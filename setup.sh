@@ -7,7 +7,7 @@ brew update
 
 ### Tools and Software
 brew install golang ffmpeg lame tree vim wget youtube-dl tmux mas python
-brew install bartender istat-menus iina little-snitch the-unarchiver alt-tab \
+brew install iina little-snitch the-unarchiver alt-tab \
 visual-studio-code iterm2 \
 discord telegram whatsapp \
 steelseries-engine steelseries-exactmouse-tool logitech-camera-settings logitech-g-hub
