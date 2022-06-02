@@ -22,6 +22,12 @@ plugins=(
     zsh-syntax-highlighting
 )
 
-LANG=en_US.utf8
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
 
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+
+source $HOME/.iterm2_shell_integration.zsh
 source $ZSH/oh-my-zsh.sh
+. $HOME/.zsh_aliases

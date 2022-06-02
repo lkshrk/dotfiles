@@ -6,11 +6,17 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew update
 
 ### Tools and Software
-brew install golang ffmpeg lame tree vim wget youtube-dl tmux mas python
-brew install iina little-snitch the-unarchiver alt-tab \
-visual-studio-code iterm2 \
-discord telegram whatsapp \
-steelseries-engine steelseries-exactmouse-tool logitech-camera-settings logitech-g-hub
+brew install golang ffmpeg lame tree vim wget youtube-dl tmux mas python pyenv thefuck watch tldr yamllint
+brew install iina little-snitch the-unarchiver alt-tab hammerspoon karabiner-elements iterm2 app-cleaner vlc \
+visual-studio-code docker \
+telegram whatsapp firefox google-chrome signal discord \
+steelseries-exactmouse-tool logitech-g-hub
+
+echo "Install business tools?"
+read -p 'yes/no: ' val
+if [ val = "yes" || val = "y" ]; then
+  brew install slack zoom microsoft-teams microsoft-excel microsoft-outlook microsoft-powerpoint
+fi  
 
 sh -c "RUNZSH=no; $(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -21,9 +27,7 @@ brew tap homebrew/cask-fonts
 brew install font-hack-nerd-font
 
 # dotfiles for zsh
-cp -f dotfiles/.zshrc $HOME/.zshrc
-mkdir -p $HOME/.dotfiles
-cp dotfiles/* $HOME/.dotfiles/
+cp -r -f dotfiles/ $HOME/
 
 ### osx configs
 chflags nohidden ~/Library #Show Library

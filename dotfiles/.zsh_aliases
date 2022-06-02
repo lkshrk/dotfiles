@@ -1,0 +1,20 @@
+alias la='ls -lah'
+alias lh=la
+alias ll='ls -lh'
+ 
+# git
+alias ga='git add .'
+alias gcm='git commit -m'
+alias gco='git checkout'
+alias gl="git log --graph --abbrev-commit --decorate 
+--format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) 
+%C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' 
+%C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
+alias glg='git log --decorate --pretty=oneline --abbrev-commit'
+alias gpf='git push -f'
+alias gp='git push'
+alias gr='git reset'
+alias grd='git reset develop'
+alias grbd='git rebase origin/develop'
+alias grbm='git rebase origin/master'
+alias gs='git status'
