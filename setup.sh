@@ -7,7 +7,7 @@ brew update
 
 ### Tools and Software
 brew install golang ffmpeg lame tree vim wget youtube-dl tmux mas python pyenv thefuck watch tldr yamllint
-brew install iina little-snitch the-unarchiver alt-tab hammerspoon karabiner-elements iterm2 app-cleaner vlc \
+brew install iina little-snitch the-unarchiver alt-tab hammerspoon karabiner-elements iterm2 appcleaner vlc \
 visual-studio-code docker \
 telegram whatsapp firefox google-chrome signal discord \
 steelseries-exactmouse-tool logitech-g-hub
