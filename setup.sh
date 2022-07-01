@@ -12,11 +12,6 @@ visual-studio-code docker \
 telegram whatsapp firefox google-chrome signal discord \
 steelseries-exactmouse-tool logitech-g-hub
 
-echo "Install business tools?"
-read -p 'yes/no: ' val
-if [ val = "yes" || val = "y" ]; then
-  brew install slack zoom microsoft-teams microsoft-excel microsoft-outlook microsoft-powerpoint
-fi  
 
 sh -c "RUNZSH=no; $(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
