@@ -13,6 +13,7 @@ ZSH_THEME="robbyrussell"
 
 plugins=(
     cp
+    docker
     extract
     git
     history
@@ -26,12 +27,22 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
 export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  #This loads nvm
   [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 source $(brew --prefix nvm)/nvm.sh
+
+#Enable pipx autocompletion
+autoload -U bashcompinit
+bashcompinit
+eval "$(register-python-argcomplete pipx)" #Enable pipx autocompletion
+
+#Enable kubectl autocompletion
+autoload -Uz compinit
+compinit
+source <(kubectl completion zsh)
 
 export HOMEBREW_NO_ENV_HINTS=TRUE
 
 source $HOME/.iterm2_shell_integration.zsh
 source $ZSH/oh-my-zsh.sh
-. $HOME/.zsh_aliases
+. $HOME/.dotfiles/.aliases
