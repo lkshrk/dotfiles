@@ -6,7 +6,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew update
 
 ### Tools and Software
-brew install ffmpeg golang helm jq kubernetes-cli mas neovim nvm pipx python thefuck tldr tmux tree wget yamllint youtube-dl yq
+brew install fd ffmpeg golang helm jq kubernetes-cli mas neovim nvm pipx python ripgrep thefuck tldr tmux tree wget yamllint youtube-dl yq
 brew install the-unarchiver amphetamine rectangle alt-tab iterm2 appcleaner visual-studio-code docker microsoft-edge google-chrome vlc franz
 
 brew tap homebrew/cask-fonts
@@ -15,7 +15,7 @@ brew install font-hack-nerd-font font-intel-one-mono
 pipx ensurepath
 mkdir ~/.nvm
 
-mas signlin harkelukas@googlemail.com
+mas signin harkelukas@googlemail.com
 mas install 1352778147 #Install bitwarden
 
 
@@ -26,7 +26,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 # dotfiles
 cp -r -f .dotfiles $HOME/
 ln -s ~/.dotiles/.zshrc ~/.zshrc
-ln -s ~/.dotiles/.vimrc ~/.vimrc
+ln -s ~/.dotfiles/.config/nvim ~/.config/nvim
 
 ### osx configs
 chflags nohidden ~/Library #Show Library

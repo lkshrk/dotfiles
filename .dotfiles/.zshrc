@@ -25,6 +25,7 @@ plugins=(
 
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
+export HOMEBREW_NO_ENV_HINTS=TRUE
 
 export NVM_DIR="$HOME/.nvm"
   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  #This loads nvm
