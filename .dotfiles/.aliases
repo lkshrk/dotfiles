@@ -29,6 +29,10 @@ gupf() {
 	git reset head^1 && git add . && git commit -m "$1" && git push -f
 }
 
+vaulttoken() {
+	echo "$1" > ~/.vault-token
+}
+
 # K8s
 alias k='kubectl'
 alias ke='kubectl edit'
