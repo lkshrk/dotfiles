@@ -7,7 +7,7 @@ brew update
 
 ### Tools and Software
 brew install fd ffmpeg golang helm jq kubernetes-cli mas neovim nvm pipx python ripgrep thefuck tldr tmux tree wget yamllint youtube-dl yq
-brew install the-unarchiver amphetamine rectangle alt-tab iterm2 appcleaner visual-studio-code docker microsoft-edge google-chrome vlc franz
+brew install the-unarchiver amphetamine rectangle alt-tab iterm2 visual-studio-code docker microsoft-edge google-chrome vlc franz
 
 brew tap homebrew/cask-fonts
 brew install font-hack-nerd-font font-intel-one-mono
