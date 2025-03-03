@@ -1,4 +1,4 @@
-code-select --install
+xcode-select --install
 softwareupdate --install-rosetta
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $HOME/.zprofile
@@ -6,13 +6,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew update
 
 ### Tools and Software
-brew install fd ffmpeg golang helm jq kubernetes-cli mas neovim nvm pipx python ripgrep thefuck tldr tmux tree wget yamllint youtube-dl yq
-brew install the-unarchiver rectangle alt-tab iterm2 visual-studio-code docker microsoft-edge google-chrome vlc franz
+brew install fd helm jq kubernetes-cli golang mas neovim ripgrep thefuck tldr tmux tree wget yamllint yq
+brew install the-unarchiver rectangle alt-tab ghostty visual-studio-code docker vivaldi google-chrome vlc franz bitwarden
 
-brew tap homebrew/cask-fonts
 brew install font-hack-nerd-font font-intel-one-mono
-
-pipx ensurepath
 
 mas install 1352778147 #Install bitwarden
 
