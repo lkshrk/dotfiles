@@ -55,6 +55,15 @@ confirm() {
   [[ "$reply" =~ ^[Yy]$ ]]
 }
 
+# Like confirm, but --no-prompt declines. Use for destructive prompts where
+# the safe default is "no".
+confirm_safe() {
+  (( NO_PROMPT )) && return 1
+  local prompt="$1"
+  read -r -p "$prompt [y/N] " reply
+  [[ "$reply" =~ ^[Yy]$ ]]
+}
+
 # ---------------------------------------------------------------------------
 # 1. OS + host detection
 # ---------------------------------------------------------------------------
@@ -172,16 +181,61 @@ done
 
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
+# stat portability: BSD (macOS) uses -f %m, GNU (Linux) uses -c %Y.
+mtime_of() {
+  stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null || echo 0
+}
+
+# Returns 'repo' | 'home' | 'same' based on mtime comparison.
+newer_of() {
+  local rt ht
+  rt=$(mtime_of "$1")
+  ht=$(mtime_of "$2")
+  if   (( rt > ht )); then echo repo
+  elif (( ht > rt )); then echo home
+  else                     echo same
+  fi
+}
+
+# Move a real file in $HOME into the timestamped backup dir. Relative path
+# inside $BACKUP_DIR mirrors the path inside $HOME so the originals are easy
+# to restore.
+move_to_backup() {
+  local target="$1" rel="$2"
+  mkdir -p "$BACKUP_DIR/$(dirname "$rel")"
+  mv "$target" "$BACKUP_DIR/$rel"
+  info "backed up $target → $BACKUP_DIR/$rel"
+}
+
 backup_conflicts() {
   local pkg="$1"
   while IFS= read -r -d '' src; do
     local rel="${src#$DOTFILES_DIR/$pkg/}"
     local target="$HOME/$rel"
-    if [[ -e "$target" && ! -L "$target" ]]; then
-      mkdir -p "$BACKUP_DIR/$(dirname "$rel")"
-      mv "$target" "$BACKUP_DIR/$rel"
-      info "backed up $target → $BACKUP_DIR/$rel"
+
+    [[ -e "$target" && ! -L "$target" ]] || continue
+
+    # Identical content: backup silently (keeps stow happy without prompting).
+    if cmp -s "$src" "$target"; then
+      move_to_backup "$target" "$rel"
+      continue
     fi
+
+    # Default direction is home → repo: the home file becomes the source of
+    # truth (adoption), so local edits are preserved. Prompt only when that
+    # would clobber a *newer* repo version with an older home copy.
+    if [[ "$(newer_of "$src" "$target")" == "repo" ]]; then
+      warn "repo version newer than home: $target"
+      if ! confirm_safe "  overwrite repo copy with older home version?"; then
+        info "  kept repo version; home copy moved to backup"
+        move_to_backup "$target" "$rel"
+        continue
+      fi
+    fi
+
+    cp -p "$target" "$src"
+    move_to_backup "$target" "$rel"
+    info "adopted $target → ${src#$DOTFILES_DIR/}"
   done < <(find "$DOTFILES_DIR/$pkg" -type f -not -path '*/.git/*' -print0)
 }
 
