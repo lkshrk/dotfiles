@@ -1,5 +1,3 @@
-# Shell functions. Ported from ~/.dotfiles/{aliases,tmux}.
-
 # --- git --------------------------------------------------------------------
 gupf() {
   git reset head^1 && git add . && git commit -m "$1" && git push -f
@@ -40,7 +38,6 @@ ssh() {
   command ssh -F "$HOME/.config/ssh/config" "$@"
 }
 
-# --- dotfiles sync (adopt drift + new files, restow) ------------------------
 dotsync() {
   bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/sync.sh" "$@"
 }
@@ -95,13 +92,11 @@ brew() {
   return $rc
 }
 
-# --- vault token helper -----------------------------------------------------
 vaulttoken() {
   echo "$1" > "$HOME/.vault-token"
 }
 
 # --- tmux dev layout --------------------------------------------------------
-# Usage: tdl <c|cx|codex|other_ai> [<second_ai>]
 tdl() {
   [[ -z $1 ]] && { echo "Usage: tdl <ai> [<second_ai>]"; return 1; }
   [[ -z $TMUX ]] && { echo "tdl: must be run inside tmux"; return 1; }
@@ -124,7 +119,6 @@ tdl() {
 }
 
 # --- moshi: attach-or-create tmux session for a project dir -----------------
-# Usage: moshi [DIR]  (defaults to $PWD)
 moshi() {
   local dir="${1:-$PWD}"
   [[ -d "$dir" ]] || { echo "moshi: not a directory: $dir" >&2; return 1; }

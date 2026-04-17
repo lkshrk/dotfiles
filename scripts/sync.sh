@@ -21,15 +21,11 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$DOTFILES_DIR"
 
-# All stow packages, in stow order.
 PACKAGES=(
   brew zsh git gh nvim ghostty tmux hammerspoon
   linearmouse skhd yabai zed ssh claude
 )
 
-# Packages whose tracked subtree adopts NEW files automatically.
-# Format: "pkg:relative-path-under-pkg:find-args"
-# find-args is appended to `find <abs-path>` and must end with `-print0`.
 ADOPT_NEW_RULES=(
   "hammerspoon:.config/hammerspoon:-type f \\( -name '*.lua' -o -name '.luarc.json' \\) -print0"
   "yabai:.config/yabai:-type f -name '*.sh' -print0"
@@ -51,8 +47,6 @@ for arg in "$@"; do
   esac
 done
 
-# ---------------------------------------------------------------------------
-
 c_red='\033[31m'; c_yel='\033[33m'; c_grn='\033[32m'; c_dim='\033[2m'; c_off='\033[0m'
 say()  { printf '%b\n' "$*"; }
 info() { say "${c_dim}  $*${c_off}"; }
@@ -70,14 +64,10 @@ run() {
 
 confirm() {
   (( ASSUME_YES )) && return 0
-  local prompt="$1"
-  read -r -p "$prompt [y/N] " reply
+  local prompt="$1" reply
+  read -r -p "$prompt [y/N] " reply </dev/tty
   [[ "$reply" =~ ^[Yy]$ ]]
 }
-
-# ---------------------------------------------------------------------------
-# Phase 1: adopt new files into the repo
-# ---------------------------------------------------------------------------
 
 adopt_new() {
   local pkg="$1" rel="$2" find_args="$3"
@@ -92,9 +82,7 @@ adopt_new() {
     local rel_to_root="${src#$home_dir/}"
     local dst="$pkg_dir/$rel_to_root"
 
-    # Skip if it's already the symlink we manage.
     [[ -L "$src" ]] && continue
-    # Skip if already tracked (file exists in repo).
     [[ -e "$dst" ]] && continue
 
     say "  ${c_grn}+${c_off} adopt new: $src"
@@ -107,12 +95,6 @@ adopt_new() {
   return 0
 }
 
-# ---------------------------------------------------------------------------
-# Phase 2 + 3: adopt drift via stow --adopt, then restow.
-# `stow --adopt` mutates the repo with the $HOME contents — so we always
-# show `git diff` afterwards and ask before keeping changes.
-# ---------------------------------------------------------------------------
-
 stow_adopt_and_restow() {
   local pkg="$1"
   if (( DRY_RUN )); then
@@ -121,7 +103,6 @@ stow_adopt_and_restow() {
     return 0
   fi
 
-  # Capture pre-state so we can detect what stow --adopt changed in the repo.
   local before
   before=$(git -C "$DOTFILES_DIR" status --porcelain "$pkg" 2>/dev/null || true)
 
@@ -142,30 +123,22 @@ stow_adopt_and_restow() {
     fi
   fi
 
-  # Restow to ensure symlinks are back in place.
   stow -R --no-folding -t "$HOME" "$pkg" 2>&1 | sed "s/^/  /" || {
     err "$pkg: restow failed"
     return 1
   }
 }
 
-# ---------------------------------------------------------------------------
-# Drive
-# ---------------------------------------------------------------------------
-
 command -v stow >/dev/null || { err "GNU stow not installed"; exit 1; }
 
 (( DRY_RUN )) && warn "dry-run mode: no changes will be made"
 
-# Phase 1 (whole-dir adopt) — runs first so newly-adopted files participate
-# in the subsequent restow.
 say "${c_dim}── Phase 1: adopt new files ──${c_off}"
 for rule in "${ADOPT_NEW_RULES[@]}"; do
   IFS=':' read -r pkg rel find_args <<<"$rule"
   adopt_new "$pkg" "$rel" "$find_args"
 done
 
-# Phase 2 + 3
 say "${c_dim}── Phase 2: adopt drift + restow ──${c_off}"
 for pkg in "${PACKAGES[@]}"; do
   [[ -d "$DOTFILES_DIR/$pkg" ]] || { warn "skip missing package: $pkg"; continue; }
@@ -173,17 +146,12 @@ for pkg in "${PACKAGES[@]}"; do
   stow_adopt_and_restow "$pkg" || err "  $pkg failed"
 done
 
-# ---------------------------------------------------------------------------
-# Phase 4: auto-commit
-# ---------------------------------------------------------------------------
-
 if (( COMMIT )) && (( ! DRY_RUN )); then
   say "${c_dim}── Phase 4: commit ──${c_off}"
   cd "$DOTFILES_DIR"
   if [[ -z "$(git status --porcelain)" ]]; then
     info "nothing to commit"
   else
-    # Build a brief message listing changed top-level packages.
     local_pkgs=$(git status --porcelain \
                   | awk '{print $2}' \
                   | awk -F/ '{print $1}' \
@@ -196,8 +164,6 @@ if (( COMMIT )) && (( ! DRY_RUN )); then
   fi
 fi
 
-# Refresh the sync-reminder stamp and drift cache so the shell-start nag
-# quiets down immediately — no need to wait for the next background scan.
 if (( ! DRY_RUN )); then
   mkdir -p "$HOME/.cache/zsh"
   touch "$HOME/.cache/zsh/dotfiles-last-sync"

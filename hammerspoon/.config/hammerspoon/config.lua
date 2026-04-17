@@ -16,8 +16,7 @@ local function normalize(name)
   return (name or ""):lower():gsub("[^%w]", "_")
 end
 
--- Shallow merge, except `appHotkeys` which is merged per-key so host overrides
--- individual bindings rather than replacing the whole table.
+-- Shallow merge; appHotkeys is merged per-key so host overrides individual bindings.
 local function mergeInto(dst, src)
   for k, v in pairs(src) do
     if k == "appHotkeys" and type(dst.appHotkeys) == "table" and type(v) == "table" then

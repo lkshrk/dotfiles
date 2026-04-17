@@ -35,14 +35,11 @@
   local age=$(( (now - last) / 86400 ))
   (( age < 30 )) && return
 
-  # Threshold hit — read drift cache.
   if [[ -f $drift ]] && zstat -A st +mtime -- $drift 2>/dev/null; then
     drift_mtime=$st[1]
     drift_value="${$(<$drift)}"
   fi
 
-  # Cache stale (>24h old) or missing → scan in background, exit quiet.
-  # Next shell start will read the fresh result.
   local cache_age=$(( now - drift_mtime ))
   if (( drift_mtime == 0 || cache_age > 86400 )); then
     local script="${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/drift-check.sh"

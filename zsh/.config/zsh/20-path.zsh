@@ -1,6 +1,3 @@
-# PATH composition — kept separate from env so it's easy to audit.
-# Idempotent: skip dirs already on PATH.
-
 _prepend_path() {
   case ":$PATH:" in
     *":$1:"*) ;;

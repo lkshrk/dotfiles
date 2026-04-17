@@ -50,8 +50,10 @@ err()  { say "${c_red}✗ $*${c_off} " >&2; }
 
 confirm() {
   (( NO_PROMPT )) && return 0
-  local prompt="$1"
-  read -r -p "$prompt [y/N] " reply
+  local prompt="$1" reply
+  # Read from the terminal directly so prompts work even when the caller
+  # loop has stdin bound to a process substitution (e.g. while < <(find)).
+  read -r -p "$prompt [y/N] " reply </dev/tty
   [[ "$reply" =~ ^[Yy]$ ]]
 }
 
@@ -59,14 +61,10 @@ confirm() {
 # the safe default is "no".
 confirm_safe() {
   (( NO_PROMPT )) && return 1
-  local prompt="$1"
-  read -r -p "$prompt [y/N] " reply
+  local prompt="$1" reply
+  read -r -p "$prompt [y/N] " reply </dev/tty
   [[ "$reply" =~ ^[Yy]$ ]]
 }
-
-# ---------------------------------------------------------------------------
-# 1. OS + host detection
-# ---------------------------------------------------------------------------
 
 case "$(uname -s)" in
   Darwin) IS_MACOS=1 ;;
@@ -93,15 +91,7 @@ else
   info "os: $(uname -s) (non-macOS: skipping brew + macOS-only packages)"
 fi
 
-# ---------------------------------------------------------------------------
-# 2. Sanity checks
-# ---------------------------------------------------------------------------
-
 command -v stow >/dev/null || { err "GNU stow not installed (brew install stow / apt install stow)"; exit 1; }
-
-# ---------------------------------------------------------------------------
-# 3. Brew bundle (macOS only)
-# ---------------------------------------------------------------------------
 
 BREW_HOME="$DOTFILES_DIR/brew/.config/homebrew"
 
@@ -152,15 +142,7 @@ else
   info "skipping brew bundle (non-macOS)"
 fi
 
-# ---------------------------------------------------------------------------
-# 4. Pre-create dirs that mix stowed + local files
-# ---------------------------------------------------------------------------
-
 mkdir -p "$HOME/.config/zsh" "$HOME/.cache/zsh"
-
-# ---------------------------------------------------------------------------
-# 5. Stow packages (filter macOS-only on Linux)
-# ---------------------------------------------------------------------------
 
 is_macos_only() {
   local p="$1"
@@ -181,25 +163,6 @@ done
 
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
-# stat portability: BSD (macOS) uses -f %m, GNU (Linux) uses -c %Y.
-mtime_of() {
-  stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null || echo 0
-}
-
-# Returns 'repo' | 'home' | 'same' based on mtime comparison.
-newer_of() {
-  local rt ht
-  rt=$(mtime_of "$1")
-  ht=$(mtime_of "$2")
-  if   (( rt > ht )); then echo repo
-  elif (( ht > rt )); then echo home
-  else                     echo same
-  fi
-}
-
-# Move a real file in $HOME into the timestamped backup dir. Relative path
-# inside $BACKUP_DIR mirrors the path inside $HOME so the originals are easy
-# to restore.
 move_to_backup() {
   local target="$1" rel="$2"
   mkdir -p "$BACKUP_DIR/$(dirname "$rel")"
@@ -215,22 +178,16 @@ backup_conflicts() {
 
     [[ -e "$target" && ! -L "$target" ]] || continue
 
-    # Identical content: backup silently (keeps stow happy without prompting).
     if cmp -s "$src" "$target"; then
       move_to_backup "$target" "$rel"
       continue
     fi
 
-    # Default direction is home → repo: the home file becomes the source of
-    # truth (adoption), so local edits are preserved. Prompt only when that
-    # would clobber a *newer* repo version with an older home copy.
-    if [[ "$(newer_of "$src" "$target")" == "repo" ]]; then
-      warn "repo version newer than home: $target"
-      if ! confirm_safe "  overwrite repo copy with older home version?"; then
-        info "  kept repo version; home copy moved to backup"
-        move_to_backup "$target" "$rel"
-        continue
-      fi
+    warn "conflict: $target differs from repo"
+    if ! confirm_safe "  overwrite repo copy with home version?"; then
+      info "  kept repo version; home copy moved to backup"
+      move_to_backup "$target" "$rel"
+      continue
     fi
 
     cp -p "$target" "$src"
@@ -254,20 +211,12 @@ done
 
 [[ -d "$BACKUP_DIR" ]] && warn "originals preserved in $BACKUP_DIR"
 
-# ---------------------------------------------------------------------------
-# 6. Hammerspoon expects ~/.hammerspoon (macOS only)
-# ---------------------------------------------------------------------------
-
 if (( IS_MACOS )); then
   if [[ ! -e "$HOME/.hammerspoon" ]]; then
     ln -s "$HOME/.config/hammerspoon" "$HOME/.hammerspoon"
     ok "linked ~/.hammerspoon → ~/.config/hammerspoon"
   fi
 fi
-
-# ---------------------------------------------------------------------------
-# 7. Local zsh secrets stub (gitignored, never tracked)
-# ---------------------------------------------------------------------------
 
 LOCAL_ZSH="$HOME/.config/zsh/99-local.zsh"
 if [[ ! -e "$LOCAL_ZSH" ]]; then
@@ -279,10 +228,6 @@ EOF
   ok "created $LOCAL_ZSH"
 fi
 
-# ---------------------------------------------------------------------------
-# 8. Lefthook git hooks for this repo
-# ---------------------------------------------------------------------------
-
 if command -v lefthook >/dev/null; then
   (cd "$DOTFILES_DIR" && lefthook install >/dev/null 2>&1) \
     && ok "lefthook hooks installed" \
@@ -291,12 +236,6 @@ else
   warn "lefthook not installed (run brew bundle to get it)"
 fi
 
-# ---------------------------------------------------------------------------
-# 9. Sync reminder (optional, opt-in)
-# ---------------------------------------------------------------------------
-
-# Always refresh the stamp + drift cache so the shell-start nag quiets down
-# immediately after install.
 mkdir -p "$HOME/.cache/zsh"
 touch "$HOME/.cache/zsh/dotfiles-last-sync"
 printf 'no\n' > "$HOME/.cache/zsh/dotfiles-drift-check"
@@ -308,10 +247,6 @@ if [[ ! -f "$REMINDER_FLAG" ]]; then
     ok "reminder enabled (rm $REMINDER_FLAG to disable)"
   fi
 fi
-
-# ---------------------------------------------------------------------------
-# 10. Next steps
-# ---------------------------------------------------------------------------
 
 cat <<EOF
 

@@ -19,13 +19,11 @@ mkdir -p "$(dirname "$CACHE")"
 
 has_drift=0
 
-# 1) uncommitted changes in the repo
 if [[ -d "$DOTFILES_DIR/.git" ]] \
    && [[ -n "$(git -C "$DOTFILES_DIR" status --porcelain 2>/dev/null)" ]]; then
   has_drift=1
 fi
 
-# 2) adoption candidates: tracked files that exist in $HOME as real files
 if (( ! has_drift )); then
   pkgs=(brew zsh git gh nvim ghostty tmux hammerspoon linearmouse skhd yabai zed ssh claude)
   for pkg in "${pkgs[@]}"; do

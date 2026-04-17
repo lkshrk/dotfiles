@@ -2,9 +2,6 @@ local M = {
   primaryLabels   = { "main", "stack", "remote" },
   secondaryLabels = { "comms", "stream" },
 
-  -- A rule value can be either:
-  --   string       — every window of that app goes to this label
-  --   list<string> — Nth spawned window goes to Nth label (last label reused)
   appRules = {
     ["Ghostty"]           = "stack",
     ["Zed"]               = "stack",

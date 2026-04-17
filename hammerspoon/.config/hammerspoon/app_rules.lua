@@ -2,8 +2,7 @@ local config = require("config")
 local spaces = require("spaces")
 local M = {}
 
--- Per-app spawn counter. Only used when a rule is a list (Nth window → Nth
--- label). List-form rules are currently a Topaz-only concern (Vivaldi).
+-- Per-app spawn counter for list-form rules: Nth window → Nth label.
 local counters = {}
 
 local function resolveLabel(appName)

@@ -26,7 +26,6 @@ if [ -n "$WIN_ID" ]; then
   X="$(echo "$FRAME" | jq -r '(.frame.x + (.frame.w / 2)) | floor')"
   Y="$(echo "$FRAME" | jq -r '(.frame.y + (.frame.h / 2)) | floor')"
 
-  # move cursor to center first, then click there
   cliclick m:"$X","$Y"
   sleep 0.02
   cliclick c:"$X","$Y"

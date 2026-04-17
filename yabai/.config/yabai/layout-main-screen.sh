@@ -62,11 +62,9 @@ place() {
   fi
 }
 
-# stack space: fullscreen-style stack on main display
 place "Ghostty" "$SPACE_STACK" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1
 place "Zed"     "$SPACE_STACK" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1
 place "Vivaldi" "$SPACE_STACK" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1
 
-# remote space: fullscreen on main display
 place "Moonlight"         "$SPACE_REMOTE" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1
 place "League of Legends" "$SPACE_REMOTE" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1

@@ -1,8 +1,6 @@
 local spaces = require("spaces")
 local M = {}
 
--- Placement helpers. Exposed so per-host config modules can call them.
-
 function M.findWindow(appName, spaceID)
   local app = hs.application.find(appName)
   if not app then return nil end
@@ -49,9 +47,6 @@ function M.placeCenteredBottomInRegion(appName, spaceID, region)
     y = region.y + region.h - cf.h,
   })
 end
-
--- Dispatchers: per-host config may define applyMainScreen / applySecondScreen /
--- applyCatchAll as functions receiving (layouts, spaces). Absent hooks no-op.
 
 local function call(name)
   local config = require("config")

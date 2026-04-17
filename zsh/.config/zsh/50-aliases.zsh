@@ -1,5 +1,3 @@
-# Aliases. Ported from ~/.dotfiles/aliases.
-
 # ls
 alias la='ls -lah'
 alias lh=la

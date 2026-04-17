@@ -6,7 +6,6 @@
 
 set -euo pipefail
 
-# Non-interactive shells (CI, hook chains, no tty) — skip.
 if [[ ! -t 0 || ! -t 1 ]]; then
   exit 0
 fi

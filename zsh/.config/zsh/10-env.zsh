@@ -1,5 +1,3 @@
-# Environment exports — cheap, no command invocations.
-
 export EDITOR=nvim
 export HOMEBREW_NO_ENV_HINTS=1
 
