@@ -111,6 +111,7 @@ place_centered_bottom_in_region() {
   yabai -m window "$wid" --move "abs:${x}:${y}"
 }
 
+# comms
 place "Discord"       "$SPACE_COMMS" "$LEFT_X"       "$DY"               "$HALF_W"                     "$DH"              1
 place "ChatGPT"       "$SPACE_COMMS" "$LEFT_INSET_X" "$DY"               "$(( HALF_W - LEFT_INSET ))" "$DH"              1
 place "Vivaldi"       "$SPACE_COMMS" "$LEFT_INSET_X" "$DY"               "$(( HALF_W - LEFT_INSET ))" "$DH"              1
@@ -120,6 +121,7 @@ place_centered_bottom_in_region "Chatterino" "$SPACE_COMMS" "$RIGHT_X" "$BOTTOM_
 place "OBS"           "$SPACE_COMMS" "$RIGHT_X"      "$BOTTOM_QUARTER_Y" "$HALF_W"                     "$(( DH * 3 / 4 ))" 1
 place "Brave Browser" "$SPACE_COMMS" "$RIGHT_X"      "$DY"               "$HALF_W"                     "$(( DH * 3 / 4 ))" 1 "above"
 
+# comms
 place_centered_scaled "Obsidian" "$SPACE_STREAM" 75
 place "Stream Deck"       "$SPACE_STREAM" "$LEFT_X"  "$DY" "$HALF_W" "$DH" 1
 place "Elgato Wave Link"  "$SPACE_STREAM" "$RIGHT_X" "$DY" "$HALF_W" "$DH" 1
