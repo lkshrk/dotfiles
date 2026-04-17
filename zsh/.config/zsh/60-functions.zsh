@@ -42,7 +42,7 @@ ssh() {
 
 # --- dotfiles sync (adopt drift + new files, restow) ------------------------
 dotsync() {
-  bash "$HOME/Dev/dotfiles/scripts/sync.sh" "$@"
+  bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/sync.sh" "$@"
 }
 
 # --- brew wrapper: refresh yabai sudoers after install/upgrade --------------

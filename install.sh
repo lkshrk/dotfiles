@@ -292,7 +292,25 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 9. Next steps
+# 9. Sync reminder (optional, opt-in)
+# ---------------------------------------------------------------------------
+
+# Always refresh the stamp + drift cache so the shell-start nag quiets down
+# immediately after install.
+mkdir -p "$HOME/.cache/zsh"
+touch "$HOME/.cache/zsh/dotfiles-last-sync"
+printf 'no\n' > "$HOME/.cache/zsh/dotfiles-drift-check"
+
+REMINDER_FLAG="$HOME/.cache/zsh/dotfiles-sync-reminder"
+if [[ ! -f "$REMINDER_FLAG" ]]; then
+  if confirm "Enable monthly shell-start reminder to run 'dotsync'?"; then
+    touch "$REMINDER_FLAG"
+    ok "reminder enabled (rm $REMINDER_FLAG to disable)"
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 10. Next steps
 # ---------------------------------------------------------------------------
 
 cat <<EOF

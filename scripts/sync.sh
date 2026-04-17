@@ -196,4 +196,12 @@ if (( COMMIT )) && (( ! DRY_RUN )); then
   fi
 fi
 
+# Refresh the sync-reminder stamp and drift cache so the shell-start nag
+# quiets down immediately — no need to wait for the next background scan.
+if (( ! DRY_RUN )); then
+  mkdir -p "$HOME/.cache/zsh"
+  touch "$HOME/.cache/zsh/dotfiles-last-sync"
+  printf 'no\n' > "$HOME/.cache/zsh/dotfiles-drift-check"
+fi
+
 ok "sync complete"
