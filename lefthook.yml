@@ -1,0 +1,9 @@
+# Lefthook config for the dotfiles repo.
+# Activate with: lefthook install   (run once after clone, also called by install.sh)
+
+pre-push:
+  commands:
+    dotsync-prompt:
+      # Interactive: lefthook attaches stdin/tty so the prompt works.
+      interactive: true
+      run: bash scripts/pre-push-sync.sh

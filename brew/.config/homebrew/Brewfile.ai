@@ -1,0 +1,9 @@
+# Brewfile.ai — local LLM tooling + AI desktop apps.
+
+brew "python@3.14"
+brew "llama.cpp"
+brew "mlx-lm"
+
+cask "chatgpt"
+
+uv "mistral-vibe"

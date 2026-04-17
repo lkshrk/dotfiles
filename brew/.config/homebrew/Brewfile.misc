@@ -1,0 +1,5 @@
+# Brewfile.misc — Topaz-only extras without a clean category.
+
+brew "sops"
+
+cask "brave-browser"

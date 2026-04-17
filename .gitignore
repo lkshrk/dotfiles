@@ -1,15 +1,9 @@
-# General
+# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Icon must end with two \r
 Icon
-
-# Thumbnails
 ._*
-
-# Files that might appear in the root of a volume
 .DocumentRevisions-V100
 .fseventsd
 .Spotlight-V100
@@ -17,10 +11,39 @@ Icon
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
 .AppleDB
 .AppleDesktop
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Claude Code project-local settings (NOT the stowed package below)
+/.claude/
+
+# brew — generated Brewfile (install.sh concatenates base + active modules)
+brew/.config/homebrew/Brewfile.generated
+
+# zsh
+zsh/.config/zsh/99-local.zsh
+zsh/.config/zsh/.zcompdump*
+zsh/.config/zsh/.zsh_history
+
+# nvim
+nvim/.config/nvim/lazy-lock.json
+
+# gh — contains auth token
+gh/.config/gh/hosts.yml
+
+# zed — local conversation state
+zed/.config/zed/conversations/
+zed/.config/zed/prompts/
+zed/.config/zed/themes/
+zed/.config/zed/settings_backup.json
+
+# claude — only settings.json and plugins/installed_plugins.json are tracked.
+# Everything else under ~/.claude is runtime/state and ignored:
+claude/.claude/*
+!claude/.claude/settings.json
+!claude/.claude/plugins/
+claude/.claude/plugins/*
+!claude/.claude/plugins/installed_plugins.json

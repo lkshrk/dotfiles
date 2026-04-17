@@ -1,0 +1,16 @@
+Host github.com
+  User lkshrk
+  IdentityFile ~/.ssh/github.ed25519
+
+Host nasi
+  HostName nasi.lan
+  User root
+
+Host hetzner
+  HostName 91.107.232.241
+  User lkshrk
+
+Host *
+  AddKeysToAgent yes
+  PermitLocalCommand yes
+  LocalCommand printf '\033]2;%n@%h\007'

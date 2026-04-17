@@ -1,0 +1,456 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx block-no-verify@1.1.2"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/auto-tmux-dev.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:bash:tmux-reminder\" \"scripts/hooks/pre-bash-tmux-reminder.js\" \"strict\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:bash:git-push-reminder\" \"scripts/hooks/pre-bash-git-push-reminder.js\" \"strict\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:bash:commit-quality\" \"scripts/hooks/pre-bash-commit-quality.js\" \"strict\""
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:write:doc-file-warning\" \"scripts/hooks/doc-file-warning.js\" \"standard,strict\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:edit-write:suggest-compact\" \"scripts/hooks/suggest-compact.js\" \"standard,strict\""
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags-shell.sh\" \"pre:observe\" \"skills/continuous-learning-v2/hooks/observe.sh\" \"standard,strict\"",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:insaits-security\" \"scripts/hooks/insaits-security-wrapper.js\" \"standard,strict\"",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:governance-capture\" \"scripts/hooks/governance-capture.js\" \"standard,strict\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:config-protection\" \"scripts/hooks/config-protection.js\" \"standard,strict\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:mcp-health-check\" \"scripts/hooks/mcp-health-check.js\" \"standard,strict\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx moshi-hooks@latest # moshi-hooks",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"pre:compact\" \"scripts/hooks/pre-compact.js\" \"standard,strict\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/session-start-bootstrap.js\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx moshi-hooks@latest # moshi-hooks",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/post-bash-command-log.js\" audit"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/post-bash-command-log.js\" cost"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"post:bash:pr-created\" \"scripts/hooks/post-bash-pr-created.js\" \"standard,strict\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"post:bash:build-complete\" \"scripts/hooks/post-bash-build-complete.js\" \"standard,strict\"",
+            "timeout": 30,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"post:quality-gate\" \"scripts/hooks/quality-gate.js\" \"standard,strict\"",
+            "timeout": 30,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"post:edit:design-quality-check\" \"scripts/hooks/design-quality-check.js\" \"standard,strict\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"post:edit:accumulate\" \"scripts/hooks/post-edit-accumulator.js\" \"standard,strict\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"post:edit:console-warn\" \"scripts/hooks/post-edit-console-warn.js\" \"standard,strict\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"post:governance-capture\" \"scripts/hooks/governance-capture.js\" \"standard,strict\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags-shell.sh\" \"post:observe\" \"skills/continuous-learning-v2/hooks/observe.sh\" \"standard,strict\"",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx moshi-hooks@latest # moshi-hooks",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/lkshrk/.claude/scripts/hooks/run-with-flags.js\" \"post:mcp-health-check\" \"scripts/hooks/mcp-health-check.js\" \"standard,strict\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const path=require('path');const {spawnSync}=require('child_process');const raw=fs.readFileSync(0,'utf8');const rel=path.join('scripts','hooks','run-with-flags.js');const hasRunnerRoot=candidate=>{const value=typeof candidate==='string'?candidate.trim():'';return value.length>0&&fs.existsSync(path.join(path.resolve(value),rel));};const root=(()=>{const envRoot=process.env.CLAUDE_PLUGIN_ROOT||'';if(hasRunnerRoot(envRoot))return path.resolve(envRoot.trim());const home=require('os').homedir();const claudeDir=path.join(home,'.claude');if(hasRunnerRoot(claudeDir))return claudeDir;for(const candidate of [path.join(claudeDir,'plugins','everything-claude-code'),path.join(claudeDir,'plugins','everything-claude-code@everything-claude-code'),path.join(claudeDir,'plugins','marketplace','everything-claude-code')]){if(hasRunnerRoot(candidate))return candidate;}try{const cacheBase=path.join(claudeDir,'plugins','cache','everything-claude-code');for(const org of fs.readdirSync(cacheBase,{withFileTypes:true})){if(!org.isDirectory())continue;for(const version of fs.readdirSync(path.join(cacheBase,org.name),{withFileTypes:true})){if(!version.isDirectory())continue;const candidate=path.join(cacheBase,org.name,version.name);if(hasRunnerRoot(candidate))return candidate;}}}catch{}return claudeDir;})();const script=path.join(root,rel);if(fs.existsSync(script)){const result=spawnSync(process.execPath,[script,'stop:format-typecheck','scripts/hooks/stop-format-typecheck.js','standard,strict'],{input:raw,encoding:'utf8',env:process.env,cwd:process.cwd(),timeout:300000});const stdout=typeof result.stdout==='string'?result.stdout:'';if(stdout)process.stdout.write(stdout);else process.stdout.write(raw);if(result.stderr)process.stderr.write(result.stderr);if(result.error||result.status===null||result.signal){const reason=result.error?result.error.message:(result.signal?'signal '+result.signal:'missing exit status');process.stderr.write('[Stop] ERROR: hook runner failed: '+reason+String.fromCharCode(10));process.exit(1);}process.exit(Number.isInteger(result.status)?result.status:0);}process.stderr.write('[Stop] WARNING: could not resolve ECC plugin root; skipping hook'+String.fromCharCode(10));process.stdout.write(raw);\"",
+            "timeout": 300
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const path=require('path');const {spawnSync}=require('child_process');const raw=fs.readFileSync(0,'utf8');const rel=path.join('scripts','hooks','run-with-flags.js');const hasRunnerRoot=candidate=>{const value=typeof candidate==='string'?candidate.trim():'';return value.length>0&&fs.existsSync(path.join(path.resolve(value),rel));};const root=(()=>{const envRoot=process.env.CLAUDE_PLUGIN_ROOT||'';if(hasRunnerRoot(envRoot))return path.resolve(envRoot.trim());const home=require('os').homedir();const claudeDir=path.join(home,'.claude');if(hasRunnerRoot(claudeDir))return claudeDir;for(const candidate of [path.join(claudeDir,'plugins','everything-claude-code'),path.join(claudeDir,'plugins','everything-claude-code@everything-claude-code'),path.join(claudeDir,'plugins','marketplace','everything-claude-code')]){if(hasRunnerRoot(candidate))return candidate;}try{const cacheBase=path.join(claudeDir,'plugins','cache','everything-claude-code');for(const org of fs.readdirSync(cacheBase,{withFileTypes:true})){if(!org.isDirectory())continue;for(const version of fs.readdirSync(path.join(cacheBase,org.name),{withFileTypes:true})){if(!version.isDirectory())continue;const candidate=path.join(cacheBase,org.name,version.name);if(hasRunnerRoot(candidate))return candidate;}}}catch{}return claudeDir;})();const script=path.join(root,rel);if(fs.existsSync(script)){const result=spawnSync(process.execPath,[script,'stop:check-console-log','scripts/hooks/check-console-log.js','standard,strict'],{input:raw,encoding:'utf8',env:process.env,cwd:process.cwd(),timeout:30000});const stdout=typeof result.stdout==='string'?result.stdout:'';if(stdout)process.stdout.write(stdout);else process.stdout.write(raw);if(result.stderr)process.stderr.write(result.stderr);if(result.error||result.status===null||result.signal){const reason=result.error?result.error.message:(result.signal?'signal '+result.signal:'missing exit status');process.stderr.write('[Stop] ERROR: hook runner failed: '+reason+String.fromCharCode(10));process.exit(1);}process.exit(Number.isInteger(result.status)?result.status:0);}process.stderr.write('[Stop] WARNING: could not resolve ECC plugin root; skipping hook'+String.fromCharCode(10));process.stdout.write(raw);\""
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const path=require('path');const {spawnSync}=require('child_process');const raw=fs.readFileSync(0,'utf8');const rel=path.join('scripts','hooks','run-with-flags.js');const hasRunnerRoot=candidate=>{const value=typeof candidate==='string'?candidate.trim():'';return value.length>0&&fs.existsSync(path.join(path.resolve(value),rel));};const root=(()=>{const envRoot=process.env.CLAUDE_PLUGIN_ROOT||'';if(hasRunnerRoot(envRoot))return path.resolve(envRoot.trim());const home=require('os').homedir();const claudeDir=path.join(home,'.claude');if(hasRunnerRoot(claudeDir))return claudeDir;for(const candidate of [path.join(claudeDir,'plugins','everything-claude-code'),path.join(claudeDir,'plugins','everything-claude-code@everything-claude-code'),path.join(claudeDir,'plugins','marketplace','everything-claude-code')]){if(hasRunnerRoot(candidate))return candidate;}try{const cacheBase=path.join(claudeDir,'plugins','cache','everything-claude-code');for(const org of fs.readdirSync(cacheBase,{withFileTypes:true})){if(!org.isDirectory())continue;for(const version of fs.readdirSync(path.join(cacheBase,org.name),{withFileTypes:true})){if(!version.isDirectory())continue;const candidate=path.join(cacheBase,org.name,version.name);if(hasRunnerRoot(candidate))return candidate;}}}catch{}return claudeDir;})();const script=path.join(root,rel);if(fs.existsSync(script)){const result=spawnSync(process.execPath,[script,'stop:session-end','scripts/hooks/session-end.js','minimal,standard,strict'],{input:raw,encoding:'utf8',env:process.env,cwd:process.cwd(),timeout:30000});const stdout=typeof result.stdout==='string'?result.stdout:'';if(stdout)process.stdout.write(stdout);else process.stdout.write(raw);if(result.stderr)process.stderr.write(result.stderr);if(result.error||result.status===null||result.signal){const reason=result.error?result.error.message:(result.signal?'signal '+result.signal:'missing exit status');process.stderr.write('[Stop] ERROR: hook runner failed: '+reason+String.fromCharCode(10));process.exit(1);}process.exit(Number.isInteger(result.status)?result.status:0);}process.stderr.write('[Stop] WARNING: could not resolve ECC plugin root; skipping hook'+String.fromCharCode(10));process.stdout.write(raw);\"",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const path=require('path');const {spawnSync}=require('child_process');const raw=fs.readFileSync(0,'utf8');const rel=path.join('scripts','hooks','run-with-flags.js');const hasRunnerRoot=candidate=>{const value=typeof candidate==='string'?candidate.trim():'';return value.length>0&&fs.existsSync(path.join(path.resolve(value),rel));};const root=(()=>{const envRoot=process.env.CLAUDE_PLUGIN_ROOT||'';if(hasRunnerRoot(envRoot))return path.resolve(envRoot.trim());const home=require('os').homedir();const claudeDir=path.join(home,'.claude');if(hasRunnerRoot(claudeDir))return claudeDir;for(const candidate of [path.join(claudeDir,'plugins','everything-claude-code'),path.join(claudeDir,'plugins','everything-claude-code@everything-claude-code'),path.join(claudeDir,'plugins','marketplace','everything-claude-code')]){if(hasRunnerRoot(candidate))return candidate;}try{const cacheBase=path.join(claudeDir,'plugins','cache','everything-claude-code');for(const org of fs.readdirSync(cacheBase,{withFileTypes:true})){if(!org.isDirectory())continue;for(const version of fs.readdirSync(path.join(cacheBase,org.name),{withFileTypes:true})){if(!version.isDirectory())continue;const candidate=path.join(cacheBase,org.name,version.name);if(hasRunnerRoot(candidate))return candidate;}}}catch{}return claudeDir;})();const script=path.join(root,rel);if(fs.existsSync(script)){const result=spawnSync(process.execPath,[script,'stop:evaluate-session','scripts/hooks/evaluate-session.js','minimal,standard,strict'],{input:raw,encoding:'utf8',env:process.env,cwd:process.cwd(),timeout:30000});const stdout=typeof result.stdout==='string'?result.stdout:'';if(stdout)process.stdout.write(stdout);else process.stdout.write(raw);if(result.stderr)process.stderr.write(result.stderr);if(result.error||result.status===null||result.signal){const reason=result.error?result.error.message:(result.signal?'signal '+result.signal:'missing exit status');process.stderr.write('[Stop] ERROR: hook runner failed: '+reason+String.fromCharCode(10));process.exit(1);}process.exit(Number.isInteger(result.status)?result.status:0);}process.stderr.write('[Stop] WARNING: could not resolve ECC plugin root; skipping hook'+String.fromCharCode(10));process.stdout.write(raw);\"",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const path=require('path');const {spawnSync}=require('child_process');const raw=fs.readFileSync(0,'utf8');const rel=path.join('scripts','hooks','run-with-flags.js');const hasRunnerRoot=candidate=>{const value=typeof candidate==='string'?candidate.trim():'';return value.length>0&&fs.existsSync(path.join(path.resolve(value),rel));};const root=(()=>{const envRoot=process.env.CLAUDE_PLUGIN_ROOT||'';if(hasRunnerRoot(envRoot))return path.resolve(envRoot.trim());const home=require('os').homedir();const claudeDir=path.join(home,'.claude');if(hasRunnerRoot(claudeDir))return claudeDir;for(const candidate of [path.join(claudeDir,'plugins','everything-claude-code'),path.join(claudeDir,'plugins','everything-claude-code@everything-claude-code'),path.join(claudeDir,'plugins','marketplace','everything-claude-code')]){if(hasRunnerRoot(candidate))return candidate;}try{const cacheBase=path.join(claudeDir,'plugins','cache','everything-claude-code');for(const org of fs.readdirSync(cacheBase,{withFileTypes:true})){if(!org.isDirectory())continue;for(const version of fs.readdirSync(path.join(cacheBase,org.name),{withFileTypes:true})){if(!version.isDirectory())continue;const candidate=path.join(cacheBase,org.name,version.name);if(hasRunnerRoot(candidate))return candidate;}}}catch{}return claudeDir;})();const script=path.join(root,rel);if(fs.existsSync(script)){const result=spawnSync(process.execPath,[script,'stop:cost-tracker','scripts/hooks/cost-tracker.js','minimal,standard,strict'],{input:raw,encoding:'utf8',env:process.env,cwd:process.cwd(),timeout:30000});const stdout=typeof result.stdout==='string'?result.stdout:'';if(stdout)process.stdout.write(stdout);else process.stdout.write(raw);if(result.stderr)process.stderr.write(result.stderr);if(result.error||result.status===null||result.signal){const reason=result.error?result.error.message:(result.signal?'signal '+result.signal:'missing exit status');process.stderr.write('[Stop] ERROR: hook runner failed: '+reason+String.fromCharCode(10));process.exit(1);}process.exit(Number.isInteger(result.status)?result.status:0);}process.stderr.write('[Stop] WARNING: could not resolve ECC plugin root; skipping hook'+String.fromCharCode(10));process.stdout.write(raw);\"",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const path=require('path');const {spawnSync}=require('child_process');const raw=fs.readFileSync(0,'utf8');const rel=path.join('scripts','hooks','run-with-flags.js');const hasRunnerRoot=candidate=>{const value=typeof candidate==='string'?candidate.trim():'';return value.length>0&&fs.existsSync(path.join(path.resolve(value),rel));};const root=(()=>{const envRoot=process.env.CLAUDE_PLUGIN_ROOT||'';if(hasRunnerRoot(envRoot))return path.resolve(envRoot.trim());const home=require('os').homedir();const claudeDir=path.join(home,'.claude');if(hasRunnerRoot(claudeDir))return claudeDir;for(const candidate of [path.join(claudeDir,'plugins','everything-claude-code'),path.join(claudeDir,'plugins','everything-claude-code@everything-claude-code'),path.join(claudeDir,'plugins','marketplace','everything-claude-code')]){if(hasRunnerRoot(candidate))return candidate;}try{const cacheBase=path.join(claudeDir,'plugins','cache','everything-claude-code');for(const org of fs.readdirSync(cacheBase,{withFileTypes:true})){if(!org.isDirectory())continue;for(const version of fs.readdirSync(path.join(cacheBase,org.name),{withFileTypes:true})){if(!version.isDirectory())continue;const candidate=path.join(cacheBase,org.name,version.name);if(hasRunnerRoot(candidate))return candidate;}}}catch{}return claudeDir;})();const script=path.join(root,rel);if(fs.existsSync(script)){const result=spawnSync(process.execPath,[script,'stop:desktop-notify','scripts/hooks/desktop-notify.js','standard,strict'],{input:raw,encoding:'utf8',env:process.env,cwd:process.cwd(),timeout:30000});const stdout=typeof result.stdout==='string'?result.stdout:'';if(stdout)process.stdout.write(stdout);else process.stdout.write(raw);if(result.stderr)process.stderr.write(result.stderr);if(result.error||result.status===null||result.signal){const reason=result.error?result.error.message:(result.signal?'signal '+result.signal:'missing exit status');process.stderr.write('[Stop] ERROR: hook runner failed: '+reason+String.fromCharCode(10));process.exit(1);}process.exit(Number.isInteger(result.status)?result.status:0);}process.stderr.write('[Stop] WARNING: could not resolve ECC plugin root; skipping hook'+String.fromCharCode(10));process.stdout.write(raw);\"",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx moshi-hooks@latest # moshi-hooks",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const path=require('path');const {spawnSync}=require('child_process');const raw=fs.readFileSync(0,'utf8');const rel=path.join('scripts','hooks','run-with-flags.js');const hasRunnerRoot=candidate=>{const value=typeof candidate==='string'?candidate.trim():'';return value.length>0&&fs.existsSync(path.join(path.resolve(value),rel));};const root=(()=>{const envRoot=process.env.CLAUDE_PLUGIN_ROOT||'';if(hasRunnerRoot(envRoot))return path.resolve(envRoot.trim());const home=require('os').homedir();const claudeDir=path.join(home,'.claude');if(hasRunnerRoot(claudeDir))return claudeDir;for(const candidate of [path.join(claudeDir,'plugins','everything-claude-code'),path.join(claudeDir,'plugins','everything-claude-code@everything-claude-code'),path.join(claudeDir,'plugins','marketplace','everything-claude-code')]){if(hasRunnerRoot(candidate))return candidate;}try{const cacheBase=path.join(claudeDir,'plugins','cache','everything-claude-code');for(const org of fs.readdirSync(cacheBase,{withFileTypes:true})){if(!org.isDirectory())continue;for(const version of fs.readdirSync(path.join(cacheBase,org.name),{withFileTypes:true})){if(!version.isDirectory())continue;const candidate=path.join(cacheBase,org.name,version.name);if(hasRunnerRoot(candidate))return candidate;}}}catch{}return claudeDir;})();const script=path.join(root,rel);if(fs.existsSync(script)){const result=spawnSync(process.execPath,[script,'session:end:marker','scripts/hooks/session-end-marker.js','minimal,standard,strict'],{input:raw,encoding:'utf8',env:process.env,cwd:process.cwd(),timeout:30000});const stdout=typeof result.stdout==='string'?result.stdout:'';if(stdout)process.stdout.write(stdout);else process.stdout.write(raw);if(result.stderr)process.stderr.write(result.stderr);if(result.error||result.status===null||result.signal){const reason=result.error?result.error.message:(result.signal?'signal '+result.signal:'missing exit status');process.stderr.write('[SessionEnd] ERROR: hook runner failed: '+reason+String.fromCharCode(10));process.exit(1);}process.exit(Number.isInteger(result.status)?result.status:0);}process.stderr.write('[SessionEnd] WARNING: could not resolve ECC plugin root; skipping hook'+String.fromCharCode(10));process.stdout.write(raw);\"",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx moshi-hooks@latest # moshi-hooks",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx moshi-hooks@latest # moshi-hooks",
+            "async": true
+          }
+        ],
+        "matcher": "permission_prompt|idle_prompt"
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/lkshrk/.claude/statusline-command.sh"
+  },
+  "agent": "general-purpose",
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true,
+    "everything-claude-code@everything-claude-code": true,
+    "better-addons@better-addons": true,
+    "caveman@caveman": true,
+    "context7@claude-plugins-official": false,
+    "bubbletea-maintenance@human-frontier-labs-marketplace": false,
+    "bubbletea-designer@human-frontier-labs-marketplace": false,
+    "swift-lsp@claude-plugins-official": false,
+    "shadcn-dev@functional-claude": false
+  },
+  "extraKnownMarketplaces": {
+    "everything-claude-code": {
+      "source": {
+        "source": "github",
+        "repo": "affaan-m/everything-claude-code"
+      }
+    },
+    "better-addons": {
+      "source": {
+        "source": "github",
+        "repo": "FRIKKern/better-addons"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "human-frontier-labs-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "Human-Frontier-Labs-Inc/human-frontier-labs-marketplace"
+      }
+    },
+    "functional-claude": {
+      "source": {
+        "source": "github",
+        "repo": "nthplusio/functional-claude"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "env": {
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
+    "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1",
+    "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
+  "permissions": {
+    "allow": [
+      "WebSearch(*)",
+      "WebFetch(*)",
+      "mcp__web-search-prime__web_search_prime",
+      "mcp__web-reader__webReader",
+      "mcp__plugin_everything-claude-code_context7__resolve-library-id",
+      "mcp__plugin_everything-claude-code_context7__query-docs",
+      "mcp__plugin_everything-claude-code_exa__web_search_exa",
+      "mcp__plugin_everything-claude-code_exa__web_fetch_exa"
+    ]
+  }
+}
