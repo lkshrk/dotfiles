@@ -37,20 +37,29 @@ local function focusNthSpace(n)
 end
 
 function M.setup()
-  for key, app in pairs(config.appHotkeys) do
-    bind(AC, key, function() focus_cycle.focus(app) end)
+  for key, spec in pairs(config.appHotkeys) do
+    bind(AC, key, function()
+      if type(spec) == "table" then
+        focus_cycle.focusMany(spec)
+      else
+        focus_cycle.focus(spec)
+      end
+    end)
   end
-  bind(AC, "g",      helpers.focusGaming)
+  if config.gaming then bind(AC, "g", helpers.focusGaming) end
   bind(AC, "return", helpers.finderHere)
 
-  bind(AC, "1", function() spaces.focus("main")   end)
-  bind(AC, "2", function() spaces.focus("stack")  end)
-  bind(AC, "3", function() spaces.focus("remote") end)
-  bind(AC, "4", function() spaces.focus("comms")  end)
-  bind(AC, "5", function() spaces.focus("stream") end)
+  local labels = {}
+  for _, l in ipairs(config.primaryLabels   or {}) do table.insert(labels, l) end
+  for _, l in ipairs(config.secondaryLabels or {}) do table.insert(labels, l) end
 
-  for i = 6, 9 do
-    bind(AC, tostring(i), function() focusNthSpace(i) end)
+  for i = 1, 9 do
+    local label = labels[i]
+    if label then
+      bind(AC, tostring(i), function() spaces.focus(label) end)
+    else
+      bind(AC, tostring(i), function() focusNthSpace(i) end)
+    end
   end
 
   bind(AC, "f",     maximize)
@@ -60,11 +69,10 @@ function M.setup()
 
   bind(ACS, "left",  function() shiftSpace(-1) end)
   bind(ACS, "right", function() shiftSpace(1)  end)
-  bind(ACS, "1", function() moveAndFollow("main")   end)
-  bind(ACS, "2", function() moveAndFollow("stack")  end)
-  bind(ACS, "3", function() moveAndFollow("remote") end)
-  bind(ACS, "4", function() moveAndFollow("comms")  end)
-  bind(ACS, "5", function() moveAndFollow("stream") end)
+  for i = 1, math.min(9, #labels) do
+    local label = labels[i]
+    bind(ACS, tostring(i), function() moveAndFollow(label) end)
+  end
 
   bind(ACS, "u", helpers.toggleAbove)
   bind(ACS, "l", layouts.applySecondScreen)

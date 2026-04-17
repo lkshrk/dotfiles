@@ -41,21 +41,31 @@ function M.finderHere()
 end
 
 function M.focusGaming()
+  local config = require("config")
+  local g = config.gaming
+  if not g then return end
+
+  local targets = {}
+  for _, name in ipairs(g.apps or {}) do targets[name:lower()] = true end
+
   for _, w in ipairs(hs.window.allWindows()) do
     local title = (w:title() or ""):lower()
     local app   = (w:application() and w:application():name() or ""):lower()
-    if title == "towerr" or app == "moonlight" then
+    if targets[title] or targets[app] then
       w:focus()
-      hs.timer.doAfter(0.1, function()
-        local f = w:frame()
-        local pt = { x = f.x + f.w / 2, y = f.y + f.h / 2 }
-        hs.mouse.absolutePosition(pt)
-        hs.eventtap.leftClick(pt)
-      end)
+      if g.warpMouse then
+        hs.timer.doAfter(0.1, function()
+          local f = w:frame()
+          local pt = { x = f.x + f.w / 2, y = f.y + f.h / 2 }
+          hs.mouse.absolutePosition(pt)
+          hs.eventtap.leftClick(pt)
+        end)
+      end
       return
     end
   end
-  spaces.focus("remote")
+
+  if g.label then spaces.focus(g.label) end
 end
 
 return M

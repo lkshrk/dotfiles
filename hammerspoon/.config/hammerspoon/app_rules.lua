@@ -2,24 +2,32 @@ local config = require("config")
 local spaces = require("spaces")
 local M = {}
 
-local vivaldiCount = 0
+-- Per-app spawn counter. Only used when a rule is a list (Nth window → Nth
+-- label). List-form rules are currently a Topaz-only concern (Vivaldi).
+local counters = {}
+
+local function resolveLabel(appName)
+  local rule = config.appRules[appName]
+  if type(rule) == "string" then
+    return rule
+  end
+  if type(rule) == "table" then
+    counters[appName] = (counters[appName] or 0) + 1
+    local idx = counters[appName]
+    return rule[idx] or rule[#rule]
+  end
+  return nil
+end
 
 local function placeWindow(win, appName)
-  local label = config.appRules[appName]
-
-  -- Vivaldi launches two windows; first goes to comms, second to stack.
-  if appName == "Vivaldi" then
-    vivaldiCount = vivaldiCount + 1
-    label = (vivaldiCount == 1) and "comms" or "stack"
-  end
-
+  local label = resolveLabel(appName)
   if not label then return end
   local id = spaces.id(label)
   if id then hs.spaces.moveWindowToSpace(win, id) end
 end
 
 function M.applyToExisting()
-  vivaldiCount = 0
+  counters = {}
   for _, w in ipairs(hs.window.allWindows()) do
     local app = w:application() and w:application():name() or ""
     placeWindow(w, app)

@@ -56,4 +56,35 @@ function M.focus(appName)
   if nextWin then nextWin:focus() end
 end
 
+-- Cycle focus across a list of apps. Each press advances to the next app
+-- (wrapping). Non-running apps are skipped during cycling; if none are
+-- running, the first app in the list is launched. Within a single app,
+-- the normal window-cycle from M.focus takes over.
+function M.focusMany(apps)
+  if #apps == 0 then return end
+  if #apps == 1 then return M.focus(apps[1]) end
+
+  local current = hs.application.frontmostApplication()
+  local currentName = current and current:name() or ""
+
+  local startIdx = 1
+  for i, name in ipairs(apps) do
+    if name == currentName then
+      startIdx = (i % #apps) + 1
+      break
+    end
+  end
+
+  for offset = 0, #apps - 1 do
+    local idx = ((startIdx - 1 + offset) % #apps) + 1
+    local name = apps[idx]
+    if hs.application.find(name) then
+      M.focus(name)
+      return
+    end
+  end
+
+  hs.application.launchOrFocus(apps[1])
+end
+
 return M
