@@ -113,10 +113,5 @@
   },
   "experimental": {
     "preemptive_compaction": true
-  },
-  "_migrations": [
-    "model-version:anthropic/claude-sonnet-4-5->anthropic/claude-sonnet-4-6",
-    "model-version:openai/gpt-5.3-codex->openai/gpt-5.4",
-    "model-version:openai/gpt-5.3-codex->openai/gpt-5.4"
-  ]
+  }
 }

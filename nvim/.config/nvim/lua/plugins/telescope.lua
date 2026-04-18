@@ -26,19 +26,48 @@ return {
       if ts_parsers.get_parser == nil then
         ts_parsers.get_parser = function(bufnr, lang)
           local ok, parser = pcall(vim.treesitter.get_parser, bufnr, lang)
-          return ok and parser or nil
+          if not ok or not parser then
+            return nil
+          end
+          -- Telescope hands the raw parser straight to
+          -- `vim.treesitter.highlighter.new`, which indexes the parser's
+          -- internal tree. Force a parse first so the tree exists.
+          pcall(parser.parse, parser)
+          return parser
         end
       end
     end
 
     if not package.loaded['nvim-treesitter.configs'] then
       package.loaded['nvim-treesitter.configs'] = {
-        is_enabled = function(_, lang, _)
-          if not lang or lang == '' then
+        -- Telescope calls this before creating the treesitter highlighter.
+        -- We must return false in any case where the highlighter would then
+        -- fail — otherwise `highlighter.lua` blows up on a nil tree. Guard:
+        --   1. lang must be non-empty
+        --   2. parser must load for that lang
+        --   3. a parser must be obtainable for the buffer and actually parse
+        is_enabled = function(_, lang, bufnr)
+          if type(lang) ~= 'string' or lang == '' then
             return false
           end
-          local ok = pcall(vim.treesitter.language.add, lang)
-          return ok
+          if not pcall(vim.treesitter.language.add, lang) then
+            return false
+          end
+          local buf = bufnr or 0
+          if not vim.api.nvim_buf_is_valid(buf) then
+            return false
+          end
+          local ok_parser, parser = pcall(vim.treesitter.get_parser, buf, lang)
+          if not ok_parser or not parser then
+            return false
+          end
+          local ok_parse, trees = pcall(function()
+            return parser:parse()
+          end)
+          if not ok_parse or type(trees) ~= 'table' or #trees == 0 then
+            return false
+          end
+          return true
         end,
         get_module = function(_)
           return { additional_vim_regex_highlighting = false }

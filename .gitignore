@@ -19,6 +19,7 @@ Temporary Items
 
 # Claude Code project-local settings (NOT the stowed package below)
 /.claude/
+.omc/
 
 # brew — generated Brewfile (install.sh concatenates base + active modules)
 brew/.config/homebrew/Brewfile.generated
