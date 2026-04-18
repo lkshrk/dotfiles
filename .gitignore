@@ -30,6 +30,24 @@ zsh/.config/zsh/.zsh_history
 
 # nvim
 nvim/.config/nvim/lazy-lock.json
+nvim/.config/nvim/LICENSE.md
+nvim/.config/nvim/README.md
+
+# opencode — runtime auto-saved backups
+opencode/.config/opencode/*.backup-*
+opencode/.config/opencode/*.bak.*
+
+acli/.config/acli/
+cagent/.config/cagent/
+configstore/.config/configstore/
+github-copilot/.config/github-copilot/
+karabiner/.config/karabiner/
+llmctl/.config/llmctl/
+mole/.config/mole/
+moshi/.config/moshi/
+talos/.config/talos/
+ttllm/.config/ttllm/
+com.corsair/.config/com.corsair/
 
 # gh — contains auth token
 gh/.config/gh/hosts.yml
@@ -44,6 +62,7 @@ zed/.config/zed/settings_backup.json
 # Everything else under ~/.claude is runtime/state and ignored:
 claude/.claude/*
 !claude/.claude/settings.json
+!claude/.claude/statusline-command.sh
 !claude/.claude/plugins/
 claude/.claude/plugins/*
 !claude/.claude/plugins/installed_plugins.json

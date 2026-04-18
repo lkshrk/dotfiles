@@ -42,42 +42,43 @@ dotsync() {
   bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/sync.sh" "$@"
 }
 
-# --- brew wrapper: refresh yabai sudoers after install/upgrade --------------
-# yabai's --load-sa sudoers entry pins the binary's SHA256, so it must be
-# rewritten after any brew action that may have replaced the yabai binary.
-# Wrapping `brew` itself catches every path: `bu`, `brew upgrade yabai`,
-# `brew bundle`, `brew install yabai`, …
-brew() {
-  local pre_hash="" post_hash="" yabai_path
-  case "${1:-}" in
-    install|upgrade|reinstall|bundle)
-      yabai_path=$(command -v yabai 2>/dev/null) || true
-      [[ -n "$yabai_path" ]] && pre_hash=$(shasum -a 256 "$yabai_path" 2>/dev/null | cut -d' ' -f1)
-      ;;
-  esac
+# Show repo drift + new $HOME files that are not gitignored.
+dotcheck() {
+  bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/drift-check.sh" --list "$@"
+}
 
+# Start tracking a $HOME file: moves it into the repo and restows.
+# Usage: dottrack ~/.config/aerospace/aerospace.toml [package]
+dottrack() {
+  bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/track.sh" "$@"
+}
+
+# --- brew wrapper: refresh yabai sudoers after install/upgrade --------------
+# yabai's --load-sa sudoers entry pins the binary's SHA256. After any brew
+# action that could have replaced the yabai binary (install / upgrade /
+# reinstall / bundle), invoke update_sudoers.sh. The script is idempotent —
+# no sudo prompt, no output when the hash is already current.
+brew() {
   command brew "$@"
   local rc=$?
 
   case "${1:-}" in
     install|upgrade|reinstall|bundle)
-      yabai_path=$(command -v yabai 2>/dev/null) || true
-      [[ -n "$yabai_path" ]] && post_hash=$(shasum -a 256 "$yabai_path" 2>/dev/null | cut -d' ' -f1)
       local script="$HOME/.config/yabai/update_sudoers.sh"
-      # Only refresh when the yabai binary actually changed (install or upgrade).
-      if [[ -n "$pre_hash" && -n "$post_hash" && "$pre_hash" != "$post_hash" && -x "$script" ]]; then
-        print -u2 ""
-        print -u2 "\033[33m── yabai binary changed — refreshing sudoers entry ──\033[0m"
-        "$script"
-        if command -v csrutil >/dev/null 2>&1; then
-          local sip_status
-          sip_status=$(csrutil status 2>/dev/null)
-          if [[ "$sip_status" != *"disabled"* && "$sip_status" != *"Custom Configuration"* ]]; then
-            print -u2 ""
-            print -u2 "\033[33m! yabai --load-sa requires SIP partially disabled.\033[0m"
-            print -u2 "\033[33m  Boot to recovery → Terminal:\033[0m"
-            print -u2 "\033[33m  csrutil disable --with-kext --with-dtrace --with-nvram --with-basesystem\033[0m"
-          fi
+      [[ -x "$script" ]] || return $rc
+      command -v yabai >/dev/null 2>&1 || return $rc
+      local out
+      out=$("$script" 2>&1) || true
+      [[ -n "$out" ]] || return $rc
+      print -u2 ""
+      print -u2 "\033[33m$out\033[0m"
+      if command -v csrutil >/dev/null 2>&1; then
+        local sip_status
+        sip_status=$(csrutil status 2>/dev/null)
+        if [[ "$sip_status" != *"disabled"* && "$sip_status" != *"Custom Configuration"* ]]; then
+          print -u2 "\033[33m! yabai --load-sa requires SIP partially disabled.\033[0m"
+          print -u2 "\033[33m  Boot to recovery → Terminal:\033[0m"
+          print -u2 "\033[33m  csrutil disable --with-kext --with-dtrace --with-nvram --with-basesystem\033[0m"
         fi
       fi
       ;;

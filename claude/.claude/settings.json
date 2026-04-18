@@ -1,5 +1,22 @@
 {
-  "model": "opus[1m]",
+  "env": {
+    "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1",
+    "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet[1m]",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "WebSearch(*)",
+      "WebFetch(*)",
+      "mcp__web-search-prime__web_search_prime",
+      "mcp__web-reader__webReader",
+      "mcp__plugin_everything-claude-code_context7__resolve-library-id",
+      "mcp__plugin_everything-claude-code_context7__query-docs",
+      "mcp__plugin_everything-claude-code_exa__web_search_exa",
+      "mcp__plugin_everything-claude-code_exa__web_fetch_exa"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -376,22 +393,21 @@
     ],
     "Notification": [
       {
+        "matcher": "permission_prompt|idle_prompt",
         "hooks": [
           {
             "type": "command",
             "command": "bash /Users/lkshrk/.claude/scripts/moshi-if-locked.sh # moshi-hooks (screen-lock gated)",
             "async": true
           }
-        ],
-        "matcher": "permission_prompt|idle_prompt"
+        ]
       }
     ]
   },
   "statusLine": {
     "type": "command",
-    "command": "bash /Users/lkshrk/.claude/statusline-command.sh"
+    "command": "node ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hud/omc-hud.mjs"
   },
-  "agent": "general-purpose",
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true,
     "everything-claude-code@everything-claude-code": true,
@@ -401,7 +417,8 @@
     "bubbletea-maintenance@human-frontier-labs-marketplace": false,
     "bubbletea-designer@human-frontier-labs-marketplace": false,
     "swift-lsp@claude-plugins-official": false,
-    "shadcn-dev@functional-claude": false
+    "shadcn-dev@functional-claude": false,
+    "oh-my-claudecode@omc": true
   },
   "extraKnownMarketplaces": {
     "everything-claude-code": {
@@ -433,24 +450,14 @@
         "source": "github",
         "repo": "nthplusio/functional-claude"
       }
+    },
+    "omc": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
+      }
     }
   },
   "effortLevel": "high",
-  "env": {
-    "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1",
-    "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet[1m]"
-  },
-  "permissions": {
-    "allow": [
-      "WebSearch(*)",
-      "WebFetch(*)",
-      "mcp__web-search-prime__web_search_prime",
-      "mcp__web-reader__webReader",
-      "mcp__plugin_everything-claude-code_context7__resolve-library-id",
-      "mcp__plugin_everything-claude-code_context7__query-docs",
-      "mcp__plugin_everything-claude-code_exa__web_search_exa",
-      "mcp__plugin_everything-claude-code_exa__web_fetch_exa"
-    ]
-  }
+  "agent": "general-purpose"
 }

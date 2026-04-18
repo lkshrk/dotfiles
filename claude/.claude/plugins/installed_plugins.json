@@ -96,6 +96,16 @@
         "lastUpdated": "2026-04-15T11:53:13.731Z",
         "gitCommitSha": "4ad9c1725ba84ba8d70f4dac244cc1ff5b90f1be"
       }
+    ],
+    "oh-my-claudecode@omc": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/omc/oh-my-claudecode/4.12.0",
+        "version": "4.12.0",
+        "installedAt": "2026-04-18T06:36:55.293Z",
+        "lastUpdated": "2026-04-18T06:36:55.293Z",
+        "gitCommitSha": "a15b41fc418190f97f7e28f9086bd1c43185ecab"
+      }
     ]
   }
 }

@@ -9,10 +9,10 @@
 #   ~/.cache/zsh/dotfiles-drift-check  # "yes"|"no", refreshed by drift-check.sh
 #
 # Strategy (fast path first):
-#   1. If age < 30d → silent return (~80 µs, zsh builtins, zero forks).
-#   2. If age ≥ 30d and drift cache is stale (>24h) → fire drift-check.sh
+#   1. If age < 7d → silent return (~80 µs, zsh builtins, zero forks).
+#   2. If age ≥ 7d and drift cache is stale (>24h) → fire drift-check.sh
 #      in the background (`&!`), detach, and exit. Next shell reads result.
-#   3. If age ≥ 30d and cache says "yes" → print reminder.
+#   3. If age ≥ 7d and cache says "yes" → print reminder.
 #      If cache says "no" → stay quiet (repo is already clean).
 
 () {
@@ -33,7 +33,7 @@
 
   local now=${EPOCHSECONDS:-$(date +%s)}
   local age=$(( (now - last) / 86400 ))
-  (( age < 30 )) && return
+  (( age < 7 )) && return
 
   if [[ -f $drift ]] && zstat -A st +mtime -- $drift 2>/dev/null; then
     drift_mtime=$st[1]
@@ -49,5 +49,5 @@
 
   [[ $drift_value == "yes" ]] || return
 
-  print -P "%F{yellow}⚠  dotfiles last synced ${age}d ago, drift detected — run %F{cyan}dotsync%F{yellow} to update.%f"
+  print -P "%F{yellow}⚠  dotfiles last synced ${age}d ago, drift detected — run %F{cyan}dotcheck%F{yellow} to inspect, %F{cyan}dotsync%F{yellow} to update.%f"
 }
