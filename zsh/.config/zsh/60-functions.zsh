@@ -64,27 +64,20 @@ brew() {
       yabai_path=$(command -v yabai 2>/dev/null) || true
       [[ -n "$yabai_path" ]] && post_hash=$(shasum -a 256 "$yabai_path" 2>/dev/null | cut -d' ' -f1)
       local script="$HOME/.config/yabai/update_sudoers.sh"
-      if [[ -n "$post_hash" && -x "$script" ]]; then
-        # Binary changed (install or upgrade) → refresh sudoers + warn about SIP
-        if [[ "$pre_hash" != "$post_hash" ]]; then
-          print -u2 ""
-          print -u2 "\033[33m── yabai binary changed — refreshing sudoers entry ──\033[0m"
-          "$script"
-          # SIP must be partially disabled for --load-sa to actually load
-          if command -v csrutil >/dev/null 2>&1; then
-            local sip_status
-            sip_status=$(csrutil status 2>/dev/null)
-            if [[ "$sip_status" != *"disabled"* && "$sip_status" != *"Custom Configuration"* ]]; then
-              print -u2 ""
-              print -u2 "\033[33m! yabai --load-sa requires SIP partially disabled.\033[0m"
-              print -u2 "\033[33m  Boot to recovery → Terminal:\033[0m"
-              print -u2 "\033[33m  csrutil disable --with-kext --with-dtrace --with-nvram --with-basesystem\033[0m"
-            fi
+      # Only refresh when the yabai binary actually changed (install or upgrade).
+      if [[ -n "$pre_hash" && -n "$post_hash" && "$pre_hash" != "$post_hash" && -x "$script" ]]; then
+        print -u2 ""
+        print -u2 "\033[33m── yabai binary changed — refreshing sudoers entry ──\033[0m"
+        "$script"
+        if command -v csrutil >/dev/null 2>&1; then
+          local sip_status
+          sip_status=$(csrutil status 2>/dev/null)
+          if [[ "$sip_status" != *"disabled"* && "$sip_status" != *"Custom Configuration"* ]]; then
+            print -u2 ""
+            print -u2 "\033[33m! yabai --load-sa requires SIP partially disabled.\033[0m"
+            print -u2 "\033[33m  Boot to recovery → Terminal:\033[0m"
+            print -u2 "\033[33m  csrutil disable --with-kext --with-dtrace --with-nvram --with-basesystem\033[0m"
           fi
-        # Binary unchanged but sudoers drifted (e.g. first install) → quiet refresh
-        elif ! "$script" --check --quiet; then
-          print -u2 "yabai: sudoers entry stale — refreshing"
-          "$script"
         fi
       fi
       ;;

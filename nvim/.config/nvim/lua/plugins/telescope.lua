@@ -12,6 +12,40 @@ return {
     { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
   },
   config = function()
+    -- Shim: telescope 0.1.x previewer calls nvim-treesitter.parsers.{ft_to_lang,
+    -- get_parser} and nvim-treesitter.configs.{is_enabled,get_module}, which
+    -- were removed in nvim-treesitter's main-branch rewrite. Inject fallbacks
+    -- via package.loaded before telescope's previewer utils are required.
+    local ok_p, ts_parsers = pcall(require, 'nvim-treesitter.parsers')
+    if ok_p and type(ts_parsers) == 'table' then
+      if ts_parsers.ft_to_lang == nil then
+        ts_parsers.ft_to_lang = function(ft)
+          return vim.treesitter.language.get_lang(ft) or ft
+        end
+      end
+      if ts_parsers.get_parser == nil then
+        ts_parsers.get_parser = function(bufnr, lang)
+          local ok, parser = pcall(vim.treesitter.get_parser, bufnr, lang)
+          return ok and parser or nil
+        end
+      end
+    end
+
+    if not package.loaded['nvim-treesitter.configs'] then
+      package.loaded['nvim-treesitter.configs'] = {
+        is_enabled = function(_, lang, _)
+          if not lang or lang == '' then
+            return false
+          end
+          local ok = pcall(vim.treesitter.language.add, lang)
+          return ok
+        end,
+        get_module = function(_)
+          return { additional_vim_regex_highlighting = false }
+        end,
+      }
+    end
+
     local actions = require 'telescope.actions'
 
     require('telescope').setup {
