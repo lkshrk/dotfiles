@@ -108,9 +108,10 @@ cask "the-unarchiver"
 
 cask "obsidian"
 
-cask "claude-code@latest"
 
 mas "Bitwarden", id: 1352778147
 
 uv "flux-local"
 krew "browse-pvc"
+brew "tree-sitter-cli"
+tap "homebrew/core"

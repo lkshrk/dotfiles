@@ -3,3 +3,10 @@
 brew "sops"
 
 cask "brave-browser"
+brew "cilium-cli"
+brew "krew"
+brew "shellcheck"
+brew "subversion"
+cask "flux-markdown"
+cask "google-chrome"
+brew "node"
