@@ -47,8 +47,25 @@ Host overrides live in `hosts/<hostname>.conf` and
 `config_shared.lua` is deep-merged with the host config at runtime;
 per-key overrides win on conflict.
 
+**Brew modules:** Host configs declare a `BREW_MODULES` array that determines
+which Brewfile.<module> files to load beyond the baseline. Available modules:
+
+| Module    | Packages                                                       |
+| --------- | -------------------------------------------------------------- |
+| `desktop` | yabai, skhd-zig, cliclick, karabiner (tiling + input)           |
+| `ai`      | llama.cpp, mlx-lm, mistral-vibe, chatgpt, python@3.14           |
+| `streaming` | obs, plex, parsec, elgato-stream-deck, elgato-wave-link    |
+| `chat`    | discord, telegram (beyond baseline signal)                      |
+| `iwork`   | MAS iMovie, Keynote, Numbers, Pages, Xcode                      |
+| `misc`    | sops, brave-browser                                             |
+
+Example `hosts/Topaz.conf`:
+```sh
+BREW_MODULES=(desktop ai streaming chat iwork misc)
+```
+
 Supported hosts: `Topaz`, `APM3LJHMVG7XGCF`. Unknown hosts fall back to
-`default`.
+`default` (baseline only).
 
 ## Day-to-day
 
@@ -57,7 +74,7 @@ Three commands cover the whole loop:
 ```sh
 dotcheck                # list repo drift + untracked $HOME candidates
 dottrack <path> [pkg]   # start tracking a $HOME file: mv into repo + restow + stage
-dotsync                 # absorb drift on already-tracked files, restow, auto-commit
+dotsync [brew|config]   # sync brew packages and/or config files, auto-commit
 ```
 
 `dotsync` does **not** pull in new files — that's `dottrack`'s job. Typical flow:
@@ -66,14 +83,25 @@ dotsync                 # absorb drift on already-tracked files, restow, auto-co
 2. New file you want tracked? `dottrack ~/.config/foo/bar.toml`.
 3. `dotsync` to absorb any atomic-write drift and commit.
 
-`dotsync` flags: `--dry-run`, `--no-commit`, `--yes`.
+**Usage:**
+- `dotsync` — sync both brew packages and config files
+- `dotsync brew` — only sync brew packages (interactive Brewfile sync)
+- `dotsync config` — only sync config files (drift-absorb + restow + commit)
 
-Phases of `dotsync`:
+**Flags (passed through to underlying scripts):**
+- `--dry-run` / `-n` — report only, no writes, no commit
+- `--no-commit` — absorb + restow only, leave changes staged
+- `--yes` / `-y` — no prompts (useful in hooks)
 
+**Config sync phases:**
 1. **Adopt drift** — `stow --adopt` absorbs any tracked file that got
    clobbered into a real file. Shows a diff and prompts before keeping.
 2. **Restow** — recreate symlinks.
 3. **Commit** — auto-commit staged changes.
+
+**Brew sync phases:**
+1. **Installed but not tracked** — prompts which Brewfile to add each package to
+2. **In Brewfile but not installed** — prompts to install OR remove from Brewfile
 
 ## Sync reminder (optional)
 
@@ -104,7 +132,8 @@ quiets immediately after a successful sync.
 ```
 install.sh               # idempotent installer
 scripts/
-  sync.sh                # dotsync: drift-absorb + restow + commit
+  sync.sh                # dotync config: drift-absorb + restow + commit
+  sync-brewfile.zsh      # dotync brew: interactive Brewfile sync
   track.sh               # dottrack: move a $HOME file into the repo
   drift-check.sh         # dotcheck: list drift + untracked candidates
   pre-push-sync.sh       # lefthook hook

@@ -27,8 +27,38 @@ csh() {
 # Title is set by LocalCommand in ssh config.
 ssh() { command ssh -F "$HOME/.config/ssh/config" "$@"; }
 
+# dotsync — sync dotfiles (config) and/or brew packages
+# Usage: dotsync [brew|config] [options]
+#   No args: sync both brew and config
+#   brew: only sync brew packages
+#   config: only sync config files
+#   Additional args passed through to sync scripts (e.g. --yes, --dry-run)
 dotsync() {
-  bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/sync.sh" "$@"
+  local dotfiles="${DOTFILES_DIR:-$HOME/Dev/dotfiles}"
+  local mode="${1:-}"
+  shift 2>/dev/null || true
+
+  # Pass through additional arguments
+  local args=("$@")
+
+  if [[ -z "$mode" ]]; then
+    # No mode specified: run both
+    echo "=== Syncing brew packages ==="
+    zsh "$dotfiles/scripts/sync-brewfile.zsh" "${args[@]}"
+    echo
+    echo "=== Syncing config files ==="
+    bash "$dotfiles/scripts/sync.sh" "${args[@]}"
+  elif [[ "$mode" == "brew" ]]; then
+    # Only brew
+    zsh "$dotfiles/scripts/sync-brewfile.zsh" "${args[@]}"
+  elif [[ "$mode" == "config" ]]; then
+    # Only config
+    bash "$dotfiles/scripts/sync.sh" "${args[@]}"
+  else
+    echo "Unknown mode: $mode" >&2
+    echo "Usage: dotsync [brew|config] [options]" >&2
+    return 1
+  fi
 }
 
 # Show repo drift + new $HOME files that are not gitignored.

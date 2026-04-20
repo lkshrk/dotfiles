@@ -121,11 +121,44 @@ return {
             },
           },
         },
+        yamlls = {
+          settings = {
+            yaml = {
+              validate = true,
+              completion = true,
+              schemaStore = {
+                enable = true,
+                url = 'https://www.schemastore.org/api/json/catalog.json',
+              },
+              schemas = {},
+            },
+          },
+        },
+        jsonls = {
+          settings = {
+            json = {
+              validate = {
+                enable = true,
+              },
+              schemas = {},
+            },
+          },
+        },
+        taplo = {
+          settings = {
+            taplo = {
+              schemas = {},
+            },
+          },
+        },
       }
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua',
+        'yamlls',
+        'jsonls',
+        'taplo',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
