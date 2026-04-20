@@ -106,6 +106,15 @@
         "lastUpdated": "2026-04-18T06:36:55.293Z",
         "gitCommitSha": "a15b41fc418190f97f7e28f9086bd1c43185ecab"
       }
+    ],
+    "frontend-design@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/frontend-design/unknown",
+        "version": "unknown",
+        "installedAt": "2026-04-19T00:07:21.839Z",
+        "lastUpdated": "2026-04-19T00:07:21.839Z"
+      }
     ]
   }
 }

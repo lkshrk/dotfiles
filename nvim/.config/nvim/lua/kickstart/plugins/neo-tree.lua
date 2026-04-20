@@ -14,6 +14,21 @@ return {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
+    default_component_configs = {
+      git_status = {
+        symbols = {
+          added = '+',
+          modified = '~',
+          deleted = '✖',
+          renamed = '➜',
+          untracked = '?',
+          ignored = '◌',
+          unstaged = '○',
+          staged = '●',
+          conflict = '',
+        },
+      },
+    },
     filesystem = {
       window = {
         mappings = {

@@ -13,4 +13,4 @@ Host hetzner
 Host *
   AddKeysToAgent yes
   PermitLocalCommand yes
-  LocalCommand printf '\033]2;%n@%h\007'
+  LocalCommand printf '\033]2;%n\007'

@@ -8,5 +8,7 @@ return {
       topdelete = { text = '‾' },
       changedelete = { text = '~' },
     },
+    -- Highlight line numbers for changed lines
+    numhl = true,
   },
 }

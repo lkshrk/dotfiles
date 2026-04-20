@@ -23,20 +23,9 @@ csh() {
   kubectl run -it --rm --restart=Never --image=busybox tmp-shell -n "$ns" -- sh
 }
 
-# --- ssh wrapper — set terminal title, use ~/.config/ssh/config -------------
-ssh() {
-  local target user host
-  for arg in "$@"; do
-    [[ "$arg" != -* ]] && target="$arg"
-  done
-  if [[ "$target" == *"@"* ]]; then
-    user="${target%@*}"; host="${target#*@}"
-  else
-    user="$USER"; host="$target"
-  fi
-  printf '\033]2;%s@%s\007' "$user" "$host"
-  command ssh -F "$HOME/.config/ssh/config" "$@"
-}
+# --- ssh wrapper — use ~/.config/ssh/config ----------------------------------
+# Title is set by LocalCommand in ssh config.
+ssh() { command ssh -F "$HOME/.config/ssh/config" "$@"; }
 
 dotsync() {
   bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/sync.sh" "$@"
