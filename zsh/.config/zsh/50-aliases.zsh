@@ -12,7 +12,13 @@ alias bu='brew update && brew upgrade'
 alias fr='flux reconcile '
 
 # git
-function ga { [[ $# -eq 0 ]] && git add . || git add "$@"; }
+function ga() {
+  if [[ $# -eq 0 ]]; then
+    git add .
+  else
+    git add "$@"
+  fi
+}
 alias gcm='git commit -m'
 alias gco='git checkout'
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
