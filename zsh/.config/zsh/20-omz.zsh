@@ -2,7 +2,6 @@
 ZSH_THEME="robbyrussell"
 
 plugins=(
-  git
   extract
   zsh-autosuggestions
   zsh-syntax-highlighting   # must stay last
