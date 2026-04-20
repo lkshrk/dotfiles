@@ -5,6 +5,9 @@
 
 set -euo pipefail
 
+# Disable auto-continue - prompt for each package individually
+unset LAST_BREWFILE_CHOICE LAST_CHOICE_TYPE
+
 DOTFILES_DIR="$(dirname "$(dirname "$0")")"
 BREWFILE_DIR="$DOTFILES_DIR/brew/.config/homebrew"
 HOSTNAME=$(hostname)
@@ -62,10 +65,30 @@ for bf in "${all_brewfiles[@]}"; do
   for f in ${(f)formulae}; do
     brewfile_packages[brew:$f]=1
     brewfile_package_source[brew:$f]="$bf"
+    # If formula has tap prefix (e.g., "atlassian/acli/acli"), mark tap as tracked
+    if [[ "$f" =~ "^([^/]+)/([^/]+)/" ]]; then
+      local tap_name="${match[1]}/${match[2]}"
+      brewfile_packages[tap:$tap_name]=1
+      brewfile_package_source[tap:$tap_name]="$bf"
+      # Also store base name
+      local base_name="${f##*/}"
+      brewfile_packages[brew:$base_name]=1
+      brewfile_package_source[brew:$base_name]="$bf"
+    fi
   done
   for c in ${(f)casks}; do
     brewfile_packages[cask:$c]=1
     brewfile_package_source[cask:$c]="$bf"
+    # If cask has tap prefix, mark tap as tracked
+    if [[ "$c" =~ "^([^/]+)/([^/]+)/" ]]; then
+      local tap_name="${match[1]}/${match[2]}"
+      brewfile_packages[tap:$tap_name]=1
+      brewfile_package_source[tap:$tap_name]="$bf"
+      # Also store base name
+      local base_name="${c##*/}"
+      brewfile_packages[cask:$base_name]=1
+      brewfile_package_source[cask:$base_name]="$bf"
+    fi
   done
   for t in ${(f)taps}; do
     brewfile_packages[tap:$t]=1
@@ -73,12 +96,41 @@ for bf in "${all_brewfiles[@]}"; do
   done
 done
 
-# Get installed packages
-installed_formulae=$(brew leaves --installed-on-request 2>/dev/null | sort -u)
-installed_casks=$(brew list --cask --quiet 2>/dev/null | sort -u)
-installed_taps=$(brew tap --quiet 2>/dev/null | sort -u)
+# Get installed packages using brew bundle dump (clean and accurate)
+TEMP_BREWFILE=$(mktemp)
+trap "rm -f $TEMP_BREWFILE" EXIT
+rm -f "$TEMP_BREWFILE"  # Remove empty file so brew bundle dump can create it
 
-# Find missing packages
+brew bundle dump --file "$TEMP_BREWFILE" 2>/dev/null || true
+
+# Parse the dumped Brewfile
+installed_formulae=$(grep -E '^brew "' "$TEMP_BREWFILE" 2>/dev/null | sed 's/brew "//' | sed 's/"$//' | sed 's/".*//' | sort -u)
+installed_casks=$(grep -E '^cask "' "$TEMP_BREWFILE" 2>/dev/null | sed 's/cask "//' | sed 's/"$//' | sort -u)
+installed_taps=$(grep -E '^tap "' "$TEMP_BREWFILE" 2>/dev/null | sed 's/tap "//' | sed 's/"$//' | sort -u)
+
+# Build lookup maps for installed packages
+typeset -A installed_formulae_map installed_casks_map installed_taps_map
+for f in ${(f)installed_formulae}; do
+  installed_formulae_map[$f]=1
+  # Also store base name for tap-prefixed packages
+  if [[ "$f" =~ "^([^/]+)/([^/]+)/" ]]; then
+    local base_name="${f##*/}"
+    installed_formulae_map[$base_name]=1
+  fi
+done
+for c in ${(f)installed_casks}; do
+  installed_casks_map[$c]=1
+  # Also store base name for tap-prefixed packages
+  if [[ "$c" =~ "^([^/]+)/([^/]+)/" ]]; then
+    local base_name="${c##*/}"
+    installed_casks_map[$base_name]=1
+  fi
+done
+for t in ${(f)installed_taps}; do
+  installed_taps_map[$t]=1
+done
+
+# Find missing packages (installed but not in Brewfiles)
 typeset -a missing_formulae missing_casks missing_taps
 
 for f in ${(f)installed_formulae}; do
@@ -90,8 +142,12 @@ for c in ${(f)installed_casks}; do
 done
 
 for t in ${(f)installed_taps}; do
+  # Skip default taps
+  [[ "$t" == "homebrew/core" ]] && continue
+  [[ "$t" == "homebrew/cask" ]] && continue
   (( ${+brewfile_packages[tap:$t]} )) || missing_taps+=("$t")
 done
+
 
 # Find packages in Brewfiles but not installed
 typeset -a uninstalled_formulae uninstalled_casks uninstalled_taps
@@ -105,27 +161,39 @@ for bf in "${all_brewfiles[@]}"; do
   local taps=$(grep -E '^tap "' "$file" 2>/dev/null | sed 's/tap "//' | sed 's/"$//' | sort -u)
 
   for f in ${(f)formulae}; do
-    if [[ ! " ${(f)installed_formulae} " =~ " $f " ]]; then
-      uninstalled_formulae+=("$f|$bf")
-    fi
+    (( ${+installed_formulae_map[$f]} )) || uninstalled_formulae+=("$f|$bf")
   done
 
   for c in ${(f)casks}; do
-    if [[ ! " ${(f)installed_casks} " =~ " $c " ]]; then
-      uninstalled_casks+=("$c|$bf")
-    fi
+    (( ${+installed_casks_map[$c]} )) || uninstalled_casks+=("$c|$bf")
   done
 
   for t in ${(f)taps}; do
-    if [[ ! " ${(f)installed_taps} " =~ " $t " ]]; then
-      uninstalled_taps+=("$t|$bf")
-    fi
+    # Skip default taps
+    [[ "$t" == "homebrew/core" ]] && continue
+    [[ "$t" == "homebrew/cask" ]] && continue
+    (( ${+installed_taps_map[$t]} )) || uninstalled_taps+=("$t|$bf")
   done
 done
 
 # Count totals
-missing_count=${#missing_formulae}+${#missing_casks}+${#missing_taps}
-uninstalled_count=${#uninstalled_formulae}+${#uninstalled_casks}+${#uninstalled_taps}
+missing_count=$((${#missing_formulae}+${#missing_casks}+${#missing_taps}))
+uninstalled_count=$((${#uninstalled_formulae}+${#uninstalled_casks}+${#uninstalled_taps}))
+
+# Count total tracked packages for sync stats
+tracked_formulae=0
+tracked_casks=0
+tracked_taps=0
+for key in ${(k)brewfile_packages}; do
+  case $key in
+    brew:*) ((tracked_formulae++)) ;;
+    cask:*) ((tracked_casks++)) ;;
+    tap:*) ((tracked_taps++)) ;;
+  esac || true
+done
+
+# Count packages that are in sync (tracked AND installed)
+in_sync_count=$((tracked_formulae - ${#uninstalled_formulae} + tracked_casks - ${#uninstalled_casks} + tracked_taps - ${#uninstalled_taps}))
 
 if [[ $missing_count -eq 0 && $uninstalled_count -eq 0 ]]; then
   echo "✅ Brewfiles are fully in sync with installed packages!"
@@ -133,7 +201,8 @@ if [[ $missing_count -eq 0 && $uninstalled_count -eq 0 ]]; then
 fi
 
 echo "📊 Sync Summary:"
-[[ $missing_count -gt 0 ]] && echo "  → $missing_count package(s) installed but not tracked"
+echo "  → $in_sync_count package(s) in sync"
+[[ $missing_count -gt 0 ]] && echo "  → $missing_count package(s) installed but not in Brewfiles"
 [[ $uninstalled_count -gt 0 ]] && echo "  → $uninstalled_count package(s) in Brewfiles but not installed"
 echo
 
@@ -145,14 +214,16 @@ prompt_brewfile_choice() {
   # Show package info
   case $type in
     brew)
-      local info=$(brew info "$package" 2>/dev/null | head -1)
+      local info=$(brew info "$package" 2>/dev/null)
+      local desc=$(echo "$info" | sed -n '2p' | sed 's/:$//' | sed 's/^[[:space:]]*//')
       echo "📌 brew: $package"
-      [[ -n $info ]] && echo "   $info"
+      [[ -n $desc ]] && echo "   $desc"
       ;;
     cask)
-      local info=$(brew info --cask "$package" 2>/dev/null | head -1)
+      local info=$(brew info --cask "$package" 2>/dev/null)
+      local desc=$(echo "$info" | sed -n '2p' | sed 's/:$//' | sed 's/^[[:space:]]*//')
       echo "🍺 cask: $package"
-      [[ -n $info ]] && echo "   $info"
+      [[ -n $desc ]] && echo "   $desc"
       ;;
     tap)
       echo "🔧 tap: $package"
@@ -175,25 +246,75 @@ prompt_brewfile_choice() {
     ((i++))
   done
 
+  echo "  [u] Uninstall from system"
   echo "  [s] Skip"
   echo "  [q] Quit"
   echo
 
   local -A choice_map
   i=1
+  # Build choice_map in the same order as the menu display
+  for bf in "${relevant_brewfiles[@]}"; do
+    choice_map[$i]=$bf
+    ((i++))
+  done
   for bf in "${all_brewfiles[@]}"; do
+    [[ " ${relevant_brewfiles[@]} " =~ " ${bf} " ]] && continue
     choice_map[$i]=$bf
     ((i++))
   done
 
   local choice
   echo -n "Choice: "
-  read -r choice
+  read -k 1 choice  # Read single character without Enter
 
   case $choice in
     [Qq]*)
       echo "   👋 Quitting"
       exit 0
+      ;;
+    [Uu]*)
+      echo "   🗑️  Uninstalling $package..."
+      case $type in
+        brew)
+          if brew uninstall "$package"; then
+            echo "   ✅ Uninstalled"
+          else
+            echo "   ❌ Uninstallation failed"
+          fi
+          ;;
+        cask)
+          if brew uninstall --cask "$package"; then
+            echo "   ✅ Uninstalled"
+          else
+            echo "   ❌ Uninstallation failed"
+          fi
+          ;;
+        tap)
+          # First uninstall any formulae/casks from this tap
+          local tap_packages=$(brew list --formula --quiet | grep "^${package//\//\\/}/" 2>/dev/null || true)
+          local tap_casks=$(brew list --cask --quiet | grep "^${package//\//\\/}/" 2>/dev/null || true)
+
+          if [[ -n "$tap_packages" ]] || [[ -n "$tap_casks" ]]; then
+            echo "   ⚠️  Tap contains installed packages, uninstalling first..."
+            for p in ${(f)tap_packages}; do
+              echo "      → Uninstalling $p..."
+              brew uninstall "$p" 2>/dev/null || true
+            done
+            for c in ${(f)tap_casks}; do
+              echo "      → Uninstalling $c..."
+              brew uninstall --cask "$c" 2>/dev/null || true
+            done
+          fi
+
+          if brew untap "$package"; then
+            echo "   ✅ Untapped"
+          else
+            echo "   ❌ Untap failed"
+          fi
+          ;;
+      esac
+      echo
       ;;
     [Ss]*)
       echo "   ⏭️  Skipped"
@@ -232,14 +353,16 @@ prompt_uninstalled() {
   # Show package info
   case $type in
     brew)
-      local info=$(brew info "$package" 2>/dev/null | head -1)
+      local info=$(brew info "$package" 2>/dev/null)
+      local desc=$(echo "$info" | sed -n '2p' | sed 's/:$//' | sed 's/^[[:space:]]*//')
       echo "📦 brew: $package (in Brewfile.$brewfile but not installed)"
-      [[ -n $info ]] && echo "   $info"
+      [[ -n $desc ]] && echo "   $desc"
       ;;
     cask)
-      local info=$(brew info --cask "$package" 2>/dev/null | head -1)
+      local info=$(brew info --cask "$package" 2>/dev/null)
+      local desc=$(echo "$info" | sed -n '2p' | sed 's/:$//' | sed 's/^[[:space:]]*//')
       echo "🍺 cask: $package (in Brewfile.$brewfile but not installed)"
-      [[ -n $info ]] && echo "   $info"
+      [[ -n $desc ]] && echo "   $desc"
       ;;
     tap)
       echo "🔧 tap: $package (in Brewfile.$brewfile but not tapped)"
@@ -256,7 +379,7 @@ prompt_uninstalled() {
 
   local choice
   echo -n "Choice: "
-  read -r choice
+  read -k 1 choice  # Read single character without Enter
 
   case $choice in
     [Ii]*)
@@ -339,6 +462,13 @@ if [[ $uninstalled_count -gt 0 ]]; then
   echo "=== Phase 2: Packages in Brewfiles but not installed ==="
   echo
 
+  # Taps first (required before formulae/casks can be installed)
+  for item in "${uninstalled_taps[@]}"; do
+    local package="${item%|*}"
+    local brewfile="${item#*|}"
+    prompt_uninstalled "tap" "$package" "$brewfile"
+  done
+
   for item in "${uninstalled_formulae[@]}"; do
     local package="${item%|*}"
     local brewfile="${item#*|}"
@@ -350,12 +480,26 @@ if [[ $uninstalled_count -gt 0 ]]; then
     local brewfile="${item#*|}"
     prompt_uninstalled "cask" "$package" "$brewfile"
   done
-
-  for item in "${uninstalled_taps[@]}"; do
-    local package="${item%|*}"
-    local brewfile="${item#*|}"
-    prompt_uninstalled "tap" "$package" "$brewfile"
-  done
 fi
 
 echo "✨ Done! Review changes with: git diff $BREWFILE_DIR"
+echo
+
+# Check if there are Brewfile changes to commit
+local changed_brewfiles=$(git diff --name-only "$BREWFILE_DIR" 2>/dev/null)
+if [[ -n "$changed_brewfiles" ]]; then
+  # Stage only the changed Brewfiles
+  echo "$changed_brewfiles" | xargs git add 2>/dev/null || true
+
+  # Create commit with today's date
+  local today=$(date +"%Y-%m-%d")
+  local commit_msg="chore(dotsync): brew ($today)"
+
+  if git commit -m "$commit_msg" 2>/dev/null; then
+    echo "✅ Changes committed: $commit_msg"
+  else
+    echo "⚠️  Failed to commit changes (check git status)"
+  fi
+else
+  echo "ℹ️  No Brewfile changes to commit"
+fi
