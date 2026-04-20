@@ -206,6 +206,84 @@ echo "  → $in_sync_count package(s) in sync"
 [[ $uninstalled_count -gt 0 ]] && echo "  → $uninstalled_count package(s) in Brewfiles but not installed"
 echo
 
+# Ask how to proceed
+echo "How would you like to sync?"
+echo "  [a] Install all & add all (automatic)"
+echo "  [d] Decide for each package (interactive)"
+echo
+
+local sync_mode
+echo -n "Choice: "
+read -k 1 sync_mode
+echo
+echo
+
+if [[ "$sync_mode" =~ "[Aa]" ]]; then
+  echo "🚀 Automatic mode: installing all & adding all..."
+  echo
+
+  # Install all uninstalled packages
+  if [[ $uninstalled_count -gt 0 ]]; then
+    echo "=== Installing uninstalled packages ==="
+
+    for item in "${uninstalled_taps[@]}"; do
+      local package="${item%|*}"
+      echo "  → Tapping $package..."
+      brew tap "$package" 2>/dev/null || echo "    ⚠️  Failed to tap $package"
+    done
+
+    for item in "${uninstalled_formulae[@]}"; do
+      local package="${item%|*}"
+      echo "  → Installing brew: $package..."
+      brew install "$package" 2>/dev/null || echo "    ⚠️  Failed to install $package"
+    done
+
+    for item in "${uninstalled_casks[@]}"; do
+      local package="${item%|*}"
+      echo "  → Installing cask: $package..."
+      brew install --cask "$package" 2>/dev/null || echo "    ⚠️  Failed to install $package"
+    done
+
+    echo
+  fi
+
+  # Add all missing packages to relevant Brewfiles
+  if [[ $missing_count -gt 0 ]]; then
+    echo "=== Adding missing packages to Brewfiles ==="
+
+    # Use first relevant Brewfile (or base if none)
+    local target_brewfile="${relevant_brewfiles[1]:-base}"
+    local file="$BREWFILE_DIR/Brewfile.$target_brewfile"
+    echo "  → Adding to Brewfile.$target_brewfile"
+    echo
+
+    for f in "${missing_formulae[@]}"; do
+      echo "brew \"$f\"" >> "$file"
+      echo "  ✅ Added brew: $f"
+    done
+
+    for c in "${missing_casks[@]}"; do
+      echo "cask \"$c\"" >> "$file"
+      echo "  ✅ Added cask: $c"
+    done
+
+    for t in "${missing_taps[@]}"; do
+      echo "tap \"$t\"" >> "$file"
+      echo "  ✅ Added tap: $t"
+    done
+
+    echo
+  fi
+
+  echo "✨ Automatic sync complete!"
+  echo
+  exit 0
+fi
+
+echo "🔍 Interactive mode: deciding for each package..."
+echo
+echo
+
 # Function to prompt for Brewfile selection
 prompt_brewfile_choice() {
   local type=$1
