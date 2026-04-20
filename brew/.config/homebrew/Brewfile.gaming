@@ -1,0 +1,3 @@
+# Brewfile.gaming — games and gaming clients.
+
+cask "battle-net"
