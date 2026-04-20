@@ -88,3 +88,14 @@ sops() {
     h-cloud-age-key   SOPS_AGE_KEY \
     -- command sops "$@"
 }
+
+zai() {
+  ANTHROPIC_DEFAULT_HAIKU_MODEL=glm-4.5-air \
+  ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5-turbo \
+  ANTHROPIC_DEFAULT_OPUS_MODEL=glm-5.1 \
+  ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic \
+  API_TIMEOUT_MS=3000000 \
+  with-secrets \
+    zai-api-key       ANTHROPIC_AUTH_TOKEN \
+    -- command claude "$@"
+}
