@@ -75,12 +75,15 @@ with-secrets() {
 }
 
 claude() {
-  with-secrets \
-    openai-api-key    OPENAI_API_KEY \
-    zai-api-key       ZAI_API_KEY \
-    hf-token          HF_TOKEN \
-    context7-api-key  CONTEXT7_API_KEY \
-    -- command claude "$@"
+  (
+    unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL ANTHROPIC_BASE_URL API_TIMEOUT_MS ANTHROPIC_AUTH_TOKEN
+    with-secrets \
+      openai-api-key    OPENAI_API_KEY \
+      zai-api-key       ZAI_API_KEY \
+      hf-token          HF_TOKEN \
+      context7-api-key  CONTEXT7_API_KEY \
+      -- command claude "$@"
+  )
 }
 
 sops() {
@@ -90,12 +93,16 @@ sops() {
 }
 
 zai() {
-  ANTHROPIC_DEFAULT_HAIKU_MODEL=glm-4.5-air \
-  ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5-turbo \
-  ANTHROPIC_DEFAULT_OPUS_MODEL=glm-5.1 \
-  ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic \
-  API_TIMEOUT_MS=3000000 \
-  with-secrets \
-    zai-api-key       ANTHROPIC_AUTH_TOKEN \
-    -- command claude "$@"
+  (
+    ANTHROPIC_DEFAULT_HAIKU_MODEL=glm-4.5-air \
+    ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5-turbo \
+    ANTHROPIC_DEFAULT_OPUS_MODEL=glm-5.1 \
+    ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic \
+    API_TIMEOUT_MS=3000000 \
+    with-secrets \
+      zai-api-key       ANTHROPIC_AUTH_TOKEN \
+      zai-api-key       ZAI_API_KEY \
+      context7-api-key  CONTEXT7_API_KEY \
+      -- command claude "$@"
+  )
 }
