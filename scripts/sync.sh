@@ -61,26 +61,32 @@ stow_adopt_and_restow() {
     return 0
   fi
 
-  local before
-  before=$(git -C "$DOTFILES_DIR" status --porcelain "$pkg" 2>/dev/null || true)
+  # Check for conflicts before doing anything
+  while IFS= read -r -d '' src; do
+    local rel="${src#$DOTFILES_DIR/$pkg/}"
+    local target="$HOME/$rel"
 
-  stow --adopt --no-folding -t "$HOME" "$pkg" 2>&1 | sed "s/^/  /" || {
-    err "$pkg: stow --adopt failed"
-    return 1
-  }
+    # Skip if target doesn't exist or is already a symlink
+    [[ -e "$target" && ! -L "$target" ]] || continue
 
-  local after
-  after=$(git -C "$DOTFILES_DIR" status --porcelain "$pkg" 2>/dev/null || true)
-
-  if [[ "$before" != "$after" ]]; then
-    warn "$pkg: drift absorbed into repo:"
-    git -C "$DOTFILES_DIR" --no-pager diff --stat "$pkg" | sed "s/^/    /"
-    if ! confirm "  inspect/keep changes for $pkg?"; then
-      warn "  reverting absorbed changes for $pkg"
-      git -C "$DOTFILES_DIR" checkout -- "$pkg"
+    # Check if files differ
+    if ! cmp -s "$src" "$target"; then
+      warn "conflict: $target differs from repo"
+      echo "  repo version: $src"
+      echo "  local version: $target"
+      if ! confirm "  overwrite local version with repo version?"; then
+        info "  keeping local version; skipping $pkg"
+        return 0
+      fi
+      # Back up local version
+      local backup_dir="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+      mkdir -p "$backup_dir/$(dirname "$rel")"
+      cp -p "$target" "$backup_dir/$rel"
+      info "  backed up local version to $backup_dir/$rel"
     fi
-  fi
+  done < <(find "$DOTFILES_DIR/$pkg" -type f -not -path '*/.git/*' -print0)
 
+  # Now safe to restow
   stow -R --no-folding -t "$HOME" "$pkg" 2>&1 | sed "s/^/  /" || {
     err "$pkg: restow failed"
     return 1
