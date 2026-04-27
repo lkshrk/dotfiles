@@ -2,9 +2,10 @@
 set -euo pipefail
 
 APP_NAME="${1:-}"
+EXCLUDE_TITLE="${2:-}"
 
 if [ -z "$APP_NAME" ]; then
-  echo "usage: $0 <App Name>" >&2
+  echo "usage: $0 <App Name> [exclude-title-regex]" >&2
   exit 1
 fi
 
