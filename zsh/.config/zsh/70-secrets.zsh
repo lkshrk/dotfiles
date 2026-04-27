@@ -30,6 +30,7 @@ hf_key()       { _lazy_secret HF_TOKEN          hf-token; }
 context7_key() { _lazy_secret CONTEXT7_API_KEY  context7-api-key; }
 pocket_id_key()   { _lazy_secret POCKET_ID_API_KEY    pocket-id-api-key; }
 h_cloud_age_key() { _lazy_secret SOPS_AGE_KEY    h-cloud-age-key; }
+h_cloud_age_key() { _lazy_secret SOPS_AGE_KEY    h-cloud-age-key; }
 
 # Run a command with secrets injected as env vars, fetched on demand.
 # Skips items already in env, fetches the rest in parallel (~350ms total
@@ -53,43 +54,23 @@ with-secrets() {
 
   # Pass 2: parallel fetch uncached items
   if (( ${#missing_items} )); then
-    local -a pids tmpfiles val
+    local -a pids vals
     for (( i = 1; i <= ${#missing_items}; i++ )); do
-      tmpfiles+=("$(mktemp)")
-      ( _rbw_get_or_unlock "${missing_items[i]}" > "${tmpfiles[i]}" ) &
+      vals[i]=""
+      { vals[i]=$(_rbw_get_or_unlock "${missing_items[i]}"); } &!
       pids+=($!)
     done
     for (( i = 1; i <= ${#pids}; i++ )); do
       wait ${pids[i]} || true
-      val=$(<"${tmpfiles[i]}")
-      rm -f "${tmpfiles[i]}"
-      if [[ -z $val ]]; then
+      if [[ -z ${vals[i]} ]]; then
         print -u2 "rbw: failed to fetch '${missing_items[i]}'"
         return 1
       fi
-      export "${missing_vars[i]}=$val"
+      export "${missing_vars[i]}=${vals[i]}"
     done
   fi
 
   "$@"
-}
-
-claude() {
-  (
-    unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL ANTHROPIC_BASE_URL API_TIMEOUT_MS ANTHROPIC_AUTH_TOKEN
-    with-secrets \
-      openai-api-key    OPENAI_API_KEY \
-      zai-api-key       ZAI_API_KEY \
-      hf-token          HF_TOKEN \
-      context7-api-key  CONTEXT7_API_KEY \
-      -- command claude "$@"
-  )
-}
-
-sops() {
-  with-secrets \
-    h-cloud-age-key   SOPS_AGE_KEY \
-    -- command sops "$@"
 }
 
 zai() {
@@ -105,4 +86,10 @@ zai() {
       context7-api-key  CONTEXT7_API_KEY \
       -- command claude "$@"
   )
+}
+
+sops() {
+  with-secrets \
+    h-cloud-age-key   SOPS_AGE_KEY \
+    -- command sops "$@"
 }

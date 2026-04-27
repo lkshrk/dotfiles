@@ -42,10 +42,11 @@ WINDOW_IDS="$(
   yabai -m query --windows \
     | jq -r \
       --arg app "$APP_NAME" \
+      --arg exclude "$EXCLUDE_TITLE" \
       --argjson hist "$FOCUS_HISTORY" \
       --argjson preferred "$PREFERRED_DISPLAY_INDEX" \
       --argjson stack "${STACK_SPACE_INDEX:-0}" '
-        map(select(.app == $app))
+        map(select(.app == $app and ($exclude == "" or (.title | test($exclude) | not))))
         | sort_by(
             -($hist[(.id | tostring)] // 0),
             (if .display == $preferred then 0 else 1 end),

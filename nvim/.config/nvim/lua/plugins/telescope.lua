@@ -12,69 +12,6 @@ return {
     { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
   },
   config = function()
-    -- Shim: telescope 0.1.x previewer calls nvim-treesitter.parsers.{ft_to_lang,
-    -- get_parser} and nvim-treesitter.configs.{is_enabled,get_module}, which
-    -- were removed in nvim-treesitter's main-branch rewrite. Inject fallbacks
-    -- via package.loaded before telescope's previewer utils are required.
-    local ok_p, ts_parsers = pcall(require, 'nvim-treesitter.parsers')
-    if ok_p and type(ts_parsers) == 'table' then
-      if ts_parsers.ft_to_lang == nil then
-        ts_parsers.ft_to_lang = function(ft)
-          return vim.treesitter.language.get_lang(ft) or ft
-        end
-      end
-      if ts_parsers.get_parser == nil then
-        ts_parsers.get_parser = function(bufnr, lang)
-          local ok, parser = pcall(vim.treesitter.get_parser, bufnr, lang)
-          if not ok or not parser then
-            return nil
-          end
-          -- Telescope hands the raw parser straight to
-          -- `vim.treesitter.highlighter.new`, which indexes the parser's
-          -- internal tree. Force a parse first so the tree exists.
-          pcall(parser.parse, parser)
-          return parser
-        end
-      end
-    end
-
-    if not package.loaded['nvim-treesitter.configs'] then
-      package.loaded['nvim-treesitter.configs'] = {
-        -- Telescope calls this before creating the treesitter highlighter.
-        -- We must return false in any case where the highlighter would then
-        -- fail — otherwise `highlighter.lua` blows up on a nil tree. Guard:
-        --   1. lang must be non-empty
-        --   2. parser must load for that lang
-        --   3. a parser must be obtainable for the buffer and actually parse
-        is_enabled = function(_, lang, bufnr)
-          if type(lang) ~= 'string' or lang == '' then
-            return false
-          end
-          if not pcall(vim.treesitter.language.add, lang) then
-            return false
-          end
-          local buf = bufnr or 0
-          if not vim.api.nvim_buf_is_valid(buf) then
-            return false
-          end
-          local ok_parser, parser = pcall(vim.treesitter.get_parser, buf, lang)
-          if not ok_parser or not parser then
-            return false
-          end
-          local ok_parse, trees = pcall(function()
-            return parser:parse()
-          end)
-          if not ok_parse or type(trees) ~= 'table' or #trees == 0 then
-            return false
-          end
-          return true
-        end,
-        get_module = function(_)
-          return { additional_vim_regex_highlighting = false }
-        end,
-      }
-    end
-
     local actions = require 'telescope.actions'
 
     require('telescope').setup {
@@ -90,7 +27,12 @@ return {
           'target',
           '.next',
           '.svelte%-kit',
+          -- Hidden noise (shown by fd --hidden but not useful)
           '%.DS_Store',
+          '%.env$',
+          '%.env%.',
+          '%.idea/',
+          '%.vscode/',
           '%.cache/',
           -- macOS Library dirs (user + system)
           '^Library/',

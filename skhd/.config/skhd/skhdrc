@@ -8,7 +8,7 @@ alt + ctrl + cmd - n : ~/.config/yabai/focus-app.sh 'Obsidian'
 alt + ctrl + cmd - o : ~/.config/yabai/focus-app.sh 'OBS'
 alt + ctrl + cmd - v : ~/.config/yabai/focus-app.sh 'Brave Browser'
 alt + ctrl + cmd - s : ~/.config/yabai/focus-app.sh 'Signal'
-alt + ctrl + cmd - t : ~/.config/yabai/focus-app.sh 'Ghostty'
+alt + ctrl + cmd - t : ~/.config/yabai/focus-app.sh 'Ghostty' '\.nvim\.'
 alt + ctrl + cmd - a : ~/.config/yabai/focus-app.sh 'ChatGPT'
 alt + ctrl + cmd - return : ~/.config/yabai/finder-here.sh
 

@@ -2,7 +2,7 @@
   "env": {
     "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1",
     "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet[1m]",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "attribution": {
@@ -21,7 +21,19 @@
       "mcp__plugin_everything-claude-code_exa__web_fetch_exa"
     ]
   },
-  "model": "claude-opus-4-6",
+  "model": "sonnet",
+  "skillOverrides": {
+    "better-addons:wow-mode": "user-invocable-only",
+    "better-addons:wow-debug": "user-invocable-only",
+    "better-addons:wow-verify": "user-invocable-only",
+    "better-addons:wow-create": "user-invocable-only",
+    "better-addons:wow-news": "user-invocable-only",
+    "better-addons:wow-init": "user-invocable-only",
+    "better-addons:wow-research": "user-invocable-only",
+    "better-addons:wow-review": "user-invocable-only",
+    "better-addons:wow-migrate": "user-invocable-only",
+    "better-addons:wow-api": "user-invocable-only"
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -145,6 +157,15 @@
             "async": true
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
       }
     ],
     "PreCompact": [
@@ -165,6 +186,16 @@
           {
             "type": "command",
             "command": "node \"/Users/lkshrk/.claude/scripts/hooks/session-start-bootstrap.js\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs'),os=require('os'),path=require('path');const base=path.join(os.homedir(),'.claude','plugins','cache','karpathy-skills');try{const orgs=fs.readdirSync(base);const org=orgs[0];const vers=fs.readdirSync(path.join(base,org));const ver=vers[0];const md=fs.readFileSync(path.join(base,org,ver,'CLAUDE.md'),'utf8');process.stdout.write('Karpathy Guidelines active:\\n'+md);}catch(e){process.stdout.write('');}\"",
+            "timeout": 5,
+            "statusMessage": "Loading Karpathy guidelines..."
           }
         ]
       },
@@ -423,8 +454,14 @@
     "bubbletea-designer@human-frontier-labs-marketplace": false,
     "swift-lsp@claude-plugins-official": false,
     "shadcn-dev@functional-claude": false,
-    "oh-my-claudecode@omc": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "claude-code-setup@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "everything-claude-code": {
@@ -461,6 +498,12 @@
       "source": {
         "source": "git",
         "url": "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
+      }
+    },
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
       }
     }
   },

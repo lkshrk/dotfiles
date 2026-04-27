@@ -42,6 +42,8 @@ function M.id(label)
   return M.labels[label]
 end
 
+-- Global desktop ordinal (1-based) for a label. Primary display first,
+-- then secondary. Matches macOS's "Desktop N" numbering.
 function M.ordinal(label)
   for i, l in ipairs(config.primaryLabels) do
     if l == label then return i end

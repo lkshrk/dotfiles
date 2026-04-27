@@ -35,3 +35,5 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 vim.opt.foldenable = false
+
+vim.opt.title = true

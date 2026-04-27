@@ -50,6 +50,9 @@ talos/.config/talos/
 ttllm/.config/ttllm/
 com.corsair/.config/com.corsair/
 
+# git — per-device identity / signing config
+git/.config/git/config.local
+
 # gh — contains auth token
 gh/.config/gh/hosts.yml
 
