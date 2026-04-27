@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # scripts/pre-push-sync.sh — invoked by lefthook pre-push.
 #
-# Asks whether to run `dotsync` before pushing. Skips silently when running
+# Asks whether to run `dotync` before pushing. Skips silently when running
 # non-interactively (CI, scripted pushes) so it doesn't block automation.
 
 set -euo pipefail
@@ -12,7 +12,7 @@ fi
 
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
-printf 'Run dotsync before pushing? [y/N] '
+printf 'Run dotync before pushing? [y/N] '
 read -r reply </dev/tty || exit 0
 
 case "$reply" in

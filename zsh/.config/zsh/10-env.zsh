@@ -28,3 +28,12 @@ _update_title() {
 }
 precmd_functions+=(_update_title)
 chpwd_functions+=(_update_title)
+
+# Window title: "folder" locally, "host:folder" over SSH
+_update_title() {
+  local title="${PWD##*/}"
+  [[ -n $SSH_CONNECTION ]] && title="${HOST%%.*}:$title"
+  printf '\033]2;%s\007' "$title"
+}
+precmd_functions+=(_update_title)
+chpwd_functions+=(_update_title)

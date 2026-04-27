@@ -128,4 +128,10 @@ if (( ! DRY_RUN )); then
   printf 'no\n' > "$HOME/.cache/zsh/dotfiles-drift-check"
 fi
 
+if (( ! DRY_RUN )); then
+  mkdir -p "$HOME/.cache/zsh"
+  touch "$HOME/.cache/zsh/dotfiles-last-sync"
+  printf 'no\n' > "$HOME/.cache/zsh/dotfiles-drift-check"
+fi
+
 ok "sync complete"

@@ -24,6 +24,9 @@ Temporary Items
 # brew — generated Brewfile (install.sh concatenates base + active modules)
 brew/.config/homebrew/Brewfile.generated
 
+# brew — generated Brewfile (install.sh concatenates base + active modules)
+brew/.config/homebrew/Brewfile.generated
+
 # zsh
 zsh/.config/zsh/99-local.zsh
 zsh/.config/zsh/.zcompdump*
@@ -31,6 +34,46 @@ zsh/.config/zsh/.zsh_history
 
 # nvim
 nvim/.config/nvim/lazy-lock.json
+nvim/.config/nvim/LICENSE.md
+nvim/.config/nvim/README.md
+
+# opencode — runtime auto-saved backups
+opencode/.config/opencode/*.backup-*
+opencode/.config/opencode/*.bak.*
+
+# yabai — compiled from .swift source at install time
+yabai/.config/yabai/sleep-on-lock
+
+acli/.config/acli/
+cagent/.config/cagent/
+configstore/.config/configstore/
+github-copilot/.config/github-copilot/
+karabiner/.config/karabiner/
+llmctl/.config/llmctl/
+mole/.config/mole/
+moshi/.config/moshi/
+talos/.config/talos/
+ttllm/.config/ttllm/
+com.corsair/.config/com.corsair/
+
+# ~/.config subdirs we explicitly don't version (third-party tooling, runtime
+# state, anything we've deliberately skipped). Treated as "never suggest".
+acli/
+cagent/
+configstore/
+github-copilot/
+karabiner/
+llmctl/
+mole/
+moshi/
+talos/
+ttllm/
+nvim/.config/nvim/LICENSE.md
+nvim/.config/nvim/README.md
+
+# opencode — runtime auto-saved backups
+opencode/.config/opencode/*.backup-*
+opencode/.config/opencode/*.bak.*
 nvim/.config/nvim/LICENSE.md
 nvim/.config/nvim/README.md
 
@@ -49,6 +92,9 @@ moshi/.config/moshi/
 talos/.config/talos/
 ttllm/.config/ttllm/
 com.corsair/.config/com.corsair/
+
+# git — per-device identity / signing config
+git/.config/git/config.local
 
 # git — per-device identity / signing config
 git/.config/git/config.local

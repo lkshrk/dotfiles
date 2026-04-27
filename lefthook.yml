@@ -1,4 +1,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
+# yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
+# yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
 # Lefthook config for the dotfiles repo.
 # Activate with: lefthook install   (run once after clone, also called by install.sh)
 

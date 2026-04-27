@@ -23,7 +23,7 @@ cd "$DOTFILES_DIR"
 # All stow packages present in the repo.
 PACKAGES_ALL=(
   brew zsh git gh nvim ghostty tmux hammerspoon
-  linearmouse skhd yabai zed ssh claude
+  linearmouse skhd yabai zed ssh claude opencode
 )
 
 # macOS-only stow packages (skipped on Linux).
@@ -189,6 +189,20 @@ if (( IS_MACOS )); then
     ln -s "$HOME/.config/hammerspoon" "$HOME/.hammerspoon"
     ok "linked ~/.hammerspoon → ~/.config/hammerspoon"
   fi
+
+  # compile sleep-on-lock daemon (sleeps display on screen lock)
+  if command -v yabai >/dev/null 2>&1; then
+    sol_src="$HOME/.config/yabai/sleep-on-lock.swift"
+    sol_bin="$HOME/.config/yabai/sleep-on-lock"
+    if [[ -f "$sol_src" ]]; then
+      if swiftc -O -o "$sol_bin" "$sol_src" -framework Cocoa 2>&1; then
+        chmod +x "$sol_bin"
+        ok "compiled sleep-on-lock"
+      else
+        warn "failed to compile sleep-on-lock"
+      fi
+    fi
+  fi
 fi
 
 LOCAL_ZSH="$HOME/.config/zsh/99-local.zsh"
@@ -215,7 +229,7 @@ printf 'no\n' > "$HOME/.cache/zsh/dotfiles-drift-check"
 
 REMINDER_FLAG="$HOME/.cache/zsh/dotfiles-sync-reminder"
 if [[ ! -f "$REMINDER_FLAG" ]]; then
-  if confirm "Enable monthly shell-start reminder to run 'dotsync'?"; then
+  if confirm "Enable monthly shell-start reminder to run 'dotync'?"; then
     touch "$REMINDER_FLAG"
     ok "reminder enabled (rm $REMINDER_FLAG to disable)"
   fi

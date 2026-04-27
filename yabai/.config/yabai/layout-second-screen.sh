@@ -5,7 +5,7 @@ SPACE_COMMS="$(yabai -m query --spaces | jq -r '.[] | select(.label=="comms") | 
 SPACE_STREAM="$(yabai -m query --spaces | jq -r '.[] | select(.label=="stream") | .index')"
 
 SECONDARY_DISPLAY="$(
-  yabai -m query --displays | jq -r '.[] | select(.index != 1) | .index' | head -n1
+  yabai -m query --displays | jq -r '[.[] | select(.frame.h > .frame.w)] | sort_by(.frame.h) | last | .index'
 )"
 
 read -r DX DY DW DH < <(
@@ -111,7 +111,6 @@ place_centered_bottom_in_region() {
   yabai -m window "$wid" --move "abs:${x}:${y}"
 }
 
-# comms
 place "Discord"       "$SPACE_COMMS" "$LEFT_X"       "$DY"               "$HALF_W"                     "$DH"              1
 place "ChatGPT"       "$SPACE_COMMS" "$LEFT_INSET_X" "$DY"               "$(( HALF_W - LEFT_INSET ))" "$DH"              1
 place "Vivaldi"       "$SPACE_COMMS" "$LEFT_INSET_X" "$DY"               "$(( HALF_W - LEFT_INSET ))" "$DH"              1
@@ -121,7 +120,6 @@ place_centered_bottom_in_region "Chatterino" "$SPACE_COMMS" "$RIGHT_X" "$BOTTOM_
 place "OBS"           "$SPACE_COMMS" "$RIGHT_X"      "$BOTTOM_QUARTER_Y" "$HALF_W"                     "$(( DH * 3 / 4 ))" 1
 place "Brave Browser" "$SPACE_COMMS" "$RIGHT_X"      "$DY"               "$HALF_W"                     "$(( DH * 3 / 4 ))" 1 "above"
 
-# comms
 place_centered_scaled "Obsidian" "$SPACE_STREAM" 75
 place "Stream Deck"       "$SPACE_STREAM" "$LEFT_X"  "$DY" "$HALF_W" "$DH" 1
 place "Elgato Wave Link"  "$SPACE_STREAM" "$RIGHT_X" "$DY" "$HALF_W" "$DH" 1

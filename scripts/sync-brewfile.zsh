@@ -8,6 +8,9 @@ set -euo pipefail
 # Disable auto-continue - prompt for each package individually
 unset LAST_BREWFILE_CHOICE LAST_CHOICE_TYPE
 
+# Disable auto-continue - prompt for each package individually
+unset LAST_BREWFILE_CHOICE LAST_CHOICE_TYPE
+
 DOTFILES_DIR="$(dirname "$(dirname "$0")")"
 BREWFILE_DIR="$DOTFILES_DIR/brew/.config/homebrew"
 HOSTNAME=$(hostname)
@@ -101,7 +104,7 @@ TEMP_BREWFILE=$(mktemp)
 trap "rm -f $TEMP_BREWFILE" EXIT
 rm -f "$TEMP_BREWFILE"  # Remove empty file so brew bundle dump can create it
 
-brew bundle dump --file "$TEMP_BREWFILE" 2>/dev/null || true
+brew bundle dump --file "$TEMP_BREWFILE" 2>/dev/null || true || true
 
 # Parse the dumped Brewfile
 installed_formulae=$(grep -E '^brew "' "$TEMP_BREWFILE" 2>/dev/null | sed 's/brew "//' | sed 's/"$//' | sed 's/".*//' | sort -u)
@@ -326,6 +329,7 @@ prompt_brewfile_choice() {
 
   echo "  [u] Uninstall from system"
   echo "  [s] Skip"
+  echo "  [a] Auto-continue remaining (same choice)"
   echo "  [q] Quit"
   echo
 
@@ -350,6 +354,13 @@ prompt_brewfile_choice() {
     [Qq]*)
       echo "   👋 Quitting"
       exit 0
+      ;;
+    [Aa]*)
+      echo "   🔄 Auto-continuing with choice: $selected"
+      LAST_BREWFILE_CHOICE="$selected"
+      LAST_CHOICE_TYPE="number"
+      echo
+      return
       ;;
     [Uu]*)
       echo "   🗑️  Uninstalling $package..."
@@ -516,7 +527,101 @@ prompt_uninstalled() {
   esac
 }
 
-# Process missing packages (installed but not tracked)
+# Function to handle uninstalled packages
+prompt_uninstalled() {
+  local type=$1
+  local package=$2
+  local brewfile=$3
+
+  # Show package info
+  case $type in
+    brew)
+      local info=$(brew info "$package" 2>/dev/null)
+      local desc=$(echo "$info" | sed -n '2p' | sed 's/:$//' | sed 's/^[[:space:]]*//')
+      echo "📦 brew: $package (in Brewfile.$brewfile but not installed)"
+      [[ -n $desc ]] && echo "   $desc"
+      ;;
+    cask)
+      local info=$(brew info --cask "$package" 2>/dev/null)
+      local desc=$(echo "$info" | sed -n '2p' | sed 's/:$//' | sed 's/^[[:space:]]*//')
+      echo "🍺 cask: $package (in Brewfile.$brewfile but not installed)"
+      [[ -n $desc ]] && echo "   $desc"
+      ;;
+    tap)
+      echo "🔧 tap: $package (in Brewfile.$brewfile but not tapped)"
+      ;;
+  esac
+
+  echo
+  echo "Action:"
+  echo "  [i] Install with brew"
+  echo "  [r] Remove from Brewfile.$brewfile"
+  echo "  [s] Skip"
+  echo "  [q] Quit"
+  echo
+
+  local choice
+  echo -n "Choice: "
+  read -k 1 choice  # Read single character without Enter
+
+  case $choice in
+    [Ii]*)
+      echo "   📥 Installing $package..."
+      case $type in
+        brew)
+          if brew install "$package"; then
+            echo "   ✅ Installed"
+          else
+            echo "   ❌ Installation failed"
+          fi
+          ;;
+        cask)
+          if brew install --cask "$package"; then
+            echo "   ✅ Installed"
+          else
+            echo "   ❌ Installation failed"
+          fi
+          ;;
+        tap)
+          if brew tap "$package"; then
+            echo "   ✅ Tapped"
+          else
+            echo "   ❌ Tap failed"
+          fi
+          ;;
+      esac
+      echo
+      ;;
+    [Rr]*)
+      local file="$BREWFILE_DIR/Brewfile.$brewfile"
+      # Remove the line from Brewfile
+      case $type in
+        brew)
+          sed -i.tmp "/^brew \"$package\"$/d" "$file"
+          ;;
+        cask)
+          sed -i.tmp "/^cask \"$package\"$/d" "$file"
+          ;;
+        tap)
+          sed -i.tmp "/^tap \"$package\"$/d" "$file"
+          ;;
+      esac
+      rm -f "$file.tmp"
+      echo "   🗑️  Removed from Brewfile.$brewfile"
+      echo
+      ;;
+    [Qq]*)
+      echo "   👋 Quitting"
+      exit 0
+      ;;
+    *)
+      echo "   ⏭️  Skipped"
+      echo
+      ;;
+  esac
+}
+
+# Process missing packages (installed but not tracked) (installed but not tracked)
 if [[ $missing_count -gt 0 ]]; then
   echo "=== Phase 1: Packages installed but not in Brewfiles ==="
   echo
@@ -561,6 +666,26 @@ if [[ $uninstalled_count -gt 0 ]]; then
 fi
 
 echo "✨ Done! Review changes with: git diff $BREWFILE_DIR"
+echo
+
+# Check if there are Brewfile changes to commit
+local changed_brewfiles=$(git diff --name-only "$BREWFILE_DIR" 2>/dev/null)
+if [[ -n "$changed_brewfiles" ]]; then
+  # Stage only the changed Brewfiles
+  echo "$changed_brewfiles" | xargs git add 2>/dev/null || true
+
+  # Create commit with today's date
+  local today=$(date +"%Y-%m-%d")
+  local commit_msg="chore(dotsync): brew ($today)"
+
+  if git commit -m "$commit_msg" 2>/dev/null; then
+    echo "✅ Changes committed: $commit_msg"
+  else
+    echo "⚠️  Failed to commit changes (check git status)"
+  fi
+else
+  echo "ℹ️  No Brewfile changes to commit"
+fi
 echo
 
 # Check if there are Brewfile changes to commit

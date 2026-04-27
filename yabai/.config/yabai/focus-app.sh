@@ -11,7 +11,7 @@ fi
 
 PREFERRED_DISPLAY_INDEX="$(
   yabai -m query --displays \
-    | jq -r '.[] | select(.index == 1) | .index'
+    | jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index'
 )"
 
 STACK_SPACE_INDEX="$(

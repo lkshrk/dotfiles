@@ -142,7 +142,29 @@ if [[ -d "$HOME/.config" ]]; then
   done < <(find "$HOME/.config" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
 fi
 
+# Scan ~/.config for subdirs that have no corresponding stow package in the
+# repo and would NOT be gitignored if they were added. These are candidates
+# for a brand-new package rather than new files in an existing one.
+unknown_pkgs=()
+if [[ -d "$HOME/.config" ]]; then
+  while IFS= read -r -d '' sub; do
+    name="${sub##*/}"
+    # Skip if a repo package already tracks this .config subdir.
+    any_pkg=0
+    for pkg in "$DOTFILES_DIR"/*/; do
+      [[ -d "${pkg}.config/$name" ]] && { any_pkg=1; break; }
+    done
+    (( any_pkg )) && continue
+    # Skip if the hypothetical repo path is gitignored. Trailing slash matters
+    # because gitignore entries end with `/` to scope to directories.
+    hypo="$name/.config/$name/"
+    git -C "$DOTFILES_DIR" check-ignore -q "$hypo" && continue
+    unknown_pkgs+=("$sub")
+  done < <(find "$HOME/.config" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+fi
+
 (( ${#new_candidates[@]:-0} > 0 )) && has_drift=1
+(( ${#unknown_pkgs[@]:-0} > 0 ))   && has_drift=1
 (( ${#unknown_pkgs[@]:-0} > 0 ))   && has_drift=1
 
 if (( LIST )); then

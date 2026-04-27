@@ -41,21 +41,78 @@ function M.finderHere()
 end
 
 function M.focusGaming()
-  for _, w in ipairs(hs.window.allWindows()) do
-    local title = (w:title() or ""):lower()
-    local app   = (w:application() and w:application():name() or ""):lower()
-    if title == "towerr" or app == "moonlight" then
-      w:focus()
+  local config = require("config")
+  local g = config.gaming
+  if not g then return end
+
+  local all = hs.window.allWindows()
+
+  -- Towerr: title match
+  local towerrWins = {}
+  for _, w in ipairs(all) do
+    if w:isStandard() and (w:title() or ""):lower() == "towerr" then
+      table.insert(towerrWins, w)
+    end
+  end
+
+  -- Moonlight: app match (only if towerr absent)
+  local moonlightWins = {}
+  if #towerrWins == 0 then
+    for _, w in ipairs(all) do
+      local app = (w:application() and w:application():name() or ""):lower()
+      if w:isStandard() and app == "moonlight" then
+        table.insert(moonlightWins, w)
+      end
+    end
+  end
+
+  local streamWins = #towerrWins > 0 and towerrWins or moonlightWins
+
+  -- League: prefer game window (empty title) over client
+  local leagueGameWins, leagueAllWins = {}, {}
+  for _, w in ipairs(all) do
+    local app = (w:application() and w:application():name() or ""):lower()
+    if w:isStandard() and app == "league of legends" then
+      table.insert(leagueAllWins, w)
+      if (w:title() or "") == "" then
+        table.insert(leagueGameWins, w)
+      end
+    end
+  end
+  local leagueWins = #leagueGameWins > 0 and leagueGameWins or leagueAllWins
+
+  -- Pool: stream pick + league pick
+  local pool = {}
+  for _, w in ipairs(streamWins) do table.insert(pool, w) end
+  for _, w in ipairs(leagueWins)  do table.insert(pool, w) end
+
+  if #pool == 0 then
+    if g.label then spaces.focus(g.label) end
+    return
+  end
+
+  -- Cycle: find current window in pool, advance to next
+  local current   = hs.window.focusedWindow()
+  local currentID = current and current:id()
+  local nextWin   = pool[1]
+  for i, w in ipairs(pool) do
+    if w:id() == currentID then
+      nextWin = pool[(i % #pool) + 1]
+      break
+    end
+  end
+
+  if nextWin then
+    nextWin:focus()
+    if g.warpMouse then
       hs.timer.doAfter(0.1, function()
-        local f = w:frame()
+        local f  = nextWin:frame()
         local pt = { x = f.x + f.w / 2, y = f.y + f.h / 2 }
         hs.mouse.absolutePosition(pt)
         hs.eventtap.leftClick(pt)
       end)
-      return
     end
   end
-  spaces.focus("remote")
 end
 
 return M

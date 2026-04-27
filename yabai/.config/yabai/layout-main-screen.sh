@@ -6,7 +6,7 @@ SPACE_STACK="$(yabai -m query --spaces | jq -r '.[] | select(.label=="stack") | 
 SPACE_REMOTE="$(yabai -m query --spaces | jq -r '.[] | select(.label=="remote") | .index')"
 
 PRIMARY_DISPLAY="$(
-  yabai -m query --displays | jq -r '.[] | select(.index == 1) | .index'
+  yabai -m query --displays | jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index'
 )"
 
 read -r DX DY DW DH < <(
@@ -62,11 +62,9 @@ place() {
   fi
 }
 
-# stack space: fullscreen-style stack on main display
 place "Ghostty" "$SPACE_STACK" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1
 place "Zed"     "$SPACE_STACK" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1
 place "Vivaldi" "$SPACE_STACK" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1
 
-# remote space: fullscreen on main display
 place "Moonlight"         "$SPACE_REMOTE" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1
 place "League of Legends" "$SPACE_REMOTE" "$FULL_X" "$FULL_Y" "$FULL_W" "$FULL_H" 1

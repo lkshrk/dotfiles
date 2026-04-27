@@ -5,11 +5,11 @@ PRIMARY_TARGET=3
 SECONDARY_TARGET=2
 
 primary_display="$(
-  yabai -m query --displays | jq -r '.[] | select(.index == 1) | .index'
+  yabai -m query --displays | jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index'
 )"
 
 secondary_display="$(
-  yabai -m query --displays | jq -r '.[] | select(.index != 1) | .index' | head -n1
+  yabai -m query --displays | jq -r '[.[] | select(.frame.h > .frame.w)] | sort_by(.frame.h) | last | .index'
 )"
 
 if [ -z "${primary_display:-}" ] || [ -z "${secondary_display:-}" ]; then

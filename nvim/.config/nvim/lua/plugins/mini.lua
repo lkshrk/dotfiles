@@ -5,6 +5,8 @@ return {
     require('mini.ai').setup { n_lines = 500 }
     -- Add/delete/replace surroundings: saiw), sd', sr)'
     require('mini.surround').setup()
+    -- Show open buffers as tabs
+    require('mini.tabline').setup()
 
     local statusline = require 'mini.statusline'
     statusline.setup { use_icons = vim.g.have_nerd_font }

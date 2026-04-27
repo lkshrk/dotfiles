@@ -31,6 +31,7 @@ context7_key() { _lazy_secret CONTEXT7_API_KEY  context7-api-key; }
 pocket_id_key()   { _lazy_secret POCKET_ID_API_KEY    pocket-id-api-key; }
 h_cloud_age_key() { _lazy_secret SOPS_AGE_KEY    h-cloud-age-key; }
 h_cloud_age_key() { _lazy_secret SOPS_AGE_KEY    h-cloud-age-key; }
+h_cloud_age_key() { _lazy_secret SOPS_AGE_KEY    h-cloud-age-key; }
 
 # Run a command with secrets injected as env vars, fetched on demand.
 # Skips items already in env, fetches the rest in parallel (~350ms total
@@ -71,6 +72,40 @@ with-secrets() {
   fi
 
   "$@"
+}
+
+fcc() {
+  (
+    # Fetch all keys once into this subshell
+    with-secrets \
+      nvidia-api-key    NVIDIA_NIM_API_KEY \
+      openrouter.ai     OPENROUTER_API_KEY \
+      context7-api-key  CONTEXT7_API_KEY \
+      -- true
+
+    # Start free-claude-code proxy if not already listening
+    local _fcc_pid=0
+    if ! lsof -i :8082 -sTCP:LISTEN &>/dev/null; then
+      free-claude-code &>/dev/null &
+      _fcc_pid=$!
+      local _i=0
+      while ! lsof -i :8082 -sTCP:LISTEN &>/dev/null && (( _i++ < 50 )); do
+        sleep 0.1
+      done
+      if ! lsof -i :8082 -sTCP:LISTEN &>/dev/null; then
+        print -u2 "fcc: proxy failed to start on :8082"
+        return 1
+      fi
+      print -u2 "fcc: proxy started on :8082 (pid $_fcc_pid)"
+    fi
+
+    # Kill proxy on exit if we started it
+    (( _fcc_pid )) && trap "kill $_fcc_pid 2>/dev/null" EXIT
+
+    ANTHROPIC_BASE_URL="http://localhost:8082" \
+    API_TIMEOUT_MS=3000000 \
+    command claude "$@"
+  )
 }
 
 zai() {
