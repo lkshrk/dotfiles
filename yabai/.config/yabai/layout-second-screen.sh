@@ -58,7 +58,7 @@ place() {
   fi
 
   if [ -n "$sublayer" ]; then
-    yabai -m window "$wid" --sub-layer "$sublayer"
+    yabai -m window "$wid" --sub-layer "$sublayer" || true
   fi
 }
 
