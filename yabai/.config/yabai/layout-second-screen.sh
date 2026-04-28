@@ -111,15 +111,51 @@ place_centered_bottom_in_region() {
   yabai -m window "$wid" --move "abs:${x}:${y}"
 }
 
-place "Discord"       "$SPACE_COMMS" "$LEFT_X"       "$DY"               "$HALF_W"                     "$DH"              1
-place "ChatGPT"       "$SPACE_COMMS" "$LEFT_INSET_X" "$DY"               "$(( HALF_W - LEFT_INSET ))" "$DH"              1
-place "Vivaldi"       "$SPACE_COMMS" "$LEFT_INSET_X" "$DY"               "$(( HALF_W - LEFT_INSET ))" "$DH"              1
-place "Signal"        "$SPACE_COMMS" "$LEFT_X"       "$BOTTOM_HALF_Y"    "$HALF_W"                     "$HALF_H"          1
-place "Messages"      "$SPACE_COMMS" "$LEFT_X"       "$BOTTOM_HALF_Y"    "$HALF_W"                     "$HALF_H"          1
-place_centered_bottom_in_region "Chatterino" "$SPACE_COMMS" "$RIGHT_X" "$BOTTOM_HALF_Y" "$HALF_W" "$HALF_H"
-place "OBS"           "$SPACE_COMMS" "$RIGHT_X"      "$BOTTOM_QUARTER_Y" "$HALF_W"                     "$(( DH * 3 / 4 ))" 1
-place "Brave Browser" "$SPACE_COMMS" "$RIGHT_X"      "$DY"               "$HALF_W"                     "$(( DH * 3 / 4 ))" 1 "above"
+if (( DH > DW )); then
+  # ── Portrait layout: stack vertically, full width ──
+  P_THIRD_H=$(( DH / 3 ))
+  P_SEVEN15_H=$(( DH * 7 / 15 ))
+  P_SEVEN15_Y=$(( DY + DH - P_SEVEN15_H ))
+  P_BOT_THIRD_Y=$(( DY + DH - P_THIRD_H ))
+  P_BRAVE_Y=$(( DY + DH / 5 ))
+  P_BRAVE_H=$(( DH / 3 ))
+  P_CHAT_W=$(( DW / 3 ))
+  P_CHAT_H=$(( DH / 4 ))
+  P_CHAT_X=$(( DX + DW - P_CHAT_W ))
+  P_CHAT_Y=$(( DY + DH - P_CHAT_H ))
+  P_HALF_H=$(( DH / 2 ))
 
-place_centered_scaled "Obsidian" "$SPACE_STREAM" 75
-place "Stream Deck"       "$SPACE_STREAM" "$LEFT_X"  "$DY" "$HALF_W" "$DH" 1
-place "Elgato Wave Link"  "$SPACE_STREAM" "$RIGHT_X" "$DY" "$HALF_W" "$DH" 1
+  # comms
+  place "Discord"       "$SPACE_COMMS" "$DX" "$DY"             "$DW" "$P_THIRD_H"   1
+  place "Claude"        "$SPACE_COMMS" "$DX" "$P_SEVEN15_Y"    "$DW" "$P_SEVEN15_H" 1
+  place "Vivaldi"       "$SPACE_COMMS" "$DX" "$P_SEVEN15_Y"    "$DW" "$P_SEVEN15_H" 1
+  place "Signal"        "$SPACE_COMMS" "$DX" "$P_BOT_THIRD_Y"  "$DW" "$P_THIRD_H"   1
+  place "Messages"      "$SPACE_COMMS" "$DX" "$P_BOT_THIRD_Y"  "$DW" "$P_THIRD_H"   1
+  place "OBS"           "$SPACE_COMMS" "$DX" "$P_BOT_THIRD_Y"  "$DW" "$P_THIRD_H"   1
+  place "Chatterino"    "$SPACE_COMMS" "$P_CHAT_X" "$P_CHAT_Y" "$P_CHAT_W" "$P_CHAT_H" 1
+  place "Brave Browser" "$SPACE_COMMS" "$DX" "$P_BRAVE_Y"      "$DW" "$P_BRAVE_H"   1 "above"
+
+  # stream
+  place_centered_scaled "Obsidian" "$SPACE_STREAM" 75
+  place "Stream Deck"      "$SPACE_STREAM" "$DX" "$DY"                   "$DW" "$P_HALF_H" 1
+  place "Elgato Wave Link" "$SPACE_STREAM" "$DX" "$(( DY + P_HALF_H ))" "$DW" "$P_HALF_H" 1
+
+else
+  # ── Landscape layout: left / right halves ──
+
+  # comms
+  place "Discord"       "$SPACE_COMMS" "$LEFT_X"       "$DY"               "$HALF_W"                     "$DH"              1
+  place "Claude"        "$SPACE_COMMS" "$LEFT_INSET_X" "$DY"               "$(( HALF_W - LEFT_INSET ))" "$DH"              1
+  place "Vivaldi"       "$SPACE_COMMS" "$LEFT_INSET_X" "$DY"               "$(( HALF_W - LEFT_INSET ))" "$DH"              1
+  place "Signal"        "$SPACE_COMMS" "$LEFT_X"       "$BOTTOM_HALF_Y"    "$HALF_W"                     "$HALF_H"          1
+  place "Messages"      "$SPACE_COMMS" "$LEFT_X"       "$BOTTOM_HALF_Y"    "$HALF_W"                     "$HALF_H"          1
+  place_centered_bottom_in_region "Chatterino" "$SPACE_COMMS" "$RIGHT_X" "$BOTTOM_HALF_Y" "$HALF_W" "$HALF_H"
+  place "OBS"           "$SPACE_COMMS" "$RIGHT_X"      "$BOTTOM_QUARTER_Y" "$HALF_W"                     "$(( DH * 3 / 4 ))" 1
+  place "Brave Browser" "$SPACE_COMMS" "$RIGHT_X"      "$DY"               "$HALF_W"                     "$(( DH * 3 / 4 ))" 1 "above"
+
+  # stream
+  place_centered_scaled "Obsidian" "$SPACE_STREAM" 75
+  place "Stream Deck"       "$SPACE_STREAM" "$LEFT_X"  "$DY" "$HALF_W" "$DH" 1
+  place "Elgato Wave Link"  "$SPACE_STREAM" "$RIGHT_X" "$DY" "$HALF_W" "$DH" 1
+
+fi
