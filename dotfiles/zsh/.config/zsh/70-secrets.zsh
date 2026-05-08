@@ -60,11 +60,25 @@ with-secrets() {
 
   # Pass 2: parallel fetch uncached items
   if (( ${#missing_items} )); then
+    # Pre-flight: ensure vault is unlocked once, before spawning parallel jobs.
+    # Without this, N background subshells each try `rbw unlock` simultaneously,
+    # causing an endless password-prompt loop.
+    if ! rbw get "${missing_items[1]}" &>/dev/null; then
+      if [[ -t 0 && -t 1 ]]; then
+        print -u2 "rbw: vault locked; unlocking…"
+        rbw unlock </dev/tty >/dev/tty 2>/dev/tty || {
+          print -u2 "rbw: unlock failed; continuing without secrets"
+          "$@"
+          return
+        }
+      fi
+    fi
+
     local -a pids tmpfiles
     local val
     for (( i = 1; i <= ${#missing_items}; i++ )); do
       tmpfiles+=("$(mktemp)")
-      ( _rbw_get_or_unlock "${missing_items[i]}" > "${tmpfiles[i]}" ) &
+      ( rbw get "${missing_items[i]}" > "${tmpfiles[i]}" 2>/dev/null ) &
       pids+=($!)
     done
     for (( i = 1; i <= ${#pids}; i++ )); do

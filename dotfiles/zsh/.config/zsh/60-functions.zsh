@@ -190,3 +190,30 @@ moshi() {
   fi
   tmux attach -t "$session"
 }
+
+# --- ai-clean: wipe coding-agent caches, show freed space -----------------
+ai-clean() {
+  local dirs=(
+    ~/.claude/{cache,logs,file-history,shell-snapshots,statsig,todos}
+    ~/.codex/{tmp,log,cache,sessions,history,artifacts}
+    ~/.cache/{opencode,aider,Cursor,Windsurf,Code}
+  )
+  local -a targets=()
+  for d in $dirs; do
+    [[ -d "$d" ]] && targets+=("$d")
+  done
+  (( ${#targets} )) || { print "ai-clean: nothing to clean"; return 0; }
+
+  local before after freed
+  before=$(du -sc "${targets[@]}" 2>/dev/null | tail -1 | awk '{print $1}')
+  rm -rf "${targets[@]}"/* 2>/dev/null
+  after=$(du -sc "${targets[@]}" 2>/dev/null | tail -1 | awk '{print $1}')
+  freed=$(( (before - after) / 1024 ))
+  print "ai-clean: freed ${freed}MB (files)"
+
+  if command -v docker &>/dev/null && docker info &>/dev/null; then
+    local reclaimed
+    reclaimed=$(docker system prune -af --volumes 2>/dev/null | grep -i 'reclaimed' | grep -oE '[0-9.]+[kMGT]B')
+    print "ai-clean: docker pruned${reclaimed:+ $reclaimed}"
+  fi
+}

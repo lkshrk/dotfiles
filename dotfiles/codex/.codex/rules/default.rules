@@ -79,3 +79,5 @@ prefix_rule(pattern=["rtk", "pkill", "-f", "xctrace record.*decide-it-set-switch
 prefix_rule(pattern=["go", "get"], decision="allow")
 prefix_rule(pattern=["rtk", "swiftlint", "lint"], decision="allow")
 prefix_rule(pattern=["go", "mod", "tidy"], decision="allow")
+prefix_rule(pattern=["rtk", "docker"], decision="allow")
+prefix_rule(pattern=["rtk", "make", "test-package-managers"], decision="allow")
