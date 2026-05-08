@@ -120,7 +120,8 @@
         "watch",
         "wget",
         "yq",
-        "zed"
+        "zed",
+        "omni"
       ],
       "dots": [
         {
@@ -288,10 +289,6 @@
         {
           "name": "git",
           "path": "~/.config/git"
-        },
-        {
-          "name": "hammerspoon",
-          "path": "~/.config/hammerspoon"
         },
         {
           "name": "homebrew",
@@ -645,6 +642,10 @@
     "oh-my-claude-sisyphus": {
       "provider": "node",
       "package": "oh-my-claude-sisyphus"
+    },
+    "omni": {
+      "provider": "system",
+      "package": "omni"
     },
     "opencode": {
       "provider": "system"
