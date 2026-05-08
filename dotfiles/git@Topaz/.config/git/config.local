@@ -1,0 +1,6 @@
+[user]
+	name = lkshrk
+	email = dev@harke.me
+	signingKey = ~/.cache/git-signing-key.pub
+[gpg "ssh"]
+	allowedSignersFile = ~/.config/git/allowed_signers

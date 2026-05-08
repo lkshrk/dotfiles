@@ -150,6 +150,30 @@
         {
           "name": "zed",
           "path": "~/.config/zed"
+        },
+        {
+          "name": "zprofile",
+          "path": "~/.zprofile"
+        },
+        {
+          "name": "zsh",
+          "path": "~/.config/zsh",
+          "ignore": [
+            ".zsh_history",
+            ".gitignore"
+          ]
+        },
+        {
+          "name": "zshenv",
+          "path": "~/.zshenv"
+        },
+        {
+          "name": "ssh",
+          "path": "~/.config/ssh"
+        },
+        {
+          "name": "hammerspoon",
+          "path": "~/.hammerspoon"
         }
       ]
     },
@@ -288,15 +312,17 @@
         },
         {
           "name": "git",
-          "path": "~/.config/git"
-        },
-        {
-          "name": "homebrew",
-          "path": "~/.config/homebrew"
+          "path": "~/.config/git",
+          "hosts": {
+            "Topaz": {
+              "package": "git@Topaz"
+            }
+          }
         },
         {
           "name": "karabiner",
-          "path": "~/.config/karabiner"
+          "path": "~/.config/karabiner",
+          "ignored": true
         },
         {
           "name": "moshi",
@@ -304,28 +330,8 @@
           "ignored": true
         },
         {
-          "name": "ssh",
-          "path": "~/.config/ssh"
-        },
-        {
           "name": "taskless",
           "path": "~/.config/taskless"
-        },
-        {
-          "name": "zprofile",
-          "path": "~/.zprofile"
-        },
-        {
-          "name": "zsh",
-          "path": "~/.config/zsh",
-          "ignore": [
-            ".zsh_history",
-            ".gitignore"
-          ]
-        },
-        {
-          "name": "zshenv",
-          "path": "~/.zshenv"
         },
         {
           "name": "zshrc",
@@ -340,6 +346,10 @@
           "name": "talos",
           "path": "~/.config/talos",
           "ignored": true
+        },
+        {
+          "name": "homebrew",
+          "path": "~/.config/homebrew"
         }
       ]
     }
