@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "leankg": {
+      "command": "/Users/lkshrk/.local/bin/leankg",
+      "args": ["mcp-stdio", "--watch"]
+    },
+    "CodeGraphContext": {
+      "command": "/Users/lkshrk/.local/bin/cgc",
+      "args": ["mcp", "start"]
+    }
+  }
+}

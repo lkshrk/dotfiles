@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<map name="Backup">
+		<value name="Version">5.43.73</value>
+	</map>
+	<map name="CommonSettings">
+		<value name="IntegrationsClientsAccessExplicitDecisionPerformed">Stream Deck</value>
+	</map>
+	<map name="DataCollectionSettings">
+		<value name="configuration_loaded_date">2026-05-07T18:43:52.682</value>
+		<value name="dataConsent">false</value>
+		<map name="hwProfilesHashes">
+			<map name="{32486e58-a900-497e-bc14-280517bd1d15}">
+				<value name="{2b220000-0010-0000-0000-000000000000}"></value>
+			</map>
+		</map>
+		<value name="initialProfilesSent">true</value>
+		<value name="machine_id">a0c2bc1e62263d47f228e85b07f6b457</value>
+		<value name="needToSendSystemSensorsInfo">false</value>
+		<value name="session_ended">false</value>
+	</map>
+	<map name="Devices">
+		<map name="SCIMITAR RGB ELITE WIRELESS V2">
+			<map name="{32486e58-a900-497e-bc14-280517bd1d15}">
+				<value name="ActiveHardwareProfileIndex">0</value>
+				<value name="AngleSnappingAngle">0</value>
+				<value name="AngleSnappingEnabled">false</value>
+				<value name="BodyColor">25</value>
+				<value name="BrightnessLevel">0</value>
+				<value name="DeviceMemoryModeEnabled">true</value>
+				<value name="FirstDetected">2026-04-18T07:47:47.926Z</value>
+				<value name="Layout">1</value>
+				<binary name="LedChannelCounts">%00%01%00%00%00%00%00%00%0BQList%3Cint%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelExtensionsTypes">%00%01%00%00%00%00%00%001QList%3CQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%3E%00%00%00%00%01%00%00%00%00</binary>
+				<binary name="LedChannelSynchronizations">%00%01%00%00%00%00%00%00%0CQList%3Cbool%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelTypeCombinations">%00%01%00%00%00%00%00%001QList%3CQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelTypes">%00%01%00%00%00%00%00%00%2AQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%00%00%00%00%01%00%00%00%0CNotConnected</binary>
+				<value name="LiftHeightLevel">Low</value>
+				<value name="LightingMode">Software</value>
+				<value name="MotionSensePowerSavingEnabled">false</value>
+				<value name="PowerSaveModeEnabled">false</value>
+				<value name="SleepModeEnabled">true</value>
+				<value name="SleepModeWaitDelaySec">900</value>
+				<value name="TaskbarBatteryIconEnabled">false</value>
+				<value name="UniqueDeviceId">{2b88b3f9-1c23-4716-94c0-cf4cc8a2744a}</value>
+				<value name="UniqueDongleId">{67fe4f33-5900-4c8d-84da-22ecb443781d}</value>
+			</map>
+		</map>
+		<map name="SLIPSTREAM WIRELESS DONGLE V2">
+			<map name="{141b2e46-7ea5-4cf1-a96e-5b4d05950c50}">
+				<value name="BodyColor">0</value>
+				<value name="FirstDetected">2026-04-18T07:47:47.851Z</value>
+				<value name="Layout">1</value>
+				<binary name="LedChannelCounts">%00%01%00%00%00%00%00%00%0BQList%3Cint%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelExtensionsTypes">%00%01%00%00%00%00%00%001QList%3CQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelSynchronizations">%00%01%00%00%00%00%00%00%0CQList%3Cbool%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelTypeCombinations">%00%01%00%00%00%00%00%001QList%3CQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelTypes">%00%01%00%00%00%00%00%00%2AQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%00%00%00%00%00</binary>
+				<value name="LightingMode">Software</value>
+				<value name="UniqueDeviceId">{97ed8be2-c6bd-486e-aa88-036534e460ce}</value>
+			</map>
+		</map>
+		<binary name="UniqueDeviceIds">%00%01%00%00%00%00%00%003QHash%3CQUuid%2Ccue_settings%3A%3Atypes%3A%3AUniqueDeviceData%3E%00%00%00%00%022HnX%A9%00I~%BC%14%28%05%17%BD%1D%15%00%00%1B%1C%00%00%2B%22%00%00%00%20%00C%00F%000%005%00E%00D%006%00D%004%006%00A%00F%005%006%00F%00D%00%00%00%04%9FP%F9%F7%14%1B.F~%A5L%F1%A9n%5BM%05%95%0CP%00%00%1B%1C%00%00%2B%00%00%00%00%20%008%00F%004%00E%004%00E%003%008%00F%007%007%007%000%003%007%002%00%00%00%04%9FP%F9%F7</binary>
+	</map>
+	<map name="HWPInfoPopup">
+		<value name="InfoPopupVisible">false</value>
+	</map>
+	<value name="Language">en</value>
+	<value name="LastDataCollectionConsentAppVersion">5.43.73</value>
+	<value name="LastLoadedAppVersion">5.43.73</value>
+	<map name="LightingLibraryStorage">
+		<value name="version">401</value>
+	</map>
+	<map name="Privacy">
+		<value name="DataCollectionConsent">false</value>
+		<value name="DataCollectionConsentTimestamp">18 Apr 2026 09:47:44 +0200</value>
+	</map>
+	<map name="Storage Locations">
+		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-dpi-dpi.cuelibrary">true</value>
+		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-dpi-hwdpi.cuelibrary">true</value>
+		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-eq_presets-limitedequalizerpresets.cuelibrary">true</value>
+		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-eq_presets-unlimitedequalizerpresets.cuelibrary">true</value>
+		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-eq_presets-unlimitedv2equalizerpresets.cuelibrary">true</value>
+		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-eq_presets-unlimitedv3equalizerpresets.cuelibrary">true</value>
+		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-quicklightingzones-quickLightingZones">true</value>
+		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-sensors-UserProps">true</value>
+	</map>
+	<map name="SwUpdate">
+		<value name="LastCheckDate">2026-05-19</value>
+	</map>
+	<value name="defaultProfile">{6cd71b5b-3931-40b3-b349-10604b36d69e}</value>
+</config>

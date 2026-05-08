@@ -1,0 +1,117 @@
+# Brewfile.base — installed on every macOS host.
+
+tap "fluxcd/tap"
+tap "siderolabs/tap"
+tap "xykong/tap"
+tap "nguyenphutrong/tap"
+tap "nikitabobko/tap"
+tap "oliwonders/tap"
+tap "opgginc/tap"
+tap "sst/tap"
+
+brew "zstd"
+brew "bats-core"
+brew "bcrypt"
+brew "coreutils"
+brew "gnu-sed"
+brew "ripgrep"
+brew "fd"
+brew "fzf"
+brew "eza"
+brew "jq"
+brew "yq"
+brew "tree"
+brew "wget"
+brew "watch"
+brew "fswatch"
+brew "tree-sitter"
+brew "thefuck"
+brew "gum"
+brew "glow"
+
+brew "stow"
+brew "tmux"
+brew "mosh"
+
+brew "neovim"
+brew "lua-language-server"
+brew "luacheck"
+brew "luarocks"
+brew "stylua"
+brew "busted"
+
+brew "gh"
+brew "lazygit"
+brew "lefthook"
+
+brew "yamlfmt"
+brew "yamllint"
+brew "minijinja-cli"
+brew "gomplate"
+brew "plantuml"
+
+brew "rbw"
+brew "pinentry-mac"
+
+brew "mas"
+
+brew "mactop"
+brew "mole"
+
+brew "go"
+brew "nvm"
+brew "uv"
+brew "pipx"
+brew "cmake"
+brew "pkgconf"
+brew "devcontainer"
+brew "docker"
+brew "lazydocker"
+brew "just"
+brew "go-task"
+brew "vhs"
+
+brew "kubernetes-cli"
+brew "kubectl-cnpg"
+brew "kubectx"
+brew "kustomize"
+brew "helm"
+brew "helmfile"
+brew "libiscsi"
+brew "sblim-sfcc"
+brew "fluxcd/tap/flux"
+brew "siderolabs/tap/talosctl"
+
+brew "karakeep"
+
+cask "font-hack-nerd-font"
+cask "font-intel-one-mono"
+cask "font-jetbrains-mono-nerd-font"
+
+cask "ghostty"
+cask "zed"
+
+cask "hammerspoon"
+cask "linearmouse"
+cask "stats"
+
+cask "vivaldi"
+
+cask "iina"
+cask "vlc"
+cask "moonlight"
+cask "xykong/tap/flux-markdown"
+
+cask "signal"
+
+cask "the-unarchiver"
+
+cask "obsidian"
+
+
+mas "Bitwarden", id: 1352778147
+
+uv "flux-local"
+krew "browse-pvc"
+brew "tree-sitter-cli"
+tap "homebrew/core"

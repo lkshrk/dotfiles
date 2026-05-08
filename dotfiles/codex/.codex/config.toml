@@ -1,0 +1,98 @@
+model_auto_compact_token_limit = 217600
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+[projects."/Users/lkshrk"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/omni"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/.config"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/h-cloud"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/sonarr-season-reminder"]
+trust_level = "trusted"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+
+[mcp_servers.CodeGraphContext]
+command = "/Users/lkshrk/.local/bin/cgc"
+args = ["mcp", "start"]
+
+[mcp_servers.CodeGraphContext.env]
+ALLOW_DB_DELETION = "false"
+CACHE_ENABLED = "true"
+COMPLEXITY_THRESHOLD = "10"
+DEBUG_LOGS = "false"
+DEBUG_LOG_PATH = "/Users/lkshrk/mcp_debug.log"
+DEFAULT_DATABASE = "falkordb"
+ENABLE_APP_LOGS = "CRITICAL"
+ENABLE_AUTO_WATCH = "false"
+FALKORDB_PATH = "/Users/lkshrk/.codegraphcontext/global/db/falkordb"
+FALKORDB_SOCKET_PATH = "/Users/lkshrk/.codegraphcontext/global/db/falkordb.sock"
+IGNORE_DIRS = "node_modules,venv,.venv,env,.env,dist,build,target,out,.git,.idea,.vscode,__pycache__"
+IGNORE_HIDDEN_FILES = "true"
+IGNORE_TEST_FILES = "false"
+INDEX_SOURCE = "true"
+INDEX_VARIABLES = "true"
+LIBRARY_LOG_LEVEL = "WARNING"
+LOG_FILE_PATH = "/Users/lkshrk/.codegraphcontext/logs/cgc.log"
+MAX_DEPTH = "unlimited"
+MAX_FILE_SIZE_MB = "10"
+PARALLEL_WORKERS = "4"
+SCIP_INDEXER = "false"
+SCIP_LANGUAGES = "python,typescript,go,rust,java"
+SKIP_EXTERNAL_RESOLUTION = "false"
+
+[mcp_servers.CodeGraphContext.tools.list_indexed_repositories]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.analyze_code_relationships]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.list_watched_paths]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.watch_directory]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.find_most_complex_functions]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.find_code]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.get_repository_stats]
+approval_mode = "approve"
+
+[mcp_servers.context7]
+url = "https://mcp.context7.com/mcp"
+env_http_headers = { "CONTEXT7_API_KEY" = "CONTEXT7_API_KEY" }
+
+[tui.keymap.editor]
+insert_newline = ["shift-enter"]
+kill_line_start = ["ctrl-u", "shift-delete"]
+
+# BEGIN OMC MANAGED MCP REGISTRY
+
+[mcp_servers.leankg]
+command = "/Users/lkshrk/.local/bin/leankg"
+args = ["mcp-stdio", "--watch"]
+type = "stdio"
+
+[mcp_servers.shiplight]
+command = "npx"
+args = ["-y", "@shiplightai/mcp@latest"]
+env = { PWDEBUG = "console" }
+startup_timeout_sec = 15
+
+[mcp_servers.xcodebuildmcp]
+command = "/opt/homebrew/bin/xcodebuildmcp"
+args = ["mcp"]
+type = "stdio"
+
+# END OMC MANAGED MCP REGISTRY

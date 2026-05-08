@@ -1,0 +1,4 @@
+# Brewfile.chat — additional messaging apps beyond the baseline (signal).
+
+cask "discord"
+cask "telegram"

@@ -1,0 +1,786 @@
+{
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.schema.json",
+  "groups": [
+    {
+      "name": "ai",
+      "tools": [
+        "@aisuite/chub",
+        "@code-yeongyu/comment-checker",
+        "chatgpt",
+        "claude-cmd",
+        "claude-code",
+        "cmux",
+        "codegraphcontext",
+        "codex",
+        "free-claude-code",
+        "mistral-vibe",
+        "mlx",
+        "mlx-lm",
+        "opencode",
+        "openwolf",
+        "rtk",
+        "codex-app",
+        "oh-my-claude-sisyphus"
+      ],
+      "dots": [
+        {
+          "name": "claude",
+          "path": "~/.claude",
+          "ignore": [
+            "*",
+            "!/settings.json",
+            "!/CLAUDE.md",
+            "!/mcp.json",
+            "!/plugins",
+            "!/plugins/installed_plugins.json",
+            "!/skills/",
+            "!/agents/",
+            "!/hooks/",
+            "!/scripts/",
+            "!/.omc-config.json",
+            "!/keybindings.json",
+            "!/statusline-command.sh"
+          ]
+        },
+        {
+          "name": "com.corsair",
+          "path": "~/.config/com.corsair"
+        }
+      ]
+    },
+    {
+      "name": "core",
+      "tools": [
+        "coreutils",
+        "docker",
+        "eza",
+        "fd",
+        "font-hack-nerd-font",
+        "font-intel-one-mono",
+        "font-jetbrains-mono-nerd-font",
+        "fzf",
+        "ghostty",
+        "gnu-sed",
+        "iina",
+        "jq",
+        "just",
+        "karakeep",
+        "mactop",
+        "mas",
+        "mole",
+        "neovim",
+        "cliclick",
+        "obsidian",
+        "pinentry-mac",
+        "rbw",
+        "ripgrep",
+        "signal",
+        "stats",
+        "stow",
+        "the-unarchiver",
+        "thefuck",
+        "tmux",
+        "tree",
+        "tree-sitter",
+        "tree-sitter-cli",
+        "vivaldi",
+        "vlc",
+        "watch",
+        "wget",
+        "yq",
+        "zed"
+      ]
+    },
+    {
+      "name": "desk",
+      "tools": [
+        "linearmouse",
+        "brave-browser",
+        "mosh",
+        "skhd-zig",
+        "yabai",
+        "zstd"
+      ]
+    },
+    {
+      "name": "dev",
+      "tools": [
+        "bats-core",
+        "bcrypt",
+        "busted",
+        "devcontainer",
+        "gh",
+        "git-filter-repo",
+        "glow",
+        "go",
+        "go-task",
+        "golangci-lint",
+        "gomplate",
+        "gum",
+        "imagemagick",
+        "lazydocker",
+        "lazygit",
+        "lefthook",
+        "lua-language-server",
+        "luacheck",
+        "luarocks",
+        "node",
+        "npm",
+        "nvm",
+        "yaml-language-server",
+        "pipx",
+        "playwright",
+        "stylua",
+        "uv",
+        "vhs",
+        "yaml-lint",
+        "yamlfmt",
+        "yamllint",
+        "python@3.14",
+        "pip",
+        "swiftformat",
+        "swiftlint"
+      ]
+    },
+    {
+      "name": "gaming",
+      "tools": [
+        "battle-net",
+        "discord",
+        "elgato-stream-deck",
+        "elgato-wave-link",
+        "moonlight",
+        "obs"
+      ],
+      "dots": [
+        {
+          "name": "com.corsair",
+          "path": "~/.config/com.corsair"
+        }
+      ]
+    },
+    {
+      "name": "infra",
+      "tools": [
+        "cilium-cli",
+        "cmctl",
+        "flux",
+        "flux-local",
+        "flux-markdown",
+        "helm",
+        "helmfile",
+        "krew",
+        "kubectl-cnpg",
+        "kubectx",
+        "kustomize",
+        "kubernetes-cli",
+        "sops",
+        "talosctl"
+      ]
+    },
+    {
+      "name": "utils",
+      "tools": [
+        "hammerspoon",
+        "minijinja-cli",
+        "plantuml",
+        "plex",
+        "wheel"
+      ]
+    },
+    {
+      "name": "Topaz",
+      "special": "host",
+      "tools": [
+        "cmake",
+        "docker-buildx",
+        "fswatch",
+        "libiscsi",
+        "pkgconf",
+        "parsec",
+        "certifi",
+        "numpy",
+        "pm2",
+        "corepack",
+        "xcodebuildmcp",
+        "github-js"
+      ],
+      "dots": [
+        {
+          "name": "gh",
+          "path": "~/.config/gh"
+        },
+        {
+          "name": "git",
+          "path": "~/.config/git"
+        },
+        {
+          "name": "hammerspoon",
+          "path": "~/.config/hammerspoon"
+        },
+        {
+          "name": "homebrew",
+          "path": "~/.config/homebrew"
+        },
+        {
+          "name": "karabiner",
+          "path": "~/.config/karabiner"
+        },
+        {
+          "name": "linearmouse",
+          "path": "~/.config/linearmouse"
+        },
+        {
+          "name": "moshi",
+          "path": "~/.config/moshi",
+          "ignored": true
+        },
+        {
+          "name": "nvim",
+          "path": "~/.config/nvim",
+          "ignore": [
+            ".gitignore"
+          ]
+        },
+        {
+          "name": "omni",
+          "path": "~/.config/omni"
+        },
+        {
+          "name": "opencode",
+          "path": "~/.config/opencode",
+          "ignore": [
+            "oh-my-openagent.json.backup-2026-04-13T15-21-36-926Z",
+            "oh-my-openagent.json.backup-2026-04-15T16-55-25-356Z",
+            "oh-my-openagent.json.backup-2026-05-01T14-49-32-879Z",
+            "oh-my-openagent.json.bak.2026-04-18T12-06-45-874Z",
+            "oh-my-opencode.json.clean",
+            "oh-my-opencode.json.opt",
+            "opencode.json.backup-2026-04-12T10-07-04-579Z",
+            "opencode.json.backup-2026-04-13T15-14-05-965Z",
+            "opencode.json.backup-2026-04-15T16-55-25-352Z",
+            "opencode.json.backup-2026-05-01T14-49-32-875Z",
+            ".gitignore"
+          ]
+        },
+        {
+          "name": "skhd",
+          "path": "~/.config/skhd"
+        },
+        {
+          "name": "ssh",
+          "path": "~/.config/ssh"
+        },
+        {
+          "name": "taskless",
+          "path": "~/.config/taskless"
+        },
+        {
+          "name": "tmux",
+          "path": "~/.config/tmux"
+        },
+        {
+          "name": "vim",
+          "path": "~/.vim"
+        },
+        {
+          "name": "yabai",
+          "path": "~/.config/yabai"
+        },
+        {
+          "name": "zed",
+          "path": "~/.config/zed"
+        },
+        {
+          "name": "zprofile",
+          "path": "~/.zprofile"
+        },
+        {
+          "name": "zsh",
+          "path": "~/.config/zsh",
+          "ignore": [
+            ".zsh_history",
+            ".gitignore"
+          ]
+        },
+        {
+          "name": "zshenv",
+          "path": "~/.zshenv"
+        },
+        {
+          "name": "zshrc",
+          "path": "~/.zshrc"
+        },
+        {
+          "name": "talos",
+          "path": "~/.config/talos",
+          "ignored": true
+        },
+        {
+          "name": "codex",
+          "path": "~/.codex",
+          "ignore": [
+            "*",
+            "!/config.toml",
+            "!/mcp.json",
+            "!/AGENTS.md",
+            "!/RTK.md",
+            "!/rules/",
+            "!/skills/",
+            "/skills/.system/"
+          ]
+        },
+        {
+          "name": "free-claude-code",
+          "path": "~/.config/free-claude-code"
+        },
+        {
+          "name": "ghostty",
+          "path": "~/.config/ghostty"
+        }
+      ]
+    }
+  ],
+  "host_settings": {
+    "Topaz": {
+      "dots_repo": "~/Dev/dotfiles",
+      "dots_disabled": false
+    }
+  },
+  "hosts": {
+    "Topaz": [
+      "ai",
+      "core",
+      "desk",
+      "dev",
+      "gaming",
+      "infra",
+      "utils"
+    ]
+  },
+  "ignore": {
+    "tools": [
+      "cmake",
+      "docker-buildx",
+      "fswatch",
+      "libiscsi",
+      "pkgconf"
+    ]
+  },
+  "settings": {
+    "dots_git": {}
+  },
+  "tools": {
+    "@aisuite/chub": {
+      "provider": "node"
+    },
+    "@code-yeongyu/comment-checker": {
+      "provider": "node"
+    },
+    "bats-core": {
+      "provider": "system"
+    },
+    "battle-net": {
+      "provider": "system"
+    },
+    "bcrypt": {
+      "provider": "system"
+    },
+    "brave-browser": {
+      "provider": "system"
+    },
+    "busted": {
+      "provider": "system"
+    },
+    "certifi": {
+      "provider": "python",
+      "install_with": "pip",
+      "ignore": true
+    },
+    "chatgpt": {
+      "provider": "system"
+    },
+    "cilium-cli": {
+      "provider": "system"
+    },
+    "claude-cmd": {
+      "provider": "system"
+    },
+    "claude-code": {
+      "provider": "system"
+    },
+    "cliclick": {
+      "provider": "system"
+    },
+    "cmake": {
+      "provider": "system"
+    },
+    "cmctl": {
+      "provider": "system"
+    },
+    "cmux": {
+      "provider": "system"
+    },
+    "codegraphcontext": {
+      "provider": "python"
+    },
+    "codex": {
+      "provider": "system"
+    },
+    "codex-app": {
+      "provider": "system",
+      "package": "codex-app"
+    },
+    "corepack": {
+      "provider": "node"
+    },
+    "coreutils": {
+      "provider": "system"
+    },
+    "devcontainer": {
+      "provider": "system"
+    },
+    "discord": {
+      "provider": "system"
+    },
+    "docker": {
+      "provider": "system"
+    },
+    "docker-buildx": {
+      "provider": "system"
+    },
+    "elgato-stream-deck": {
+      "provider": "system"
+    },
+    "elgato-wave-link": {
+      "provider": "system"
+    },
+    "eza": {
+      "provider": "system"
+    },
+    "fd": {
+      "provider": "system"
+    },
+    "flux": {
+      "provider": "system"
+    },
+    "flux-local": {
+      "provider": "python"
+    },
+    "flux-markdown": {
+      "provider": "system"
+    },
+    "font-hack-nerd-font": {
+      "provider": "system"
+    },
+    "font-intel-one-mono": {
+      "provider": "system"
+    },
+    "font-jetbrains-mono-nerd-font": {
+      "provider": "system"
+    },
+    "free-claude-code": {
+      "provider": "python"
+    },
+    "fswatch": {
+      "provider": "system"
+    },
+    "fzf": {
+      "provider": "system"
+    },
+    "gh": {
+      "provider": "system"
+    },
+    "ghostty": {
+      "provider": "system"
+    },
+    "git-filter-repo": {
+      "provider": "system"
+    },
+    "github-js": {
+      "provider": "node",
+      "package": "github-js"
+    },
+    "glow": {
+      "provider": "system"
+    },
+    "gnu-sed": {
+      "provider": "system"
+    },
+    "go": {
+      "provider": "system"
+    },
+    "go-task": {
+      "provider": "system"
+    },
+    "golangci-lint": {
+      "provider": "system"
+    },
+    "gomplate": {
+      "provider": "system"
+    },
+    "gum": {
+      "provider": "system"
+    },
+    "hammerspoon": {
+      "provider": "system"
+    },
+    "helm": {
+      "provider": "system"
+    },
+    "helmfile": {
+      "provider": "system"
+    },
+    "iina": {
+      "provider": "system"
+    },
+    "imagemagick": {
+      "provider": "system"
+    },
+    "jq": {
+      "provider": "system"
+    },
+    "just": {
+      "provider": "system"
+    },
+    "karakeep": {
+      "provider": "system"
+    },
+    "krew": {
+      "provider": "system"
+    },
+    "kubectl-cnpg": {
+      "provider": "system"
+    },
+    "kubectx": {
+      "provider": "system"
+    },
+    "kubernetes-cli": {
+      "provider": "system"
+    },
+    "kustomize": {
+      "provider": "system"
+    },
+    "lazydocker": {
+      "provider": "system"
+    },
+    "lazygit": {
+      "provider": "system"
+    },
+    "lefthook": {
+      "provider": "system"
+    },
+    "libiscsi": {
+      "provider": "system"
+    },
+    "linearmouse": {
+      "provider": "system"
+    },
+    "lua-language-server": {
+      "provider": "system"
+    },
+    "luacheck": {
+      "provider": "system"
+    },
+    "luarocks": {
+      "provider": "system"
+    },
+    "mactop": {
+      "provider": "system"
+    },
+    "mas": {
+      "provider": "system"
+    },
+    "minijinja-cli": {
+      "provider": "system"
+    },
+    "mistral-vibe": {
+      "provider": "python"
+    },
+    "mlx": {
+      "provider": "python",
+      "install_with": "pip"
+    },
+    "mlx-lm": {
+      "provider": "system"
+    },
+    "mole": {
+      "provider": "system"
+    },
+    "moonlight": {
+      "provider": "system"
+    },
+    "mosh": {
+      "provider": "system"
+    },
+    "neovim": {
+      "provider": "system"
+    },
+    "node": {
+      "provider": "system"
+    },
+    "npm": {
+      "provider": "node",
+      "install_with": "npm"
+    },
+    "numpy": {
+      "provider": "python",
+      "install_with": "pip"
+    },
+    "nvm": {
+      "provider": "system"
+    },
+    "obs": {
+      "provider": "system"
+    },
+    "obsidian": {
+      "provider": "system"
+    },
+    "oh-my-claude-sisyphus": {
+      "provider": "node",
+      "package": "oh-my-claude-sisyphus"
+    },
+    "opencode": {
+      "provider": "system"
+    },
+    "openwolf": {
+      "provider": "node"
+    },
+    "parsec": {
+      "provider": "system"
+    },
+    "pinentry-mac": {
+      "provider": "system"
+    },
+    "pip": {
+      "provider": "python"
+    },
+    "pipx": {
+      "provider": "system"
+    },
+    "pkgconf": {
+      "provider": "system"
+    },
+    "plantuml": {
+      "provider": "system"
+    },
+    "playwright": {
+      "provider": "node"
+    },
+    "plex": {
+      "provider": "system"
+    },
+    "pm2": {
+      "provider": "node"
+    },
+    "python@3.14": {
+      "provider": "system"
+    },
+    "rbw": {
+      "provider": "system"
+    },
+    "ripgrep": {
+      "provider": "system"
+    },
+    "rtk": {
+      "provider": "system"
+    },
+    "signal": {
+      "provider": "system"
+    },
+    "skhd-zig": {
+      "provider": "system"
+    },
+    "sops": {
+      "provider": "system"
+    },
+    "stats": {
+      "provider": "system"
+    },
+    "stow": {
+      "provider": "system"
+    },
+    "stylua": {
+      "provider": "system"
+    },
+    "swiftformat": {
+      "provider": "system",
+      "package": "swiftformat"
+    },
+    "swiftlint": {
+      "provider": "system",
+      "package": "swiftlint"
+    },
+    "talosctl": {
+      "provider": "system"
+    },
+    "the-unarchiver": {
+      "provider": "system"
+    },
+    "thefuck": {
+      "provider": "system"
+    },
+    "tmux": {
+      "provider": "system"
+    },
+    "tree": {
+      "provider": "system"
+    },
+    "tree-sitter": {
+      "provider": "system"
+    },
+    "tree-sitter-cli": {
+      "provider": "system"
+    },
+    "uv": {
+      "provider": "system"
+    },
+    "vhs": {
+      "provider": "system"
+    },
+    "vivaldi": {
+      "provider": "system"
+    },
+    "vlc": {
+      "provider": "system"
+    },
+    "watch": {
+      "provider": "system"
+    },
+    "wget": {
+      "provider": "system"
+    },
+    "wheel": {
+      "provider": "python",
+      "install_with": "pip"
+    },
+    "xcodebuildmcp": {
+      "provider": "system",
+      "package": "xcodebuildmcp"
+    },
+    "yabai": {
+      "provider": "system"
+    },
+    "yaml-language-server": {
+      "provider": "node"
+    },
+    "yaml-lint": {
+      "provider": "node"
+    },
+    "yamlfmt": {
+      "provider": "system"
+    },
+    "yamllint": {
+      "provider": "system"
+    },
+    "yq": {
+      "provider": "system"
+    },
+    "zed": {
+      "provider": "system"
+    },
+    "zstd": {
+      "provider": "system"
+    }
+  }
+}
