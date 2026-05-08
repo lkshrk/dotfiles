@@ -1,5 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.schema.json",
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v1.schema.json",
+  "version": 1,
   "groups": [
     {
       "name": "ai",
@@ -331,7 +332,12 @@
         },
         {
           "name": "zshrc",
-          "path": "~/.zshrc"
+          "path": "~/.zshrc",
+          "hosts": {
+            "Topaz": {
+              "package": "zshrc@Topaz"
+            }
+          }
         },
         {
           "name": "talos",

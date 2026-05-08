@@ -16,6 +16,9 @@ trust_level = "trusted"
 [projects."/Users/lkshrk/Dev/sonarr-season-reminder"]
 trust_level = "trusted"
 
+[projects."/Users/lkshrk/Dev/Decide It"]
+trust_level = "trusted"
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 
@@ -69,13 +72,19 @@ approval_mode = "approve"
 [mcp_servers.CodeGraphContext.tools.get_repository_stats]
 approval_mode = "approve"
 
+[mcp_servers.CodeGraphContext.tools.execute_cypher_query]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.add_code_to_graph]
+approval_mode = "approve"
+
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
 env_http_headers = { "CONTEXT7_API_KEY" = "CONTEXT7_API_KEY" }
 
 [tui.keymap.editor]
 insert_newline = ["shift-enter"]
-kill_line_start = ["ctrl-u", "shift-delete"]
+kill_line_start = ["ctrl-u"]
 
 # BEGIN OMC MANAGED MCP REGISTRY
 
@@ -83,6 +92,12 @@ kill_line_start = ["ctrl-u", "shift-delete"]
 command = "/Users/lkshrk/.local/bin/leankg"
 args = ["mcp-stdio", "--watch"]
 type = "stdio"
+
+[mcp_servers.leankg.tools.mcp_status]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_tested_by]
+approval_mode = "approve"
 
 [mcp_servers.shiplight]
 command = "npx"
@@ -94,5 +109,8 @@ startup_timeout_sec = 15
 command = "/opt/homebrew/bin/xcodebuildmcp"
 args = ["mcp"]
 type = "stdio"
+
+[plugins."build-ios-apps@openai-curated"]
+enabled = true
 
 # END OMC MANAGED MCP REGISTRY

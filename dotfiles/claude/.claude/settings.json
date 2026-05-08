@@ -21,7 +21,7 @@
       "mcp__plugin_everything-claude-code_exa__web_fetch_exa"
     ]
   },
-  "model": "sonnet",
+  "model": "claude-opus-4-6",
   "skillOverrides": {
     "better-addons:wow-mode": "user-invocable-only",
     "better-addons:wow-debug": "user-invocable-only",
