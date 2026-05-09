@@ -308,7 +308,9 @@
         "ccundo",
         "mitsupi",
         "gopls",
-        "pi-coding-agent"
+        "pi-coding-agent",
+        "better-sqlite3",
+        "context-mode"
       ],
       "dots": [
         {
@@ -400,6 +402,10 @@
     "bcrypt": {
       "provider": "system"
     },
+    "better-sqlite3": {
+      "provider": "node",
+      "package": "better-sqlite3"
+    },
     "brave-browser": {
       "provider": "system"
     },
@@ -448,6 +454,10 @@
     "codex-app": {
       "provider": "system",
       "package": "codex-app"
+    },
+    "context-mode": {
+      "provider": "node",
+      "package": "context-mode"
     },
     "corepack": {
       "provider": "node"
