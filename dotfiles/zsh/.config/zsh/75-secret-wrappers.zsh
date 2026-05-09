@@ -2,24 +2,30 @@
 
 builtin unalias claude codex fcc zai oc sops 2>/dev/null || :
 
+_claude_otel_run() {
+  local _otel_ca
+  _otel_ca=$(_root_ca_cert_file) || return
+
+  CLAUDE_CODE_ENABLE_TELEMETRY=1 \
+  CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1 \
+  OTEL_METRICS_EXPORTER=otlp \
+  OTEL_LOGS_EXPORTER=otlp \
+  OTEL_TRACES_EXPORTER=otlp \
+  OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf" \
+  OTEL_EXPORTER_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
+  OTEL_EXPORTER_OTLP_METRICS_ENDPOINT="https://otel.h-cloud.lan/v1/metrics" \
+  OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="https://otel.h-cloud.lan/v1/logs" \
+  OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://otel.h-cloud.lan/v1/traces" \
+  OTEL_SERVICE_NAME="claude-code" \
+  OTEL_RESOURCE_ATTRIBUTES="cli_tool=claude-code,user=lkshrk" \
+  NODE_EXTRA_CA_CERTS="$_otel_ca" \
+  "$@"
+}
+
 claude() {
   (
-    local _otel_ca
-    _otel_ca=$(_root_ca_cert_file) || return
     unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL ANTHROPIC_BASE_URL API_TIMEOUT_MS ANTHROPIC_AUTH_TOKEN
-    CLAUDE_CODE_ENABLE_TELEMETRY=1 \
-    OTEL_METRICS_EXPORTER=otlp \
-    OTEL_LOGS_EXPORTER=otlp \
-    OTEL_TRACES_EXPORTER=otlp \
-    OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf" \
-    OTEL_EXPORTER_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
-    OTEL_EXPORTER_OTLP_METRICS_ENDPOINT="https://otel.h-cloud.lan/v1/metrics" \
-    OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="https://otel.h-cloud.lan/v1/logs" \
-    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://otel.h-cloud.lan/v1/traces" \
-    OTEL_SERVICE_NAME="claude-code" \
-    OTEL_RESOURCE_ATTRIBUTES="cli_tool=claude-code,user=lkshrk" \
-    NODE_EXTRA_CA_CERTS="$_otel_ca" \
-    with-secrets \
+    _claude_otel_run with-secrets \
       openai-api-key    OPENAI_API_KEY \
       zai-api-key       ZAI_API_KEY \
       hf-token          HF_TOKEN \
@@ -69,7 +75,7 @@ fcc() {
 
     ANTHROPIC_BASE_URL="http://localhost:8082" \
     API_TIMEOUT_MS=3000000 \
-    command claude "$@"
+    _claude_otel_run command claude "$@"
   )
 }
 
@@ -80,7 +86,7 @@ zai() {
     ANTHROPIC_DEFAULT_OPUS_MODEL=glm-5.1 \
     ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic \
     API_TIMEOUT_MS=3000000 \
-    with-secrets \
+    _claude_otel_run with-secrets \
       zai-api-key       ANTHROPIC_AUTH_TOKEN \
       zai-api-key       ZAI_API_KEY \
       context7-api-key  CONTEXT7_API_KEY \

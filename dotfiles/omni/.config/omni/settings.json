@@ -317,7 +317,8 @@
         "gopls",
         "pi-coding-agent",
         "better-sqlite3",
-        "context-mode"
+        "context-mode",
+        "sshpass"
       ],
       "dots": [
         {
@@ -748,6 +749,10 @@
     },
     "sops": {
       "provider": "system"
+    },
+    "sshpass": {
+      "provider": "system",
+      "package": "sshpass"
     },
     "stats": {
       "provider": "system"
