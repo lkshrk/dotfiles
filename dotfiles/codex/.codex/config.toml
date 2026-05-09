@@ -3,10 +3,25 @@ model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
 
 [otel]
+environment = "dev"
 log_user_prompt = true
 
+[otel.exporter.otlp-http]
+endpoint = "https://otel.h-cloud.lan/v1/logs"
+protocol = "binary"
+
+[otel.exporter.otlp-http.tls]
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+
+[otel.trace_exporter.otlp-http]
+endpoint = "https://otel.h-cloud.lan/v1/traces"
+protocol = "binary"
+
+[otel.trace_exporter.otlp-http.tls]
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+
 [otel.metrics_exporter.otlp-http]
-endpoint = "https://otel.h-cloud.lan"
+endpoint = "https://otel.h-cloud.lan/v1/metrics"
 protocol = "binary"
 
 [otel.metrics_exporter.otlp-http.tls]
@@ -30,6 +45,12 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/civora"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/portfolio"]
 trust_level = "trusted"
 
 [tui.model_availability_nux]
@@ -112,6 +133,12 @@ approval_mode = "approve"
 [mcp_servers.CodeGraphContext.tools.switch_context]
 approval_mode = "approve"
 
+[mcp_servers.CodeGraphContext.tools.check_job_status]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.unwatch_directory]
+approval_mode = "approve"
+
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
 env_http_headers = { "CONTEXT7_API_KEY" = "CONTEXT7_API_KEY" }
@@ -149,6 +176,18 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.leankg.tools.get_context]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.mcp_index]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.ctx_read]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.detect_changes]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_impact_radius]
 approval_mode = "approve"
 
 [mcp_servers.shiplight]

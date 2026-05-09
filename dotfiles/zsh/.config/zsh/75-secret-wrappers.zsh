@@ -1,15 +1,24 @@
 (( $+functions[with-secrets] )) || return 0
 
+builtin unalias claude codex fcc zai oc sops 2>/dev/null || :
+
 claude() {
   (
+    local _otel_ca
+    _otel_ca=$(_root_ca_cert_file) || return
     unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL ANTHROPIC_BASE_URL API_TIMEOUT_MS ANTHROPIC_AUTH_TOKEN
     CLAUDE_CODE_ENABLE_TELEMETRY=1 \
     OTEL_METRICS_EXPORTER=otlp \
     OTEL_LOGS_EXPORTER=otlp \
+    OTEL_TRACES_EXPORTER=otlp \
     OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf" \
     OTEL_EXPORTER_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
+    OTEL_EXPORTER_OTLP_METRICS_ENDPOINT="https://otel.h-cloud.lan/v1/metrics" \
+    OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="https://otel.h-cloud.lan/v1/logs" \
+    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://otel.h-cloud.lan/v1/traces" \
+    OTEL_SERVICE_NAME="claude-code" \
     OTEL_RESOURCE_ATTRIBUTES="cli_tool=claude-code,user=lkshrk" \
-    NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/lan-ca.pem" \
+    NODE_EXTRA_CA_CERTS="$_otel_ca" \
     with-secrets \
       openai-api-key    OPENAI_API_KEY \
       zai-api-key       ZAI_API_KEY \
@@ -21,6 +30,10 @@ claude() {
 
 codex() {
   (
+    local _otel_ca
+    _otel_ca=$(_root_ca_cert_file) || return
+    NODE_EXTRA_CA_CERTS="$_otel_ca" \
+    OTEL_SERVICE_NAME="codex-cli" \
     OTEL_RESOURCE_ATTRIBUTES="cli_tool=codex-cli,user=lkshrk" \
     with-secrets \
       hf-token          HF_TOKEN \
@@ -77,11 +90,23 @@ zai() {
 
 oc() {
   (
+    local _otel_ca
+    _otel_ca=$(_root_ca_cert_file) || return
     OPENCODE_ENABLE_TELEMETRY=1 \
-    OPENCODE_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
     OPENCODE_OTLP_PROTOCOL="http/protobuf" \
-    OPENCODE_RESOURCE_ATTRIBUTES="cli_tool=opencode,user=lkshrk" \
-    NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/lan-ca.pem" \
+    OPENCODE_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
+    OPENCODE_OTLP_METRICS_INTERVAL=1000 \
+    OPENCODE_OTLP_LOGS_INTERVAL=1000 \
+    OPENCODE_RESOURCE_ATTRIBUTES="service.name=opencode,cli_tool=opencode,user=lkshrk" \
+    OTEL_BSP_SCHEDULE_DELAY=1000 \
+    OTEL_BLRP_SCHEDULE_DELAY=1000 \
+    OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf" \
+    OTEL_EXPORTER_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
+    OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="https://otel.h-cloud.lan/v1/logs" \
+    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://otel.h-cloud.lan/v1/traces" \
+    OTEL_SERVICE_NAME="opencode" \
+    OTEL_RESOURCE_ATTRIBUTES="cli_tool=opencode,user=lkshrk" \
+    NODE_EXTRA_CA_CERTS="$_otel_ca" \
     with-secrets \
       context7-api-key  CONTEXT7_API_KEY \
       -- command opencode --port "$@"
@@ -92,29 +117,4 @@ sops() {
   with-secrets \
     h-cloud-age-key   SOPS_AGE_KEY \
     -- command sops "$@"
-}
-
-# Lazy-fetch git signing pubkey from rbw item `github` into cache file.
-# Pubkey not secret; cache avoids hitting rbw on every signing op.
-# Refresh: rm ~/.cache/git-signing-key.pub
-_git_signing_key_cache="$HOME/.cache/git-signing-key.pub"
-
-_ensure_git_signing_key() {
-  [[ -s $_git_signing_key_cache ]] && return 0
-  mkdir -p "${_git_signing_key_cache:h}"
-  local val
-  val=$(_rbw_get_or_unlock github 2>/dev/null) || {
-    print -u2 "git: could not fetch signing pubkey from rbw item 'github'"
-    return 1
-  }
-  print -r -- "$val" > "$_git_signing_key_cache"
-}
-
-git() {
-  case "$1" in
-    commit|tag|merge|rebase|cherry-pick|revert|am|pull)
-      _ensure_git_signing_key
-      ;;
-  esac
-  command git "$@"
 }
