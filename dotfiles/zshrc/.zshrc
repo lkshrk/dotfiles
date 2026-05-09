@@ -1,6 +1,5 @@
 # ~/.zshrc — slim loader
 # Modular config lives in ~/.config/zsh/*.zsh and is sourced in name order.
-# Local-only overrides (secrets, host-specific) go in 99-local.zsh (gitignored).
 
 # Optional profiler — uncomment top + bottom block to debug startup time
 # zmodload zsh/zprof

@@ -100,15 +100,25 @@ csh() {
 # Title is set by LocalCommand in ssh config.
 ssh() { command ssh -F "$HOME/.config/ssh/config" "$@"; }
 
-# Show repo drift + new $HOME files that are not gitignored.
-dotcheck() {
-  bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/drift-check.sh" --list "$@"
+_dotfiles_omni() {
+  local repo="${DOTFILES_DIR:-$HOME/Dev/dotfiles}"
+  command omni --config "$repo/dotfiles/omni/.config/omni/settings.json" "$@"
 }
 
-# Start tracking a $HOME file: moves it into the repo and restows.
-# Usage: dottrack ~/.config/aerospace/aerospace.toml [package]
+# Sync tools, upgrades, dotfile links, and dotfile commits.
+dotsync() {
+  _dotfiles_omni reconcile "$@"
+}
+
+# Show dotfile symlink health and repo status.
+dotcheck() {
+  _dotfiles_omni dots status "$@"
+}
+
+# Start tracking a local path by adopting it into Omni dots management.
+# Usage: dottrack ~/.config/aerospace/aerospace.toml [--name aerospace]
 dottrack() {
-  bash "${DOTFILES_DIR:-$HOME/Dev/dotfiles}/scripts/track.sh" "$@"
+  _dotfiles_omni dots add --adopt "$@"
 }
 
 # --- brew wrapper: refresh yabai sudoers after install/upgrade --------------

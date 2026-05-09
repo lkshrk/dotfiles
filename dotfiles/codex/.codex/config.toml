@@ -1,6 +1,16 @@
 model_auto_compact_token_limit = 217600
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
+
+[otel]
+log_user_prompt = true
+
+[otel.metrics_exporter.otlp-http]
+endpoint = "https://otel.h-cloud.lan"
+protocol = "binary"
+
+[otel.metrics_exporter.otlp-http.tls]
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 [projects."/Users/lkshrk"]
 trust_level = "trusted"
 
@@ -17,6 +27,9 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/Decide It"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/dotfiles"]
 trust_level = "trusted"
 
 [tui.model_availability_nux]
@@ -130,6 +143,12 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.leankg.tools.query_file]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_dependents]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_context]
 approval_mode = "approve"
 
 [mcp_servers.shiplight]

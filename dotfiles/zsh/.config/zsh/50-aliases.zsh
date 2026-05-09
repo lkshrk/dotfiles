@@ -79,8 +79,6 @@ alias tc='talosctl '
 alias tcg='talosctl get '
 alias tcd='talosctl dashboard '
 
-# opencode
-alias oc='opencode --port'
 
 # ssh — use ~/.config/ssh/config (overrides default ~/.ssh/config location)
 alias scp='scp -F ~/.config/ssh/config'

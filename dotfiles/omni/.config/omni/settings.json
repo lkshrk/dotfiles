@@ -194,7 +194,14 @@
         },
         {
           "name": "yabai",
-          "path": "~/.config/yabai"
+          "path": "~/.config/yabai",
+          "ignore": [
+            "sleep-on-lock"
+          ]
+        },
+        {
+          "name": "sleep-on-lock",
+          "path": "~/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
         }
       ]
     },

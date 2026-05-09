@@ -17,47 +17,61 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Claude Code project-local settings (NOT the stowed package below)
+# AI assistant project-local settings/state (not stowed packages under dotfiles/)
+/.agents/
 /.claude/
+/.codex/
+/.codegraphcontext/
+/.continue/
+/.cursor/
+/.crush/
+/.gemini/
+/.goose/
+/.leankg/
+/.mcp/
+/.qwen/
+/.roo/
+/.serena/
+/.windsurf/
+/.aider*
+/AGENTS.local.md
+/CLAUDE.local.md
+/GEMINI.local.md
 .omc/
 
-# brew — generated Brewfile (install.sh concatenates base + active modules)
-brew/.config/homebrew/Brewfile.generated
+# zsh runtime
+dotfiles/zsh/.config/zsh/.zcompdump*
+dotfiles/zsh/.config/zsh/.zsh_history
 
-# brew — generated Brewfile (install.sh concatenates base + active modules)
-brew/.config/homebrew/Brewfile.generated
+# nvim vendored/runtime files
+dotfiles/nvim/.config/nvim/lazy-lock.json
+dotfiles/nvim/.config/nvim/LICENSE.md
+dotfiles/nvim/.config/nvim/README.md
 
-# zsh
-zsh/.config/zsh/99-local.zsh
-zsh/.config/zsh/.zcompdump*
-zsh/.config/zsh/.zsh_history
+# opencode runtime backups
+dotfiles/opencode/.config/opencode/*.backup-*
+dotfiles/opencode/.config/opencode/*.bak.*
 
-# nvim
-nvim/.config/nvim/lazy-lock.json
-nvim/.config/nvim/LICENSE.md
-nvim/.config/nvim/README.md
+# omni runtime backups
+dotfiles/omni/.config/omni/*.bak*
 
-# opencode — runtime auto-saved backups
-opencode/.config/opencode/*.backup-*
-opencode/.config/opencode/*.bak.*
+# yabai generated binary
+dotfiles/yabai/.config/yabai/sleep-on-lock
 
-# yabai — compiled from .swift source at install time
-yabai/.config/yabai/sleep-on-lock
+# intentionally unmanaged ~/.config trees
+dotfiles/acli/.config/acli/
+dotfiles/cagent/.config/cagent/
+dotfiles/configstore/.config/configstore/
+dotfiles/github-copilot/.config/github-copilot/
+dotfiles/karabiner/.config/karabiner/
+dotfiles/llmctl/.config/llmctl/
+dotfiles/mole/.config/mole/
+dotfiles/moshi/.config/moshi/
+dotfiles/talos/.config/talos/
+dotfiles/ttllm/.config/ttllm/
+dotfiles/com.corsair/.config/com.corsair/
 
-acli/.config/acli/
-cagent/.config/cagent/
-configstore/.config/configstore/
-github-copilot/.config/github-copilot/
-karabiner/.config/karabiner/
-llmctl/.config/llmctl/
-mole/.config/mole/
-moshi/.config/moshi/
-talos/.config/talos/
-ttllm/.config/ttllm/
-com.corsair/.config/com.corsair/
-
-# ~/.config subdirs we explicitly don't version (third-party tooling, runtime
-# state, anything we've deliberately skipped). Treated as "never suggest".
+# ignored discovery candidates
 acli/
 cagent/
 configstore/
@@ -68,51 +82,32 @@ mole/
 moshi/
 talos/
 ttllm/
-nvim/.config/nvim/LICENSE.md
-nvim/.config/nvim/README.md
+com.corsair/
 
-# opencode — runtime auto-saved backups
-opencode/.config/opencode/*.backup-*
-opencode/.config/opencode/*.bak.*
-nvim/.config/nvim/LICENSE.md
-nvim/.config/nvim/README.md
+# local credentials/state
+dotfiles/git/.config/git/config.local
+dotfiles/gh/.config/gh/hosts.yml
+dotfiles/zed/.config/zed/conversations/
+dotfiles/zed/.config/zed/prompts/
+dotfiles/zed/.config/zed/themes/
+dotfiles/zed/.config/zed/settings_backup.json
 
-# opencode — runtime auto-saved backups
-opencode/.config/opencode/*.backup-*
-opencode/.config/opencode/*.bak.*
-
-acli/.config/acli/
-cagent/.config/cagent/
-configstore/.config/configstore/
-github-copilot/.config/github-copilot/
-karabiner/.config/karabiner/
-llmctl/.config/llmctl/
-mole/.config/mole/
-moshi/.config/moshi/
-talos/.config/talos/
-ttllm/.config/ttllm/
-com.corsair/.config/com.corsair/
-
-# git — per-device identity / signing config
-git/.config/git/config.local
-
-# git — per-device identity / signing config
-git/.config/git/config.local
-
-# gh — contains auth token
-gh/.config/gh/hosts.yml
-
-# zed — local conversation state
-zed/.config/zed/conversations/
-zed/.config/zed/prompts/
-zed/.config/zed/themes/
-zed/.config/zed/settings_backup.json
-
-# claude — only settings.json and plugins/installed_plugins.json are tracked.
-# Everything else under ~/.claude is runtime/state and ignored:
-claude/.claude/*
-!claude/.claude/settings.json
-!claude/.claude/statusline-command.sh
-!claude/.claude/plugins/
-claude/.claude/plugins/*
-!claude/.claude/plugins/installed_plugins.json
+# claude runtime; keep tracked config, skills, agents, hooks, scripts, and plugin inventory
+dotfiles/claude/.claude/*
+!dotfiles/claude/.claude/CLAUDE.md
+!dotfiles/claude/.claude/mcp.json
+!dotfiles/claude/.claude/keybindings.json
+!dotfiles/claude/.claude/.omc-config.json
+!dotfiles/claude/.claude/settings.json
+!dotfiles/claude/.claude/statusline-command.sh
+!dotfiles/claude/.claude/agents/
+!dotfiles/claude/.claude/agents/**
+!dotfiles/claude/.claude/hooks/
+!dotfiles/claude/.claude/hooks/**
+!dotfiles/claude/.claude/plugins/
+dotfiles/claude/.claude/plugins/*
+!dotfiles/claude/.claude/plugins/installed_plugins.json
+!dotfiles/claude/.claude/scripts/
+!dotfiles/claude/.claude/scripts/**
+!dotfiles/claude/.claude/skills/
+!dotfiles/claude/.claude/skills/**

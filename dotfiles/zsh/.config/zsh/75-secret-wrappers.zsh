@@ -3,6 +3,13 @@
 claude() {
   (
     unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL ANTHROPIC_BASE_URL API_TIMEOUT_MS ANTHROPIC_AUTH_TOKEN
+    CLAUDE_CODE_ENABLE_TELEMETRY=1 \
+    OTEL_METRICS_EXPORTER=otlp \
+    OTEL_LOGS_EXPORTER=otlp \
+    OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf" \
+    OTEL_EXPORTER_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
+    OTEL_RESOURCE_ATTRIBUTES="cli_tool=claude-code,user=lkshrk" \
+    NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/lan-ca.pem" \
     with-secrets \
       openai-api-key    OPENAI_API_KEY \
       zai-api-key       ZAI_API_KEY \
@@ -14,6 +21,7 @@ claude() {
 
 codex() {
   (
+    OTEL_RESOURCE_ATTRIBUTES="cli_tool=codex-cli,user=lkshrk" \
     with-secrets \
       hf-token          HF_TOKEN \
       context7-api-key  CONTEXT7_API_KEY \
@@ -64,6 +72,19 @@ zai() {
       zai-api-key       ZAI_API_KEY \
       context7-api-key  CONTEXT7_API_KEY \
       -- command claude "$@"
+  )
+}
+
+oc() {
+  (
+    OPENCODE_ENABLE_TELEMETRY=1 \
+    OPENCODE_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
+    OPENCODE_OTLP_PROTOCOL="http/protobuf" \
+    OPENCODE_RESOURCE_ATTRIBUTES="cli_tool=opencode,user=lkshrk" \
+    NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/lan-ca.pem" \
+    with-secrets \
+      context7-api-key  CONTEXT7_API_KEY \
+      -- command opencode --port "$@"
   )
 }
 

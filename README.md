@@ -1,145 +1,92 @@
 # dotfiles
 
-Personal macOS config, managed with [GNU Stow](https://www.gnu.org/software/stow/).
-Per-host layout: shared defaults plus host-specific overrides keyed on `hostname -s`.
+Personal macOS config managed by [Omni](https://github.com/lkshrk/omni). Omni owns package reconciliation and dotfile symlinks; this repo only keeps the bootstrap glue and a few local post-sync steps.
 
-## Install
+## Setup
 
 ```sh
 git clone <repo> ~/Dev/dotfiles
 cd ~/Dev/dotfiles
-./install.sh
+./setup.sh
 ```
 
-The installer:
+The setup flow:
 
-1. Installs Homebrew + base brew bundle (skippable).
-2. Stows every package into `$HOME` (`--no-folding`, `--adopt`).
-3. Adopts any existing real files in `$HOME` into the repo, backing the
-   originals up to `~/.dotfiles-backup/<timestamp>/`. Prompts before
-   overwriting a newer repo version with an older home copy.
-4. Offers an opt-in 7-day shell-start reminder to run `dotsync`.
+1. Verifies Xcode Command Line Tools and `swiftc`.
+2. Ensures Homebrew is installed and on `PATH`.
+3. Installs the bootstrap tools with Brew: GNU Stow, Omni, Bun, and uv.
+4. Runs `omni --config dotfiles/omni/.config/omni/settings.json --yes bootstrap`.
+5. Runs `omni --config dotfiles/omni/.config/omni/settings.json --yes reconcile`.
+6. Compiles `~/.config/yabai/sleep-on-lock` from the tracked Swift source.
+7. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
+8. Refreshes the yabai sudoers entry.
+9. Installs lefthook hooks.
+
+Admin-required package actions are handled by normal macOS authentication. Setup warms the sudo session with `sudo -v` unless `--skip-admin-warmup` is passed.
 
 Flags:
 
-| Flag            | Effect                                         |
-| --------------- | ---------------------------------------------- |
-| `--skip-brew`   | Skip Homebrew install + bundle                 |
-| `--no-prompt`   | Assume "yes" for safe prompts, "no" for destructive ones |
+| Flag | Effect |
+| ---- | ------ |
+| `--macos-defaults` | Run `scripts/macos-defaults.sh` after Omni reconcile |
+| `--skip-admin-warmup` | Skip the initial `sudo -v` |
 
-## Packages
+`install.sh` is a compatibility shim that delegates to `setup.sh`.
 
-One stow package per directory:
-
-```
-brew        zsh        git      gh       nvim     opencode
-ghostty     tmux       hammerspoon
-linearmouse skhd       yabai    zed      ssh      claude
-```
-
-Each package mirrors its target path under `$HOME`, so
-`hammerspoon/.config/hammerspoon/init.lua` → `~/.config/hammerspoon/init.lua`.
-
-## Per-host config
-
-Host overrides live in `hosts/<hostname>.conf` and
-`hammerspoon/.config/hammerspoon/config_<hostname>.lua`. A shared
-`config_shared.lua` is deep-merged with the host config at runtime;
-per-key overrides win on conflict.
-
-**Brew modules:** Host configs declare a `BREW_MODULES` array that determines
-which Brewfile.<module> files to load beyond the baseline. Available modules:
-
-| Module    | Packages                                                       |
-| --------- | -------------------------------------------------------------- |
-| `desktop` | yabai, skhd-zig, cliclick, karabiner (tiling + input)           |
-| `ai`      | llama.cpp, mlx-lm, mistral-vibe, chatgpt, python@3.14           |
-| `streaming` | obs, plex, parsec, elgato-stream-deck, elgato-wave-link    |
-| `chat`    | discord, telegram (beyond baseline signal)                      |
-| `iwork`   | MAS iMovie, Keynote, Numbers, Pages, Xcode                      |
-| `misc`    | sops, brave-browser                                             |
-
-Example `hosts/Topaz.conf`:
-```sh
-BREW_MODULES=(desktop ai streaming chat iwork misc)
-```
-
-Supported hosts: `Topaz`, `APM3LJHMVG7XGCF`. Unknown hosts fall back to
-`default` (baseline only).
-
-## Day-to-day
-
-Three commands cover the whole loop:
+After setup, run:
 
 ```sh
-dotcheck                # list repo drift + untracked $HOME candidates
-dottrack <path> [pkg]   # start tracking a $HOME file: mv into repo + restow + stage
-dotsync [brew|config]   # sync brew packages and/or config files, auto-commit
+claude doctor
 ```
 
-`dotsync` does **not** pull in new files — that's `dottrack`'s job. Typical flow:
+## Omni
 
-1. Edit a tracked file. Symlink routes the write straight into the repo.
-2. New file you want tracked? `dottrack ~/.config/foo/bar.toml`.
-3. `dotsync` to absorb any atomic-write drift and commit.
+This repo uses the tracked config:
 
-**Usage:**
-- `dotsync` — sync both brew packages and config files
-- `dotsync brew` — only sync brew packages (interactive Brewfile sync)
-- `dotsync config` — only sync config files (drift-absorb + restow + commit)
+```sh
+dotfiles/omni/.config/omni/settings.json
+```
 
-**Flags (passed through to underlying scripts):**
-- `--dry-run` / `-n` — report only, no writes, no commit
-- `--no-commit` — absorb + restow only, leave changes staged
-- `--yes` / `-y` — no prompts (useful in hooks)
+Use it explicitly when running Omni from a fresh shell:
 
-**Config sync phases:**
-1. **Adopt drift** — `stow --adopt` absorbs any tracked file that got
-   clobbered into a real file. Shows a diff and prompts before keeping.
-2. **Restow** — recreate symlinks.
-3. **Commit** — auto-commit staged changes.
+```sh
+omni --config ~/Dev/dotfiles/dotfiles/omni/.config/omni/settings.json reconcile
+```
 
-**Brew sync phases:**
-1. **Installed but not tracked** — prompts which Brewfile to add each package to
-2. **In Brewfile but not installed** — prompts to install OR remove from Brewfile
+The equivalent environment variable is:
 
-## Sync reminder (optional)
+```sh
+export OMNI_CONFIG=~/Dev/dotfiles/dotfiles/omni/.config/omni/settings.json
+```
 
-Enabled via `~/.cache/zsh/dotfiles-sync-reminder`.
+Useful commands:
 
-Shell-start flow (`zsh/.config/zsh/80-sync-reminder.zsh`):
+```sh
+omni reconcile             # sync tools, upgrade, repair dots, commit dot changes
+omni dots status           # dotfile symlink health + repo status
+omni dots discover         # untracked dotfile candidates
+omni dots add --adopt PATH # adopt a local path into dotfile management
+omni dots sync [name]      # repair all dots or one dot entry
+```
 
-1. If `dotfiles-last-sync` is <7d old → silent return (~130µs).
-2. Otherwise read `dotfiles-drift-check` cache.
-   - Stale (>24h) → fire `scripts/drift-check.sh &!` in background, exit
-     quiet. Next shell reads the fresh result.
-   - `yes` → print `⚠  … run dotcheck to inspect, dotsync to update`.
-   - `no` → silent.
+The zsh helpers mirror those commands:
 
-`dotsync` and `install.sh` both reset the stamp + cache so the reminder
-quiets immediately after a successful sync.
-
-`dotcheck` reports three buckets:
-
-- **repo drift** — uncommitted changes in the repo.
-- **new $HOME candidates** — non-symlink files in already-tracked dirs
-  whose hypothetical repo path is not gitignored. Add with `dottrack`.
-- **unknown ~/.config subdirs** — dirs with no matching stow package.
-  Add with `dottrack` or silence with `<name>/.config/<name>/` in `.gitignore`.
+```sh
+dotsync                   # omni reconcile
+dotcheck                  # omni dots status
+dottrack PATH [args...]   # omni dots add --adopt PATH [args...]
+```
 
 ## Layout
 
-```
-install.sh               # idempotent installer
+```text
+setup.sh                  # primary bootstrap script
+install.sh                # compatibility shim for setup.sh
 scripts/
-  sync.sh                # dotync config: drift-absorb + restow + commit
-  sync-brewfile.zsh      # dotync brew: interactive Brewfile sync
-  track.sh               # dottrack: move a $HOME file into the repo
-  drift-check.sh         # dotcheck: list drift + untracked candidates
-  pre-push-sync.sh       # lefthook hook
-  macos-defaults.sh      # optional macOS tweaks
-  install-claude-plugins.sh
-hosts/
-  <hostname>.conf        # per-host env + feature flags
-<package>/               # one dir per stow package
+  macos-defaults.sh       # optional macOS defaults
+dotfiles/
+  omni/                   # tracked Omni config
+  yabai/                  # yabai config + sleep-on-lock Swift source
+  sleep-on-lock/          # LaunchAgent plist
+  ...                     # managed dotfile packages
 ```

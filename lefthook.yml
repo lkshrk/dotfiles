@@ -2,11 +2,7 @@
 # yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
 # yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
 # Lefthook config for the dotfiles repo.
-# Activate with: lefthook install   (run once after clone, also called by install.sh)
+# Activate with: lefthook install (also called by setup.sh).
 
 pre-push:
-  commands:
-    dotsync-prompt:
-      # Interactive: lefthook attaches stdin/tty so the prompt works.
-      interactive: true
-      run: bash scripts/pre-push-sync.sh
+  commands: {}
