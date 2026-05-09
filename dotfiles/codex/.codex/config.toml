@@ -51,6 +51,21 @@ SCIP_INDEXER = "false"
 SCIP_LANGUAGES = "python,typescript,go,rust,java"
 SKIP_EXTERNAL_RESOLUTION = "false"
 
+[mcp_servers.context-mode]
+command = "context-mode"
+
+[mcp_servers.context-mode.tools.ctx_stats]
+approval_mode = "approve"
+
+[mcp_servers.context-mode.tools.ctx_batch_execute]
+approval_mode = "approve"
+
+[mcp_servers.context-mode.tools.ctx_execute_file]
+approval_mode = "approve"
+
+[mcp_servers.context-mode.tools.ctx_execute]
+approval_mode = "approve"
+
 [mcp_servers.CodeGraphContext.tools.list_indexed_repositories]
 approval_mode = "approve"
 
@@ -78,6 +93,12 @@ approval_mode = "approve"
 [mcp_servers.CodeGraphContext.tools.add_code_to_graph]
 approval_mode = "approve"
 
+[mcp_servers.CodeGraphContext.tools.find_dead_code]
+approval_mode = "approve"
+
+[mcp_servers.CodeGraphContext.tools.switch_context]
+approval_mode = "approve"
+
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
 env_http_headers = { "CONTEXT7_API_KEY" = "CONTEXT7_API_KEY" }
@@ -99,17 +120,28 @@ approval_mode = "approve"
 [mcp_servers.leankg.tools.get_tested_by]
 approval_mode = "approve"
 
+[mcp_servers.leankg.tools.get_code_tree]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.search_code]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_callers]
+approval_mode = "approve"
+
 [mcp_servers.shiplight]
 command = "npx"
 args = ["-y", "@shiplightai/mcp@latest"]
 env = { PWDEBUG = "console" }
 startup_timeout_sec = 15
 
+enabled = false
 [mcp_servers.xcodebuildmcp]
 command = "/opt/homebrew/bin/xcodebuildmcp"
 args = ["mcp"]
 type = "stdio"
 
+enabled = false
 [plugins."build-ios-apps@openai-curated"]
 enabled = true
 

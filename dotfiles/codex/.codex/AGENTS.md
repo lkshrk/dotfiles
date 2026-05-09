@@ -1,4 +1,5 @@
 @/Users/lkshrk/.codex/RTK.md
+@/Users/lkshrk/.codex/CONTEXT_MODE.md
 
 
 ## Delegation Policy

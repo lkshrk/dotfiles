@@ -216,6 +216,14 @@
             "async": true
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/lkshrk/.claude/hooks/context-mode-cache-heal.mjs\""
+          }
+        ]
       }
     ],
     "PostToolUse": [
