@@ -303,7 +303,8 @@
         "pm2",
         "corepack",
         "xcodebuildmcp",
-        "github-js"
+        "github-js",
+        "gibo"
       ],
       "dots": [
         {
@@ -346,10 +347,6 @@
           "name": "talos",
           "path": "~/.config/talos",
           "ignored": true
-        },
-        {
-          "name": "homebrew",
-          "path": "~/.config/homebrew"
         }
       ]
     }
@@ -506,6 +503,10 @@
     },
     "ghostty": {
       "provider": "system"
+    },
+    "gibo": {
+      "provider": "system",
+      "package": "gibo"
     },
     "git-filter-repo": {
       "provider": "system"

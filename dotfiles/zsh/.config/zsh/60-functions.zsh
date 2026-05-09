@@ -217,3 +217,10 @@ ai-clean() {
     print "ai-clean: docker pruned${reclaimed:+ $reclaimed}"
   fi
 }
+
+
+# --- Default gitignore init ---------------------------------------------
+gii() {
+  gibo dump VSCode JetBrains Vim Neovim Emacs SublimeText VisualStudio Zed \
+    macOS Linux Windows llm claude
+}
