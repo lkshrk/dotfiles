@@ -471,7 +471,8 @@
     "playwright@claude-plugins-official": true,
     "ralph-loop@claude-plugins-official": true,
     "andrej-karpathy-skills@karpathy-skills": true,
-    "claude-code-setup@claude-plugins-official": true
+    "claude-code-setup@claude-plugins-official": true,
+    "context-mode@context-mode": true
   },
   "extraKnownMarketplaces": {
     "everything-claude-code": {
@@ -514,6 +515,12 @@
       "source": {
         "source": "github",
         "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    },
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/context-mode"
       }
     }
   },

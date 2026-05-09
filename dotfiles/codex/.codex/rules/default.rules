@@ -140,3 +140,7 @@ prefix_rule(pattern=["rtk", "git", "-C", "/private/tmp/h-cloud-app-template-v5",
 prefix_rule(pattern=["rtk", "git", "-C", "/private/tmp/h-cloud-app-template-v5", "commit"], decision="allow")
 prefix_rule(pattern=["rtk", "kubectl", "get", "deploy,pods,endpoints", "-n", "pub", "-l", "app.kubernetes.io/name=isc"], decision="allow")
 prefix_rule(pattern=["rtk", "kubectl", "get", "deploy", "isc", "-n", "pub", "-o", "jsonpath={.metadata.labels.helm\\.sh/chart}{\"\\n\"}"], decision="allow")
+prefix_rule(pattern=["rtk", "kubectl", "get", "pods,svc,endpoints", "-n", "security", "-l", "app.kubernetes.io/name=kyverno"], decision="allow")
+prefix_rule(pattern=["rtk", "kubectl", "get", "pods", "-n", "security"], decision="allow")
+prefix_rule(pattern=["rtk", "kubectl", "get", "deploy", "-n", "security"], decision="allow")
+prefix_rule(pattern=["rtk", "kubectl", "get", "svc,endpoints", "-n", "security"], decision="allow")

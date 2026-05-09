@@ -169,6 +169,16 @@
         "lastUpdated": "2026-05-04T03:01:11.000Z",
         "gitCommitSha": "2c606141936f1eeef17fa3043a72095b4765b9c2"
       }
+    ],
+    "context-mode@context-mode": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/context-mode/context-mode/1.0.111",
+        "version": "1.0.111",
+        "installedAt": "2026-05-09T02:12:18.644Z",
+        "lastUpdated": "2026-05-09T02:12:18.644Z",
+        "gitCommitSha": "00aa039e0f3a69dee3ed56b5ed1afd9cdacb9a47"
+      }
     ]
   }
 }

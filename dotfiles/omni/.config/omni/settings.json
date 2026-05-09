@@ -304,7 +304,11 @@
         "corepack",
         "xcodebuildmcp",
         "github-js",
-        "gibo"
+        "gibo",
+        "ccundo",
+        "mitsupi",
+        "gopls",
+        "pi-coding-agent"
       ],
       "dots": [
         {
@@ -401,6 +405,10 @@
     },
     "busted": {
       "provider": "system"
+    },
+    "ccundo": {
+      "provider": "node",
+      "package": "ccundo"
     },
     "certifi": {
       "provider": "python",
@@ -533,6 +541,10 @@
     "gomplate": {
       "provider": "system"
     },
+    "gopls": {
+      "provider": "system",
+      "package": "gopls"
+    },
     "gum": {
       "provider": "system"
     },
@@ -611,6 +623,10 @@
     "mistral-vibe": {
       "provider": "python"
     },
+    "mitsupi": {
+      "provider": "node",
+      "package": "mitsupi"
+    },
     "mlx": {
       "provider": "python",
       "install_with": "pip"
@@ -666,6 +682,10 @@
     },
     "parsec": {
       "provider": "system"
+    },
+    "pi-coding-agent": {
+      "provider": "system",
+      "package": "pi-coding-agent"
     },
     "pinentry-mac": {
       "provider": "system"
