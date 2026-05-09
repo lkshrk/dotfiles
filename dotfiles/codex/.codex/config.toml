@@ -129,6 +129,9 @@ approval_mode = "approve"
 [mcp_servers.leankg.tools.get_callers]
 approval_mode = "approve"
 
+[mcp_servers.leankg.tools.query_file]
+approval_mode = "approve"
+
 [mcp_servers.shiplight]
 command = "npx"
 args = ["-y", "@shiplightai/mcp@latest"]
