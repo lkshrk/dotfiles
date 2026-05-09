@@ -179,6 +179,15 @@
         "lastUpdated": "2026-05-09T02:39:01.390Z",
         "gitCommitSha": "00aa039e0f3a69dee3ed56b5ed1afd9cdacb9a47"
       }
+    ],
+    "gopls-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/gopls-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-05-09T06:16:32.747Z",
+        "lastUpdated": "2026-05-09T06:16:32.747Z"
+      }
     ]
   }
 }
