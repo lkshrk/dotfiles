@@ -12,7 +12,7 @@ alt + ctrl + cmd - s : ~/.config/yabai/focus-app.sh 'Signal'
 alt + ctrl + cmd - t : ~/.config/yabai/focus-app.sh 'Ghostty' '\.nvim\.' '\.nvim\.' '\.nvim\.'
 alt + ctrl + cmd - a : ~/.config/yabai/focus-app.sh 'ChatGPT'
 alt + ctrl + cmd - return : ~/.config/yabai/finder-here.sh
-alt + ctrl + cmd - p : ~/.config/yabai/focus-app.sh 'Bitwarden'
+alt + ctrl + cmd - 0x2C : ~/.config/yabai/focus-app.sh 'Bitwarden'
 
 # Space shortcuts
 alt + ctrl + cmd - 1 : yabai -m space --focus 1
@@ -37,13 +37,14 @@ alt + ctrl + cmd - right : yabai -m window --grid 1:2:1:0:1:1
 # Move window
 alt + ctrl + cmd + shift - left : yabai -m window --space prev && yabai -m space --focus prev
 alt + ctrl + cmd + shift - right : yabai -m window --space next && yabai -m space --focus next
-# move focused window to labeled spaces
-alt + ctrl + cmd + shift - 1 : yabai -m window --space main   && yabai -m space --focus main
-alt + ctrl + cmd + shift - 2 : yabai -m window --space stack  && yabai -m space --focus stack
-alt + ctrl + cmd + shift - 3 : yabai -m window --space remote && yabai -m space --focus remote
-alt + ctrl + cmd + shift - 4 : yabai -m window --space comms  && yabai -m space --focus comms
-alt + ctrl + cmd + shift - 5 : yabai -m window --space stream && yabai -m space --focus stream
+# move focused window to space
+alt + ctrl + cmd + shift - 1 : yabai -m window --space 1 && yabai -m space --focus 1
+alt + ctrl + cmd + shift - 2 : yabai -m window --space 2 && yabai -m space --focus 2
+alt + ctrl + cmd + shift - 3 : yabai -m window --space 3 && yabai -m space --focus 3
+alt + ctrl + cmd + shift - 4 : yabai -m window --space 4 && yabai -m space --focus 4
+alt + ctrl + cmd + shift - 5 : yabai -m window --space 5 && yabai -m space --focus 5
+alt + ctrl + cmd + shift - 6 : yabai -m window --space 6 && yabai -m space --focus 6
 
 # Apply Layouts
 alt + ctrl + cmd + shift - u : ~/.config/yabai/toggle-above.sh
-alt + ctrl + cmd + shift - l : ~/.config/yabai/layout-second-screen.sh
+alt + ctrl + cmd + shift - l : ~/.config/yabai/apply-layout.sh

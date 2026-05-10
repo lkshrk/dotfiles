@@ -13,7 +13,7 @@ ZED_IDS="$(yabai -m query --windows | jq -r 'map(select(.app == "Zed" and (.titl
 ALL_IDS="$(printf '%s\n' $NVIM_IDS $ZED_IDS | awk 'NF && !seen[$0]++')"
 
 if [ -z "$ALL_IDS" ]; then
-  open -a "Zed"
+  open -na "Ghostty" --args -e nvim
   exit 0
 fi
 

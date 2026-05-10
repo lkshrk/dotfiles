@@ -49,15 +49,6 @@
         "gitCommitSha": "ef6050c5e1848b6880ff47c32ade1a608a64f85e"
       }
     ],
-    "context7@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/context7/unknown",
-        "version": "unknown",
-        "installedAt": "2026-04-10T23:29:56.701Z",
-        "lastUpdated": "2026-05-04T10:44:16.246Z"
-      }
-    ],
     "bubbletea-maintenance@human-frontier-labs-marketplace": [
       {
         "scope": "user",
@@ -124,15 +115,6 @@
         "lastUpdated": "2026-05-04T03:04:32.748Z"
       }
     ],
-    "github@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/github/unknown",
-        "version": "unknown",
-        "installedAt": "2026-05-04T03:04:32.748Z",
-        "lastUpdated": "2026-05-04T10:44:16.245Z"
-      }
-    ],
     "claude-code-setup@claude-plugins-official": [
       {
         "scope": "user",
@@ -149,15 +131,6 @@
         "version": "1.0.0",
         "installedAt": "2026-05-04T03:04:32.748Z",
         "lastUpdated": "2026-05-04T03:04:32.748Z"
-      }
-    ],
-    "playwright@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/playwright/unknown",
-        "version": "unknown",
-        "installedAt": "2026-05-04T03:04:32.748Z",
-        "lastUpdated": "2026-05-04T10:44:16.251Z"
       }
     ],
     "andrej-karpathy-skills@karpathy-skills": [
@@ -187,6 +160,33 @@
         "version": "1.0.0",
         "installedAt": "2026-05-09T06:16:32.747Z",
         "lastUpdated": "2026-05-09T06:16:32.747Z"
+      }
+    ],
+    "context7@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/context7/unknown",
+        "version": "unknown",
+        "installedAt": "2026-05-10T03:58:57.696Z",
+        "lastUpdated": "2026-05-10T03:58:57.696Z"
+      }
+    ],
+    "github@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/github/unknown",
+        "version": "unknown",
+        "installedAt": "2026-05-10T03:58:57.696Z",
+        "lastUpdated": "2026-05-10T03:58:57.696Z"
+      }
+    ],
+    "playwright@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/playwright/unknown",
+        "version": "unknown",
+        "installedAt": "2026-05-10T03:58:57.696Z",
+        "lastUpdated": "2026-05-10T03:58:57.696Z"
       }
     ]
   }

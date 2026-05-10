@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SPACE_MAIN="$(yabai -m query --spaces | jq -r '.[] | select(.label=="main") | .index')"
+SPACE_MAIN=1
 
 yabai -m query --windows \
   | jq -r '

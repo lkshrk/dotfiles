@@ -26,4 +26,9 @@ yabai -m signal --add \
   event=window_focused \
   action="${CONFIG_DIR}/track-focus.sh"
 
+# New windows: follow sibling app space, or space 1 if first window
+yabai -m signal --add \
+  event=window_created \
+  action="${CONFIG_DIR}/window-created.sh"
+
 echo "yabai config loaded"

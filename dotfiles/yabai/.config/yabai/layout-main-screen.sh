@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SPACE_MAIN="$(yabai -m query --spaces | jq -r '.[] | select(.label=="main") | .index')"
-SPACE_STACK="$(yabai -m query --spaces | jq -r '.[] | select(.label=="stack") | .index')"
-SPACE_REMOTE="$(yabai -m query --spaces | jq -r '.[] | select(.label=="remote") | .index')"
+SPACE_MAIN=1
+SPACE_STACK=2
+SPACE_REMOTE=4
 
 PRIMARY_DISPLAY="$(
   yabai -m query --displays | jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index'
@@ -28,10 +28,9 @@ BOTTOM_Y=$(( DY + HALF_H ))
 
 wid_for() {
   local app="$1"
-  local space="$2"
   yabai -m query --windows \
-    | jq -r --arg app "$app" --argjson space "$space" '
-        map(select(.app == $app and .space == $space))
+    | jq -r --arg app "$app" '
+        map(select(.app == $app))
         | sort_by(.id)
         | last.id // empty
       '
@@ -48,9 +47,10 @@ place() {
   local sublayer="${8:-}"
 
   local wid
-  wid="$(wid_for "$app" "$space")"
+  wid="$(wid_for "$app")"
   [ -z "$wid" ] && return 0
 
+  yabai -m window "$wid" --space "$space"
   yabai -m window "$wid" --move "abs:${x}:${y}"
 
   if [ "$do_resize" = "1" ]; then

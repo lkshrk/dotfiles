@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SPACE_COMMS="$(yabai -m query --spaces | jq -r '.[] | select(.label=="comms") | .index')"
-SPACE_STREAM="$(yabai -m query --spaces | jq -r '.[] | select(.label=="stream") | .index')"
+SPACE_COMMS=5
+SPACE_STREAM=6
 
 SECONDARY_DISPLAY="$(
   yabai -m query --displays | jq -r '[.[] | select(.frame.h > .frame.w)] | sort_by(.frame.h) | last | .index'
@@ -28,10 +28,9 @@ RIGHT_X=$(( DX + HALF_W ))
 
 wid_for() {
   local app="$1"
-  local space="$2"
   yabai -m query --windows \
-    | jq -r --arg app "$app" --argjson space "$space" '
-        map(select(.app == $app and .space == $space))
+    | jq -r --arg app "$app" '
+        map(select(.app == $app))
         | sort_by(.id)
         | last.id // empty
       '
@@ -48,9 +47,10 @@ place() {
   local sublayer="${8:-}"
 
   local wid
-  wid="$(wid_for "$app" "$space")"
+  wid="$(wid_for "$app")"
   [ -z "$wid" ] && return 0
 
+  yabai -m window "$wid" --space "$space"
   yabai -m window "$wid" --move "abs:${x}:${y}"
 
   if [ "$do_resize" = "1" ]; then

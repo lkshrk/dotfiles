@@ -14,10 +14,7 @@ PREFERRED_DISPLAY_INDEX="$(
     | jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index'
 )"
 
-STACK_SPACE_INDEX="$(
-  yabai -m query --spaces \
-    | jq -r '.[] | select(.label == "stack") | .index'
-)"
+STACK_SPACE_INDEX=2
 
 if [ -z "$PREFERRED_DISPLAY_INDEX" ]; then
   echo "preferred display not found" >&2
