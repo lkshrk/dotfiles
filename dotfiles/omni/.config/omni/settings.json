@@ -232,7 +232,6 @@
         "nvm",
         "yaml-language-server",
         "pipx",
-        "playwright",
         "stylua",
         "uv",
         "vhs",
@@ -719,9 +718,6 @@
     },
     "plantuml": {
       "provider": "system"
-    },
-    "playwright": {
-      "provider": "node"
     },
     "plex": {
       "provider": "system"

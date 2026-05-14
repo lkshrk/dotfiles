@@ -100,6 +100,9 @@ approval_mode = "approve"
 [mcp_servers.context-mode.tools.ctx_execute]
 approval_mode = "approve"
 
+[mcp_servers.context-mode.tools.ctx_upgrade]
+approval_mode = "approve"
+
 [mcp_servers.CodeGraphContext.tools.list_indexed_repositories]
 approval_mode = "approve"
 
