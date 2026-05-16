@@ -7,7 +7,7 @@
 		<value name="IntegrationsClientsAccessExplicitDecisionPerformed">Stream Deck</value>
 	</map>
 	<map name="DataCollectionSettings">
-		<value name="configuration_loaded_date">2026-05-10T18:51:27.469</value>
+		<value name="configuration_loaded_date">2026-05-15T15:19:58.469</value>
 		<value name="dataConsent">false</value>
 		<map name="hwProfilesHashes">
 			<map name="{32486e58-a900-497e-bc14-280517bd1d15}">
@@ -89,9 +89,9 @@
 		<value name="LastCheckDate">2026-05-19</value>
 	</map>
 	<map name="Update">
-		<value name="PrevUpdateTime">2026-05-10T16:51:22.078Z</value>
-		<value name="UpdateCount">4</value>
-		<value name="UpdateEndTime">2026-05-10T16:51:24.290Z</value>
+		<value name="PrevUpdateTime">2026-05-15T13:19:57.248Z</value>
+		<value name="UpdateCount">6</value>
+		<value name="UpdateEndTime">2026-05-15T13:19:57.329Z</value>
 	</map>
 	<value name="defaultProfile">{6cd71b5b-3931-40b3-b349-10604b36d69e}</value>
 </config>
