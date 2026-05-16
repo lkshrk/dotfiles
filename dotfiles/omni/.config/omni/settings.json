@@ -54,7 +54,8 @@
             "!/RTK.md",
             "!/rules/",
             "!/skills/",
-            "/skills/.system/"
+            "/skills/.system/",
+            "skills"
           ]
         },
         {
@@ -361,6 +362,13 @@
           "name": "talos",
           "path": "~/.config/talos",
           "ignored": true
+        },
+        {
+          "name": "agents",
+          "path": "~/.agents",
+          "ignore": [
+            "skills"
+          ]
         }
       ]
     }

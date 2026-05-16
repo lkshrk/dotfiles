@@ -1,0 +1,302 @@
+{
+  "version": 3,
+  "skills": {
+    "moshi-best-practices": {
+      "source": "rjyo/moshi-skill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/rjyo/moshi-skill.git",
+      "skillPath": "skills/moshi-best-practices/SKILL.md",
+      "skillFolderHash": "a48151ac60b4970bf15f09f52c401186f418ff27",
+      "installedAt": "2026-04-15T22:41:16.278Z",
+      "updatedAt": "2026-05-15T20:09:15.840Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "3013fdeb8a11b10b1eb795ec3ae8bfca38f7c26d",
+      "installedAt": "2026-04-15T22:41:20.735Z",
+      "updatedAt": "2026-04-15T22:41:20.735Z"
+    },
+    "cloud": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/cloud/SKILL.md",
+      "skillFolderHash": "afa95e9d8c60fe801b1bc68e237bf863616851cf",
+      "installedAt": "2026-04-27T03:38:47.374Z",
+      "updatedAt": "2026-04-27T03:38:47.374Z"
+    },
+    "compliance-review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/compliance-review/SKILL.md",
+      "skillFolderHash": "210400916dad27dff0e4b20b4ec50a9a1337534d",
+      "installedAt": "2026-04-27T03:38:47.711Z",
+      "updatedAt": "2026-04-27T03:38:47.711Z"
+    },
+    "create_e2e_tests": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/create_e2e_tests/SKILL.md",
+      "skillFolderHash": "9961b8b2768cbec94c97d1d7636e9ea78ad063f7",
+      "installedAt": "2026-04-27T03:38:48.019Z",
+      "updatedAt": "2026-04-27T03:38:48.019Z"
+    },
+    "design-review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/design-review/SKILL.md",
+      "skillFolderHash": "a2be39155027444f28d9f0ab3e06dd24d293d997",
+      "installedAt": "2026-04-27T03:38:48.360Z",
+      "updatedAt": "2026-05-10T06:24:54.940Z"
+    },
+    "geo-review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/geo-review/SKILL.md",
+      "skillFolderHash": "3d4765f10a4865b8328bf133965dea5241dd5965",
+      "installedAt": "2026-04-27T03:38:48.692Z",
+      "updatedAt": "2026-04-27T03:38:48.692Z"
+    },
+    "performance-review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/performance-review/SKILL.md",
+      "skillFolderHash": "192950cf8d607dccd43a5f5a7ea9b683d5e499b1",
+      "installedAt": "2026-04-27T03:38:49.013Z",
+      "updatedAt": "2026-05-10T06:24:54.940Z"
+    },
+    "privacy-review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/privacy-review/SKILL.md",
+      "skillFolderHash": "90cbbb9dbc9cc3c2e3f263dd736da8ebe230988c",
+      "installedAt": "2026-04-27T03:38:49.324Z",
+      "updatedAt": "2026-05-10T06:24:54.940Z"
+    },
+    "resilience-review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/resilience-review/SKILL.md",
+      "skillFolderHash": "66d2e514a6fea174f7f985f59d2d287d901c359a",
+      "installedAt": "2026-04-27T03:38:49.648Z",
+      "updatedAt": "2026-05-10T06:24:54.941Z"
+    },
+    "review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/review/SKILL.md",
+      "skillFolderHash": "f2f194abea7945ebeb0ada8fb33aa2d5356a4ca0",
+      "installedAt": "2026-04-27T03:38:50.010Z",
+      "updatedAt": "2026-05-10T06:24:54.941Z"
+    },
+    "security-review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/security-review/SKILL.md",
+      "skillFolderHash": "78e795f13a1b8248d981e65edb287ce35d658f66",
+      "installedAt": "2026-04-27T03:38:50.335Z",
+      "updatedAt": "2026-05-10T06:24:54.941Z"
+    },
+    "seo-review": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/seo-review/SKILL.md",
+      "skillFolderHash": "c477e3af6205b8b572cc3b26b0e95c7aabeee3b1",
+      "installedAt": "2026-04-27T03:38:50.681Z",
+      "updatedAt": "2026-05-10T06:24:54.941Z"
+    },
+    "triage": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/triage/SKILL.md",
+      "skillFolderHash": "de4f182c30876a2460ca307e2f601b9b892527e5",
+      "pluginName": "mattpocock-skills",
+      "installedAt": "2026-04-27T03:38:51.024Z",
+      "updatedAt": "2026-05-16T14:04:53.303Z"
+    },
+    "verify": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/verify/SKILL.md",
+      "skillFolderHash": "367a66568bf63833c1c3a5462fecef74508f2bfd",
+      "installedAt": "2026-04-27T03:38:51.355Z",
+      "updatedAt": "2026-05-10T06:24:54.942Z"
+    },
+    "cavecrew": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
+      "skillPath": "skills/cavecrew/SKILL.md",
+      "skillFolderHash": "41f7a678cd5dbea613f8fac91a9db4684e3e35fe",
+      "installedAt": "2026-05-01T12:54:35.924Z",
+      "updatedAt": "2026-05-01T12:54:35.924Z"
+    },
+    "caveman": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
+      "skillPath": "caveman/SKILL.md",
+      "skillFolderHash": "f524c391d466fe35e0bdbe9707854fcb2be52b26",
+      "installedAt": "2026-05-01T12:54:35.927Z",
+      "updatedAt": "2026-05-01T12:54:35.927Z"
+    },
+    "caveman-commit": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
+      "skillPath": "skills/caveman-commit/SKILL.md",
+      "skillFolderHash": "f8d14c8de94e55b43de62b4b3081230248e2f481",
+      "installedAt": "2026-05-01T12:54:35.928Z",
+      "updatedAt": "2026-05-01T12:54:35.928Z"
+    },
+    "caveman-compress": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
+      "skillPath": "caveman-compress/SKILL.md",
+      "skillFolderHash": "eb81d1ed6ddeb1767f56817572c232e66bdc1167",
+      "installedAt": "2026-05-01T12:54:35.929Z",
+      "updatedAt": "2026-05-01T12:54:35.929Z"
+    },
+    "caveman-help": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
+      "skillPath": "skills/caveman-help/SKILL.md",
+      "skillFolderHash": "0456947ac9539b1f8cba536f3b7a19d7a0f4eb91",
+      "installedAt": "2026-05-01T12:54:35.930Z",
+      "updatedAt": "2026-05-01T12:54:35.930Z"
+    },
+    "caveman-review": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
+      "skillPath": "skills/caveman-review/SKILL.md",
+      "skillFolderHash": "2147719da5f81255dbf960d6ce46d5a7ee9d0860",
+      "installedAt": "2026-05-01T12:54:35.931Z",
+      "updatedAt": "2026-05-01T12:54:35.931Z"
+    },
+    "caveman-stats": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
+      "skillPath": "skills/caveman-stats/SKILL.md",
+      "skillFolderHash": "b18f5f97d4c5234dfa45bf8e0f155cdcc7755d04",
+      "installedAt": "2026-05-01T12:54:35.931Z",
+      "updatedAt": "2026-05-01T12:54:35.931Z"
+    },
+    "compress": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
+      "skillPath": "skills/compress/SKILL.md",
+      "skillFolderHash": "d9f3edbb403bb351a6c6968fc7fcd7c861450c0d",
+      "installedAt": "2026-05-01T12:54:35.932Z",
+      "updatedAt": "2026-05-01T12:54:35.932Z"
+    },
+    "create-tests": {
+      "source": "ShiplightAI/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
+      "skillPath": "skills/create-tests/SKILL.md",
+      "skillFolderHash": "66f1da4875ce0971ead75122fc9da665bad4515d",
+      "installedAt": "2026-05-10T06:24:54.939Z",
+      "updatedAt": "2026-05-10T06:24:54.939Z"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "skillFolderHash": "2a1ad17028306ebe45f0e49703fa28b9b2e7f499",
+      "pluginName": "mattpocock-skills",
+      "installedAt": "2026-05-16T14:04:53.299Z",
+      "updatedAt": "2026-05-16T14:04:53.299Z"
+    },
+    "grill-with-docs": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/grill-with-docs/SKILL.md",
+      "skillFolderHash": "3c4ac970c404e8d32c24f2725bfe679e455a925b",
+      "pluginName": "mattpocock-skills",
+      "installedAt": "2026-05-16T14:04:53.300Z",
+      "updatedAt": "2026-05-16T14:04:53.300Z"
+    },
+    "handoff": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/handoff/SKILL.md",
+      "skillFolderHash": "85c644da8f99d073b434261f1e3fc058e2116236",
+      "pluginName": "mattpocock-skills",
+      "installedAt": "2026-05-16T14:04:53.301Z",
+      "updatedAt": "2026-05-16T14:04:53.301Z"
+    },
+    "improve-codebase-architecture": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
+      "skillFolderHash": "3ad8fa787b3b9b622d1f5a3d0afc27812ac782fa",
+      "pluginName": "mattpocock-skills",
+      "installedAt": "2026-05-16T14:04:53.302Z",
+      "updatedAt": "2026-05-16T14:04:53.302Z"
+    },
+    "setup-matt-pocock-skills": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
+      "skillFolderHash": "77638955bebe492948244f1338e54ca1a9445c29",
+      "pluginName": "mattpocock-skills",
+      "installedAt": "2026-05-16T14:04:53.302Z",
+      "updatedAt": "2026-05-16T14:04:53.302Z"
+    },
+    "diagnose": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/engineering/diagnose/SKILL.md",
+      "skillFolderHash": "43d464d0e9d1049b9d525975c0f7367ab7e01a5f",
+      "pluginName": "mattpocock-skills",
+      "installedAt": "2026-05-16T14:04:53.302Z",
+      "updatedAt": "2026-05-16T14:04:53.302Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "dexto",
+    "firebender",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "warp",
+    "claude-code",
+    "pi"
+  ]
+}
