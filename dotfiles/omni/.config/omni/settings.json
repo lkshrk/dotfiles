@@ -317,7 +317,8 @@
         "pi-coding-agent",
         "better-sqlite3",
         "context-mode",
-        "sshpass"
+        "sshpass",
+        "moshi-hook"
       ],
       "dots": [
         {
@@ -659,6 +660,10 @@
     },
     "mosh": {
       "provider": "system"
+    },
+    "moshi-hook": {
+      "provider": "system",
+      "package": "moshi-hook"
     },
     "neovim": {
       "provider": "system"
