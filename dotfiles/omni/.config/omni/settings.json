@@ -684,8 +684,7 @@
       "install_with": "npm"
     },
     "numpy": {
-      "provider": "python",
-      "install_with": "pip"
+      "provider": "python"
     },
     "nvm": {
       "provider": "system"
