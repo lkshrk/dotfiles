@@ -365,13 +365,6 @@
           "ignored": true
         },
         {
-          "name": "agents",
-          "path": "~/.agents",
-          "ignore": [
-            "skills"
-          ]
-        },
-        {
           "name": "CLAUDE.md",
           "path": "~/.config/CLAUDE.md",
           "ignored": true
