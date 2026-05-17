@@ -319,7 +319,8 @@
         "better-sqlite3",
         "context-mode",
         "sshpass",
-        "moshi-hook"
+        "moshi-hook",
+        "witr"
       ],
       "dots": [
         {
@@ -821,6 +822,10 @@
     "wheel": {
       "provider": "python",
       "install_with": "pip"
+    },
+    "witr": {
+      "provider": "system",
+      "package": "witr"
     },
     "xcodebuildmcp": {
       "provider": "system",
