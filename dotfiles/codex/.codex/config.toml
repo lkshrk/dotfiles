@@ -1,6 +1,7 @@
 model_auto_compact_token_limit = 217600
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "xhigh"
 
 [otel]
 environment = "dev"
@@ -53,6 +54,9 @@ trust_level = "trusted"
 [projects."/Users/lkshrk/Dev/portfolio"]
 trust_level = "trusted"
 
+[projects."/Users/lkshrk/Dev/civora/civora-backend"]
+trust_level = "trusted"
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 
@@ -101,6 +105,12 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.context-mode.tools.ctx_upgrade]
+approval_mode = "approve"
+
+[mcp_servers.context-mode.tools.ctx_search]
+approval_mode = "approve"
+
+[mcp_servers.context-mode.tools.ctx_index]
 approval_mode = "approve"
 
 [mcp_servers.CodeGraphContext.tools.list_indexed_repositories]
@@ -210,3 +220,20 @@ enabled = false
 enabled = true
 
 # END OMC MANAGED MCP REGISTRY
+
+[features]
+hooks = true
+
+[hooks.state]
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
+trusted_hash = "sha256:d82a6f8cc0e25d88c564a8c54fd04e6d995214f025699b46d75f5920a1cfd7f1"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:32c80cd33fbfcfc4ae4f2feca77149fe3334b1113c6598676f753fd942500de2"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:a0550731637177c048527d803117304a1b3d0f9e4f2580a9fba31d53bfe4cb8f"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:78297874884298bf02ef5d48433f2bb34166de580ee027e9e85d564cdf23fe63"
