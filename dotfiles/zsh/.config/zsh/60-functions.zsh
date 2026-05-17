@@ -4,6 +4,16 @@ gupf() {
   git reset head^1 && git add . && git commit -m "$1" && git push -f
 }
 
+# Ensure rbw is unlocked before signing operations so GPG can fetch the key.
+git() {
+  case "${1:-}" in
+    commit|tag|merge)
+      rbw unlocked 2>/dev/null || rbw unlock
+      ;;
+  esac
+  command git "$@"
+}
+
 # release <major|minor|patch|vX.Y.Z>
 #   1. if uncommitted changes → prompt to stage+commit
 #   2. tag (bumped from latest semver tag, or explicit), push branch + tag

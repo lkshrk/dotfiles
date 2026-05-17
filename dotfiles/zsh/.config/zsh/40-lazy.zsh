@@ -7,9 +7,9 @@ nvm() {
   _load_nvm
   nvm "$@"
 }
-node() { _load_nvm; node "$@"; }
-npm()  { _load_nvm; npm "$@"; }
-npx()  { _load_nvm; npx "$@"; }
+node() { _load_nvm; command node "$@"; }
+npm()  { _load_nvm; command npm "$@"; }
+npx()  { _load_nvm; command npx "$@"; }
 
 _kc_cache="$HOME/.cache/zsh/kubectl-completion.zsh"
 if (( $+commands[kubectl] )); then

@@ -447,8 +447,8 @@
   "enabledPlugins": {
     "andrej-karpathy-skills@karpathy-skills": true,
     "better-addons@better-addons": false,
-    "bubbletea-designer@human-frontier-labs-marketplace": true,
-    "bubbletea-maintenance@human-frontier-labs-marketplace": true,
+    "bubbletea-designer@human-frontier-labs-marketplace": false,
+    "bubbletea-maintenance@human-frontier-labs-marketplace": false,
     "caveman@caveman": true,
     "claude-code-setup@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
