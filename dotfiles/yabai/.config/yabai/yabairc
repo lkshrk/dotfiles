@@ -14,6 +14,11 @@ yabai -m config mouse_action1         move
 yabai -m config mouse_action2         resize
 yabai -m config mouse_drop_action     swap
 
+# ── Snappy UI (disable macOS space/window animations) ─────────────────────────
+defaults write com.apple.dock workspaces-swoosh-animation-off -bool true
+defaults write com.apple.universalaccess reduceMotion -bool true
+defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+
 # ── Spaces ────────────────────────────────────────────────────────────────────
 CONFIG_DIR="${HOME}/.config/yabai"
 

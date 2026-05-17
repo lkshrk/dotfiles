@@ -4,7 +4,7 @@
     "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
-    "ECC_DISABLED_HOOKS": "pre:bash:gateguard-fact-force"
+    "ECC_DISABLED_HOOKS": "pre:bash:gateguard-fact-force,pre:edit-write:gateguard-fact-force"
   },
   "attribution": {
     "commit": "",
