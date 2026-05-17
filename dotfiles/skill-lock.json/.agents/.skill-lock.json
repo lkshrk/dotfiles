@@ -147,13 +147,13 @@
       "updatedAt": "2026-05-01T12:54:35.924Z"
     },
     "caveman": {
-      "source": "JuliusBrussee/caveman",
+      "source": "alirezarezvani/claude-skills",
       "sourceType": "github",
-      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
-      "skillPath": "caveman/SKILL.md",
-      "skillFolderHash": "f524c391d466fe35e0bdbe9707854fcb2be52b26",
+      "sourceUrl": "https://github.com/alirezarezvani/claude-skills.git",
+      "skillPath": "engineering/caveman/skills/caveman/SKILL.md",
+      "skillFolderHash": "cda4a19b02134e9956c970ab9e3140799fb817f4",
       "installedAt": "2026-05-01T12:54:35.927Z",
-      "updatedAt": "2026-05-01T12:54:35.927Z"
+      "updatedAt": "2026-05-17T06:19:28.658Z"
     },
     "caveman-commit": {
       "source": "JuliusBrussee/caveman",
@@ -277,6 +277,69 @@
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-05-16T14:04:53.302Z",
       "updatedAt": "2026-05-16T14:04:53.302Z"
+    },
+    "a11y-audit": {
+      "source": "alirezarezvani/claude-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alirezarezvani/claude-skills.git",
+      "skillPath": "engineering-team/a11y-audit/skills/a11y-audit/SKILL.md",
+      "skillFolderHash": "8ddf5147c41d0a2dc6a33c748c63c5024d8fad9a",
+      "installedAt": "2026-05-17T06:19:28.657Z",
+      "updatedAt": "2026-05-17T06:19:28.657Z"
+    },
+    "code-reviewer": {
+      "source": "alirezarezvani/claude-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alirezarezvani/claude-skills.git",
+      "skillPath": "engineering-team/skills/code-reviewer/SKILL.md",
+      "skillFolderHash": "239cb7a616d1c12c78214321a6ecd82207296bff",
+      "installedAt": "2026-05-17T06:19:28.659Z",
+      "updatedAt": "2026-05-17T06:19:28.659Z"
+    },
+    "research": {
+      "source": "alirezarezvani/claude-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alirezarezvani/claude-skills.git",
+      "skillPath": "research/research/skills/research/SKILL.md",
+      "skillFolderHash": "2a8a1eb25a97fde7645f91acd334247f6e4e3c9f",
+      "installedAt": "2026-05-17T06:19:28.659Z",
+      "updatedAt": "2026-05-17T06:19:28.659Z"
+    },
+    "senior-backend": {
+      "source": "alirezarezvani/claude-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alirezarezvani/claude-skills.git",
+      "skillPath": "engineering-team/skills/senior-backend/SKILL.md",
+      "skillFolderHash": "408708e1dd540a68ffd32cabeeedebbf254c429b",
+      "installedAt": "2026-05-17T06:19:28.660Z",
+      "updatedAt": "2026-05-17T06:19:28.660Z"
+    },
+    "senior-architect": {
+      "source": "alirezarezvani/claude-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alirezarezvani/claude-skills.git",
+      "skillPath": "engineering-team/skills/senior-architect/SKILL.md",
+      "skillFolderHash": "23f6b2ef093796508fb8c96b6ceb149a8171280d",
+      "installedAt": "2026-05-17T06:19:28.661Z",
+      "updatedAt": "2026-05-17T06:19:28.661Z"
+    },
+    "senior-frontend": {
+      "source": "alirezarezvani/claude-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alirezarezvani/claude-skills.git",
+      "skillPath": "engineering-team/skills/senior-frontend/SKILL.md",
+      "skillFolderHash": "78dbf1eb25378d7539de86ae80d14ce810d8e070",
+      "installedAt": "2026-05-17T06:19:28.661Z",
+      "updatedAt": "2026-05-17T06:19:28.661Z"
+    },
+    "senior-devops": {
+      "source": "alirezarezvani/claude-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alirezarezvani/claude-skills.git",
+      "skillPath": "engineering-team/skills/senior-devops/SKILL.md",
+      "skillFolderHash": "156ae3a689b79345e546be558a58236b088dffe1",
+      "installedAt": "2026-05-17T06:19:28.662Z",
+      "updatedAt": "2026-05-17T06:19:28.662Z"
     }
   },
   "dismissed": {

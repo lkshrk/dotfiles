@@ -202,14 +202,7 @@ main() {
   refresh_yabai_sudoers
   install_lefthook
   run_macos_defaults
-
-  cat <<'EOF'
-
-Setup complete.
-
-Recommended next check:
-  claude doctor
-EOF
+  bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 }
 
 main "$@"

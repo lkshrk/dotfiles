@@ -21,7 +21,12 @@
         "openwolf",
         "rtk",
         "codex-app",
-        "oh-my-claude-sisyphus"
+        "oh-my-claude-sisyphus",
+        "context-mode",
+        "ccundo",
+        "mitsupi",
+        "pi-coding-agent",
+        "moshi-hook"
       ],
       "dots": [
         {
@@ -40,7 +45,9 @@
             "!/scripts/",
             "!/.omc-config.json",
             "!/keybindings.json",
-            "!/statusline-command.sh"
+            "!/statusline-command.sh",
+            "skills",
+            "hooks"
           ]
         },
         {
@@ -122,7 +129,9 @@
         "wget",
         "yq",
         "zed",
-        "omni"
+        "omni",
+        "gibo",
+        "witr"
       ],
       "dots": [
         {
@@ -242,7 +251,8 @@
         "python@3.14",
         "pip",
         "swiftformat",
-        "swiftlint"
+        "swiftlint",
+        "gopls"
       ]
     },
     {
@@ -311,16 +321,8 @@
         "corepack",
         "xcodebuildmcp",
         "github-js",
-        "gibo",
-        "ccundo",
-        "mitsupi",
-        "gopls",
-        "pi-coding-agent",
         "better-sqlite3",
-        "context-mode",
-        "sshpass",
-        "moshi-hook",
-        "witr"
+        "sshpass"
       ],
       "dots": [
         {
@@ -713,7 +715,8 @@
       "provider": "node"
     },
     "parsec": {
-      "provider": "system"
+      "provider": "system",
+      "ignore": true
     },
     "pi-coding-agent": {
       "provider": "system",
