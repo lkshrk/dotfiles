@@ -374,6 +374,11 @@
         {
           "name": "skill-lock.json",
           "path": "~/.agents/.skill-lock.json"
+        },
+        {
+          "name": "cagent",
+          "path": "~/.config/cagent",
+          "ignored": true
         }
       ]
     }
