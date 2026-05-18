@@ -869,3 +869,4 @@ prefix_rule(pattern=["git", "-C", "/Users/lkshrk/Dev/civora/civora-web", "diff",
 prefix_rule(pattern=["env", "CIVORA_API_URL=http://127.0.0.1:8000", "DIRECTUS_URL=https://your-directus.example.com/", "DIRECTUS_TOKEN=replace-me", "bun", "run", "dev"], decision="allow")
 prefix_rule(pattern=["git", "-C", "/private/tmp/civora-web-review-e2e-specs", "apply", "--index"], decision="allow")
 prefix_rule(pattern=["git", "-C", "/private/tmp/civora-web-review-article-labels-20260518", "apply", "--index"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "rtk git -C /Users/lkshrk/Dev/civora/civora-web worktree add --detach /private/tmp/civora-web-audit-frontend-migration-$(date +%s) HEAD"], decision="allow")
