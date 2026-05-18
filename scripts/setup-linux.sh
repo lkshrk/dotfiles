@@ -41,9 +41,13 @@ install_omni_linux() {
     return
   fi
 
-  # omni is distributed via lkshrk/homebrew-tap. On Linux without Homebrew,
-  # try building from source if Go is available, otherwise fall back to stow.
-  if command -v brew >/dev/null 2>&1; then
+  # Try: GitHub release binary → brew tap → go install
+  OMNI_VERSION=$(curl -s https://api.github.com/repos/lkshrk/Omni/releases/latest | grep tag_name | cut -d '"' -f4 2>/dev/null || true)
+  if [[ -n "$OMNI_VERSION" ]]; then
+    curl -fsSL "https://github.com/lkshrk/Omni/releases/download/${OMNI_VERSION}/Omni_linux_x86_64.tar.gz" | tar xz -C /tmp omni
+    sudo install /tmp/omni /usr/local/bin/omni
+    rm -f /tmp/omni
+  elif command -v brew >/dev/null 2>&1; then
     brew tap lkshrk/tap 2>/dev/null || true
     brew install omni 2>/dev/null || true
   elif command -v go >/dev/null 2>&1; then
