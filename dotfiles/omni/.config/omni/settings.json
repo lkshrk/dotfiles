@@ -710,7 +710,7 @@
     "numpy": {
       "provider": "python",
       "package": "numpy",
-      "install_with": "pip3"
+      "install_with": "pip"
     },
     "nvm": {
       "provider": "system"

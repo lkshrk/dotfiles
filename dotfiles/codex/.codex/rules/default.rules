@@ -929,3 +929,4 @@ prefix_rule(pattern=["/bin/zsh", "-lc", "CIVORA_RUN_DB_TESTS=1 uv run pytest -q 
 prefix_rule(pattern=["/bin/zsh", "-lc", "CIVORA_RUN_DB_TESTS=1 uv run pytest -q tests/db/test_regional_schemas_db.py tests/services/test_definition_proposals_db.py tests/services/test_definition_sync_db.py"], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "sed -n '70,120p' pyproject.toml && uv run pytest --trace-config -q tests/db/test_regional_schemas_db.py 2>&1 | head -120"], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "CIVORA_RUN_DB_TESTS=1 uv run pytest -q tests/db/test_regional_schemas_db.py tests/services/test_definition_proposals_db.py tests/services/test_definition_sync_db.py && git status --short"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "CIVORA_RUN_DB_TESTS=1 uv run pytest -q tests/db/test_migrations_db.py"], decision="allow")
