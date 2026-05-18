@@ -31,8 +31,6 @@ Flags:
 | `--macos-defaults` | Run `scripts/macos-defaults.sh` after Omni reconcile |
 | `--skip-admin-warmup` | Skip the initial `sudo -v` |
 
-`install.sh` is a compatibility shim that delegates to `setup.sh`.
-
 After setup, run:
 
 ```sh
@@ -81,7 +79,6 @@ dottrack PATH [args...]   # omni dots add --adopt PATH [args...]
 
 ```text
 setup.sh                  # primary bootstrap script
-install.sh                # compatibility shim for setup.sh
 scripts/
   macos-defaults.sh       # optional macOS defaults
 dotfiles/
