@@ -133,6 +133,19 @@ function _fxr {
 }
 (( $+functions[compdef] )) && compdef _fxr fxr
 
+
+# agents
+alias cr='coder '
+alias crs='coder ssh '
+alias cru='coder update '
+alias crr='coder restart '
+unalias crur 2>/dev/null
+function crur {
+  coder update "$@"
+  coder restart "$@" --yes
+}
+
+
 # ssh — use ~/.config/ssh/config (overrides default ~/.ssh/config location)
 alias scp='scp -F ~/.config/ssh/config'
 alias sftp='sftp -F ~/.config/ssh/config'
