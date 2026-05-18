@@ -84,7 +84,7 @@ stow_dotfiles_fallback() {
   # Cross-platform packages only. Skip macOS-only stuff.
   local -a linux_packages=(
     claude codex git gh nvim tmux vim
-    zsh zshrc zshenv zprofile
+    zsh zshrc zshenv
     opencode skill-lock.json ssh
   )
 
