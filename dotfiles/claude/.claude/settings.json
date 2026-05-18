@@ -340,7 +340,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/lkshrk/.claude/hooks/context-mode-cache-heal.mjs\""
+            "command": "[ \"$MOSHI_CLIENT\" != \"1\" ] && exit 0; '/opt/homebrew/bin/moshi-hook' claude-hook",
+            "async": true
           }
         ]
       },
@@ -348,8 +349,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ \"$MOSHI_CLIENT\" != \"1\" ] && exit 0; '/opt/homebrew/bin/moshi-hook' claude-hook",
-            "async": true
+            "command": "\"/Users/lkshrk/.claude/hooks/context-mode-cache-heal.mjs\""
           }
         ]
       }

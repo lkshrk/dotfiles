@@ -146,10 +146,10 @@
     "context-mode@context-mode": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/context-mode/context-mode/1.0.111",
-        "version": "1.0.111",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/context-mode/context-mode/1.0.136",
+        "version": "1.0.136",
         "installedAt": "2026-05-09T02:12:18.644Z",
-        "lastUpdated": "2026-05-15T18:28:31.756Z",
+        "lastUpdated": "2026-05-18T07:27:35.566Z",
         "gitCommitSha": "00aa039e0f3a69dee3ed56b5ed1afd9cdacb9a47"
       }
     ],
@@ -199,5 +199,8 @@
         "gitCommitSha": "807e03ac9d5aa23bc395fdec8c3767500a86b3cf"
       }
     ]
+  },
+  "enabledPlugins": {
+    "context-mode@context-mode": true
   }
 }

@@ -322,7 +322,13 @@
         "xcodebuildmcp",
         "github-js",
         "better-sqlite3",
-        "sshpass"
+        "sshpass",
+        "arm-none-eabi-gcc@8",
+        "avr-gcc@8",
+        "avrdude",
+        "dfu-programmer",
+        "dfu-util",
+        "skopeo"
       ],
       "dots": [
         {
@@ -419,6 +425,18 @@
     "@code-yeongyu/comment-checker": {
       "provider": "node"
     },
+    "arm-none-eabi-gcc@8": {
+      "provider": "system",
+      "package": "arm-none-eabi-gcc@8"
+    },
+    "avr-gcc@8": {
+      "provider": "system",
+      "package": "avr-gcc@8"
+    },
+    "avrdude": {
+      "provider": "system",
+      "package": "avrdude"
+    },
     "bats-core": {
       "provider": "system"
     },
@@ -493,6 +511,14 @@
     },
     "devcontainer": {
       "provider": "system"
+    },
+    "dfu-programmer": {
+      "provider": "system",
+      "package": "dfu-programmer"
+    },
+    "dfu-util": {
+      "provider": "system",
+      "package": "dfu-util"
     },
     "discord": {
       "provider": "system"
@@ -765,6 +791,10 @@
     },
     "skhd-zig": {
       "provider": "system"
+    },
+    "skopeo": {
+      "provider": "system",
+      "package": "skopeo"
     },
     "sops": {
       "provider": "system"

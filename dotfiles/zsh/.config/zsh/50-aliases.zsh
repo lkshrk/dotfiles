@@ -5,11 +5,9 @@ alias ll='ls -lh'
 
 # brew — note: `brew` itself is wrapped in 60-functions.zsh to refresh
 # the yabai sudoers entry after install/upgrade/reinstall/bundle.
-alias bupgrade='brew list --cask | xargs brew upgrade --cask'
 alias bu='brew update && brew upgrade'
+alias or='omni reconcile -y'
 
-# flux
-alias fr='flux reconcile '
 
 # git
 function ga() {
@@ -79,6 +77,11 @@ alias tc='talosctl '
 alias tcg='talosctl get '
 alias tcd='talosctl dashboard '
 
+# flux
+alias fx='flux '
+fxr() {
+  flux reconcile "$@" --with-source
+}
 
 # ssh — use ~/.config/ssh/config (overrides default ~/.ssh/config location)
 alias scp='scp -F ~/.config/ssh/config'
