@@ -229,12 +229,6 @@ enabled = true
 
 [plugins."context-mode@context-mode"]
 enabled = true
-
-[marketplaces.context-mode]
-last_updated = "2026-05-18T09:10:14Z"
-last_revision = "f06565d14d3df104a77f3940b6c6ee72032eb5e6"
-source_type = "git"
-source = "https://github.com/mksglu/context-mode.git"
 [features]
 hooks = true
 goals = true
@@ -299,6 +293,12 @@ trusted_hash = "sha256:8edaf166760a04391496504f67c7eda14b0f4dcc358a901a7549e3137
 
 [plugins."oh-my-codex@oh-my-codex-local"]
 enabled = true
+
+[marketplaces.context-mode]
+last_updated = "2026-05-18T23:37:42Z"
+last_revision = "0c838a3dea3f85010557718e38b8301d2782fc00"
+source_type = "git"
+source = "https://github.com/mksglu/context-mode.git"
 
 [marketplaces.oh-my-codex-local]
 source_type = "local"
