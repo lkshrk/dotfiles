@@ -76,17 +76,13 @@ ensure_omni_bootstrap() {
   step "omni"
   command -v omni >/dev/null 2>&1 || die "omni is not installed"
   omni bootstrap --help >/dev/null 2>&1 || die "installed omni does not support 'bootstrap'; update omni and rerun setup"
-  omni reconcile --help >/dev/null 2>&1 || die "installed omni does not support 'reconcile'; update omni and rerun setup"
   [[ -f "$OMNI_CONFIG_PATH" ]] || die "Omni config not found: $OMNI_CONFIG_PATH"
   ok "$(omni --version 2>/dev/null || printf 'omni found')"
 }
 
-omni_bootstrap_and_reconcile() {
+omni_bootstrap() {
   step "omni bootstrap"
   omni --config "$OMNI_CONFIG_PATH" --yes bootstrap
-
-  step "omni reconcile"
-  omni --config "$OMNI_CONFIG_PATH" --yes reconcile
 }
 
 # ─── Shared: lefthook ─────────────────────────────────────────────────────────
@@ -123,7 +119,7 @@ main() {
   # omni is available, or skips this block via OMNI_AVAILABLE=0).
   if [[ "${OMNI_AVAILABLE:-1}" == "1" ]]; then
     ensure_omni_bootstrap
-    omni_bootstrap_and_reconcile
+    omni_bootstrap
   fi
 
   install_lefthook
