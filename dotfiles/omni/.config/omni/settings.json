@@ -38,10 +38,7 @@
             "!/CLAUDE.md",
             "!/mcp.json",
             "!/plugins",
-            "!/plugins/installed_plugins.json",
-            "!/skills/",
             "!/agents/",
-            "!/hooks/",
             "!/scripts/",
             "!/.omc-config.json",
             "!/keybindings.json",
@@ -60,7 +57,6 @@
             "!/AGENTS.md",
             "!/RTK.md",
             "!/rules/",
-            "!/skills/",
             "/skills/.system/",
             "skills"
           ]
@@ -385,6 +381,11 @@
           "name": "cagent",
           "path": "~/.config/cagent",
           "ignored": true
+        },
+        {
+          "name": "containers",
+          "path": "~/.config/containers",
+          "ignored": true
         }
       ]
     }
@@ -392,7 +393,8 @@
   "host_settings": {
     "Topaz": {
       "dots_repo": "~/Dev/dotfiles",
-      "dots_disabled": false
+      "dots_disabled": false,
+      "dots_git": {}
     }
   },
   "hosts": {
