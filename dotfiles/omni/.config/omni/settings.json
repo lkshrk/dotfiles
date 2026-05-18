@@ -78,6 +78,10 @@
             "opencode.json.backup-2026-05-01T14-49-32-875Z",
             ".gitignore"
           ]
+        },
+        {
+          "name": "skill-lock.json",
+          "path": "~/.agents/.skill-lock.json"
         }
       ]
     },
@@ -367,10 +371,6 @@
           "name": "CLAUDE.md",
           "path": "~/.config/CLAUDE.md",
           "ignored": true
-        },
-        {
-          "name": "skill-lock.json",
-          "path": "~/.agents/.skill-lock.json"
         },
         {
           "name": "cagent",
