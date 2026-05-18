@@ -15,8 +15,3 @@ fi
 
 # zprof | head -30
 export PATH=$PATH:$HOME/.maestro/bin
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/lkshrk/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions

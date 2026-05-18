@@ -2,6 +2,7 @@ model_auto_compact_token_limit = 217600
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
 plan_mode_reasoning_effort = "xhigh"
+developer_instructions = "You have oh-my-codex installed through Codex plugin mode. AGENTS.md is the orchestration brain and main control surface. Follow AGENTS.md for skill/keyword routing and $name workflow invocation. Registered Codex plugin marketplace surfaces supply OMX workflows, prompts, and native-agent roles when the plugin is installed. User-installed skills may still live under ~/.codex/skills. Setup-owned prompt files and native-agent TOML defaults are intentionally omitted unless explicitly installed. Use outcome-first, concise progress updates: state the target result, constraints, validation evidence, and stop condition before adding process detail."
 
 [otel]
 environment = "dev"
@@ -56,6 +57,10 @@ trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/civora/civora-backend"]
 trust_level = "trusted"
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "run-state", "context-used", "five-hour-limit", "weekly-limit", "task-progress"]
+status_line_use_colors = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
@@ -225,45 +230,76 @@ enabled = true
 [plugins."context-mode@context-mode"]
 enabled = true
 
-# END OMC MANAGED MCP REGISTRY
-
+[marketplaces.context-mode]
+last_updated = "2026-05-18T09:10:14Z"
+last_revision = "f06565d14d3df104a77f3940b6c6ee72032eb5e6"
+source_type = "git"
+source = "https://github.com/mksglu/context-mode.git"
 [features]
 hooks = true
+goals = true
+
+# END OMC MANAGED MCP REGISTRY
 
 [hooks.state]
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
 trusted_hash = "sha256:d82a6f8cc0e25d88c564a8c54fd04e6d995214f025699b46d75f5920a1cfd7f1"
 
+# OMX-owned Codex hook trust state
+# Trusts only setup-managed native hook wrappers.
+[hooks.state."/Users/lkshrk/.codex/hooks.json:post_compact:0:0"]
+trusted_hash = "sha256:82791a6a4be5b677ca76ce31339b211b01ece6e3588706982c94e0437ca8ba5a"
+
 [hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:0:0"]
 trusted_hash = "sha256:ee7d802662511d58e1cbd2b8095805a178732f750819e2cb7adc0caee5aec67f"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:1:0"]
+trusted_hash = "sha256:b4b422736cd5e9b9d4b907b346e582f1d0cc8f4579870856eda404a2ee91d42e"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:0:0"]
 trusted_hash = "sha256:1fe35949e38b6e8e7cb4a030b1126983a2794d0403a562cebdf38ca95d166b4e"
 
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:1:0"]
+trusted_hash = "sha256:eff545cf238198494cc15b7b8786a6ab4f242e3837a6f7d5d76cc907b2d99aab"
+
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:69b4ecce0665d5cf169b85191c0756b43510c358f9e8219b93a52f111f0445fc"
 
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:1:0"]
+trusted_hash = "sha256:cbd932c56e2cf349300c92fcf5a5caf9270198bb675c4fd758fba833a9aaa639"
+
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:0:0"]
-trusted_hash = "sha256:32c80cd33fbfcfc4ae4f2feca77149fe3334b1113c6598676f753fd942500de2"
+trusted_hash = "sha256:1408b80ea2bf2d072eefe602c1f186a08838aed2e00d2df9f0b5e6d7027d7af6"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:1:0"]
 trusted_hash = "sha256:89d0365c3dd05e5503c3948f1be707be703396356341736ea3923fa9e3c3e29a"
 
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:2:0"]
+trusted_hash = "sha256:1408b80ea2bf2d072eefe602c1f186a08838aed2e00d2df9f0b5e6d7027d7af6"
+
 [hooks.state."/Users/lkshrk/.codex/hooks.json:stop:0:0"]
-trusted_hash = "sha256:a0550731637177c048527d803117304a1b3d0f9e4f2580a9fba31d53bfe4cb8f"
+trusted_hash = "sha256:e0a3fba51376a7b6b11f75d06392c3be21d5d63d34897f8da4ad72936c0af389"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:stop:1:0"]
 trusted_hash = "sha256:9fc7312a4a274d40081f6734c6f6553d494e9cfde20fd01339995232aea2d74a"
 
+[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:2:0"]
+trusted_hash = "sha256:e0a3fba51376a7b6b11f75d06392c3be21d5d63d34897f8da4ad72936c0af389"
+
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:0:0"]
-trusted_hash = "sha256:78297874884298bf02ef5d48433f2bb34166de580ee027e9e85d564cdf23fe63"
+trusted_hash = "sha256:8edaf166760a04391496504f67c7eda14b0f4dcc358a901a7549e3137a4e718d"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:1:0"]
 trusted_hash = "sha256:9f9b46244739e7f6f787757a083d0d65c07db3aa2daaaecb6fe9e65b08f362b2"
 
-[marketplaces.context-mode]
-last_updated = "2026-05-17T21:06:04Z"
-last_revision = "f8d46390613f068f232eb14ad91804841c64bdfa"
-source_type = "git"
-source = "https://github.com/mksglu/context-mode.git"
+[hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:2:0"]
+trusted_hash = "sha256:8edaf166760a04391496504f67c7eda14b0f4dcc358a901a7549e3137a4e718d"
+# End OMX-owned Codex hook trust state
+
+[plugins."oh-my-codex@oh-my-codex-local"]
+enabled = true
+
+[marketplaces.oh-my-codex-local]
+source_type = "local"
+source = "/Users/lkshrk/.bun/install/global/node_modules/oh-my-codex"

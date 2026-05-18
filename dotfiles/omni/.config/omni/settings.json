@@ -248,7 +248,8 @@
         "pip",
         "swiftformat",
         "swiftlint",
-        "gopls"
+        "gopls",
+        "skopeo"
       ]
     },
     {
@@ -312,19 +313,16 @@
         "pkgconf",
         "parsec",
         "certifi",
-        "numpy",
         "pm2",
         "corepack",
         "xcodebuildmcp",
         "github-js",
         "better-sqlite3",
         "sshpass",
-        "arm-none-eabi-gcc@8",
-        "avr-gcc@8",
-        "avrdude",
-        "dfu-programmer",
-        "dfu-util",
-        "skopeo"
+        "@openai/codex",
+        "oh-my-codex",
+        "numpy",
+        "coder"
       ],
       "dots": [
         {
@@ -427,17 +425,9 @@
     "@code-yeongyu/comment-checker": {
       "provider": "node"
     },
-    "arm-none-eabi-gcc@8": {
-      "provider": "system",
-      "package": "arm-none-eabi-gcc@8"
-    },
-    "avr-gcc@8": {
-      "provider": "system",
-      "package": "avr-gcc@8"
-    },
-    "avrdude": {
-      "provider": "system",
-      "package": "avrdude"
+    "@openai/codex": {
+      "provider": "node",
+      "package": "@openai/codex"
     },
     "bats-core": {
       "provider": "system"
@@ -494,6 +484,10 @@
     "codegraphcontext": {
       "provider": "python"
     },
+    "coder": {
+      "provider": "system",
+      "package": "coder"
+    },
     "codex": {
       "provider": "system"
     },
@@ -513,14 +507,6 @@
     },
     "devcontainer": {
       "provider": "system"
-    },
-    "dfu-programmer": {
-      "provider": "system",
-      "package": "dfu-programmer"
-    },
-    "dfu-util": {
-      "provider": "system",
-      "package": "dfu-util"
     },
     "discord": {
       "provider": "system"
@@ -722,7 +708,9 @@
       "install_with": "npm"
     },
     "numpy": {
-      "provider": "python"
+      "provider": "python",
+      "package": "numpy",
+      "install_with": "pip3"
     },
     "nvm": {
       "provider": "system"
@@ -736,6 +724,10 @@
     "oh-my-claude-sisyphus": {
       "provider": "node",
       "package": "oh-my-claude-sisyphus"
+    },
+    "oh-my-codex": {
+      "provider": "node",
+      "package": "oh-my-codex"
     },
     "omni": {
       "provider": "system",
