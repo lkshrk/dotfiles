@@ -42,9 +42,7 @@
             "!/scripts/",
             "!/.omc-config.json",
             "!/keybindings.json",
-            "!/statusline-command.sh",
-            "skills",
-            "hooks"
+            "!/statusline-command.sh"
           ]
         },
         {
@@ -57,8 +55,7 @@
             "!/AGENTS.md",
             "!/RTK.md",
             "!/rules/",
-            "/skills/.system/",
-            "skills"
+            "/skills/.system/"
           ]
         },
         {
@@ -710,7 +707,8 @@
     "numpy": {
       "provider": "python",
       "package": "numpy",
-      "install_with": "pip"
+      "install_with": "pip",
+      "ignore": true
     },
     "nvm": {
       "provider": "system"
