@@ -303,3 +303,6 @@ source = "https://github.com/mksglu/context-mode.git"
 [marketplaces.oh-my-codex-local]
 source_type = "local"
 source = "/Users/lkshrk/.bun/install/global/node_modules/oh-my-codex"
+
+[shell_environment_policy.set]
+OMX_LORE_COMMIT_GUARD = "0"
