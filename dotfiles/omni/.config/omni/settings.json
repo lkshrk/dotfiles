@@ -356,7 +356,8 @@
         "certifi",
         "@openai/codex",
         "oh-my-codex",
-        "numpy"
+        "numpy",
+        "npm"
       ],
       "dots": [
         {
@@ -712,6 +713,11 @@
     },
     "node": {
       "provider": "system"
+    },
+    "npm": {
+      "provider": "node",
+      "package": "npm",
+      "install_with": "npm"
     },
     "numpy": {
       "provider": "python",
