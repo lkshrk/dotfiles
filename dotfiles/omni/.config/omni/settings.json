@@ -26,7 +26,8 @@
             "!/scripts/",
             "!/.omc-config.json",
             "!/keybindings.json",
-            "!/statusline-command.sh"
+            "!/statusline-command.sh",
+            "scripts"
           ]
         },
         {
