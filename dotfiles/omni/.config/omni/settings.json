@@ -10,23 +10,16 @@
         "chatgpt",
         "claude-cmd",
         "claude-code",
-        "cmux",
-        "codegraphcontext",
         "codex",
-        "free-claude-code",
-        "mistral-vibe",
         "mlx",
-        "mlx-lm",
         "opencode",
         "openwolf",
         "rtk",
-        "codex-app",
         "oh-my-claude-sisyphus",
         "context-mode",
         "ccundo",
-        "mitsupi",
         "pi-coding-agent",
-        "moshi-hook"
+        "coder"
       ],
       "dots": [
         {
@@ -89,52 +82,30 @@
       "name": "core",
       "tools": [
         "coreutils",
-        "docker",
         "eza",
         "fd",
         "font-hack-nerd-font",
         "font-intel-one-mono",
         "font-jetbrains-mono-nerd-font",
         "fzf",
-        "ghostty",
-        "gnu-sed",
-        "iina",
         "jq",
         "just",
         "karakeep",
-        "mactop",
-        "mas",
-        "mole",
         "neovim",
-        "cliclick",
         "obsidian",
-        "pinentry-mac",
-        "rbw",
         "ripgrep",
-        "signal",
-        "stats",
         "stow",
-        "the-unarchiver",
         "thefuck",
         "tmux",
         "tree",
         "tree-sitter",
         "tree-sitter-cli",
-        "vivaldi",
-        "vlc",
-        "watch",
         "wget",
         "yq",
-        "zed",
         "omni",
-        "gibo",
-        "witr"
+        "glow"
       ],
       "dots": [
-        {
-          "name": "ghostty",
-          "path": "~/.config/ghostty"
-        },
         {
           "name": "nvim",
           "path": "~/.config/nvim",
@@ -177,80 +148,53 @@
         {
           "name": "ssh",
           "path": "~/.config/ssh"
-        },
-        {
-          "name": "hammerspoon",
-          "path": "~/.hammerspoon"
         }
       ]
     },
     {
       "name": "desk",
       "tools": [
-        "linearmouse",
         "brave-browser",
-        "mosh",
-        "skhd-zig",
-        "yabai",
-        "zstd"
+        "iina",
+        "zed",
+        "codex-app",
+        "ghostty"
       ],
       "dots": [
         {
-          "name": "skhd",
-          "path": "~/.config/skhd"
-        },
-        {
-          "name": "yabai",
-          "path": "~/.config/yabai",
-          "ignore": [
-            "sleep-on-lock"
-          ]
-        },
-        {
           "name": "sleep-on-lock",
           "path": "~/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
+        },
+        {
+          "name": "ghostty",
+          "path": "~/.config/ghostty"
         }
       ]
     },
     {
       "name": "dev",
       "tools": [
-        "bats-core",
-        "bcrypt",
-        "busted",
-        "devcontainer",
-        "gh",
-        "git-filter-repo",
-        "glow",
-        "go",
-        "go-task",
-        "golangci-lint",
-        "gomplate",
         "gum",
+        "lefthook"
+      ]
+    },
+    {
+      "name": "dev-tooling",
+      "tools": [
+        "devcontainer",
+        "docker",
+        "gh",
+        "gibo",
+        "git-filter-repo",
         "imagemagick",
         "lazydocker",
         "lazygit",
-        "lefthook",
-        "lua-language-server",
-        "luacheck",
-        "luarocks",
-        "node",
-        "npm",
-        "nvm",
-        "yaml-language-server",
-        "pipx",
-        "stylua",
-        "uv",
+        "skopeo",
         "vhs",
+        "yaml-language-server",
         "yaml-lint",
         "yamlfmt",
-        "yamllint",
-        "python@3.14",
-        "pip",
-        "swiftformat",
-        "swiftlint",
-        "gopls",
-        "skopeo"
+        "yamllint"
       ]
     },
     {
@@ -261,7 +205,8 @@
         "elgato-stream-deck",
         "elgato-wave-link",
         "moonlight",
-        "obs"
+        "obs",
+        "linearmouse"
       ],
       "dots": [
         {
@@ -275,10 +220,19 @@
       ]
     },
     {
+      "name": "go",
+      "tools": [
+        "go",
+        "go-task",
+        "golangci-lint",
+        "gomplate",
+        "gopls"
+      ]
+    },
+    {
       "name": "infra",
       "tools": [
         "cilium-cli",
-        "cmctl",
         "flux",
         "flux-local",
         "flux-markdown",
@@ -290,17 +244,103 @@
         "kustomize",
         "kubernetes-cli",
         "sops",
-        "talosctl"
+        "talosctl",
+        "minijinja-cli",
+        "watch"
+      ]
+    },
+    {
+      "name": "lua",
+      "tools": [
+        "busted",
+        "lua-language-server",
+        "luacheck",
+        "luarocks",
+        "stylua"
+      ]
+    },
+    {
+      "name": "mac",
+      "tools": [
+        "gnu-sed",
+        "mactop",
+        "mas",
+        "mole",
+        "stats",
+        "swiftformat",
+        "swiftlint",
+        "the-unarchiver",
+        "xcodebuildmcp",
+        "zstd",
+        "hammerspoon",
+        "rbw"
+      ],
+      "dots": [
+        {
+          "name": "hammerspoon",
+          "path": "~/.hammerspoon"
+        }
+      ]
+    },
+    {
+      "name": "priv",
+      "tools": [
+        "mosh",
+        "moshi-hook",
+        "plex",
+        "signal",
+        "skhd-zig",
+        "vivaldi",
+        "vlc",
+        "yabai"
+      ],
+      "dots": [
+        {
+          "name": "yabai",
+          "path": "~/.config/yabai",
+          "ignore": [
+            "sleep-on-lock"
+          ]
+        },
+        {
+          "name": "skhd",
+          "path": "~/.config/skhd"
+        }
+      ]
+    },
+    {
+      "name": "python",
+      "tools": [
+        "pip",
+        "pipx",
+        "python@3.14",
+        "uv",
+        "wheel"
+      ]
+    },
+    {
+      "name": "test-tooling",
+      "tools": [
+        "bats-core"
+      ]
+    },
+    {
+      "name": "ts",
+      "tools": [
+        "corepack",
+        "node",
+        "nvm",
+        "pm2"
       ]
     },
     {
       "name": "utils",
       "tools": [
-        "hammerspoon",
-        "minijinja-cli",
         "plantuml",
-        "plex",
-        "wheel"
+        "bcrypt",
+        "better-sqlite3",
+        "sshpass",
+        "witr"
       ]
     },
     {
@@ -314,16 +354,9 @@
         "pkgconf",
         "parsec",
         "certifi",
-        "pm2",
-        "corepack",
-        "xcodebuildmcp",
-        "github-js",
-        "better-sqlite3",
-        "sshpass",
         "@openai/codex",
         "oh-my-codex",
-        "numpy",
-        "coder"
+        "numpy"
       ],
       "dots": [
         {
@@ -398,8 +431,16 @@
       "core",
       "desk",
       "dev",
+      "dev-tooling",
       "gaming",
+      "go",
       "infra",
+      "lua",
+      "mac",
+      "priv",
+      "python",
+      "test-tooling",
+      "ts",
       "utils"
     ]
   },
@@ -466,20 +507,8 @@
     "claude-code": {
       "provider": "system"
     },
-    "cliclick": {
-      "provider": "system"
-    },
     "cmake": {
       "provider": "system"
-    },
-    "cmctl": {
-      "provider": "system"
-    },
-    "cmux": {
-      "provider": "system"
-    },
-    "codegraphcontext": {
-      "provider": "python"
     },
     "coder": {
       "provider": "system",
@@ -544,9 +573,6 @@
     "font-jetbrains-mono-nerd-font": {
       "provider": "system"
     },
-    "free-claude-code": {
-      "provider": "python"
-    },
     "fswatch": {
       "provider": "system"
     },
@@ -565,10 +591,6 @@
     },
     "git-filter-repo": {
       "provider": "system"
-    },
-    "github-js": {
-      "provider": "node",
-      "package": "github-js"
     },
     "glow": {
       "provider": "system"
@@ -667,19 +689,10 @@
     "minijinja-cli": {
       "provider": "system"
     },
-    "mistral-vibe": {
-      "provider": "python"
-    },
-    "mitsupi": {
-      "provider": "node",
-      "package": "mitsupi"
-    },
     "mlx": {
       "provider": "python",
-      "install_with": "pip"
-    },
-    "mlx-lm": {
-      "provider": "system"
+      "install_with": "pip",
+      "ignore": true
     },
     "mole": {
       "provider": "system"
@@ -699,10 +712,6 @@
     },
     "node": {
       "provider": "system"
-    },
-    "npm": {
-      "provider": "node",
-      "install_with": "npm"
     },
     "numpy": {
       "provider": "python",
@@ -744,9 +753,6 @@
     "pi-coding-agent": {
       "provider": "system",
       "package": "pi-coding-agent"
-    },
-    "pinentry-mac": {
-      "provider": "system"
     },
     "pip": {
       "provider": "python"
@@ -849,7 +855,8 @@
       "provider": "system"
     },
     "wget": {
-      "provider": "system"
+      "provider": "system",
+      "ignore": true
     },
     "wheel": {
       "provider": "python",
