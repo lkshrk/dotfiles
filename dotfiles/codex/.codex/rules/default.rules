@@ -932,3 +932,8 @@ prefix_rule(pattern=["/bin/zsh", "-lc", "CIVORA_RUN_DB_TESTS=1 uv run pytest -q 
 prefix_rule(pattern=["/bin/zsh", "-lc", "CIVORA_RUN_DB_TESTS=1 uv run pytest -q tests/controller/test_runs_db.py tests/db/test_migrations_db.py tests/db/test_regional_schemas_db.py tests/services/test_definition_proposals_db.py tests/services/test_definition_sync_db.py && git diff --check && git status --short"], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "CIVORA_RUN_DB_TESTS=1 uv run pytest -q tests/services/test_clustering_db.py"], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "CIVORA_RUN_DB_TESTS=1 uv run pytest -q tests/services/test_clustering_db.py tests/controller/test_runs_db.py tests/db/test_migrations_db.py tests/db/test_regional_schemas_db.py tests/services/test_definition_proposals_db.py tests/services/test_definition_sync_db.py && git diff --check && git status --short"], decision="allow")
+prefix_rule(pattern=["git", "add", "internal/actions/catalog.go", "internal/app/config_import.go", "internal/app/config_test.go", "internal/cli/cmd_test.go", "internal/cli/init.go", "internal/tui/cmd_test.go", "internal/tui/commands_setup.go", "internal/tui/flows_test.go", "internal/tui/messages.go", "internal/tui/model.go", "internal/tui/model_test.go", "internal/tui/update.go", "internal/tui/update_file_picker.go", "internal/tui/update_setup.go", "internal/tui/view_header.go", "internal/tui/view_more_test.go"], decision="allow")
+prefix_rule(pattern=["git", "add", "integration_tests/testdata/scripts/init-import-config.txtar"], decision="allow")
+prefix_rule(pattern=["uv", "run", "ruff"], decision="allow")
+prefix_rule(pattern=["uv", "run", "pytest"], decision="allow")
+prefix_rule(pattern=["uv", "run", "mypy"], decision="allow")

@@ -5,21 +5,12 @@
     {
       "name": "ai",
       "tools": [
-        "@aisuite/chub",
-        "@code-yeongyu/comment-checker",
         "chatgpt",
-        "claude-cmd",
         "claude-code",
         "codex",
         "mlx",
         "opencode",
-        "openwolf",
-        "rtk",
-        "oh-my-claude-sisyphus",
-        "context-mode",
-        "ccundo",
-        "pi-coding-agent",
-        "coder"
+        "pi-coding-agent"
       ],
       "dots": [
         {
@@ -76,6 +67,20 @@
           "name": "skill-lock.json",
           "path": "~/.agents/.skill-lock.json"
         }
+      ]
+    },
+    {
+      "name": "ai-plugins",
+      "tools": [
+        "@aisuite/chub",
+        "@code-yeongyu/comment-checker",
+        "ccundo",
+        "claude-cmd",
+        "context-mode",
+        "oh-my-claude-sisyphus",
+        "oh-my-codex",
+        "openwolf",
+        "rtk"
       ]
     },
     {
@@ -194,7 +199,8 @@
         "yaml-language-server",
         "yaml-lint",
         "yamlfmt",
-        "yamllint"
+        "yamllint",
+        "git-delta"
       ]
     },
     {
@@ -355,7 +361,6 @@
         "parsec",
         "certifi",
         "@openai/codex",
-        "oh-my-codex",
         "numpy",
         "npm"
       ],
@@ -429,6 +434,7 @@
   "hosts": {
     "Topaz": [
       "ai",
+      "ai-plugins",
       "core",
       "desk",
       "dev",
@@ -511,10 +517,6 @@
     "cmake": {
       "provider": "system"
     },
-    "coder": {
-      "provider": "system",
-      "package": "coder"
-    },
     "codex": {
       "provider": "system"
     },
@@ -589,6 +591,10 @@
     "gibo": {
       "provider": "system",
       "package": "gibo"
+    },
+    "git-delta": {
+      "provider": "system",
+      "package": "git-delta"
     },
     "git-filter-repo": {
       "provider": "system"
