@@ -30,24 +30,9 @@ install_apt_packages() {
 }
 
 # ─── omni on Linux ────────────────────────────────────────────────────────────
-# omni's official install script works on Linux. If it fails or is unavailable,
-# we fall back to stowing cross-platform dotfiles directly with GNU stow.
-
-stow_omni_config() {
-  local dots_dir="$REPO_DIR/dotfiles"
-  if [[ -d "$dots_dir/omni" ]]; then
-    command -v stow >/dev/null 2>&1 || return
-    stow --dir="$dots_dir" --target="$HOME" --restow omni 2>/dev/null \
-      && ok "omni config linked" \
-      || warn "omni config stow failed (conflicts?)"
-  fi
-}
 
 install_omni_linux() {
   step "omni (Linux)"
-
-  # Always link omni settings first — omni needs its config to reconcile
-  stow_omni_config
 
   if command -v omni >/dev/null 2>&1; then
     ok "omni already on PATH: $(omni --version 2>/dev/null || printf 'found')"
