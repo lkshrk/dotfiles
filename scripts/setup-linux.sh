@@ -71,43 +71,10 @@ install_omni_linux() {
   if command -v omni >/dev/null 2>&1; then
     ok "omni installed: $(omni --version 2>/dev/null || printf 'found')"
   else
-    warn "omni not available on this Linux system"
-    warn "falling back to direct stow of cross-platform dotfile packages"
+    warn "omni not available on this Linux system — dotfiles won't be managed"
     OMNI_AVAILABLE=0
     export OMNI_AVAILABLE
-    stow_dotfiles_fallback
   fi
-}
-
-# ─── Fallback: stow dots directly ─────────────────────────────────────────────
-# Used when omni is unavailable. Stows every top-level package directory that
-# lives inside the dotfiles/ subtree (same root omni would manage).
-
-stow_dotfiles_fallback() {
-  step "stow dotfiles (fallback)"
-  local dots_dir="$REPO_DIR/dotfiles"
-
-  [[ -d "$dots_dir" ]] || {
-    warn "dotfiles directory not found at $dots_dir; nothing to stow"
-    return
-  }
-
-  command -v stow >/dev/null 2>&1 || die "stow is not installed; cannot deploy dotfiles"
-
-  # Cross-platform packages only. Skip macOS-only stuff.
-  local -a linux_packages=(
-    claude codex git gh nvim tmux vim
-    zsh zshrc zshenv omni
-    opencode skill-lock.json ssh
-  )
-
-  local pkg
-  for pkg in "${linux_packages[@]}"; do
-    [[ -d "$dots_dir/$pkg" ]] || continue
-    stow --dir="$dots_dir" --target="$HOME" --restow "$pkg" 2>/dev/null \
-      && ok "stowed $pkg" \
-      || warn "stow $pkg failed (conflicts?); skipping"
-  done
 }
 
 # ─── main ─────────────────────────────────────────────────────────────────────
