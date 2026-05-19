@@ -937,3 +937,4 @@ prefix_rule(pattern=["git", "add", "integration_tests/testdata/scripts/init-impo
 prefix_rule(pattern=["uv", "run", "ruff"], decision="allow")
 prefix_rule(pattern=["uv", "run", "pytest"], decision="allow")
 prefix_rule(pattern=["uv", "run", "mypy"], decision="allow")
+prefix_rule(pattern=["kubectl", "--kubeconfig", "./kubeconfig"], decision="allow")

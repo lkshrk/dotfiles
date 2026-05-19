@@ -58,6 +58,9 @@ trust_level = "trusted"
 [projects."/Users/lkshrk/Dev/civora/civora-backend"]
 trust_level = "trusted"
 
+[projects."/Users/lkshrk/.shannon/workspaces/charts"]
+trust_level = "trusted"
+
 [tui]
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "run-state", "context-used", "five-hour-limit", "weekly-limit", "task-progress"]
 status_line_use_colors = true
@@ -222,16 +225,16 @@ trusted_hash = "sha256:9f9b46244739e7f6f787757a083d0d65c07db3aa2daaaecb6fe9e65b0
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:2:0"]
 trusted_hash = "sha256:8edaf166760a04391496504f67c7eda14b0f4dcc358a901a7549e3137a4e718d"
+
+[marketplaces.context-mode]
+last_updated = "2026-05-19T09:28:32Z"
+last_revision = "6bbcb4430bbfaf106d8dd778ebc34b17c66e8f24"
+source_type = "git"
+source = "https://github.com/mksglu/context-mode.git"
 # End OMX-owned Codex hook trust state
 
 [plugins."oh-my-codex@oh-my-codex-local"]
 enabled = true
-
-[marketplaces.context-mode]
-last_updated = "2026-05-18T23:37:42Z"
-last_revision = "0c838a3dea3f85010557718e38b8301d2782fc00"
-source_type = "git"
-source = "https://github.com/mksglu/context-mode.git"
 
 [marketplaces.oh-my-codex-local]
 source_type = "local"
