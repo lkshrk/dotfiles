@@ -363,7 +363,10 @@
         "certifi",
         "@openai/codex",
         "numpy",
-        "npm"
+        "npm",
+        "pupeteer",
+        "cursor-cli",
+        "quarkdown"
       ],
       "dots": [
         {
@@ -534,6 +537,10 @@
     },
     "coreutils": {
       "provider": "system"
+    },
+    "cursor-cli": {
+      "provider": "system",
+      "package": "cursor-cli"
     },
     "devcontainer": {
       "provider": "system"
@@ -785,8 +792,16 @@
     "pm2": {
       "provider": "node"
     },
+    "pupeteer": {
+      "provider": "node",
+      "package": "pupeteer"
+    },
     "python@3.14": {
       "provider": "system"
+    },
+    "quarkdown": {
+      "provider": "system",
+      "package": "quarkdown"
     },
     "rbw": {
       "provider": "system"
