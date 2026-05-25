@@ -173,7 +173,7 @@ goals = true
 [hooks.state]
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
-enabled = true
+enabled = false
 trusted_hash = "sha256:7a01a1beee5fad28ec485e3d9c2e7781da5e4690facfa79471ad3c6e557efa8a"
 
 # OMX-owned Codex hook trust state
@@ -183,15 +183,19 @@ trusted_hash = "sha256:82791a6a4be5b677ca76ce31339b211b01ece6e3588706982c94e0437
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:0:0"]
 trusted_hash = "sha256:ee7d802662511d58e1cbd2b8095805a178732f750819e2cb7adc0caee5aec67f"
+enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:1:0"]
 trusted_hash = "sha256:b4b422736cd5e9b9d4b907b346e582f1d0cc8f4579870856eda404a2ee91d42e"
+enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:0:0"]
 trusted_hash = "sha256:1fe35949e38b6e8e7cb4a030b1126983a2794d0403a562cebdf38ca95d166b4e"
+enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:1:0"]
 trusted_hash = "sha256:eff545cf238198494cc15b7b8786a6ab4f242e3837a6f7d5d76cc907b2d99aab"
+enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:0:0"]
 enabled = false
@@ -199,9 +203,11 @@ trusted_hash = "sha256:69b4ecce0665d5cf169b85191c0756b43510c358f9e8219b93a52f111
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:1:0"]
 trusted_hash = "sha256:cbd932c56e2cf349300c92fcf5a5caf9270198bb675c4fd758fba833a9aaa639"
+enabled = true
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:0:0"]
 trusted_hash = "sha256:5df4ffd020114b087ffbf3b83d154960be164757a04665df7ffca431855d8a72"
+enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:1:0"]
 trusted_hash = "sha256:89d0365c3dd05e5503c3948f1be707be703396356341736ea3923fa9e3c3e29a"
@@ -220,12 +226,29 @@ trusted_hash = "sha256:e0a3fba51376a7b6b11f75d06392c3be21d5d63d34897f8da4ad72936
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:0:0"]
 trusted_hash = "sha256:e1eba3688f3afaf9a4cf827807b19969a19a07dfb02c23ea0d475859771d054b"
+enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:1:0"]
 trusted_hash = "sha256:9f9b46244739e7f6f787757a083d0d65c07db3aa2daaaecb6fe9e65b08f362b2"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:2:0"]
 trusted_hash = "sha256:8edaf166760a04391496504f67c7eda14b0f4dcc358a901a7549e3137a4e718d"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:56da0c4249dc7af048f42ae458fb83931926a8af41ec6fab5ae819ff3a8c83ae"
+enabled = true
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:0d237345f8d46110d36cd0ef08e79b55fa151a07691dee36d492aa6f64bc0efd"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:pre_compact:0:0"]
+trusted_hash = "sha256:ac1f9e5eb71ca262492150381d8f078b897056fc691f9973fc56d7b1b402e648"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:a6cc6a322d0931bdd68a5969e523cd71e6eedccab4850e8996c8948311173618"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:114549c484c131b94782d3424527dd1042d48bc3a8616a11299acdf60b112572"
 
 [marketplaces.context-mode]
 last_updated = "2026-05-24T07:14:07Z"
