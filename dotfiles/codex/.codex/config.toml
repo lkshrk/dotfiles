@@ -247,16 +247,19 @@ trusted_hash = "sha256:ac1f9e5eb71ca262492150381d8f078b897056fc691f9973fc56d7b1b
 
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:session_start:0:0"]
 trusted_hash = "sha256:a6cc6a322d0931bdd68a5969e523cd71e6eedccab4850e8996c8948311173618"
+enabled = false
 
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:user_prompt_submit:0:0"]
 trusted_hash = "sha256:114549c484c131b94782d3424527dd1042d48bc3a8616a11299acdf60b112572"
+enabled = false
 
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:stop:0:0"]
 trusted_hash = "sha256:9205c1763e40c0256ab334e2e96c037c1cdf5b8bfaddba31ed19d93d3388586a"
+enabled = false
 
 [marketplaces.context-mode]
-last_updated = "2026-05-25T12:29:13Z"
-last_revision = "167fbe6cc794fa84167691f096c7fbd31d1f7ea6"
+last_updated = "2026-05-28T10:27:43Z"
+last_revision = "188833f8a0712bbd7dfa5aae7aaff1ab470acb85"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 # End OMX-owned Codex hook trust state
