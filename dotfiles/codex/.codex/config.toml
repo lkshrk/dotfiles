@@ -217,6 +217,7 @@ trusted_hash = "sha256:1408b80ea2bf2d072eefe602c1f186a08838aed2e00d2df9f0b5e6d70
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:stop:0:0"]
 trusted_hash = "sha256:86af3eaab244482b4cf6a471d0a3ec3960f5438ae3314fd4fd6bd4edeefb5cb8"
+enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:stop:1:0"]
 trusted_hash = "sha256:9fc7312a4a274d40081f6734c6f6553d494e9cfde20fd01339995232aea2d74a"
@@ -250,9 +251,12 @@ trusted_hash = "sha256:a6cc6a322d0931bdd68a5969e523cd71e6eedccab4850e8996c894831
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:user_prompt_submit:0:0"]
 trusted_hash = "sha256:114549c484c131b94782d3424527dd1042d48bc3a8616a11299acdf60b112572"
 
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:stop:0:0"]
+trusted_hash = "sha256:9205c1763e40c0256ab334e2e96c037c1cdf5b8bfaddba31ed19d93d3388586a"
+
 [marketplaces.context-mode]
-last_updated = "2026-05-24T07:14:07Z"
-last_revision = "5c78530e3920c13e831e0b9f0c90ad476dd8c1cd"
+last_updated = "2026-05-25T12:29:13Z"
+last_revision = "167fbe6cc794fa84167691f096c7fbd31d1f7ea6"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 # End OMX-owned Codex hook trust state
