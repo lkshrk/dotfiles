@@ -1,5 +1,5 @@
 _load_nvm() {
-  unset -f nvm node npm npx 2>/dev/null
+  unset -f nvm node 2>/dev/null
   [[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]] && source "/opt/homebrew/opt/nvm/nvm.sh"
 }
 
@@ -8,8 +8,8 @@ nvm() {
   nvm "$@"
 }
 node() { _load_nvm; command node "$@"; }
-npm()  { _load_nvm; command npm "$@"; }
-npx()  { _load_nvm; command npx "$@"; }
+npm()  { bun "$@"; }
+npx()  { command bunx "$@"; }
 
 _kc_cache="$HOME/.cache/zsh/kubectl-completion.zsh"
 if (( $+commands[kubectl] )); then

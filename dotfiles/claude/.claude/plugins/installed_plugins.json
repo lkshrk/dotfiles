@@ -19,16 +19,6 @@
         "lastUpdated": "2026-04-05T06:38:21.324Z"
       }
     ],
-    "everything-claude-code@everything-claude-code": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/everything-claude-code/everything-claude-code/2.0.0-rc.1",
-        "version": "2.0.0-rc.1",
-        "installedAt": "2026-04-05T09:40:50.889Z",
-        "lastUpdated": "2026-05-04T03:00:56.308Z",
-        "gitCommitSha": "841beea45cb25ba51f29fa45b7e272938d19b80a"
-      }
-    ],
     "better-addons@better-addons": [
       {
         "scope": "user",
@@ -42,11 +32,11 @@
     "caveman@caveman": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/caveman/caveman/ef6050c5e184",
-        "version": "ef6050c5e184",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/caveman/caveman/655b7d9c5431",
+        "version": "655b7d9c5431",
         "installedAt": "2026-04-10T22:17:15.482Z",
-        "lastUpdated": "2026-05-04T03:01:01.959Z",
-        "gitCommitSha": "ef6050c5e1848b6880ff47c32ade1a608a64f85e"
+        "lastUpdated": "2026-05-29T06:47:38.140Z",
+        "gitCommitSha": "655b7d9c5431f822264b7732e9901c5578ac84cf"
       }
     ],
     "bubbletea-maintenance@human-frontier-labs-marketplace": [
@@ -146,11 +136,11 @@
     "context-mode@context-mode": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/context-mode/context-mode/1.0.136",
-        "version": "1.0.136",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/context-mode/context-mode/1.0.151",
+        "version": "1.0.151",
         "installedAt": "2026-05-09T02:12:18.644Z",
-        "lastUpdated": "2026-05-29T00:36:21.722Z",
-        "gitCommitSha": "00aa039e0f3a69dee3ed56b5ed1afd9cdacb9a47"
+        "lastUpdated": "2026-05-29T07:15:41.779Z",
+        "gitCommitSha": "a5f1fb7e89e667965414d63ae59294cd02d8e98c"
       }
     ],
     "gopls-lsp@claude-plugins-official": [
@@ -197,6 +187,16 @@
         "installedAt": "2026-05-15T23:44:57.907Z",
         "lastUpdated": "2026-05-15T23:44:57.907Z",
         "gitCommitSha": "807e03ac9d5aa23bc395fdec8c3767500a86b3cf"
+      }
+    ],
+    "ecc@everything-claude-code": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/everything-claude-code/ecc/2.0.0-rc.1",
+        "version": "2.0.0-rc.1",
+        "installedAt": "2026-05-29T07:26:57.744Z",
+        "lastUpdated": "2026-05-29T07:26:57.744Z",
+        "gitCommitSha": "64cd1ba248e77e377e76f70fc4e6434bfdddd511"
       }
     ]
   },

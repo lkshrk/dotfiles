@@ -28,7 +28,9 @@
             "!/statusline-command.sh",
             "scripts",
             "!/plugins/installed_plugins.json",
-            "!/plugins/known_marketplaces.json"
+            "!/plugins/known_marketplaces.json",
+            "!/.last-cleanup",
+            ".last-cleanup"
           ]
         },
         {
