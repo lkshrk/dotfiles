@@ -426,6 +426,10 @@
           "name": "containers",
           "path": "~/.config/containers",
           "ignored": true
+        },
+        {
+          "name": "herdr",
+          "path": "~/.config/herdr"
         }
       ]
     }
