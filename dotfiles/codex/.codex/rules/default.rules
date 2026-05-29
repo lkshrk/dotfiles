@@ -1099,3 +1099,4 @@ prefix_rule(pattern=["rtk", "proxy", "bash", "-lc", "set -euo pipefail; tmp=$(mk
 prefix_rule(pattern=["rg", "plex|NAMESPACE"], decision="allow")
 prefix_rule(pattern=["rtk", "skopeo", "inspect"], decision="allow")
 prefix_rule(pattern=["rtk", "git", "push", "--force-with-lease", "origin", "main"], decision="allow")
+prefix_rule(pattern=["helm", "dependency", "build"], decision="allow")
