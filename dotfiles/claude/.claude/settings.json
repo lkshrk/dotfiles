@@ -1,4 +1,26 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
+  "includeCoAuthoredBy": false,
+  "model": "claude-opus-4-8",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/lkshrk/.claude/hooks/context-mode-cache-heal.mjs\""
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "sh \"/Users/lkshrk/.claude/statusline-command.sh\""
+  },
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
@@ -29,16 +51,5 @@
     }
   },
   "theme": "dark-daltonized",
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Users/lkshrk/.claude/hooks/context-mode-cache-heal.mjs\""
-          }
-        ]
-      }
-    ]
-  }
+  "effortLevel": "high"
 }
