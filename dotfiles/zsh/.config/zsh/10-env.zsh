@@ -6,6 +6,7 @@ export NVM_DIR="$HOME/.nvm"
 export BUN_INSTALL="$HOME/.bun"
 export PNPM_HOME="$HOME/Library/pnpm"
 export JAVA_HOME="/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home"
+export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
 
 export KUBECONFIG=$HOME/.kube/hcloud:$HOME/.kube/legacy
 

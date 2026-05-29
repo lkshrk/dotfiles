@@ -9,5 +9,3 @@
 	format = ssh
 [commit]
 	gpgsign = true
-[user]
-	signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAg2EWJnRXN5+Nq+3sRbo3LdlfCoz7eVNOvfrP7qZqX "

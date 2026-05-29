@@ -30,6 +30,7 @@ claude() {
       zai-api-key       ZAI_API_KEY \
       hf-token          HF_TOKEN \
       context7-api-key  CONTEXT7_API_KEY \
+      gh-cli            GITHUB_PERSONAL_ACCESS_TOKEN \
       -- command claude "$@"
   )
 }

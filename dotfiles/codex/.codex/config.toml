@@ -276,8 +276,8 @@ trusted_hash = "sha256:4a72598d979d0a8f2174a4c657e7c08e4b77ad914ca62fb88d43aca08
 trusted_hash = "sha256:1a1abbe815841ac7c543b9f3656de442526f6470e271b11ee58ccf0b05ed6b6c"
 
 [marketplaces.context-mode]
-last_updated = "2026-05-28T21:00:14Z"
-last_revision = "a5f1fb7e89e667965414d63ae59294cd02d8e98c"
+last_updated = "2026-05-29T10:37:39Z"
+last_revision = "09139b284dcc7df8bf2aa30c5c83863678343e5b"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 # End OMX-owned Codex hook trust state

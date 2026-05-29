@@ -1,0 +1,77 @@
+#!/bin/sh
+set -u
+
+stdin_file=$(mktemp "${TMPDIR:-/tmp}/git-pre-push.XXXXXX") || exit 1
+trap 'rm -f "$stdin_file"' EXIT HUP INT TERM
+cat > "$stdin_file"
+
+zero=0000000000000000000000000000000000000000
+enforce_since=$(git config --type=int --get commitSigning.enforceSince 2>/dev/null || printf '0\n')
+expected_email=$(git config --get user.email || printf '')
+
+while read local_ref local_sha remote_ref remote_sha; do
+  test "$local_sha" = "$zero" && continue
+
+  if test "$remote_sha" = "$zero"; then
+    commits=$(git rev-list "$local_sha" --not --remotes)
+  elif git cat-file -e "$remote_sha^{commit}" 2>/dev/null; then
+    commits=$(git rev-list "$remote_sha..$local_sha")
+  else
+    commits=$(git rev-list "$local_sha" --not --remotes)
+  fi
+
+  for commit in $commits; do
+    commit_time=$(git show -s --format='%ct' "$commit")
+    test "$commit_time" -lt "$enforce_since" && continue
+
+    test -n "$expected_email" || {
+      echo "pre-push: missing user.email; refusing to verify pushed commit identity" >&2
+      exit 1
+    }
+
+    author_email=$(git show -s --format='%ae' "$commit")
+    committer_email=$(git show -s --format='%ce' "$commit")
+    if test "$author_email" != "$expected_email" || test "$committer_email" != "$expected_email"; then
+      echo "pre-push: rejecting commit with unexpected identity $commit" >&2
+      echo "  expected email:  $expected_email" >&2
+      echo "  author email:    $author_email" >&2
+      echo "  committer email: $committer_email" >&2
+      exit 1
+    fi
+
+    status=$(git log -1 --format='%G?' "$commit")
+    test "$status" = G && continue
+
+    echo "pre-push: rejecting unsigned or untrusted new commit $commit (%G?=$status)" >&2
+    exit 1
+  done
+done < "$stdin_file"
+
+local_lefthook_ran=0
+for local_config in lefthook.yml lefthook.yaml lefthook.toml .lefthook.yml .lefthook.yaml .lefthook.toml; do
+  [ -f "$local_config" ] || continue
+
+  local_lefthook_ran=1
+  LEFTHOOK_CONFIG="$local_config" lefthook run pre-push --no-auto-install --no-tty "$@" < "$stdin_file" || exit $?
+  break
+done
+
+git_dir=$(git rev-parse --git-dir 2>/dev/null || true)
+[ -n "$git_dir" ] || exit 0
+
+case "$git_dir" in
+  /*) local_hook="$git_dir/hooks/pre-push" ;;
+  *) local_hook="$PWD/$git_dir/hooks/pre-push" ;;
+esac
+
+[ -x "$local_hook" ] || exit 0
+
+hook_dir=$(cd "$(dirname "$0")" && pwd -P)
+local_hook_dir=$(cd "$(dirname "$local_hook")" && pwd -P)
+[ "$local_hook_dir/$(basename "$local_hook")" = "$hook_dir/$(basename "$0")" ] && exit 0
+
+if [ "$local_lefthook_ran" -eq 1 ] && grep -qi 'lefthook' "$local_hook"; then
+  exit 0
+fi
+
+"$local_hook" "$@" < "$stdin_file"
