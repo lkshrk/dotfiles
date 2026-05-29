@@ -1,6 +1,467 @@
 {
   "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v1.schema.json",
   "version": 1,
+  "groups": [
+    {
+      "name": "ai",
+      "tools": [
+        "chatgpt",
+        "claude-code",
+        "codex",
+        "mlx",
+        "opencode",
+        "pi-coding-agent"
+      ],
+      "dots": [
+        {
+          "name": "claude",
+          "path": "~/.claude",
+          "ignore": [
+            "*",
+            "!/settings.json",
+            "!/CLAUDE.md",
+            "!/mcp.json",
+            "!/plugins",
+            "!/agents/",
+            "!/.omc-config.json",
+            "!/keybindings.json",
+            "!/statusline-command.sh",
+            "scripts"
+          ]
+        },
+        {
+          "name": "codex",
+          "path": "~/.codex",
+          "ignore": [
+            "*",
+            "!/config.toml",
+            "!/mcp.json",
+            "!/AGENTS.md",
+            "!/RTK.md",
+            "!/rules/",
+            "/skills/.system/"
+          ]
+        },
+        {
+          "name": "free-claude-code",
+          "path": "~/.config/free-claude-code"
+        },
+        {
+          "name": "opencode",
+          "path": "~/.config/opencode",
+          "ignore": [
+            "oh-my-openagent.json.backup-2026-04-13T15-21-36-926Z",
+            "oh-my-openagent.json.backup-2026-04-15T16-55-25-356Z",
+            "oh-my-openagent.json.backup-2026-05-01T14-49-32-879Z",
+            "oh-my-openagent.json.bak.2026-04-18T12-06-45-874Z",
+            "oh-my-opencode.json.clean",
+            "oh-my-opencode.json.opt",
+            "opencode.json.backup-2026-04-12T10-07-04-579Z",
+            "opencode.json.backup-2026-04-13T15-14-05-965Z",
+            "opencode.json.backup-2026-04-15T16-55-25-352Z",
+            "opencode.json.backup-2026-05-01T14-49-32-875Z",
+            ".gitignore"
+          ]
+        },
+        {
+          "name": "skill-lock.json",
+          "path": "~/.agents/.skill-lock.json"
+        }
+      ]
+    },
+    {
+      "name": "ai-plugins",
+      "tools": [
+        "@aisuite/chub",
+        "@code-yeongyu/comment-checker",
+        "ccundo",
+        "claude-cmd",
+        "context-mode",
+        "oh-my-claude-sisyphus",
+        "oh-my-codex",
+        "openwolf",
+        "rtk"
+      ]
+    },
+    {
+      "name": "core",
+      "tools": [
+        "coreutils",
+        "eza",
+        "fd",
+        "font-hack-nerd-font",
+        "font-intel-one-mono",
+        "font-jetbrains-mono-nerd-font",
+        "fzf",
+        "jq",
+        "just",
+        "karakeep",
+        "neovim",
+        "obsidian",
+        "ripgrep",
+        "stow",
+        "thefuck",
+        "tmux",
+        "tree",
+        "tree-sitter",
+        "tree-sitter-cli",
+        "wget",
+        "yq",
+        "omni",
+        "glow"
+      ],
+      "dots": [
+        {
+          "name": "nvim",
+          "path": "~/.config/nvim",
+          "ignore": [
+            ".gitignore"
+          ]
+        },
+        {
+          "name": "omni",
+          "path": "~/.config/omni"
+        },
+        {
+          "name": "tmux",
+          "path": "~/.config/tmux"
+        },
+        {
+          "name": "vim",
+          "path": "~/.vim"
+        },
+        {
+          "name": "zed",
+          "path": "~/.config/zed"
+        },
+        {
+          "name": "zprofile",
+          "path": "~/.zprofile"
+        },
+        {
+          "name": "zsh",
+          "path": "~/.config/zsh",
+          "ignore": [
+            ".zsh_history",
+            ".gitignore"
+          ]
+        },
+        {
+          "name": "zshenv",
+          "path": "~/.zshenv"
+        },
+        {
+          "name": "ssh",
+          "path": "~/.config/ssh"
+        }
+      ]
+    },
+    {
+      "name": "desk",
+      "tools": [
+        "brave-browser",
+        "iina",
+        "zed",
+        "codex-app",
+        "ghostty"
+      ],
+      "dots": [
+        {
+          "name": "sleep-on-lock",
+          "path": "~/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
+        },
+        {
+          "name": "ghostty",
+          "path": "~/.config/ghostty"
+        }
+      ]
+    },
+    {
+      "name": "dev",
+      "tools": [
+        "gum",
+        "lefthook"
+      ]
+    },
+    {
+      "name": "dev-tooling",
+      "tools": [
+        "devcontainer",
+        "docker",
+        "gh",
+        "gibo",
+        "git-filter-repo",
+        "imagemagick",
+        "lazydocker",
+        "lazygit",
+        "skopeo",
+        "vhs",
+        "yaml-language-server",
+        "yaml-lint",
+        "yamlfmt",
+        "yamllint",
+        "git-delta"
+      ]
+    },
+    {
+      "name": "gaming",
+      "tools": [
+        "battle-net",
+        "discord",
+        "elgato-stream-deck",
+        "elgato-wave-link",
+        "moonlight",
+        "obs",
+        "linearmouse"
+      ],
+      "dots": [
+        {
+          "name": "com.corsair",
+          "path": "~/.config/com.corsair"
+        },
+        {
+          "name": "linearmouse",
+          "path": "~/.config/linearmouse"
+        }
+      ]
+    },
+    {
+      "name": "go",
+      "tools": [
+        "go",
+        "go-task",
+        "golangci-lint",
+        "gomplate",
+        "gopls"
+      ]
+    },
+    {
+      "name": "infra",
+      "tools": [
+        "cilium-cli",
+        "flux",
+        "flux-local",
+        "flux-markdown",
+        "helm",
+        "helmfile",
+        "krew",
+        "kubectl-cnpg",
+        "kubectx",
+        "kustomize",
+        "kubernetes-cli",
+        "sops",
+        "talosctl",
+        "minijinja-cli",
+        "watch"
+      ]
+    },
+    {
+      "name": "lua",
+      "tools": [
+        "busted",
+        "lua-language-server",
+        "luacheck",
+        "luarocks",
+        "stylua"
+      ]
+    },
+    {
+      "name": "mac",
+      "tools": [
+        "gnu-sed",
+        "mactop",
+        "mas",
+        "mole",
+        "stats",
+        "swiftformat",
+        "swiftlint",
+        "the-unarchiver",
+        "xcodebuildmcp",
+        "zstd",
+        "hammerspoon",
+        "rbw"
+      ],
+      "dots": [
+        {
+          "name": "hammerspoon",
+          "path": "~/.hammerspoon"
+        }
+      ]
+    },
+    {
+      "name": "priv",
+      "tools": [
+        "mosh",
+        "moshi-hook",
+        "plex",
+        "signal",
+        "skhd-zig",
+        "vivaldi",
+        "vlc",
+        "yabai"
+      ],
+      "dots": [
+        {
+          "name": "yabai",
+          "path": "~/.config/yabai",
+          "ignore": [
+            "sleep-on-lock"
+          ]
+        },
+        {
+          "name": "skhd",
+          "path": "~/.config/skhd"
+        }
+      ]
+    },
+    {
+      "name": "python",
+      "tools": [
+        "pip",
+        "pipx",
+        "python@3.14",
+        "uv",
+        "wheel"
+      ]
+    },
+    {
+      "name": "test-tooling",
+      "tools": [
+        "bats-core"
+      ]
+    },
+    {
+      "name": "ts",
+      "tools": [
+        "corepack",
+        "node",
+        "nvm",
+        "pm2"
+      ]
+    },
+    {
+      "name": "utils",
+      "tools": [
+        "plantuml",
+        "bcrypt",
+        "better-sqlite3",
+        "sshpass",
+        "witr"
+      ]
+    },
+    {
+      "name": "Topaz",
+      "special": "host",
+      "tools": [
+        "cmake",
+        "docker-buildx",
+        "fswatch",
+        "libiscsi",
+        "pkgconf",
+        "parsec",
+        "certifi",
+        "numpy",
+        "npm",
+        "pupeteer",
+        "cursor-cli",
+        "quarkdown"
+      ],
+      "dots": [
+        {
+          "name": "gh",
+          "path": "~/.config/gh"
+        },
+        {
+          "name": "git",
+          "path": "~/.config/git",
+          "hosts": {
+            "Topaz": {
+              "package": "git@Topaz"
+            }
+          }
+        },
+        {
+          "name": "karabiner",
+          "path": "~/.config/karabiner",
+          "ignored": true
+        },
+        {
+          "name": "moshi",
+          "path": "~/.config/moshi",
+          "ignored": true
+        },
+        {
+          "name": "taskless",
+          "path": "~/.config/taskless"
+        },
+        {
+          "name": "zshrc",
+          "path": "~/.zshrc",
+          "hosts": {
+            "Topaz": {
+              "package": "zshrc@Topaz"
+            }
+          }
+        },
+        {
+          "name": "talos",
+          "path": "~/.config/talos",
+          "ignored": true
+        },
+        {
+          "name": "CLAUDE.md",
+          "path": "~/.config/CLAUDE.md",
+          "ignored": true
+        },
+        {
+          "name": "cagent",
+          "path": "~/.config/cagent",
+          "ignored": true
+        },
+        {
+          "name": "containers",
+          "path": "~/.config/containers",
+          "ignored": true
+        }
+      ]
+    }
+  ],
+  "host_settings": {
+    "Topaz": {
+      "dots_repo": "~/Dev/dotfiles",
+      "dots_disabled": false,
+      "dots_git": {}
+    }
+  },
+  "hosts": {
+    "Topaz": [
+      "ai",
+      "ai-plugins",
+      "core",
+      "desk",
+      "dev",
+      "dev-tooling",
+      "gaming",
+      "go",
+      "infra",
+      "lua",
+      "mac",
+      "priv",
+      "python",
+      "test-tooling",
+      "ts",
+      "utils"
+    ]
+  },
+  "ignore": {
+    "tools": [
+      "cmake",
+      "docker-buildx",
+      "fswatch",
+      "libiscsi",
+      "pkgconf"
+    ]
+  },
   "settings": {
     "dots_git": {}
   },
@@ -10,10 +471,6 @@
     },
     "@code-yeongyu/comment-checker": {
       "provider": "node"
-    },
-    "@openai/codex": {
-      "provider": "node",
-      "package": "@openai/codex"
     },
     "bats-core": {
       "provider": "system"
@@ -458,468 +915,6 @@
     },
     "zstd": {
       "provider": "system"
-    }
-  },
-  "hosts": {
-    "Topaz": [
-      "ai",
-      "ai-plugins",
-      "core",
-      "desk",
-      "dev",
-      "dev-tooling",
-      "gaming",
-      "go",
-      "infra",
-      "lua",
-      "mac",
-      "priv",
-      "python",
-      "test-tooling",
-      "ts",
-      "utils"
-    ]
-  },
-  "ignore": {
-    "tools": [
-      "cmake",
-      "docker-buildx",
-      "fswatch",
-      "libiscsi",
-      "pkgconf"
-    ]
-  },
-  "groups": [
-    {
-      "name": "ai",
-      "tools": [
-        "chatgpt",
-        "claude-code",
-        "codex",
-        "mlx",
-        "opencode",
-        "pi-coding-agent"
-      ],
-      "dots": [
-        {
-          "name": "claude",
-          "path": "~/.claude",
-          "ignore": [
-            "*",
-            "!/settings.json",
-            "!/CLAUDE.md",
-            "!/mcp.json",
-            "!/plugins",
-            "!/agents/",
-            "!/.omc-config.json",
-            "!/keybindings.json",
-            "!/statusline-command.sh",
-            "scripts"
-          ]
-        },
-        {
-          "name": "codex",
-          "path": "~/.codex",
-          "ignore": [
-            "*",
-            "!/config.toml",
-            "!/mcp.json",
-            "!/AGENTS.md",
-            "!/RTK.md",
-            "!/rules/",
-            "/skills/.system/"
-          ]
-        },
-        {
-          "name": "free-claude-code",
-          "path": "~/.config/free-claude-code"
-        },
-        {
-          "name": "opencode",
-          "path": "~/.config/opencode",
-          "ignore": [
-            "oh-my-openagent.json.backup-2026-04-13T15-21-36-926Z",
-            "oh-my-openagent.json.backup-2026-04-15T16-55-25-356Z",
-            "oh-my-openagent.json.backup-2026-05-01T14-49-32-879Z",
-            "oh-my-openagent.json.bak.2026-04-18T12-06-45-874Z",
-            "oh-my-opencode.json.clean",
-            "oh-my-opencode.json.opt",
-            "opencode.json.backup-2026-04-12T10-07-04-579Z",
-            "opencode.json.backup-2026-04-13T15-14-05-965Z",
-            "opencode.json.backup-2026-04-15T16-55-25-352Z",
-            "opencode.json.backup-2026-05-01T14-49-32-875Z",
-            ".gitignore"
-          ]
-        },
-        {
-          "name": "skill-lock.json",
-          "path": "~/.agents/.skill-lock.json"
-        }
-      ]
-    },
-    {
-      "name": "ai-plugins",
-      "tools": [
-        "@aisuite/chub",
-        "@code-yeongyu/comment-checker",
-        "ccundo",
-        "claude-cmd",
-        "context-mode",
-        "oh-my-claude-sisyphus",
-        "oh-my-codex",
-        "openwolf",
-        "rtk"
-      ]
-    },
-    {
-      "name": "core",
-      "tools": [
-        "coreutils",
-        "eza",
-        "fd",
-        "font-hack-nerd-font",
-        "font-intel-one-mono",
-        "font-jetbrains-mono-nerd-font",
-        "fzf",
-        "jq",
-        "just",
-        "karakeep",
-        "neovim",
-        "obsidian",
-        "ripgrep",
-        "stow",
-        "thefuck",
-        "tmux",
-        "tree",
-        "tree-sitter",
-        "tree-sitter-cli",
-        "wget",
-        "yq",
-        "omni",
-        "glow"
-      ],
-      "dots": [
-        {
-          "name": "nvim",
-          "path": "~/.config/nvim",
-          "ignore": [
-            ".gitignore"
-          ]
-        },
-        {
-          "name": "omni",
-          "path": "~/.config/omni"
-        },
-        {
-          "name": "tmux",
-          "path": "~/.config/tmux"
-        },
-        {
-          "name": "vim",
-          "path": "~/.vim"
-        },
-        {
-          "name": "zed",
-          "path": "~/.config/zed"
-        },
-        {
-          "name": "zprofile",
-          "path": "~/.zprofile"
-        },
-        {
-          "name": "zsh",
-          "path": "~/.config/zsh",
-          "ignore": [
-            ".zsh_history",
-            ".gitignore"
-          ]
-        },
-        {
-          "name": "zshenv",
-          "path": "~/.zshenv"
-        },
-        {
-          "name": "ssh",
-          "path": "~/.config/ssh"
-        }
-      ]
-    },
-    {
-      "name": "desk",
-      "tools": [
-        "brave-browser",
-        "iina",
-        "zed",
-        "codex-app",
-        "ghostty"
-      ],
-      "dots": [
-        {
-          "name": "sleep-on-lock",
-          "path": "~/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
-        },
-        {
-          "name": "ghostty",
-          "path": "~/.config/ghostty"
-        }
-      ]
-    },
-    {
-      "name": "dev",
-      "tools": [
-        "gum",
-        "lefthook"
-      ]
-    },
-    {
-      "name": "dev-tooling",
-      "tools": [
-        "devcontainer",
-        "docker",
-        "gh",
-        "gibo",
-        "git-filter-repo",
-        "imagemagick",
-        "lazydocker",
-        "lazygit",
-        "skopeo",
-        "vhs",
-        "yaml-language-server",
-        "yaml-lint",
-        "yamlfmt",
-        "yamllint",
-        "git-delta"
-      ]
-    },
-    {
-      "name": "gaming",
-      "tools": [
-        "battle-net",
-        "discord",
-        "elgato-stream-deck",
-        "elgato-wave-link",
-        "moonlight",
-        "obs",
-        "linearmouse"
-      ],
-      "dots": [
-        {
-          "name": "com.corsair",
-          "path": "~/.config/com.corsair"
-        },
-        {
-          "name": "linearmouse",
-          "path": "~/.config/linearmouse"
-        }
-      ]
-    },
-    {
-      "name": "go",
-      "tools": [
-        "go",
-        "go-task",
-        "golangci-lint",
-        "gomplate",
-        "gopls"
-      ]
-    },
-    {
-      "name": "infra",
-      "tools": [
-        "cilium-cli",
-        "flux",
-        "flux-local",
-        "flux-markdown",
-        "helm",
-        "helmfile",
-        "krew",
-        "kubectl-cnpg",
-        "kubectx",
-        "kustomize",
-        "kubernetes-cli",
-        "sops",
-        "talosctl",
-        "minijinja-cli",
-        "watch"
-      ]
-    },
-    {
-      "name": "lua",
-      "tools": [
-        "busted",
-        "lua-language-server",
-        "luacheck",
-        "luarocks",
-        "stylua"
-      ]
-    },
-    {
-      "name": "mac",
-      "tools": [
-        "gnu-sed",
-        "mactop",
-        "mas",
-        "mole",
-        "stats",
-        "swiftformat",
-        "swiftlint",
-        "the-unarchiver",
-        "xcodebuildmcp",
-        "zstd",
-        "hammerspoon",
-        "rbw"
-      ],
-      "dots": [
-        {
-          "name": "hammerspoon",
-          "path": "~/.hammerspoon"
-        }
-      ]
-    },
-    {
-      "name": "priv",
-      "tools": [
-        "mosh",
-        "moshi-hook",
-        "plex",
-        "signal",
-        "skhd-zig",
-        "vivaldi",
-        "vlc",
-        "yabai"
-      ],
-      "dots": [
-        {
-          "name": "yabai",
-          "path": "~/.config/yabai",
-          "ignore": [
-            "sleep-on-lock"
-          ]
-        },
-        {
-          "name": "skhd",
-          "path": "~/.config/skhd"
-        }
-      ]
-    },
-    {
-      "name": "python",
-      "tools": [
-        "pip",
-        "pipx",
-        "python@3.14",
-        "uv",
-        "wheel"
-      ]
-    },
-    {
-      "name": "test-tooling",
-      "tools": [
-        "bats-core"
-      ]
-    },
-    {
-      "name": "ts",
-      "tools": [
-        "corepack",
-        "node",
-        "nvm",
-        "pm2"
-      ]
-    },
-    {
-      "name": "utils",
-      "tools": [
-        "plantuml",
-        "bcrypt",
-        "better-sqlite3",
-        "sshpass",
-        "witr"
-      ]
-    },
-    {
-      "name": "Topaz",
-      "special": "host",
-      "tools": [
-        "cmake",
-        "docker-buildx",
-        "fswatch",
-        "libiscsi",
-        "pkgconf",
-        "parsec",
-        "certifi",
-        "@openai/codex",
-        "numpy",
-        "npm",
-        "pupeteer",
-        "cursor-cli",
-        "quarkdown"
-      ],
-      "dots": [
-        {
-          "name": "gh",
-          "path": "~/.config/gh"
-        },
-        {
-          "name": "git",
-          "path": "~/.config/git",
-          "hosts": {
-            "Topaz": {
-              "package": "git@Topaz"
-            }
-          }
-        },
-        {
-          "name": "karabiner",
-          "path": "~/.config/karabiner",
-          "ignored": true
-        },
-        {
-          "name": "moshi",
-          "path": "~/.config/moshi",
-          "ignored": true
-        },
-        {
-          "name": "taskless",
-          "path": "~/.config/taskless"
-        },
-        {
-          "name": "zshrc",
-          "path": "~/.zshrc",
-          "hosts": {
-            "Topaz": {
-              "package": "zshrc@Topaz"
-            }
-          }
-        },
-        {
-          "name": "talos",
-          "path": "~/.config/talos",
-          "ignored": true
-        },
-        {
-          "name": "CLAUDE.md",
-          "path": "~/.config/CLAUDE.md",
-          "ignored": true
-        },
-        {
-          "name": "cagent",
-          "path": "~/.config/cagent",
-          "ignored": true
-        },
-        {
-          "name": "containers",
-          "path": "~/.config/containers",
-          "ignored": true
-        }
-      ]
-    }
-  ],
-  "host_settings": {
-    "Topaz": {
-      "dots_repo": "~/Dev/dotfiles",
-      "dots_disabled": false,
-      "dots_git": {}
     }
   }
 }

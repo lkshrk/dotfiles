@@ -1,16 +1,20 @@
-Host github.com
-  User lkshrk
-  IdentityFile ~/.ssh/github.ed25519
+Host routi
+    HostName 192.168.0.1
+    User root
 
 Host nasi
-  HostName nasi.lan
-  User root
+    HostName 172.22.30.2
+    User root
 
 Host hetzner
-  HostName 91.107.232.241
-  User lkshrk
+    HostName 91.107.232.241
+    User lkshrk
+
+Host codeberg.org
+    HostName codeberg.org
+    User git
+
 
 Host *
-  AddKeysToAgent yes
   PermitLocalCommand yes
   LocalCommand printf '\033]2;%n\007'
