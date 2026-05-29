@@ -1097,3 +1097,5 @@ prefix_rule(pattern=["rtk", "proxy", "bash", "-lc", "set -euo pipefail; tmp=$(mk
 prefix_rule(pattern=["rg", "tuppr|system-upgrade|NAMESPACE"], decision="allow")
 prefix_rule(pattern=["rtk", "proxy", "bash", "-lc", "set -euo pipefail; tmp=$(mktemp -d); trap \"rm -rf $tmp\" EXIT; helm show values oci://ghcr.io/home-operations/charts/tuppr --version 0.1.35 > \"$tmp/values-old.yaml\"; helm show values oci://ghcr.io/home-operations/charts/tuppr --version 0.1.37 > \"$tmp/values-new.yaml\"; helm show crds oci://ghcr.io/home-operations/charts/tuppr --version 0.1.35 > \"$tmp/crds-old.yaml\"; helm show crds oci://ghcr.io/home-operations/charts/tuppr --version 0.1.37 > \"$tmp/crds-new.yaml\"; echo \"VALUES_DIFF\"; diff -u \"$tmp/values-old.yaml\" \"$tmp/values-new.yaml\" || true; echo \"CRDS_DIFF\"; diff -u \"$tmp/crds-old.yaml\" \"$tmp/crds-new.yaml\" || true"], decision="allow")
 prefix_rule(pattern=["rg", "plex|NAMESPACE"], decision="allow")
+prefix_rule(pattern=["rtk", "skopeo", "inspect"], decision="allow")
+prefix_rule(pattern=["rtk", "git", "push", "--force-with-lease", "origin", "main"], decision="allow")
