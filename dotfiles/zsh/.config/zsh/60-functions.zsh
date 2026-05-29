@@ -110,6 +110,23 @@ csh() {
 # Title is set by LocalCommand in ssh config.
 ssh() { command ssh -F "$HOME/.config/ssh/config" "$@"; }
 
+# --- herdr runtime paths -----------------------------------------------------
+# Herdr derives logs from XDG_CONFIG_HOME, so keep config in ~/.config/herdr
+# while sending logs and sockets to runtime/state locations.
+herdr() {
+  local runtime_root="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
+  runtime_root="${runtime_root%/}"
+
+  local state_home="${XDG_STATE_HOME:-$HOME/.local/state}"
+  command mkdir -p "$runtime_root" "$state_home" || return
+
+  HERDR_CONFIG_PATH="$HOME/.config/herdr/config.toml" \
+  HERDR_SOCKET_PATH="$runtime_root/herdr.sock" \
+  HERDR_CLIENT_SOCKET_PATH="$runtime_root/herdr-client.sock" \
+  XDG_CONFIG_HOME="$state_home" \
+  command herdr "$@"
+}
+
 _dotfiles_omni() {
   local repo="${DOTFILES_DIR:-$HOME/Dev/dotfiles}"
   command omni --config "$repo/dotfiles/omni/.config/omni/settings.json" "$@"

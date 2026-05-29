@@ -14,6 +14,7 @@ _append_path() {
 
 _prepend_path "$BUN_INSTALL/bin"
 _prepend_path "$PNPM_HOME"
+_prepend_path "$JAVA_HOME/bin"
 _prepend_path "${KREW_ROOT:-$HOME/.krew}/bin"
 _append_path  "$GOPATH/bin"
 _append_path  "$HOME/.local/bin"

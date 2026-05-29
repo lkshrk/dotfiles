@@ -39,3 +39,28 @@ macos-option-as-alt = true
 shell-integration-features = sudo,ssh-env,ssh-terminfo
 keybind = shift+enter=text:\x1b\r
 
+keybind = cmd+1=unbind
+keybind = cmd+2=unbind
+keybind = cmd+3=unbind
+keybind = cmd+4=unbind
+keybind = cmd+5=unbind
+keybind = cmd+6=unbind
+keybind = cmd+7=unbind
+keybind = cmd+8=unbind
+keybind = cmd+9=unbind
+keybind = cmd+left_bracket=unbind
+keybind = cmd+right_bracket=unbind
+
+# Herdr tabs
+keybind = cmd+1=text:\x1b[201u
+keybind = cmd+2=text:\x1b[202u
+keybind = cmd+3=text:\x1b[203u
+keybind = cmd+4=text:\x1b[204u
+keybind = cmd+5=text:\x1b[205u
+keybind = cmd+6=text:\x1b[206u
+keybind = cmd+7=text:\x1b[207u
+keybind = cmd+8=text:\x1b[208u
+keybind = cmd+9=text:\x1b[209u
+# Herdr spaces
+keybind = cmd+left_bracket=text:\x1b[210u
+keybind = cmd+right_bracket=text:\x1b[211u
