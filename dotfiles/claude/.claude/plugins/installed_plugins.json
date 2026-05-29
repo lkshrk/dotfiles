@@ -1,90 +1,13 @@
 {
   "version": 2,
   "plugins": {
-    "glm-plan-usage@zai-coding-plugins": [
+    "gopls-lsp@claude-plugins-official": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/zai-coding-plugins/glm-plan-usage/0.0.1",
-        "version": "0.0.1",
-        "installedAt": "2026-03-28T09:23:20.960Z",
-        "lastUpdated": "2026-03-28T09:23:20.960Z"
-      }
-    ],
-    "lua-lsp@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/lua-lsp/1.0.0",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/gopls-lsp/1.0.0",
         "version": "1.0.0",
-        "installedAt": "2026-04-05T06:38:21.324Z",
-        "lastUpdated": "2026-04-05T06:38:21.324Z"
-      }
-    ],
-    "better-addons@better-addons": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/better-addons/better-addons/1.0.0",
-        "version": "1.0.0",
-        "installedAt": "2026-04-05T10:01:30.600Z",
-        "lastUpdated": "2026-04-05T10:01:30.600Z",
-        "gitCommitSha": "d910fd9dac467aedd630ebe627902becf205bc34"
-      }
-    ],
-    "caveman@caveman": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/caveman/caveman/655b7d9c5431",
-        "version": "655b7d9c5431",
-        "installedAt": "2026-04-10T22:17:15.482Z",
-        "lastUpdated": "2026-05-29T06:47:38.140Z",
-        "gitCommitSha": "655b7d9c5431f822264b7732e9901c5578ac84cf"
-      }
-    ],
-    "bubbletea-maintenance@human-frontier-labs-marketplace": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/human-frontier-labs-marketplace/bubbletea-maintenance/1.0.0",
-        "version": "1.0.0",
-        "installedAt": "2026-04-11T02:13:28.753Z",
-        "lastUpdated": "2026-04-11T02:13:28.753Z",
-        "gitCommitSha": "1becdd47071a961818e9d3c7a0d41897ce8decc0"
-      }
-    ],
-    "bubbletea-designer@human-frontier-labs-marketplace": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/human-frontier-labs-marketplace/bubbletea-designer/1.0.0",
-        "version": "1.0.0",
-        "installedAt": "2026-04-11T02:14:36.222Z",
-        "lastUpdated": "2026-04-11T02:14:36.222Z",
-        "gitCommitSha": "1becdd47071a961818e9d3c7a0d41897ce8decc0"
-      }
-    ],
-    "swift-lsp@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
-        "version": "1.0.0",
-        "installedAt": "2026-04-14T13:54:15.817Z",
-        "lastUpdated": "2026-04-14T13:54:15.817Z"
-      }
-    ],
-    "shadcn-dev@functional-claude": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/functional-claude/shadcn-dev/0.3.0",
-        "version": "0.3.0",
-        "installedAt": "2026-04-15T11:53:13.731Z",
-        "lastUpdated": "2026-04-15T11:53:13.731Z",
-        "gitCommitSha": "4ad9c1725ba84ba8d70f4dac244cc1ff5b90f1be"
-      }
-    ],
-    "frontend-design@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/frontend-design/unknown",
-        "version": "unknown",
-        "installedAt": "2026-05-04T03:04:32.748Z",
-        "lastUpdated": "2026-05-04T10:44:16.252Z"
+        "installedAt": "2026-05-29T18:10:10.903Z",
+        "lastUpdated": "2026-05-29T18:10:10.903Z"
       }
     ],
     "superpowers@claude-plugins-official": [
@@ -92,8 +15,19 @@
         "scope": "user",
         "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0",
         "version": "5.1.0",
-        "installedAt": "2026-05-04T03:04:32.748Z",
-        "lastUpdated": "2026-05-07T19:04:39.127Z"
+        "installedAt": "2026-05-29T18:13:14.916Z",
+        "lastUpdated": "2026-05-29T18:13:14.916Z",
+        "gitCommitSha": "f2cbfbefebbfef77321e4c9abc9e949826bea9d7"
+      }
+    ],
+    "caveman@caveman": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/caveman/caveman/655b7d9c5431",
+        "version": "655b7d9c5431",
+        "installedAt": "2026-05-29T18:14:21.337Z",
+        "lastUpdated": "2026-05-29T18:14:21.337Z",
+        "gitCommitSha": "655b7d9c5431f822264b7732e9901c5578ac84cf"
       }
     ],
     "code-simplifier@claude-plugins-official": [
@@ -101,36 +35,8 @@
         "scope": "user",
         "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/code-simplifier/1.0.0",
         "version": "1.0.0",
-        "installedAt": "2026-05-04T03:04:32.748Z",
-        "lastUpdated": "2026-05-04T03:04:32.748Z"
-      }
-    ],
-    "claude-code-setup@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/claude-code-setup/1.0.0",
-        "version": "1.0.0",
-        "installedAt": "2026-05-04T03:04:32.748Z",
-        "lastUpdated": "2026-05-04T03:04:32.748Z"
-      }
-    ],
-    "ralph-loop@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/ralph-loop/1.0.0",
-        "version": "1.0.0",
-        "installedAt": "2026-05-04T03:04:32.748Z",
-        "lastUpdated": "2026-05-04T03:04:32.748Z"
-      }
-    ],
-    "andrej-karpathy-skills@karpathy-skills": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/karpathy-skills/andrej-karpathy-skills/1.0.0",
-        "version": "1.0.0",
-        "installedAt": "2026-05-04T03:01:11.000Z",
-        "lastUpdated": "2026-05-04T03:01:11.000Z",
-        "gitCommitSha": "2c606141936f1eeef17fa3043a72095b4765b9c2"
+        "installedAt": "2026-05-29T18:14:35.234Z",
+        "lastUpdated": "2026-05-29T18:14:35.234Z"
       }
     ],
     "context-mode@context-mode": [
@@ -138,27 +44,9 @@
         "scope": "user",
         "installPath": "/Users/lkshrk/.claude/plugins/cache/context-mode/context-mode/1.0.151",
         "version": "1.0.151",
-        "installedAt": "2026-05-09T02:12:18.644Z",
-        "lastUpdated": "2026-05-29T07:15:41.779Z",
-        "gitCommitSha": "a5f1fb7e89e667965414d63ae59294cd02d8e98c"
-      }
-    ],
-    "gopls-lsp@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/gopls-lsp/1.0.0",
-        "version": "1.0.0",
-        "installedAt": "2026-05-09T06:16:32.747Z",
-        "lastUpdated": "2026-05-09T06:16:32.747Z"
-      }
-    ],
-    "context7@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/context7/unknown",
-        "version": "unknown",
-        "installedAt": "2026-05-10T03:58:57.696Z",
-        "lastUpdated": "2026-05-10T03:58:57.696Z"
+        "installedAt": "2026-05-29T18:15:29.811Z",
+        "lastUpdated": "2026-05-29T18:15:29.811Z",
+        "gitCommitSha": "f66230d94f03e5ae43d14c1d267f9b037e06e895"
       }
     ],
     "github@claude-plugins-official": [
@@ -166,36 +54,17 @@
         "scope": "user",
         "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/github/unknown",
         "version": "unknown",
-        "installedAt": "2026-05-10T03:58:57.696Z",
-        "lastUpdated": "2026-05-10T03:58:57.696Z"
+        "installedAt": "2026-05-29T18:15:46.391Z",
+        "lastUpdated": "2026-05-29T18:15:46.391Z"
       }
     ],
-    "playwright@claude-plugins-official": [
+    "ecc@ecc": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/playwright/unknown",
-        "version": "unknown",
-        "installedAt": "2026-05-10T03:58:57.696Z",
-        "lastUpdated": "2026-05-10T03:58:57.696Z"
-      }
-    ],
-    "codex@openai-codex": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/openai-codex/codex/1.0.4",
-        "version": "1.0.4",
-        "installedAt": "2026-05-15T23:44:57.907Z",
-        "lastUpdated": "2026-05-15T23:44:57.907Z",
-        "gitCommitSha": "807e03ac9d5aa23bc395fdec8c3767500a86b3cf"
-      }
-    ],
-    "ecc@everything-claude-code": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/everything-claude-code/ecc/2.0.0-rc.1",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/ecc/ecc/2.0.0-rc.1",
         "version": "2.0.0-rc.1",
-        "installedAt": "2026-05-29T07:26:57.744Z",
-        "lastUpdated": "2026-05-29T07:26:57.744Z",
+        "installedAt": "2026-05-29T18:16:58.105Z",
+        "lastUpdated": "2026-05-29T18:16:58.105Z",
         "gitCommitSha": "64cd1ba248e77e377e76f70fc4e6434bfdddd511"
       }
     ]
