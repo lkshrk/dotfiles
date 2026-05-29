@@ -437,8 +437,7 @@
   "host_settings": {
     "Topaz": {
       "dots_repo": "~/Dev/dotfiles",
-      "dots_disabled": false,
-      "dots_git": {}
+      "dots_disabled": false
     }
   },
   "hosts": {
@@ -471,7 +470,9 @@
     ]
   },
   "settings": {
-    "dots_git": {}
+    "dots_git": {
+      "auto_commit": true
+    }
   },
   "tools": {
     "@aisuite/chub": {

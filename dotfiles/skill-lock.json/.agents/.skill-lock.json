@@ -92,13 +92,13 @@
       "updatedAt": "2026-05-10T06:24:54.941Z"
     },
     "review": {
-      "source": "ShiplightAI/agent-skills",
+      "source": "mattpocock/skills",
       "sourceType": "github",
-      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
-      "skillPath": "skills/review/SKILL.md",
-      "skillFolderHash": "f2f194abea7945ebeb0ada8fb33aa2d5356a4ca0",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/in-progress/review/SKILL.md",
+      "skillFolderHash": "756c8dd5c0f097682b45ff10d64ca23087b19159",
       "installedAt": "2026-04-27T03:38:50.010Z",
-      "updatedAt": "2026-05-10T06:24:54.941Z"
+      "updatedAt": "2026-05-29T22:39:34.725Z"
     },
     "security-review": {
       "source": "ShiplightAI/agent-skills",
@@ -226,17 +226,17 @@
       "skillFolderHash": "2a1ad17028306ebe45f0e49703fa28b9b2e7f499",
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-05-16T14:04:53.299Z",
-      "updatedAt": "2026-05-17T01:26:22.211Z"
+      "updatedAt": "2026-05-29T22:39:34.720Z"
     },
     "grill-with-docs": {
       "source": "mattpocock/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/mattpocock/skills.git",
       "skillPath": "skills/engineering/grill-with-docs/SKILL.md",
-      "skillFolderHash": "3c4ac970c404e8d32c24f2725bfe679e455a925b",
+      "skillFolderHash": "2c3a4e48571bfe42203ed7b49cae85f31ef4b6f2",
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-05-16T14:04:53.300Z",
-      "updatedAt": "2026-05-17T01:26:22.213Z"
+      "updatedAt": "2026-05-29T22:39:34.722Z"
     },
     "handoff": {
       "source": "mattpocock/skills",
@@ -340,6 +340,24 @@
       "skillFolderHash": "156ae3a689b79345e546be558a58236b088dffe1",
       "installedAt": "2026-05-17T06:19:28.662Z",
       "updatedAt": "2026-05-17T06:19:28.662Z"
+    },
+    "obsidian-vault": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/personal/obsidian-vault/SKILL.md",
+      "skillFolderHash": "1e814d168a215762391895aee58f4de06c8e3b7f",
+      "installedAt": "2026-05-29T22:39:34.723Z",
+      "updatedAt": "2026-05-29T22:39:34.723Z"
+    },
+    "request-refactor-plan": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/deprecated/request-refactor-plan/SKILL.md",
+      "skillFolderHash": "b0617c9cf69ac1e73a6b30f78c82ff81372079fd",
+      "installedAt": "2026-05-29T22:39:34.724Z",
+      "updatedAt": "2026-05-29T22:39:34.724Z"
     }
   },
   "dismissed": {
@@ -359,6 +377,7 @@
     "kimi-cli",
     "opencode",
     "warp",
+    "zed",
     "claude-code",
     "pi"
   ]
