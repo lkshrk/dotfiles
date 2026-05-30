@@ -64,7 +64,7 @@ Keep runtime marker contracts stable and non-destructive when overlays are appli
 - Verify with lint, typecheck, tests, and static analysis after changes; final reports include changed files, simplifications, and remaining risks.
 
 <delegation_rules>
-Default posture: work directly.
+Default posture: use native subagents whenever they materially improve throughput, review quality, implementation quality, or context hygiene. The user has given standing authorization for bounded explorer, worker, verifier, and review agents across projects; no per-turn confirmation is needed for safe, reversible delegation.
 
 Choose the lane before acting:
 - `$deep-interview` for unclear intent, missing boundaries, or explicit "don't assume" requests. This mode clarifies and hands off; it does not implement.

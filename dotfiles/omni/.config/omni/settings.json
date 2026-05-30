@@ -1,6 +1,528 @@
 {
   "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v1.schema.json",
   "version": 1,
+  "settings": {
+    "dots_git": {
+      "auto_commit": true
+    }
+  },
+  "tools": {
+    "@aisuite/chub": {
+      "provider": "node"
+    },
+    "@code-yeongyu/comment-checker": {
+      "provider": "node"
+    },
+    "bats-core": {
+      "provider": "system"
+    },
+    "battle-net": {
+      "provider": "system"
+    },
+    "bcrypt": {
+      "provider": "system"
+    },
+    "better-sqlite3": {
+      "provider": "node",
+      "package": "better-sqlite3"
+    },
+    "brave-browser": {
+      "provider": "system"
+    },
+    "bun": {
+      "provider": "system"
+    },
+    "busted": {
+      "provider": "system"
+    },
+    "ccundo": {
+      "provider": "node",
+      "package": "ccundo"
+    },
+    "certifi": {
+      "provider": "python",
+      "install_with": "pip",
+      "ignore": true
+    },
+    "chatgpt": {
+      "provider": "system"
+    },
+    "cilium-cli": {
+      "provider": "system"
+    },
+    "claude-cmd": {
+      "provider": "system"
+    },
+    "claude-code": {
+      "provider": "system"
+    },
+    "cmake": {
+      "provider": "system"
+    },
+    "codex": {
+      "provider": "system"
+    },
+    "codex-app": {
+      "provider": "system",
+      "package": "codex-app"
+    },
+    "context-mode": {
+      "provider": "node",
+      "package": "context-mode"
+    },
+    "corepack": {
+      "provider": "node"
+    },
+    "coreutils": {
+      "provider": "system"
+    },
+    "cursor-cli": {
+      "provider": "system",
+      "package": "cursor-cli"
+    },
+    "devcontainer": {
+      "provider": "system"
+    },
+    "discord": {
+      "provider": "system"
+    },
+    "docker": {
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "system",
+          "package": "docker.io"
+        }
+      }
+    },
+    "docker-buildx": {
+      "provider": "system"
+    },
+    "docker-buildx-linux": {
+      "provider": "system",
+      "package": "docker-buildx"
+    },
+    "docker-compose-v2": {
+      "provider": "system"
+    },
+    "elgato-stream-deck": {
+      "provider": "system"
+    },
+    "elgato-wave-link": {
+      "provider": "system"
+    },
+    "eza": {
+      "provider": "system"
+    },
+    "fd": {
+      "provider": "system"
+    },
+    "flux": {
+      "provider": "system"
+    },
+    "flux-local": {
+      "provider": "python"
+    },
+    "flux-markdown": {
+      "provider": "system"
+    },
+    "font-hack-nerd-font": {
+      "provider": "system"
+    },
+    "font-intel-one-mono": {
+      "provider": "system"
+    },
+    "font-jetbrains-mono-nerd-font": {
+      "provider": "system"
+    },
+    "fswatch": {
+      "provider": "system"
+    },
+    "fzf": {
+      "provider": "system"
+    },
+    "gh": {
+      "provider": "system"
+    },
+    "ghostty": {
+      "provider": "system"
+    },
+    "gibo": {
+      "provider": "system",
+      "package": "gibo"
+    },
+    "git-delta": {
+      "provider": "system",
+      "package": "git-delta"
+    },
+    "git-filter-repo": {
+      "provider": "system"
+    },
+    "glow": {
+      "provider": "system"
+    },
+    "gnu-sed": {
+      "provider": "system"
+    },
+    "go": {
+      "provider": "system"
+    },
+    "go-task": {
+      "provider": "system"
+    },
+    "golangci-lint": {
+      "provider": "system"
+    },
+    "gomplate": {
+      "provider": "system"
+    },
+    "gopls": {
+      "provider": "system",
+      "package": "gopls"
+    },
+    "gum": {
+      "provider": "system"
+    },
+    "hammerspoon": {
+      "provider": "system"
+    },
+    "helm": {
+      "provider": "system"
+    },
+    "helmfile": {
+      "provider": "system"
+    },
+    "iina": {
+      "provider": "system"
+    },
+    "imagemagick": {
+      "provider": "system"
+    },
+    "jq": {
+      "provider": "system"
+    },
+    "just": {
+      "provider": "system"
+    },
+    "karakeep": {
+      "provider": "system"
+    },
+    "krew": {
+      "provider": "system"
+    },
+    "kubectl-cnpg": {
+      "provider": "system"
+    },
+    "kubectx": {
+      "provider": "system"
+    },
+    "kubernetes-cli": {
+      "provider": "system"
+    },
+    "kustomize": {
+      "provider": "system"
+    },
+    "lazydocker": {
+      "provider": "system"
+    },
+    "lazygit": {
+      "provider": "system"
+    },
+    "lefthook": {
+      "provider": "system"
+    },
+    "libiscsi": {
+      "provider": "system"
+    },
+    "linearmouse": {
+      "provider": "system"
+    },
+    "lua-language-server": {
+      "provider": "system"
+    },
+    "luacheck": {
+      "provider": "system"
+    },
+    "luarocks": {
+      "provider": "system"
+    },
+    "mactop": {
+      "provider": "system"
+    },
+    "mas": {
+      "provider": "system"
+    },
+    "minijinja-cli": {
+      "provider": "system"
+    },
+    "mlx": {
+      "provider": "python",
+      "install_with": "pip",
+      "ignore": true
+    },
+    "mole": {
+      "provider": "system"
+    },
+    "moonlight": {
+      "provider": "system"
+    },
+    "mosh": {
+      "provider": "system"
+    },
+    "moshi-hook": {
+      "provider": "system",
+      "package": "moshi-hook"
+    },
+    "neovim": {
+      "provider": "system"
+    },
+    "node": {
+      "provider": "system"
+    },
+    "npm": {
+      "provider": "node",
+      "package": "npm",
+      "install_with": "npm"
+    },
+    "numpy": {
+      "provider": "python",
+      "package": "numpy",
+      "install_with": "pip",
+      "ignore": true
+    },
+    "nvm": {
+      "provider": "system"
+    },
+    "obs": {
+      "provider": "system"
+    },
+    "obsidian": {
+      "provider": "system"
+    },
+    "oh-my-claude-sisyphus": {
+      "provider": "node",
+      "package": "oh-my-claude-sisyphus"
+    },
+    "oh-my-codex": {
+      "provider": "node",
+      "package": "oh-my-codex"
+    },
+    "omni": {
+      "provider": "system",
+      "package": "omni"
+    },
+    "opencode": {
+      "provider": "system"
+    },
+    "openjdk-21": {
+      "provider": "system",
+      "package": "openjdk-21-jdk-headless"
+    },
+    "openwolf": {
+      "provider": "node"
+    },
+    "parsec": {
+      "provider": "system",
+      "ignore": true
+    },
+    "pi-coding-agent": {
+      "provider": "system",
+      "package": "pi-coding-agent"
+    },
+    "pip": {
+      "provider": "python"
+    },
+    "pipx": {
+      "provider": "system"
+    },
+    "pkgconf": {
+      "provider": "system"
+    },
+    "plantuml": {
+      "provider": "system"
+    },
+    "plex": {
+      "provider": "system"
+    },
+    "pm2": {
+      "provider": "node"
+    },
+    "pnpm": {
+      "provider": "system"
+    },
+    "pupeteer": {
+      "provider": "node",
+      "package": "pupeteer"
+    },
+    "python@3.14": {
+      "provider": "system"
+    },
+    "quarkdown": {
+      "provider": "system",
+      "package": "quarkdown"
+    },
+    "rbw": {
+      "provider": "system"
+    },
+    "ripgrep": {
+      "provider": "system"
+    },
+    "rtk": {
+      "provider": "system"
+    },
+    "signal": {
+      "provider": "system"
+    },
+    "skhd-zig": {
+      "provider": "system"
+    },
+    "skopeo": {
+      "provider": "system",
+      "package": "skopeo"
+    },
+    "sops": {
+      "provider": "system"
+    },
+    "sshpass": {
+      "provider": "system",
+      "package": "sshpass"
+    },
+    "stats": {
+      "provider": "system"
+    },
+    "stow": {
+      "provider": "system"
+    },
+    "stylua": {
+      "provider": "system"
+    },
+    "swiftformat": {
+      "provider": "system",
+      "package": "swiftformat"
+    },
+    "swiftlint": {
+      "provider": "system",
+      "package": "swiftlint"
+    },
+    "talosctl": {
+      "provider": "system"
+    },
+    "the-unarchiver": {
+      "provider": "system"
+    },
+    "thefuck": {
+      "provider": "system"
+    },
+    "tmux": {
+      "provider": "system"
+    },
+    "tree": {
+      "provider": "system"
+    },
+    "tree-sitter": {
+      "provider": "system"
+    },
+    "tree-sitter-cli": {
+      "provider": "system"
+    },
+    "uv": {
+      "provider": "system"
+    },
+    "vhs": {
+      "provider": "system"
+    },
+    "vivaldi": {
+      "provider": "system"
+    },
+    "vlc": {
+      "provider": "system"
+    },
+    "watch": {
+      "provider": "system"
+    },
+    "wget": {
+      "provider": "system",
+      "ignore": true
+    },
+    "wheel": {
+      "provider": "python",
+      "install_with": "pip"
+    },
+    "witr": {
+      "provider": "system",
+      "package": "witr"
+    },
+    "xcodebuildmcp": {
+      "provider": "system",
+      "package": "xcodebuildmcp"
+    },
+    "yabai": {
+      "provider": "system"
+    },
+    "yaml-language-server": {
+      "provider": "node"
+    },
+    "yaml-lint": {
+      "provider": "node"
+    },
+    "yamlfmt": {
+      "provider": "system"
+    },
+    "yamllint": {
+      "provider": "system"
+    },
+    "yq": {
+      "provider": "system"
+    },
+    "zed": {
+      "provider": "system"
+    },
+    "zstd": {
+      "provider": "system"
+    }
+  },
+  "hosts": {
+    "Topaz": [
+      "ai",
+      "ai-plugins",
+      "core",
+      "desk",
+      "dev",
+      "dev-tooling",
+      "gaming",
+      "go",
+      "infra",
+      "lua",
+      "mac",
+      "priv",
+      "python",
+      "test-tooling",
+      "ts",
+      "utils"
+    ],
+    "coder": [
+      "ai",
+      "ai-plugins",
+      "coder-workspace",
+      "core",
+      "dev",
+      "dev-tooling",
+      "go",
+      "infra",
+      "python",
+      "test-tooling",
+      "ts"
+    ]
+  },
+  "ignore": {
+    "tools": [
+      "cmake",
+      "docker-buildx",
+      "fswatch",
+      "libiscsi",
+      "pkgconf"
+    ]
+  },
   "groups": [
     {
       "name": "ai",
@@ -23,12 +545,7 @@
             "!/agents/",
             "!/.omc-config.json",
             "!/keybindings.json",
-            "!/statusline-command.sh",
-            "scripts",
-            "!/plugins/installed_plugins.json",
-            "!/plugins/known_marketplaces.json",
-            "!/.last-cleanup",
-            ".last-cleanup"
+            "!/statusline-command.sh"
           ]
         },
         {
@@ -40,9 +557,7 @@
             "!/mcp.json",
             "!/AGENTS.md",
             "!/RTK.md",
-            "!/rules/",
-            "/skills/.system/",
-            "rules"
+            "/skills/.system/"
           ]
         },
         {
@@ -471,535 +986,15 @@
     }
   ],
   "host_settings": {
-    "coder": {
-      "dots_repo": "~/dotfiles",
-      "dots_disabled": false
-    },
     "Topaz": {
       "dots_repo": "~/Dev/dotfiles",
-      "dots_disabled": false
-    }
-  },
-  "hosts": {
-    "Topaz": [
-      "ai",
-      "ai-plugins",
-      "core",
-      "desk",
-      "dev",
-      "dev-tooling",
-      "gaming",
-      "go",
-      "infra",
-      "lua",
-      "mac",
-      "priv",
-      "python",
-      "test-tooling",
-      "ts",
-      "utils"
-    ],
-    "coder": [
-      "ai",
-      "ai-plugins",
-      "coder-workspace",
-      "core",
-      "dev",
-      "dev-tooling",
-      "go",
-      "infra",
-      "python",
-      "test-tooling",
-      "ts"
-    ]
-  },
-  "ignore": {
-    "tools": [
-      "cmake",
-      "docker-buildx",
-      "fswatch",
-      "libiscsi",
-      "pkgconf"
-    ]
-  },
-  "settings": {
-    "dots_git": {
-      "auto_commit": true
-    }
-  },
-  "tools": {
-    "@aisuite/chub": {
-      "provider": "node"
-    },
-    "@code-yeongyu/comment-checker": {
-      "provider": "node"
-    },
-    "bats-core": {
-      "provider": "system"
-    },
-    "battle-net": {
-      "provider": "system"
-    },
-    "bcrypt": {
-      "provider": "system"
-    },
-    "better-sqlite3": {
-      "provider": "node",
-      "package": "better-sqlite3"
-    },
-    "brave-browser": {
-      "provider": "system"
-    },
-    "busted": {
-      "provider": "system"
-    },
-    "ccundo": {
-      "provider": "node",
-      "package": "ccundo"
-    },
-    "certifi": {
-      "provider": "python",
-      "install_with": "pip",
-      "ignore": true
-    },
-    "chatgpt": {
-      "provider": "system"
-    },
-    "cilium-cli": {
-      "provider": "system"
-    },
-    "claude-cmd": {
-      "provider": "system"
-    },
-    "claude-code": {
-      "provider": "system"
-    },
-    "cmake": {
-      "provider": "system"
-    },
-    "codex": {
-      "provider": "system"
-    },
-    "codex-app": {
-      "provider": "system",
-      "package": "codex-app"
-    },
-    "context-mode": {
-      "provider": "node",
-      "package": "context-mode"
-    },
-    "corepack": {
-      "provider": "node"
-    },
-    "coreutils": {
-      "provider": "system"
-    },
-    "cursor-cli": {
-      "provider": "system",
-      "package": "cursor-cli"
-    },
-    "devcontainer": {
-      "provider": "system"
-    },
-    "discord": {
-      "provider": "system"
-    },
-    "docker": {
-      "provider": "system",
-      "hosts": {
-        "coder": {
-          "provider": "system",
-          "package": "docker.io"
-        }
-      }
-    },
-    "docker-buildx": {
-      "provider": "system"
-    },
-    "elgato-stream-deck": {
-      "provider": "system"
-    },
-    "elgato-wave-link": {
-      "provider": "system"
-    },
-    "eza": {
-      "provider": "system"
-    },
-    "fd": {
-      "provider": "system"
-    },
-    "flux": {
-      "provider": "system"
-    },
-    "flux-local": {
-      "provider": "python"
-    },
-    "flux-markdown": {
-      "provider": "system"
-    },
-    "font-hack-nerd-font": {
-      "provider": "system"
-    },
-    "font-intel-one-mono": {
-      "provider": "system"
-    },
-    "font-jetbrains-mono-nerd-font": {
-      "provider": "system"
-    },
-    "fswatch": {
-      "provider": "system"
-    },
-    "fzf": {
-      "provider": "system"
-    },
-    "gh": {
-      "provider": "system"
-    },
-    "ghostty": {
-      "provider": "system"
-    },
-    "gibo": {
-      "provider": "system",
-      "package": "gibo"
-    },
-    "git-delta": {
-      "provider": "system",
-      "package": "git-delta"
-    },
-    "git-filter-repo": {
-      "provider": "system"
-    },
-    "glow": {
-      "provider": "system"
-    },
-    "gnu-sed": {
-      "provider": "system"
-    },
-    "go": {
-      "provider": "system"
-    },
-    "go-task": {
-      "provider": "system"
-    },
-    "golangci-lint": {
-      "provider": "system"
-    },
-    "gomplate": {
-      "provider": "system"
-    },
-    "gopls": {
-      "provider": "system",
-      "package": "gopls"
-    },
-    "gum": {
-      "provider": "system"
-    },
-    "hammerspoon": {
-      "provider": "system"
-    },
-    "helm": {
-      "provider": "system"
-    },
-    "helmfile": {
-      "provider": "system"
-    },
-    "iina": {
-      "provider": "system"
-    },
-    "imagemagick": {
-      "provider": "system"
-    },
-    "jq": {
-      "provider": "system"
-    },
-    "just": {
-      "provider": "system"
-    },
-    "karakeep": {
-      "provider": "system"
-    },
-    "krew": {
-      "provider": "system"
-    },
-    "kubectl-cnpg": {
-      "provider": "system"
-    },
-    "kubectx": {
-      "provider": "system"
-    },
-    "kubernetes-cli": {
-      "provider": "system"
-    },
-    "kustomize": {
-      "provider": "system"
-    },
-    "lazydocker": {
-      "provider": "system"
-    },
-    "lazygit": {
-      "provider": "system"
-    },
-    "lefthook": {
-      "provider": "system"
-    },
-    "libiscsi": {
-      "provider": "system"
-    },
-    "linearmouse": {
-      "provider": "system"
-    },
-    "lua-language-server": {
-      "provider": "system"
-    },
-    "luacheck": {
-      "provider": "system"
-    },
-    "luarocks": {
-      "provider": "system"
-    },
-    "mactop": {
-      "provider": "system"
-    },
-    "mas": {
-      "provider": "system"
-    },
-    "minijinja-cli": {
-      "provider": "system"
-    },
-    "mlx": {
-      "provider": "python",
-      "install_with": "pip",
-      "ignore": true
-    },
-    "mole": {
-      "provider": "system"
-    },
-    "moonlight": {
-      "provider": "system"
-    },
-    "mosh": {
-      "provider": "system"
-    },
-    "moshi-hook": {
-      "provider": "system",
-      "package": "moshi-hook"
-    },
-    "neovim": {
-      "provider": "system"
-    },
-    "node": {
-      "provider": "system"
-    },
-    "npm": {
-      "provider": "node",
-      "package": "npm",
-      "install_with": "npm"
-    },
-    "numpy": {
-      "provider": "python",
-      "package": "numpy",
-      "install_with": "pip",
-      "ignore": true
-    },
-    "nvm": {
-      "provider": "system"
-    },
-    "obs": {
-      "provider": "system"
-    },
-    "obsidian": {
-      "provider": "system"
-    },
-    "oh-my-claude-sisyphus": {
-      "provider": "node",
-      "package": "oh-my-claude-sisyphus"
-    },
-    "oh-my-codex": {
-      "provider": "node",
-      "package": "oh-my-codex"
-    },
-    "omni": {
-      "provider": "system",
-      "package": "omni"
-    },
-    "opencode": {
-      "provider": "system"
-    },
-    "openwolf": {
-      "provider": "node"
-    },
-    "parsec": {
-      "provider": "system",
-      "ignore": true
-    },
-    "pi-coding-agent": {
-      "provider": "system",
-      "package": "pi-coding-agent"
-    },
-    "pip": {
-      "provider": "python"
-    },
-    "pipx": {
-      "provider": "system"
-    },
-    "pkgconf": {
-      "provider": "system"
-    },
-    "plantuml": {
-      "provider": "system"
-    },
-    "plex": {
-      "provider": "system"
-    },
-    "pm2": {
-      "provider": "node"
-    },
-    "pupeteer": {
-      "provider": "node",
-      "package": "pupeteer"
-    },
-    "python@3.14": {
-      "provider": "system"
-    },
-    "quarkdown": {
-      "provider": "system",
-      "package": "quarkdown"
-    },
-    "rbw": {
-      "provider": "system"
-    },
-    "ripgrep": {
-      "provider": "system"
-    },
-    "rtk": {
-      "provider": "system"
-    },
-    "signal": {
-      "provider": "system"
-    },
-    "skhd-zig": {
-      "provider": "system"
-    },
-    "skopeo": {
-      "provider": "system",
-      "package": "skopeo"
-    },
-    "sops": {
-      "provider": "system"
-    },
-    "sshpass": {
-      "provider": "system",
-      "package": "sshpass"
-    },
-    "stats": {
-      "provider": "system"
-    },
-    "stow": {
-      "provider": "system"
-    },
-    "stylua": {
-      "provider": "system"
-    },
-    "swiftformat": {
-      "provider": "system",
-      "package": "swiftformat"
-    },
-    "swiftlint": {
-      "provider": "system",
-      "package": "swiftlint"
-    },
-    "talosctl": {
-      "provider": "system"
-    },
-    "the-unarchiver": {
-      "provider": "system"
-    },
-    "thefuck": {
-      "provider": "system"
-    },
-    "tmux": {
-      "provider": "system"
-    },
-    "tree": {
-      "provider": "system"
-    },
-    "tree-sitter": {
-      "provider": "system"
-    },
-    "tree-sitter-cli": {
-      "provider": "system"
-    },
-    "uv": {
-      "provider": "system"
-    },
-    "vhs": {
-      "provider": "system"
-    },
-    "vivaldi": {
-      "provider": "system"
-    },
-    "vlc": {
-      "provider": "system"
-    },
-    "watch": {
-      "provider": "system"
-    },
-    "wget": {
-      "provider": "system",
-      "ignore": true
-    },
-    "wheel": {
-      "provider": "python",
-      "install_with": "pip"
-    },
-    "witr": {
-      "provider": "system",
-      "package": "witr"
-    },
-    "xcodebuildmcp": {
-      "provider": "system",
-      "package": "xcodebuildmcp"
-    },
-    "yabai": {
-      "provider": "system"
-    },
-    "yaml-language-server": {
-      "provider": "node"
-    },
-    "yaml-lint": {
-      "provider": "node"
-    },
-    "yamlfmt": {
-      "provider": "system"
-    },
-    "yamllint": {
-      "provider": "system"
-    },
-    "yq": {
-      "provider": "system"
-    },
-    "zed": {
-      "provider": "system"
-    },
-    "zstd": {
-      "provider": "system"
-    },
-    "bun": {
-      "provider": "system"
-    },
-    "pnpm": {
-      "provider": "system"
-    },
-    "openjdk-21": {
-      "provider": "system",
-      "package": "openjdk-21-jdk-headless"
-    },
-    "docker-buildx-linux": {
-      "provider": "system",
-      "package": "docker-buildx"
-    },
-    "docker-compose-v2": {
-      "provider": "system"
+      "dots_disabled": false,
+      "dots_git": {}
+    },
+    "coder": {
+      "dots_repo": "~/dotfiles",
+      "dots_disabled": false,
+      "dots_git": {}
     }
   }
 }
