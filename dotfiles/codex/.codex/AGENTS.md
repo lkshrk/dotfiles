@@ -340,3 +340,5 @@ Do not manually duplicate hook-owned activation state unless recovering from mis
 ## Setup
 
 Execute `omx setup` to install all components. Execute `omx doctor` to verify installation.
+
+@/Users/lkshrk/.codex/RTK.md
