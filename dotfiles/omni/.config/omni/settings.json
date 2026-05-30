@@ -87,6 +87,17 @@
       ]
     },
     {
+      "name": "coder-workspace",
+      "description": "Coder workspace-only development tools",
+      "tools": [
+        "bun",
+        "pnpm",
+        "openjdk-21",
+        "docker-buildx-linux",
+        "docker-compose-v2"
+      ]
+    },
+    {
       "name": "core",
       "tools": [
         "coreutils",
@@ -491,6 +502,7 @@
     "coder": [
       "ai",
       "ai-plugins",
+      "coder-workspace",
       "core",
       "dev",
       "dev-tooling",
@@ -593,7 +605,13 @@
       "provider": "system"
     },
     "docker": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "system",
+          "package": "docker.io"
+        }
+      }
     },
     "docker-buildx": {
       "provider": "system"
@@ -964,6 +982,23 @@
       "provider": "system"
     },
     "zstd": {
+      "provider": "system"
+    },
+    "bun": {
+      "provider": "system"
+    },
+    "pnpm": {
+      "provider": "system"
+    },
+    "openjdk-21": {
+      "provider": "system",
+      "package": "openjdk-21-jdk-headless"
+    },
+    "docker-buildx-linux": {
+      "provider": "system",
+      "package": "docker-buildx"
+    },
+    "docker-compose-v2": {
       "provider": "system"
     }
   }
