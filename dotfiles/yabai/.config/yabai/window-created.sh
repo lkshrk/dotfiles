@@ -5,8 +5,13 @@ set -euo pipefail
 
 [ -z "${YABAI_WINDOW_ID:-}" ] && exit 0
 
-APP="$(yabai -m query --windows --window "$YABAI_WINDOW_ID" 2>/dev/null | jq -r '.app // empty')"
+WIN="$(yabai -m query --windows --window "$YABAI_WINDOW_ID" 2>/dev/null)"
+APP="$(echo "$WIN" | jq -r '.app // empty')"
 [ -z "$APP" ] && exit 0
+
+# Only manage real top-level windows — skip popovers/dropdowns/sheets/dialogs
+SUBROLE="$(echo "$WIN" | jq -r '.subrole // empty')"
+[ "$SUBROLE" != "AXStandardWindow" ] && exit 0
 
 # Only manage these apps — everything else keeps default macOS behavior
 MANAGED_APPS=(
