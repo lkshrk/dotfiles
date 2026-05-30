@@ -41,7 +41,8 @@
             "!/AGENTS.md",
             "!/RTK.md",
             "!/rules/",
-            "/skills/.system/"
+            "/skills/.system/",
+            "rules"
           ]
         },
         {
@@ -117,7 +118,10 @@
         },
         {
           "name": "omni",
-          "path": "~/.config/omni"
+          "path": "~/.config/omni",
+          "ignore": [
+            "settings.json.bak.20260508102147"
+          ]
         },
         {
           "name": "tmux",
@@ -137,7 +141,8 @@
           },
           "ignore": [
             ".zsh_history",
-            ".gitignore"
+            ".gitignore",
+            ".leankg"
           ]
         },
         {
@@ -184,7 +189,12 @@
         },
         {
           "name": "zed",
-          "path": "~/.config/zed"
+          "path": "~/.config/zed",
+          "ignore": [
+            "settings_backup.json",
+            "prompts/prompts-library-db.0.mdb",
+            "conversations"
+          ]
         }
       ]
     },
@@ -391,7 +401,10 @@
             "Topaz": {
               "package": "git@Topaz"
             }
-          }
+          },
+          "ignore": [
+            "hooks/pre-commit.old"
+          ]
         },
         {
           "name": "karabiner",
