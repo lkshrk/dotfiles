@@ -94,7 +94,8 @@
     "code-simplifier@claude-plugins-official": true,
     "context-mode@context-mode": true,
     "github@claude-plugins-official": true,
-    "ecc@ecc": true
+    "ecc@ecc": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -116,6 +117,7 @@
       }
     }
   },
+  "effortLevel": "high",
   "theme": "dark-daltonized",
-  "effortLevel": "high"
+  "skipAutoPermissionPrompt": true
 }

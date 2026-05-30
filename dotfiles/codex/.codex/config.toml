@@ -1,4 +1,4 @@
-model_auto_compact_token_limit = 217600
+model_auto_compact_token_limit = 217_600
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
 plan_mode_reasoning_effort = "xhigh"
@@ -12,22 +12,23 @@ log_user_prompt = true
 endpoint = "https://otel.h-cloud.lan/v1/logs"
 protocol = "binary"
 
-[otel.exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+  [otel.exporter.otlp-http.tls]
+  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [otel.trace_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/traces"
 protocol = "binary"
 
-[otel.trace_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+  [otel.trace_exporter.otlp-http.tls]
+  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [otel.metrics_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/metrics"
 protocol = "binary"
 
-[otel.metrics_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+  [otel.metrics_exporter.otlp-http.tls]
+  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+
 [projects."/Users/lkshrk"]
 trust_level = "trusted"
 
@@ -68,11 +69,24 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [tui]
-status_line = ["model-with-reasoning", "current-dir", "git-branch", "run-state", "context-used", "five-hour-limit", "weekly-limit", "task-progress"]
+status_line = [
+  "model-with-reasoning",
+  "current-dir",
+  "git-branch",
+  "run-state",
+  "context-used",
+  "five-hour-limit",
+  "weekly-limit",
+  "task-progress"
+]
 status_line_use_colors = true
 
-[tui.model_availability_nux]
-"gpt-5.5" = 4
+  [tui.model_availability_nux]
+  "gpt-5.5" = 4
+
+[tui.keymap.editor]
+insert_newline = [ "shift-enter" ]
+kill_line_start = [ "ctrl-u" ]
 
 [mcp_servers.context-mode]
 command = "context-mode"
@@ -101,19 +115,18 @@ approval_mode = "approve"
 [mcp_servers.context-mode.tools.ctx_doctor]
 approval_mode = "approve"
 
+[mcp_servers.context-mode.tools.ctx_fetch_and_index]
+approval_mode = "approve"
+
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
-env_http_headers = { "CONTEXT7_API_KEY" = "CONTEXT7_API_KEY" }
 
-[tui.keymap.editor]
-insert_newline = ["shift-enter"]
-kill_line_start = ["ctrl-u"]
-
-# BEGIN OMC MANAGED MCP REGISTRY
+  [mcp_servers.context7.env_http_headers]
+  CONTEXT7_API_KEY = "CONTEXT7_API_KEY"
 
 [mcp_servers.leankg]
 command = "/Users/lkshrk/.local/bin/leankg"
-args = ["mcp-stdio", "--watch"]
+args = [ "mcp-stdio", "--watch" ]
 type = "stdio"
 
 [mcp_servers.leankg.tools.mcp_status]
@@ -154,36 +167,39 @@ approval_mode = "approve"
 
 [mcp_servers.shiplight]
 command = "npx"
-args = ["-y", "@shiplightai/mcp@latest"]
-env = { PWDEBUG = "console" }
+args = [ "-y", "@shiplightai/mcp@latest" ]
 startup_timeout_sec = 15
-
 enabled = false
+
+  [mcp_servers.shiplight.env]
+  PWDEBUG = "console"
+
 [mcp_servers.xcodebuildmcp]
 command = "/opt/homebrew/bin/xcodebuildmcp"
-args = ["mcp"]
+args = [ "mcp" ]
 type = "stdio"
-
 enabled = false
+
 [plugins."build-ios-apps@openai-curated"]
 enabled = true
 
 [plugins."context-mode@context-mode"]
 enabled = true
+
+[plugins."oh-my-codex@oh-my-codex-local"]
+enabled = true
+
+[plugins."superpowers@openai-curated"]
+enabled = true
+
 [features]
 hooks = true
 goals = true
-
-# END OMC MANAGED MCP REGISTRY
-
-[hooks.state]
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
 enabled = false
 trusted_hash = "sha256:7a01a1beee5fad28ec485e3d9c2e7781da5e4690facfa79471ad3c6e557efa8a"
 
-# OMX-owned Codex hook trust state
-# Trusts only setup-managed native hook wrappers.
 [hooks.state."/Users/lkshrk/.codex/hooks.json:post_compact:0:0"]
 trusted_hash = "sha256:82791a6a4be5b677ca76ce31339b211b01ece6e3588706982c94e0437ca8ba5a"
 
@@ -283,13 +299,6 @@ last_updated = "2026-05-29T16:39:05Z"
 last_revision = "f66230d94f03e5ae43d14c1d267f9b037e06e895"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
-# End OMX-owned Codex hook trust state
-
-[plugins."oh-my-codex@oh-my-codex-local"]
-enabled = true
-
-[plugins."superpowers@openai-curated"]
-enabled = true
 
 [marketplaces.oh-my-codex-local]
 source_type = "local"
