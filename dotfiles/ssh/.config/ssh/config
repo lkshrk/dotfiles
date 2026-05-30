@@ -14,7 +14,6 @@ Host codeberg.org
     HostName codeberg.org
     User git
 
-
 Host *
   PermitLocalCommand yes
   LocalCommand printf '\033]2;%n\007'
