@@ -67,6 +67,15 @@
         "lastUpdated": "2026-05-29T18:16:58.105Z",
         "gitCommitSha": "64cd1ba248e77e377e76f70fc4e6434bfdddd511"
       }
+    ],
+    "swift-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-05-30T00:27:02.250Z",
+        "lastUpdated": "2026-05-30T00:27:02.250Z"
+      }
     ]
   },
   "enabledPlugins": {
