@@ -5,10 +5,8 @@
     {
       "name": "ai",
       "tools": [
-        "chatgpt",
         "claude-code",
         "codex",
-        "mlx",
         "opencode",
         "pi-coding-agent"
       ],
@@ -93,15 +91,10 @@
         "coreutils",
         "eza",
         "fd",
-        "font-hack-nerd-font",
-        "font-intel-one-mono",
-        "font-jetbrains-mono-nerd-font",
         "fzf",
         "jq",
         "just",
-        "karakeep",
         "neovim",
-        "obsidian",
         "ripgrep",
         "stow",
         "thefuck",
@@ -135,16 +128,13 @@
           "path": "~/.vim"
         },
         {
-          "name": "zed",
-          "path": "~/.config/zed"
-        },
-        {
-          "name": "zprofile",
-          "path": "~/.zprofile"
-        },
-        {
           "name": "zsh",
           "path": "~/.config/zsh",
+          "hosts": {
+            "coder": {
+              "package": "zsh@coder"
+            }
+          },
           "ignore": [
             ".zsh_history",
             ".gitignore"
@@ -155,8 +145,16 @@
           "path": "~/.zshenv"
         },
         {
-          "name": "ssh",
-          "path": "~/.config/ssh"
+          "name": "zshrc",
+          "path": "~/.zshrc",
+          "hosts": {
+            "Topaz": {
+              "package": "zshrc@Topaz"
+            },
+            "coder": {
+              "package": "zshrc@coder"
+            }
+          }
         }
       ]
     },
@@ -167,7 +165,13 @@
         "iina",
         "zed",
         "codex-app",
-        "ghostty"
+        "ghostty",
+        "chatgpt",
+        "obsidian",
+        "font-hack-nerd-font",
+        "font-intel-one-mono",
+        "font-jetbrains-mono-nerd-font",
+        "karakeep"
       ],
       "dots": [
         {
@@ -177,6 +181,10 @@
         {
           "name": "ghostty",
           "path": "~/.config/ghostty"
+        },
+        {
+          "name": "zed",
+          "path": "~/.config/zed"
         }
       ]
     },
@@ -283,7 +291,8 @@
         "xcodebuildmcp",
         "zstd",
         "hammerspoon",
-        "rbw"
+        "rbw",
+        "mlx"
       ],
       "dots": [
         {
@@ -399,15 +408,6 @@
           "path": "~/.config/taskless"
         },
         {
-          "name": "zshrc",
-          "path": "~/.zshrc",
-          "hosts": {
-            "Topaz": {
-              "package": "zshrc@Topaz"
-            }
-          }
-        },
-        {
           "name": "talos",
           "path": "~/.config/talos",
           "ignored": true
@@ -430,11 +430,27 @@
         {
           "name": "herdr",
           "path": "~/.config/herdr"
+        },
+        {
+          "name": "zprofile",
+          "path": "~/.zprofile"
+        },
+        {
+          "name": "ssh",
+          "path": "~/.config/ssh"
         }
       ]
+    },
+    {
+      "name": "coder",
+      "special": "host"
     }
   ],
   "host_settings": {
+    "coder": {
+      "dots_repo": "~/dotfiles",
+      "dots_disabled": false
+    },
     "Topaz": {
       "dots_repo": "~/Dev/dotfiles",
       "dots_disabled": false
@@ -458,6 +474,18 @@
       "test-tooling",
       "ts",
       "utils"
+    ],
+    "coder": [
+      "ai",
+      "ai-plugins",
+      "core",
+      "dev",
+      "dev-tooling",
+      "go",
+      "infra",
+      "python",
+      "test-tooling",
+      "ts"
     ]
   },
   "ignore": {

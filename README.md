@@ -16,26 +16,36 @@ The setup flow:
 2. Ensures Homebrew is installed and on `PATH`.
 3. Installs the bootstrap tools with Brew: GNU Stow, Omni, Bun, and uv.
 4. Runs `omni --config dotfiles/omni/.config/omni/settings.json --yes bootstrap`.
-5. Runs `omni --config dotfiles/omni/.config/omni/settings.json --yes reconcile`.
-6. Compiles `~/.config/yabai/sleep-on-lock` from the tracked Swift source.
-7. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
-8. Refreshes the yabai sudoers entry.
-9. Installs lefthook hooks.
+5. Compiles `~/.config/yabai/sleep-on-lock` from the tracked Swift source.
+6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
+7. Refreshes the yabai sudoers entry.
+8. Installs lefthook hooks and restores agent skills from the lockfile.
 
-Admin-required package actions are handled by normal macOS authentication. Setup warms the sudo session with `sudo -v` unless `--skip-admin-warmup` is passed.
+Admin-required package actions are handled by normal macOS authentication. Setup warms the sudo session with `sudo -v` when running in an interactive terminal.
 
 Flags:
 
 | Flag | Effect |
 | ---- | ------ |
-| `--macos-defaults` | Run `scripts/macos-defaults.sh` after Omni reconcile |
-| `--skip-admin-warmup` | Skip the initial `sudo -v` |
+| `--macos-defaults` | Run `scripts/macos-defaults.sh` during setup |
 
 After setup, run:
 
 ```sh
 claude doctor
 ```
+
+## Coder
+
+Coder/Linux workspaces use a separate Omni host profile instead of the macOS setup path:
+
+```sh
+git clone <repo> ~/dotfiles
+cd ~/dotfiles
+./setup-coder.sh
+```
+
+`setup-coder.sh` selects `OMNI_HOSTNAME=coder`, installs the minimal Linux prerequisites for Omni, then lets Omni sync the `coder` host's tools and dotfiles.
 
 ## Omni
 
@@ -79,8 +89,10 @@ dottrack PATH [args...]   # omni dots add --adopt PATH [args...]
 
 ```text
 setup.sh                  # primary bootstrap script
+setup-coder.sh            # Coder/Linux bootstrap through Omni host profile
 scripts/
   macos-defaults.sh       # optional macOS defaults
+  setup-coder-linux.sh    # minimal Linux prerequisites for Coder
 dotfiles/
   omni/                   # tracked Omni config
   yabai/                  # yabai config + sleep-on-lock Swift source
