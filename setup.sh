@@ -1,31 +1,30 @@
 #!/usr/bin/env bash
-# setup.sh - cross-platform bootstrap for this dotfiles repo.
+# setup.sh - macOS workstation bootstrap for this dotfiles repo.
 
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
 RUN_MACOS_DEFAULTS=0
-SKIP_ADMIN_WARMUP=0
 
 usage() {
   cat <<'USAGE'
-setup.sh - cross-platform bootstrap for this dotfiles repo.
+setup.sh - macOS workstation bootstrap for this dotfiles repo.
 
 Usage:
-  ./setup.sh [--macos-defaults] [--skip-admin-warmup]
+  ./setup.sh [--macos-defaults]
 
 Options:
-  --macos-defaults      Run scripts/macos-defaults.sh after Omni reconcile (macOS only).
-  --skip-admin-warmup   Do not run sudo -v before privileged package actions.
+  --macos-defaults      Run scripts/macos-defaults.sh after Omni bootstrap.
   -h, --help            Show this help.
+
+Coder/Linux workspaces use ./setup-coder.sh.
 USAGE
 }
 
 for arg in "$@"; do
   case "$arg" in
     --macos-defaults) RUN_MACOS_DEFAULTS=1 ;;
-    --skip-admin-warmup) SKIP_ADMIN_WARMUP=1 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "unknown flag: $arg" >&2; usage >&2; exit 2 ;;
   esac
@@ -47,19 +46,14 @@ die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 
 export -f say step ok warn die
 
-# ─── OS detection ─────────────────────────────────────────────────────────────
+# ─── OS guard ─────────────────────────────────────────────────────────────────
 
 OS="$(uname -s)"
-case "$OS" in
-  Darwin) PLATFORM=macos ;;
-  Linux)  PLATFORM=linux ;;
-  *) die "Unsupported OS: $OS" ;;
-esac
+[[ "$OS" == "Darwin" ]] || die "setup.sh is macOS-only; use ./setup-coder.sh for Coder/Linux workspaces"
 
 # ─── Shared: warm admin session ───────────────────────────────────────────────
 
 warm_admin_session() {
-  (( SKIP_ADMIN_WARMUP )) && return
   [[ -t 0 && -t 1 ]] || {
     warn "non-interactive terminal; privileged package installs may fail if authentication is required"
     return
@@ -100,27 +94,21 @@ install_lefthook() {
 # ─── main ─────────────────────────────────────────────────────────────────────
 
 main() {
-  say "${c_dim}platform: $PLATFORM${c_off}"
+  say "${c_dim}platform: macos${c_off}"
 
   warm_admin_session
 
-  # Platform-specific script handles: package manager bootstrap, stow + omni
-  # install, and any OS-specific steps.
-  local platform_script="$REPO_DIR/scripts/setup-${PLATFORM}.sh"
+  local platform_script="$REPO_DIR/scripts/setup-macos.sh"
   [[ -f "$platform_script" ]] || die "platform script not found: $platform_script"
 
-  # Export variables the platform scripts need.
-  export REPO_DIR OMNI_CONFIG_PATH RUN_MACOS_DEFAULTS SKIP_ADMIN_WARMUP
+  # Export variables the platform script needs.
+  export REPO_DIR OMNI_CONFIG_PATH RUN_MACOS_DEFAULTS
   export c_red c_yel c_grn c_dim c_off
 
   source "$platform_script"
 
-  # Omni bootstrap + reconcile run on all platforms (platform script ensures
-  # omni is available, or skips this block via OMNI_AVAILABLE=0).
-  if [[ "${OMNI_AVAILABLE:-1}" == "1" ]]; then
-    ensure_omni_bootstrap
-    omni_bootstrap
-  fi
+  ensure_omni_bootstrap
+  omni_bootstrap
 
   install_lefthook
 

@@ -1,0 +1,5 @@
+export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
+export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
+export GOPATH="${GOPATH:-$HOME/go}"
+export KUBECONFIG="${KUBECONFIG:-$HOME/.kube/config}"
