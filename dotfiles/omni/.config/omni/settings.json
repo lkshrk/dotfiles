@@ -1109,9 +1109,9 @@
         "coder": {
           "provider": "script",
           "options": {
-            "install": "\"$HOME/.bun/bin/bun\" add -g pi-coding-agent",
-            "check": "test -x \"$HOME/.bun/bin/pi\"",
-            "uninstall": "\"$HOME/.bun/bin/bun\" remove -g pi-coding-agent || true"
+            "install": "\"$HOME/.bun/bin/bun\" add -g @mariozechner/pi",
+            "check": "test -x \"$HOME/.bun/bin/pi\" || test -x \"$HOME/.bun/bin/pi-pods\"",
+            "uninstall": "\"$HOME/.bun/bin/bun\" remove -g @mariozechner/pi || true"
           }
         }
       }
