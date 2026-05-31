@@ -88,6 +88,12 @@ PY
   print -r -- "$out"
 }
 
+# Mac overrides for the shared OTEL base (65-ai-otel.zsh): resolve the lan CA
+# from the vault instead of a pod-provisioned file, and require it — a missing
+# CA aborts the launch so telemetry is never silently dropped.
+OMNI_OTEL_REQUIRE_CA=1
+_omni_otel_ca() { _root_ca_cert_file }
+
 # Run a command with secrets injected as env vars, fetched on demand.
 # Skips items already in env, fetches the rest in parallel (~350ms total
 # instead of ~350ms × N sequential).
