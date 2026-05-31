@@ -46,6 +46,9 @@ step "omni tools"
 omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
 
 step "omni dotfiles"
+# Coder's codex module writes a real ~/.codex/config.toml at agent start, which
+# collides with the symlink omni wants to stow. Drop it so dots sync links cleanly.
+rm -f "$HOME/.codex/config.toml"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync
 
 bash "$REPO_DIR/scripts/bootstrap-agents.sh"
