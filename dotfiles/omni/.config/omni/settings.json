@@ -556,7 +556,18 @@
       "provider": "system"
     },
     "bun": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "curl -fsSL https://bun.sh/install | bash",
+            "check": "test -x \"$HOME/.bun/bin/bun\"",
+            "upgrade": "\"$HOME/.bun/bin/bun\" upgrade",
+            "uninstall": "rm -rf \"$HOME/.bun\""
+          }
+        }
+      }
     },
     "busted": {
       "provider": "system"
@@ -574,7 +585,17 @@
       "provider": "system"
     },
     "cilium-cli": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$tmp/cilium\" \"$b/cilium\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/cilium\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/cilium\""
+          }
+        }
+      }
     },
     "claude-cmd": {
       "provider": "system"
@@ -644,7 +665,17 @@
       "provider": "system"
     },
     "flux": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/fluxcd/flux2/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/fluxcd/flux2/releases/download/${t}/flux_${v}_linux_amd64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$tmp/flux\" \"$b/flux\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/flux\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/flux\""
+          }
+        }
+      }
     },
     "flux-local": {
       "provider": "python"
@@ -713,10 +744,30 @@
       "provider": "system"
     },
     "helm": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | USE_SUDO=false HELM_INSTALL_DIR=\"$HOME/.local/bin\" PATH=\"$HOME/.local/bin:$PATH\" bash",
+            "check": "test -x \"$HOME/.local/bin/helm\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/helm\""
+          }
+        }
+      }
     },
     "helmfile": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/helmfile/helmfile/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/helmfile/helmfile/releases/download/${t}/helmfile_${v}_linux_amd64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$tmp/helmfile\" \"$b/helmfile\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/helmfile\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/helmfile\""
+          }
+        }
+      }
     },
     "iina": {
       "provider": "system"
@@ -734,19 +785,59 @@
       "provider": "system"
     },
     "krew": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\ntmp=$(mktemp -d); cd \"$tmp\"\ncurl -fsSLO \"https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-linux_amd64.tar.gz\"\ntar zxf krew-linux_amd64.tar.gz\n./krew-linux_amd64 install krew\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.krew/bin/kubectl-krew\"",
+            "uninstall": "rm -rf \"$HOME/.krew\""
+          }
+        }
+      }
     },
     "kubectl-cnpg": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/cloudnative-pg/cloudnative-pg/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/cloudnative-pg/cloudnative-pg/releases/download/${t}/kubectl-cnpg_${v}_linux_x86_64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$tmp/kubectl-cnpg\" \"$b/kubectl-cnpg\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/kubectl-cnpg\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/kubectl-cnpg\""
+          }
+        }
+      }
     },
     "kubectx": {
       "provider": "system"
     },
     "kubernetes-cli": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nv=$(curl -fsSL https://dl.k8s.io/release/stable.txt)\ncurl -fsSL \"https://dl.k8s.io/release/$v/bin/linux/amd64/kubectl\" -o \"$b/kubectl\"\nchmod +x \"$b/kubectl\"",
+            "check": "test -x \"$HOME/.local/bin/kubectl\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/kubectl\""
+          }
+        }
+      }
     },
     "kustomize": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\ncurl -fsSL \"https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh\" | bash -s -- \"$b\"",
+            "check": "test -x \"$HOME/.local/bin/kustomize\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/kustomize\""
+          }
+        }
+      }
     },
     "lazydocker": {
       "provider": "system"
@@ -779,7 +870,17 @@
       "provider": "system"
     },
     "minijinja-cli": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "curl -fsSL https://github.com/mitsuhiko/minijinja/releases/latest/download/minijinja-cli-installer.sh | sh",
+            "check": "test -x \"$HOME/.cargo/bin/minijinja-cli\"",
+            "uninstall": "rm -f \"$HOME/.cargo/bin/minijinja-cli\""
+          }
+        }
+      }
     },
     "mlx": {
       "provider": "python",
@@ -903,7 +1004,17 @@
       "package": "skopeo"
     },
     "sops": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/getsops/sops/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ncurl -fsSL \"https://github.com/getsops/sops/releases/download/${t}/sops-${t}.linux.amd64\" -o \"$b/sops\"\nchmod +x \"$b/sops\"",
+            "check": "test -x \"$HOME/.local/bin/sops\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/sops\""
+          }
+        }
+      }
     },
     "sshpass": {
       "provider": "system",
@@ -927,10 +1038,30 @@
       "package": "swiftlint"
     },
     "talosctl": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/siderolabs/talos/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ncurl -fsSL \"https://github.com/siderolabs/talos/releases/download/${t}/talosctl-linux-amd64\" -o \"$b/talosctl\"\nchmod +x \"$b/talosctl\"",
+            "check": "test -x \"$HOME/.local/bin/talosctl\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/talosctl\""
+          }
+        }
+      }
     },
     "opentofu": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/opentofu/opentofu/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/opentofu/opentofu/releases/download/${t}/tofu_${v}_linux_amd64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$tmp/tofu\" \"$b/tofu\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/tofu\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/tofu\""
+          }
+        }
+      }
     },
     "the-unarchiver": {
       "provider": "system"
@@ -963,7 +1094,13 @@
       "provider": "system"
     },
     "watch": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "system",
+          "package": "procps"
+        }
+      }
     },
     "wget": {
       "provider": "system",
