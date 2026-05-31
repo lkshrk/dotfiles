@@ -1155,7 +1155,17 @@
       "provider": "system"
     },
     "rtk": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/rtk-ai/rtk/releases/latest/download/rtk-x86_64-unknown-linux-musl.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name rtk -type f | head -1)\" \"$b/rtk\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/rtk\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/rtk\""
+          }
+        }
+      }
     },
     "signal": {
       "provider": "system"
