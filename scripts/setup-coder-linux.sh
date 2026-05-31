@@ -53,7 +53,41 @@ install_omni_linux() {
   fi
 }
 
+# ─── bun (Linux) ──────────────────────────────────────────────────────────────
+#
+# Installed up-front, before `omni tools sync`, for two reasons:
+#   1. omni's node provider probes `command -v bun`; without it on PATH the whole
+#      node ecosystem (yaml-language-server, yaml-lint, …) is skipped.
+#   2. Several script-provider installers (codex, devcontainer, …) shell out to
+#      "$HOME/.bun/bin/bun add -g", so bun must exist regardless of sync order.
+
+install_bun_linux() {
+  step "bun (Linux)"
+
+  if [[ ! -x "$HOME/.bun/bin/bun" ]]; then
+    curl -fsSL https://bun.sh/install | bash
+  fi
+
+  if [[ -x "$HOME/.bun/bin/bun" ]]; then
+    ok "bun ready: $("$HOME/.bun/bin/bun" --version 2>/dev/null || printf 'found')"
+  else
+    warn "bun install failed; node ecosystem and bun-based tools will be skipped"
+  fi
+}
+
+# ─── PATH for the sync session ────────────────────────────────────────────────
+#
+# This file is *sourced* by setup-coder.sh, so exporting PATH here makes the
+# freshly installed binaries (and bun) visible to the omni bootstrap/sync steps
+# that follow, before the login shell's zsh PATH config is in effect.
+
+export_sync_path() {
+  export PATH="$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
+}
+
 # ─── main ─────────────────────────────────────────────────────────────────────
 
 install_apt_packages
 install_omni_linux
+install_bun_linux
+export_sync_path
