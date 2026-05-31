@@ -723,7 +723,17 @@
       "provider": "system"
     },
     "eza": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/eza-community/eza/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/eza-community/eza/releases/download/${t}/eza_x86_64-unknown-linux-gnu.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name eza -type f | head -1)\" \"$b/eza\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/eza\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/eza\""
+          }
+        }
+      }
     },
     "fd": {
       "provider": "system",
@@ -755,7 +765,17 @@
       "provider": "python"
     },
     "flux-markdown": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "true  # macOS-only QuickLook preview tool; not applicable on Linux",
+            "check": "true",
+            "uninstall": "true"
+          }
+        }
+      }
     },
     "font-hack-nerd-font": {
       "provider": "system"
@@ -773,7 +793,17 @@
       "provider": "system"
     },
     "gh": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/cli/cli/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/cli/cli/releases/download/${t}/gh_${v}_linux_amd64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name gh -type f | head -1)\" \"$b/gh\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/gh\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/gh\""
+          }
+        }
+      }
     },
     "ghostty": {
       "provider": "system"
@@ -794,7 +824,17 @@
     },
     "git-delta": {
       "provider": "system",
-      "package": "git-delta"
+      "package": "git-delta",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/dandavison/delta/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/dandavison/delta/releases/download/${t}/delta-${v}-x86_64-unknown-linux-gnu.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name delta -type f | head -1)\" \"$b/delta\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/delta\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/delta\""
+          }
+        }
+      }
     },
     "git-filter-repo": {
       "provider": "system"
@@ -883,7 +923,17 @@
       "provider": "system"
     },
     "just": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\ncurl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to \"$b\"",
+            "check": "test -x \"$HOME/.local/bin/just\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/just\""
+          }
+        }
+      }
     },
     "karakeep": {
       "provider": "system"
@@ -1250,6 +1300,9 @@
       "provider": "system"
     },
     "tree-sitter": {
+      "provider": "system"
+    },
+    "tree-sitter-cli": {
       "provider": "system",
       "hosts": {
         "coder": {
@@ -1261,9 +1314,6 @@
           }
         }
       }
-    },
-    "tree-sitter-cli": {
-      "provider": "system"
     },
     "uv": {
       "provider": "system"
@@ -1338,7 +1388,17 @@
       "provider": "system"
     },
     "yq": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/mikefarah/yq/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ncurl -fsSL \"https://github.com/mikefarah/yq/releases/download/${t}/yq_linux_amd64\" -o \"$b/yq\"\nchmod +x \"$b/yq\"",
+            "check": "test -x \"$HOME/.local/bin/yq\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/yq\""
+          }
+        }
+      }
     },
     "zed": {
       "provider": "system"
