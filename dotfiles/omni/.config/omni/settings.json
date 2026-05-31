@@ -81,11 +81,8 @@
     },
     {
       "name": "coder-workspace",
-      "description": "Coder workspace-only development tools",
+      "description": "Coder workspace base: container tooling shared by every workspace",
       "tools": [
-        "bun",
-        "pnpm",
-        "openjdk-21",
         "docker-buildx-linux",
         "docker-compose-v2"
       ]
@@ -110,7 +107,9 @@
         "wget",
         "yq",
         "omni",
-        "glow"
+        "glow",
+        "zsh",
+        "oh-my-zsh"
       ],
       "dots": [
         {
@@ -277,6 +276,7 @@
         "kubernetes-cli",
         "sops",
         "talosctl",
+        "opentofu",
         "minijinja-cli",
         "watch"
       ]
@@ -360,10 +360,12 @@
     {
       "name": "ts",
       "tools": [
+        "bun",
         "corepack",
         "node",
         "nvm",
-        "pm2"
+        "pm2",
+        "pnpm"
       ]
     },
     {
@@ -501,11 +503,7 @@
       "core",
       "dev",
       "dev-tooling",
-      "go",
-      "infra",
-      "python",
-      "test-tooling",
-      "ts"
+      "test-tooling"
     ]
   },
   "ignore": {
@@ -525,6 +523,18 @@
   "tools": {
     "@aisuite/chub": {
       "provider": "node"
+    },
+    "oh-my-zsh": {
+      "provider": "script",
+      "options": {
+        "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"",
+        "check": "test -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
+        "upgrade": "(cd $HOME/.oh-my-zsh && git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done",
+        "uninstall": "rm -rf $HOME/.oh-my-zsh"
+      }
+    },
+    "zsh": {
+      "provider": "system"
     },
     "@code-yeongyu/comment-checker": {
       "provider": "node"
@@ -830,10 +840,6 @@
     "opencode": {
       "provider": "system"
     },
-    "openjdk-21": {
-      "provider": "system",
-      "package": "openjdk-21-jdk-headless"
-    },
     "openwolf": {
       "provider": "node"
     },
@@ -921,6 +927,9 @@
       "package": "swiftlint"
     },
     "talosctl": {
+      "provider": "system"
+    },
+    "opentofu": {
       "provider": "system"
     },
     "the-unarchiver": {
