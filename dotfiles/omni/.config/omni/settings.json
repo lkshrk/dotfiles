@@ -36,7 +36,8 @@
             "!/AGENTS.md",
             "!/RTK.md",
             "/skills/.system/"
-          ]
+          ],
+          "on_conflict": "use_repo"
         },
         {
           "name": "free-claude-code",
