@@ -45,10 +45,35 @@ omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
 step "omni tools"
 omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
 
+# Hard-sync extra language/tooling groups selected on the workspace (CODER_OMNI_STACKS,
+# comma-separated), regardless of host membership. e.g. "python,ts,infra".
+if [[ -n "${CODER_OMNI_STACKS:-}" ]]; then
+  IFS=',' read -r -a _omni_stacks <<< "$CODER_OMNI_STACKS"
+  for _stack in "${_omni_stacks[@]}"; do
+    _stack="${_stack//[[:space:]]/}"
+    [[ -n "$_stack" ]] || continue
+    step "omni stack: $_stack"
+    omni --config "$OMNI_CONFIG_PATH" --yes tools sync "$_stack"
+  done
+  unset _omni_stacks _stack
+fi
+
 step "omni dotfiles"
-# Coder's codex module writes a real ~/.codex/config.toml at agent start, which
-# collides with the symlink omni wants to stow. Drop it so dots sync links cleanly.
-rm -f "$HOME/.codex/config.toml"
+# Coder's codex module writes a real ~/.codex/config.toml at agent start, and the
+# oh-my-zsh installer writes a real ~/.zshrc; both collide with the symlinks omni
+# wants to stow. Drop them so dots sync links cleanly.
+rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync
+
+# Make zsh the login shell now that the binary is installed (core group).
+if command -v zsh >/dev/null 2>&1; then
+  _zsh_path="$(command -v zsh)"
+  grep -qx "$_zsh_path" /etc/shells 2>/dev/null || echo "$_zsh_path" | sudo tee -a /etc/shells >/dev/null
+  if [[ "${SHELL:-}" != "$_zsh_path" ]]; then
+    step "login shell -> zsh"
+    sudo chsh -s "$_zsh_path" "$USER" || warn "chsh to zsh failed; set login shell manually"
+  fi
+  unset _zsh_path
+fi
 
 bash "$REPO_DIR/scripts/bootstrap-agents.sh"
