@@ -22,6 +22,10 @@ _omni_otel_run() {
     print -u2 "otel: CA required for $svc but unavailable; not launching"
     return 1
   fi
+  # Exported (not prefix-assigned) because a ${ca:+VAR=val} expansion is not
+  # recognized as an assignment prefix by zsh and would be run as a command.
+  # Callers always invoke this in a subshell, so the export does not leak.
+  [[ -n $ca ]] && export NODE_EXTRA_CA_CERTS="$ca"
   CLAUDE_CODE_ENABLE_TELEMETRY=1 \
   CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1 \
   OTEL_METRICS_EXPORTER=otlp \
@@ -34,7 +38,6 @@ _omni_otel_run() {
   OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="$OMNI_OTEL_ENDPOINT/v1/traces" \
   OTEL_SERVICE_NAME="$svc" \
   OTEL_RESOURCE_ATTRIBUTES="cli_tool=$svc,user=${USER}" \
-  ${ca:+NODE_EXTRA_CA_CERTS="$ca"} \
   "$@"
 }
 
