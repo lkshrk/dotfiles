@@ -540,7 +540,17 @@
       "provider": "node"
     },
     "bats-core": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\ntmp=$(mktemp -d)\ngit clone --depth 1 https://github.com/bats-core/bats-core \"$tmp\"\n\"$tmp/install.sh\" \"$HOME/.local\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/bats\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/bats\""
+          }
+        }
+      }
     },
     "battle-net": {
       "provider": "system"
@@ -598,7 +608,17 @@
       }
     },
     "claude-cmd": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "\"$HOME/.bun/bin/bun\" add -g claude-cmd",
+            "check": "test -x \"$HOME/.bun/bin/claude-cmd\"",
+            "uninstall": "\"$HOME/.bun/bin/bun\" remove -g claude-cmd || true"
+          }
+        }
+      }
     },
     "claude-code": {
       "provider": "system"
@@ -607,7 +627,17 @@
       "provider": "system"
     },
     "codex": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "\"$HOME/.bun/bin/bun\" add -g @openai/codex",
+            "check": "test -x \"$HOME/.bun/bin/codex\"",
+            "uninstall": "\"$HOME/.bun/bin/bun\" remove -g @openai/codex || true"
+          }
+        }
+      }
     },
     "codex-app": {
       "provider": "system",
@@ -628,7 +658,17 @@
       "package": "cursor-cli"
     },
     "devcontainer": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "\"$HOME/.bun/bin/bun\" add -g @devcontainers/cli",
+            "check": "test -x \"$HOME/.bun/bin/devcontainer\"",
+            "uninstall": "\"$HOME/.bun/bin/bun\" remove -g @devcontainers/cli || true"
+          }
+        }
+      }
     },
     "discord": {
       "provider": "system"
@@ -637,8 +677,12 @@
       "provider": "system",
       "hosts": {
         "coder": {
-          "provider": "system",
-          "package": "docker.io"
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\ntmp=$(mktemp -d)\ncurl -fsSL \"https://download.docker.com/linux/static/stable/x86_64/docker-27.5.1.tgz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$tmp/docker/docker\" \"$b/docker\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/docker\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/docker\""
+          }
         }
       }
     },
@@ -647,10 +691,30 @@
     },
     "docker-buildx-linux": {
       "provider": "system",
-      "package": "docker-buildx"
+      "package": "docker-buildx",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\np=\"$HOME/.docker/cli-plugins\"; mkdir -p \"$p\"\nt=$(curl -fsSL https://api.github.com/repos/docker/buildx/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ncurl -fsSL \"https://github.com/docker/buildx/releases/download/${t}/buildx-${t}.linux-amd64\" -o \"$p/docker-buildx\"\nchmod +x \"$p/docker-buildx\"",
+            "check": "test -x \"$HOME/.docker/cli-plugins/docker-buildx\"",
+            "uninstall": "rm -f \"$HOME/.docker/cli-plugins/docker-buildx\""
+          }
+        }
+      }
     },
     "docker-compose-v2": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\np=\"$HOME/.docker/cli-plugins\"; mkdir -p \"$p\"\nt=$(curl -fsSL https://api.github.com/repos/docker/compose/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ncurl -fsSL \"https://github.com/docker/compose/releases/download/${t}/docker-compose-linux-x86_64\" -o \"$p/docker-compose\"\nchmod +x \"$p/docker-compose\"",
+            "check": "test -x \"$HOME/.docker/cli-plugins/docker-compose\"",
+            "uninstall": "rm -f \"$HOME/.docker/cli-plugins/docker-compose\""
+          }
+        }
+      }
     },
     "elgato-stream-deck": {
       "provider": "system"
@@ -662,7 +726,17 @@
       "provider": "system"
     },
     "fd": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/sharkdp/fd/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/sharkdp/fd/releases/download/${t}/fd-${t}-x86_64-unknown-linux-gnu.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name fd -type f | head -1)\" \"$b/fd\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/fd\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/fd\""
+          }
+        }
+      }
     },
     "flux": {
       "provider": "system",
@@ -706,7 +780,17 @@
     },
     "gibo": {
       "provider": "system",
-      "package": "gibo"
+      "package": "gibo",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\ncurl -fsSL \"https://raw.githubusercontent.com/simonwhitaker/gibo/main/gibo\" -o \"$b/gibo\"\nchmod +x \"$b/gibo\"",
+            "check": "test -x \"$HOME/.local/bin/gibo\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/gibo\""
+          }
+        }
+      }
     },
     "git-delta": {
       "provider": "system",
@@ -716,7 +800,17 @@
       "provider": "system"
     },
     "glow": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/charmbracelet/glow/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/charmbracelet/glow/releases/download/${t}/glow_${v}_Linux_x86_64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name glow -type f | head -1)\" \"$b/glow\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/glow\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/glow\""
+          }
+        }
+      }
     },
     "gnu-sed": {
       "provider": "system"
@@ -738,7 +832,17 @@
       "package": "gopls"
     },
     "gum": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/charmbracelet/gum/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/charmbracelet/gum/releases/download/${t}/gum_${v}_Linux_x86_64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name gum -type f | head -1)\" \"$b/gum\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/gum\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/gum\""
+          }
+        }
+      }
     },
     "hammerspoon": {
       "provider": "system"
@@ -840,13 +944,43 @@
       }
     },
     "lazydocker": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/jesseduffield/lazydocker/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/jesseduffield/lazydocker/releases/download/${t}/lazydocker_${v}_Linux_x86_64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name lazydocker -type f | head -1)\" \"$b/lazydocker\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/lazydocker\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/lazydocker\""
+          }
+        }
+      }
     },
     "lazygit": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/jesseduffield/lazygit/releases/download/${t}/lazygit_${v}_Linux_x86_64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name lazygit -type f | head -1)\" \"$b/lazygit\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/lazygit\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/lazygit\""
+          }
+        }
+      }
     },
     "lefthook": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/evilmartians/lefthook/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ncurl -fsSL \"https://github.com/evilmartians/lefthook/releases/download/${t}/lefthook_${v}_Linux_x86_64\" -o \"$b/lefthook\"\nchmod +x \"$b/lefthook\"",
+            "check": "test -x \"$HOME/.local/bin/lefthook\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/lefthook\""
+          }
+        }
+      }
     },
     "libiscsi": {
       "provider": "system"
@@ -936,10 +1070,30 @@
     },
     "omni": {
       "provider": "system",
-      "package": "omni"
+      "package": "omni",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/lkshrk/Omni/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/lkshrk/Omni/releases/download/${t}/Omni_linux_x86_64.tar.gz\" | tar xz -C \"$tmp\" omni\ninstall -m755 \"$tmp/omni\" \"$b/omni\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/omni\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/omni\""
+          }
+        }
+      }
     },
     "opencode": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "curl -fsSL https://opencode.ai/install | bash",
+            "check": "test -x \"$HOME/.opencode/bin/opencode\"",
+            "uninstall": "rm -f \"$HOME/.opencode/bin/opencode\""
+          }
+        }
+      }
     },
     "openwolf": {
       "provider": "node"
@@ -950,7 +1104,17 @@
     },
     "pi-coding-agent": {
       "provider": "system",
-      "package": "pi-coding-agent"
+      "package": "pi-coding-agent",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "\"$HOME/.bun/bin/bun\" add -g pi-coding-agent",
+            "check": "test -x \"$HOME/.bun/bin/pi\"",
+            "uninstall": "\"$HOME/.bun/bin/bun\" remove -g pi-coding-agent || true"
+          }
+        }
+      }
     },
     "pip": {
       "provider": "python"
@@ -1076,7 +1240,17 @@
       "provider": "system"
     },
     "tree-sitter": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/tree-sitter/tree-sitter/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\ncurl -fsSL \"https://github.com/tree-sitter/tree-sitter/releases/download/${t}/tree-sitter-linux-x64.gz\" | gunzip > \"$b/tree-sitter\"\nchmod +x \"$b/tree-sitter\"",
+            "check": "test -x \"$HOME/.local/bin/tree-sitter\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/tree-sitter\""
+          }
+        }
+      }
     },
     "tree-sitter-cli": {
       "provider": "system"
@@ -1085,7 +1259,17 @@
       "provider": "system"
     },
     "vhs": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/charmbracelet/vhs/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/charmbracelet/vhs/releases/download/${t}/vhs_${v}_Linux_x86_64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name vhs -type f | head -1)\" \"$b/vhs\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/vhs\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/vhs\""
+          }
+        }
+      }
     },
     "vivaldi": {
       "provider": "system"
@@ -1128,7 +1312,17 @@
       "provider": "node"
     },
     "yamlfmt": {
-      "provider": "system"
+      "provider": "system",
+      "hosts": {
+        "coder": {
+          "provider": "script",
+          "options": {
+            "install": "set -e\nb=\"$HOME/.local/bin\"; mkdir -p \"$b\"\nt=$(curl -fsSL https://api.github.com/repos/google/yamlfmt/releases/latest | grep -m1 '\"tag_name\"' | cut -d'\"' -f4)\nv=${t#v}\ntmp=$(mktemp -d)\ncurl -fsSL \"https://github.com/google/yamlfmt/releases/download/${t}/yamlfmt_${v}_Linux_x86_64.tar.gz\" | tar xz -C \"$tmp\"\ninstall -m755 \"$(find \"$tmp\" -name yamlfmt -type f | head -1)\" \"$b/yamlfmt\"\nrm -rf \"$tmp\"",
+            "check": "test -x \"$HOME/.local/bin/yamlfmt\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/yamlfmt\""
+          }
+        }
+      }
     },
     "yamllint": {
       "provider": "system"
