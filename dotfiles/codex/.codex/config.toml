@@ -68,6 +68,9 @@ trust_level = "trusted"
 [projects."/Users/lkshrk/Dev/dstreamy"]
 trust_level = "trusted"
 
+[projects."/Users/lkshrk/Dev/civora/civora-web"]
+trust_level = "trusted"
+
 [tui]
 status_line = [
   "model-with-reasoning",
@@ -295,8 +298,8 @@ trusted_hash = "sha256:4a72598d979d0a8f2174a4c657e7c08e4b77ad914ca62fb88d43aca08
 trusted_hash = "sha256:1a1abbe815841ac7c543b9f3656de442526f6470e271b11ee58ccf0b05ed6b6c"
 
 [marketplaces.context-mode]
-last_updated = "2026-05-30T19:17:17Z"
-last_revision = "824f0427bf67a5c121fb1bec00696ca9ab9058a6"
+last_updated = "2026-05-31T08:22:02Z"
+last_revision = "188779c2f80c2dd968eafdf87fc87348ad9fb32f"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
