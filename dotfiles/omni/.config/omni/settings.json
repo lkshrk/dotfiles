@@ -102,7 +102,6 @@
         "thefuck",
         "tmux",
         "tree",
-        "tree-sitter",
         "tree-sitter-cli",
         "wget",
         "yq",
@@ -266,7 +265,6 @@
         "cilium-cli",
         "flux",
         "flux-local",
-        "flux-markdown",
         "helm",
         "helmfile",
         "krew",
@@ -306,7 +304,9 @@
         "zstd",
         "hammerspoon",
         "rbw",
-        "mlx"
+        "mlx",
+        "flux-markdown",
+        "tree-sitter"
       ],
       "dots": [
         {
@@ -765,17 +765,7 @@
       "provider": "python"
     },
     "flux-markdown": {
-      "provider": "system",
-      "hosts": {
-        "coder": {
-          "provider": "script",
-          "options": {
-            "install": "true  # macOS-only QuickLook preview tool; not applicable on Linux",
-            "check": "true",
-            "uninstall": "true"
-          }
-        }
-      }
+      "provider": "system"
     },
     "font-hack-nerd-font": {
       "provider": "system"
