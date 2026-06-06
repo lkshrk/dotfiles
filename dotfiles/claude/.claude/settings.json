@@ -2,7 +2,8 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
-    "ECC_GATEGUARD": "off"
+    "ECC_GATEGUARD": "off",
+    "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false"
   },
   "includeCoAuthoredBy": false,
   "model": "claude-opus-4-8",
@@ -118,7 +119,7 @@
       }
     }
   },
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "autoUpdatesChannel": "stable",
   "theme": "dark-daltonized",
   "skipAutoPermissionPrompt": true

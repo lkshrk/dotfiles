@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v2.schema.json",
-  "version": 2,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v3.schema.json",
+  "version": 3,
   "groups": [
     {
       "name": "ai",
@@ -85,7 +85,8 @@
       "description": "Coder workspace base: container tooling shared by every workspace",
       "tools": [
         "docker-buildx-linux",
-        "docker-compose-v2"
+        "docker-compose-v2",
+        "docker"
       ]
     },
     {
@@ -212,7 +213,6 @@
       "name": "dev-tooling",
       "tools": [
         "devcontainer",
-        "docker",
         "gh",
         "gibo",
         "git-filter-repo",

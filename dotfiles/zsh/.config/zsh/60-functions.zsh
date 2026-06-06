@@ -193,6 +193,22 @@ vaulttoken() {
   (umask 077 && print -rn -- "$1" > "$HOME/.vault-token")
 }
 
+# --- macOS session recovery -------------------------------------------------
+fix-secure-input() {
+  emulate -L zsh
+
+  if [[ "${1:-}" != "--yes" ]]; then
+    print "fix-secure-input: this logs out of the macOS GUI session."
+    printf "Continue? [y/N] "
+    local reply
+    read -r reply
+    [[ $reply == [yY]* ]] || { print "fix-secure-input: aborted"; return 1; }
+  fi
+
+  osascript -e 'tell application "System Events" to log out'
+}
+alias fix-skhd='fix-secure-input'
+
 # --- tmux dev layout --------------------------------------------------------
 tdl() {
   [[ -z $1 ]] && { echo "Usage: tdl <ai> [<second_ai>]"; return 1; }

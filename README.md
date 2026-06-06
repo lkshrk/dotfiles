@@ -16,7 +16,7 @@ The setup flow:
 2. Ensures Homebrew is installed and on `PATH`.
 3. Installs the bootstrap tools with Brew: GNU Stow, Omni, Bun, and uv.
 4. Runs `omni --config dotfiles/omni/.config/omni/settings.json --yes bootstrap`.
-5. Compiles `~/.config/yabai/sleep-on-lock` from the tracked Swift source.
+5. Compiles `~/.local/bin/sleep-on-lock` from the tracked Swift source.
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
 7. Refreshes the yabai sudoers entry.
 8. Installs lefthook hooks and restores agent skills from the lockfile.

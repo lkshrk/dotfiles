@@ -11,6 +11,9 @@
     "provider": "zed",
   },
   "agent_servers": {
+    "mistral-vibe": {
+      "type": "registry"
+    },
     "codex-acp": {
       "type": "registry",
     },

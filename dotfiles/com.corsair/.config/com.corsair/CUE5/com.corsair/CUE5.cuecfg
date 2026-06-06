@@ -7,7 +7,7 @@
 		<value name="IntegrationsClientsAccessExplicitDecisionPerformed">Stream Deck</value>
 	</map>
 	<map name="DataCollectionSettings">
-		<value name="configuration_loaded_date">2026-05-30T01:21:59.532</value>
+		<value name="configuration_loaded_date">2026-06-05T19:29:11.808</value>
 		<value name="dataConsent">false</value>
 		<map name="hwProfilesHashes">
 			<map name="{32486e58-a900-497e-bc14-280517bd1d15}">
@@ -60,7 +60,7 @@
 				<value name="UniqueDeviceId">{97ed8be2-c6bd-486e-aa88-036534e460ce}</value>
 			</map>
 		</map>
-		<binary name="UniqueDeviceIds">%00%01%00%00%00%00%00%003QHash%3CQUuid%2Ccue_settings%3A%3Atypes%3A%3AUniqueDeviceData%3E%00%00%00%00%022HnX%A9%00I~%BC%14%28%05%17%BD%1D%15%00%00%1B%1C%00%00%2B%22%00%00%00%20%00C%00F%000%005%00E%00D%006%00D%004%006%00A%00F%005%006%00F%00D%00%00%00%04%9FP%F9%F7%14%1B.F~%A5L%F1%A9n%5BM%05%95%0CP%00%00%1B%1C%00%00%2B%00%00%00%00%20%008%00F%004%00E%004%00E%003%008%00F%007%007%007%000%003%007%002%00%00%00%04%9FP%F9%F7</binary>
+		<binary name="UniqueDeviceIds">%00%01%00%00%00%00%00%003QHash%3CQUuid%2Ccue_settings%3A%3Atypes%3A%3AUniqueDeviceData%3E%00%00%00%00%02%14%1B.F~%A5L%F1%A9n%5BM%05%95%0CP%00%00%1B%1C%00%00%2B%00%00%00%00%20%008%00F%004%00E%004%00E%003%008%00F%007%007%007%000%003%007%002%00%00%00%04%9FP%F9%F72HnX%A9%00I~%BC%14%28%05%17%BD%1D%15%00%00%1B%1C%00%00%2B%22%00%00%00%20%00C%00F%000%005%00E%00D%006%00D%004%006%00A%00F%005%006%00F%00D%00%00%00%04%9FP%F9%F7</binary>
 	</map>
 	<map name="HWPInfoPopup">
 		<value name="InfoPopupVisible">false</value>
@@ -86,12 +86,12 @@
 		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-sensors-UserProps">true</value>
 	</map>
 	<map name="SwUpdate">
-		<value name="LastCheckDate">2026-06-02</value>
+		<value name="LastCheckDate">2026-06-16</value>
 	</map>
 	<map name="Update">
-		<value name="PrevUpdateTime">2026-05-29T23:21:58.570Z</value>
-		<value name="UpdateCount">14</value>
-		<value name="UpdateEndTime">2026-05-29T23:21:58.607Z</value>
+		<value name="PrevUpdateTime">2026-06-05T17:29:09.573Z</value>
+		<value name="UpdateCount">16</value>
+		<value name="UpdateEndTime">2026-06-05T17:29:09.709Z</value>
 	</map>
 	<value name="defaultProfile">{6cd71b5b-3931-40b3-b349-10604b36d69e}</value>
 </config>

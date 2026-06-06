@@ -10,7 +10,7 @@
   <array>
     <string>/bin/zsh</string>
     <string>-lc</string>
-    <string>exec "$HOME/.config/yabai/sleep-on-lock"</string>
+    <string>exec "$HOME/.local/bin/sleep-on-lock"</string>
   </array>
 
   <key>RunAtLoad</key>
