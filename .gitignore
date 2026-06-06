@@ -55,9 +55,6 @@ dotfiles/opencode/.config/opencode/*.bak.*
 # omni runtime backups
 dotfiles/omni/.config/omni/*.bak*
 
-# yabai generated binary
-dotfiles/yabai/.config/yabai/sleep-on-lock
-
 # intentionally unmanaged ~/.config trees
 dotfiles/acli/.config/acli/
 dotfiles/cagent/.config/cagent/

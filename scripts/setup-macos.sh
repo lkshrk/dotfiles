@@ -61,7 +61,7 @@ install_bootstrap_tools() {
 compile_sleep_on_lock() {
   step "sleep-on-lock"
   local src="$HOME/.config/yabai/sleep-on-lock.swift"
-  local bin="$HOME/.config/yabai/sleep-on-lock"
+  local bin="$HOME/.local/bin/sleep-on-lock"
   local module_cache="${CLANG_MODULE_CACHE_PATH:-$HOME/.cache/clang/ModuleCache}"
 
   [[ -f "$src" ]] || {

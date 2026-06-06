@@ -1,8 +1,11 @@
 model_auto_compact_token_limit = 217_600
 model = "gpt-5.5"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "medium"
 plan_mode_reasoning_effort = "xhigh"
 developer_instructions = "You have oh-my-codex installed through Codex plugin mode. AGENTS.md is the orchestration brain and main control surface. Follow AGENTS.md for skill/keyword routing and $name workflow invocation. Registered Codex plugin marketplace surfaces supply OMX workflows, prompts, and native-agent roles when the plugin is installed. User-installed skills may still live under ~/.codex/skills. Setup-owned prompt files and native-agent TOML defaults are intentionally omitted unless explicitly installed. Use outcome-first, concise progress updates: state the target result, constraints, validation evidence, and stop condition before adding process detail."
+
+notify = ["/Users/lkshrk/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+service_tier = "default"
 
 [otel]
 environment = "dev"
@@ -69,6 +72,9 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/civora/civora-web"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/quintessenz"]
 trust_level = "trusted"
 
 [tui]
@@ -183,6 +189,24 @@ args = [ "mcp" ]
 type = "stdio"
 enabled = false
 
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/Codex.app/Contents/Resources/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = ""
+NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lkshrk/.codex"
+CODEX_HOME = "/Users/lkshrk/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "a0dc4b6aaefe6a6a82d9a34fb524e77df6e0bf71387f0d4760157a46f52e6a93"
+BROWSER_USE_AVAILABLE_BACKENDS = "iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.602.30954"
+CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
+
 [plugins."build-ios-apps@openai-curated"]
 enabled = true
 
@@ -195,9 +219,24 @@ enabled = true
 [plugins."superpowers@openai-curated"]
 enabled = true
 
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
 [features]
 hooks = true
 goals = true
+js_repl = false
+
+[hooks.state]
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
 enabled = false
@@ -297,9 +336,30 @@ trusted_hash = "sha256:4a72598d979d0a8f2174a4c657e7c08e4b77ad914ca62fb88d43aca08
 [hooks.state."/Users/lkshrk/.codex/hooks.json:stop:3:0"]
 trusted_hash = "sha256:1a1abbe815841ac7c543b9f3656de442526f6470e271b11ee58ccf0b05ed6b6c"
 
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:74e9cb0fab5c73ed10389b44aeedfd6e7f9c7009c950c58f34fdcd9a4674168f"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:pre_tool_use:1:0"]
+trusted_hash = "sha256:750e4607af5ed1e1764f0413bbd454a6bbf566720d25bb8b9c14cc27ba45eac0"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:f073acf0c27223664e64fa1743d65ed567ec84e05230194902f0cd3ea892a2d2"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:1:0"]
+trusted_hash = "sha256:01dd44c4263c3835652627dfe8cf57a1344997ba48fbbcb9c49d708887a2bbf4"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:2:0"]
+trusted_hash = "sha256:ed6f430ea6e8f890da5e339f3b4d7b14b28b85716e7d831de84253db24a362c7"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59aa45aa6"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
+
 [marketplaces.context-mode]
-last_updated = "2026-06-01T14:50:07Z"
-last_revision = "2f92d3bc94736d7c0497bcbeecbfae72916774c4"
+last_updated = "2026-06-05T15:28:09Z"
+last_revision = "9bb94829cd9483c2dc6135e0b4eca21288388d5d"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -307,5 +367,19 @@ source = "https://github.com/mksglu/context-mode.git"
 source_type = "local"
 source = "/Users/lkshrk/.bun/install/global/node_modules/oh-my-codex"
 
+[marketplaces.openai-bundled]
+last_updated = "2026-06-05T16:29:38Z"
+source_type = "local"
+source = "/Users/lkshrk/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-06-05T16:29:08Z"
+source_type = "local"
+source = "/Users/lkshrk/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
 [shell_environment_policy.set]
 OMX_LORE_COMMIT_GUARD = "0"
+
+[desktop]
+ambient-suggestions-enabled = false
+conversationDetailMode = "STEPS_COMMANDS"
