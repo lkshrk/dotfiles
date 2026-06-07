@@ -1,0 +1,23 @@
+# ~/.zshrc — slim loader
+# Modular config lives in ~/.config/zsh/*.zsh and is sourced in name order.
+
+# Optional profiler — uncomment top + bottom block to debug startup time
+# zmodload zsh/zprof
+
+export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
+
+if [[ -d "$HOME/.config/zsh" ]]; then
+  for _f in "$HOME"/.config/zsh/*.zsh(N); do
+    source "$_f"
+  done
+  unset _f
+fi
+
+if [[ "$OSTYPE" == darwin* && -d "$HOME/.config/zsh/macos" ]]; then
+  for _f in "$HOME"/.config/zsh/macos/*.zsh(N); do
+    source "$_f"
+  done
+  unset _f
+fi
+
+# zprof | head -30
