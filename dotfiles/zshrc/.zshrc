@@ -13,4 +13,11 @@ if [[ -d "$HOME/.config/zsh" ]]; then
   unset _f
 fi
 
+if [[ "$OSTYPE" == darwin* && -d "$HOME/.config/zsh/macos" ]]; then
+  for _f in "$HOME"/.config/zsh/macos/*.zsh(N); do
+    source "$_f"
+  done
+  unset _f
+fi
+
 # zprof | head -30

@@ -301,9 +301,8 @@
           "path": "~/.hammerspoon"
         },
         {
-          "name": "zsh-darwin",
-          "path": "~/.config/zsh",
-          "package": "zsh@darwin"
+          "name": "macos",
+          "path": "~/.config/zsh/macos"
         }
       ]
     },
