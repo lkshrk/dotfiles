@@ -2,13 +2,17 @@
 
 alias bu='brew update && brew upgrade'
 
-# Ensure rbw is unlocked before signing operations so GPG can fetch the key.
+# Ensure rbw is usable before git operations that need signing or SSH keys.
 git() {
   case "${1:-}" in
     commit|tag|merge)
-      (( $+functions[_rbw_unlock_if_needed] )) && _rbw_unlock_if_needed
+      (( $+functions[_rbw_unlock_if_needed] )) && _rbw_unlock_if_needed || return
+      ;;
+    push|pull|fetch|clone|ls-remote|submodule)
+      (( $+functions[_rbw_ssh_agent_ready] )) && _rbw_ssh_agent_ready || return
       ;;
   esac
+
   command git "$@"
 }
 

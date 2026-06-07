@@ -333,8 +333,8 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [marketplaces.context-mode]
-last_updated = "2026-06-07T07:38:25Z"
-last_revision = "c8508092a64711fee2ca41db21768b53fa68a1ce"
+last_updated = "2026-06-07T21:44:38Z"
+last_revision = "bfe07bee614b5ac52fed3fe7211565a3c8028781"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
