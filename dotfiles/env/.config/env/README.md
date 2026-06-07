@@ -1,0 +1,42 @@
+# env
+
+Shell-neutral environment layout for exported env, PATH, and secret injection.
+
+This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
+`~/.config/env` by Omni/Stow.
+
+## Layers
+
+- `profile.sh`: POSIX-safe entrypoint for exported base env and PATH.
+- `lib/path.sh`: POSIX-safe path helpers.
+- `os/<name>.sh`: OS-specific env and PATH facts.
+- `machine/<name>.sh`: machine-specific env and PATH facts.
+- `consumers/<name>`: tiny future adapters for shell startup files.
+  `zprofile.zsh` delegates to the POSIX profile adapter.
+- `bin/rbw-env`: shell-neutral secret injection wrapper for agents, zsh
+  wrappers, and one-off commands.
+- `secrets/*.envmap`: rbw item to environment variable mappings by consumer.
+- `tests/smoke.sh`: shell-mode checks before migration.
+
+## Stow/Omni Package Shape
+
+- `zsh`: generic interactive zsh modules.
+- `zsh@darwin`: macOS-only interactive zsh modules, including direnv, Docker
+  completions, Homebrew-backed lazy tool loaders, rbw-backed CA lookup, and
+  AI CLI secret wrappers.
+- `zshenv`, `zprofile`, and future profile packages should stay tiny and only
+  delegate into `env-next` consumers.
+
+## Current Decisions
+
+- No explicit npm path.
+- No npm/npx compatibility shim; missing npm should surface as a real missing tool.
+- `NVM_DIR` is metadata only; loading nvm stays out of base env.
+- Homebrew environment policy is macOS-specific.
+- `KUBECONFIG` is machine-specific, not macOS-specific.
+- `SSH_AUTH_SOCK` for rbw's SSH agent is macOS-specific in this setup.
+- Maestro is project-local via direnv `.envrc`, not global env.
+- Rust/Cargo is not included until Rust is actually installed.
+- `~/.local/bin` wins over package-manager binaries.
+- direnv shell hooks are explicit macOS interactive zsh overlay behavior, not base env.
+- rbw secret injection is profile-based: `rbw-env <profile> -- <command>`.

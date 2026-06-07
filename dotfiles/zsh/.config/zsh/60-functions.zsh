@@ -1,21 +1,16 @@
 # --- git --------------------------------------------------------------------
 gupf() {
   [[ -n $1 ]] || { echo "Usage: gupf <commit-message>" >&2; return 1; }
-  git reset head^1 && git add . && git commit -m "$1" && git push -f
+  git add -A && git commit --amend -m "$1" && git push --force-with-lease
 }
 
-# Ensure rbw is unlocked before signing operations so GPG can fetch the key.
-git() {
-  case "${1:-}" in
-    commit|tag|merge)
-      rbw unlocked 2>/dev/null || rbw unlock
-      ;;
-  esac
-  command git "$@"
+gup() {
+  [[ -n $1 ]] || { echo "Usage: gup <commit-message>" >&2; return 1; }
+  git add -A && git commit --amend -m "$1"
 }
 
 # release <major|minor|patch|vX.Y.Z>
-#   1. if uncommitted changes → prompt to stage+commit
+#   1. if uncommitted changes -> prompt to stage+commit
 #   2. tag (bumped from latest semver tag, or explicit), push branch + tag
 release() {
   emulate -L zsh
@@ -53,6 +48,7 @@ release() {
 
   # 2. determine new version
   local last new
+  git fetch --tags --quiet
   last=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
   [[ -z $last ]] && last="v0.0.0"
 
@@ -72,7 +68,7 @@ release() {
     esac
   fi
 
-  echo "Last tag: $last → $new (branch $branch)"
+  echo "Last tag: $last -> $new (branch $branch)"
   printf 'Proceed? [y/N] '
   local confirm; read -r confirm
   [[ $confirm == [yY]* ]] || { echo "release: aborted" >&2; return 1; }
@@ -86,6 +82,7 @@ release() {
 # --- k8s helpers ------------------------------------------------------------
 kgpn() {
   [[ -n $1 ]] || { echo "Usage: kgpn <node-name>" >&2; return 1; }
+  (( $+commands[kubectl] )) || { echo "kgpn: kubectl not found" >&2; return 127; }
   kubectl get pods --all-namespaces --field-selector spec.nodeName="$1"
 }
 
@@ -94,24 +91,29 @@ kgpn() {
 ksh() {
   local ns=$1 app=$2
   [[ -n $ns && -n $app ]] || { echo "Usage: ksh <namespace> <app-label>" >&2; return 1; }
-  kubectl exec -it -n "$ns" \
-    "$(kubectl get pods -n "$ns" -l app="$app" -o jsonpath='{.items[0].metadata.name}')" \
-    -- sh -c "bash || sh"
+  (( $+commands[kubectl] )) || { echo "ksh: kubectl not found" >&2; return 127; }
+  local pod
+  pod=$(kubectl get pods -n "$ns" -l app="$app" -o jsonpath='{.items[0].metadata.name}') || return
+  [[ -n $pod ]] || { echo "ksh: no pod found for app=$app in namespace=$ns" >&2; return 1; }
+  kubectl exec -it -n "$ns" "$pod" -- sh -c "bash || sh"
 }
 
 # temporary busybox shell in a namespace
 csh() {
   local ns=$1
   [[ -n $ns ]] || { echo "Usage: csh <namespace>" >&2; return 1; }
-  kubectl run -it --rm --restart=Never --image=busybox tmp-shell -n "$ns" -- sh
+  (( $+commands[kubectl] )) || { echo "csh: kubectl not found" >&2; return 127; }
+  kubectl run -it --rm --restart=Never --image=busybox "tmp-shell-${USER:-user}-$$" -n "$ns" -- sh
 }
 
-# --- ssh wrapper — use ~/.config/ssh/config ----------------------------------
+# --- ssh wrapper - use ~/.config/ssh/config ----------------------------------
 # Title is set by LocalCommand in ssh config.
 ssh() { command ssh -F "$HOME/.config/ssh/config" "$@"; }
 
 # --- herdr ------------------------------------------------------------------
 herdr() {
+  (( $+commands[herdr] )) || { echo "herdr: command not found" >&2; return 127; }
+
   local runtime_root="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
   runtime_root="${runtime_root%/}"
 
@@ -136,7 +138,19 @@ herdr() {
 }
 
 _dotfiles_omni() {
-  local repo="${DOTFILES_DIR:-$HOME/Dev/dotfiles}"
+  local repo="${DOTFILES_DIR:-}"
+  if [[ -z "$repo" ]]; then
+    if [[ -d "$HOME/Dev/dotfiles" ]]; then
+      repo="$HOME/Dev/dotfiles"
+    else
+      repo="$HOME/dotfiles"
+    fi
+  fi
+  [[ -d "$repo" ]] || {
+    print -u2 "dotfiles repo not found: $repo"
+    return 1
+  }
+
   command omni --config "$repo/dotfiles/omni/.config/omni/settings.json" "$@"
 }
 
@@ -156,62 +170,23 @@ dottrack() {
   _dotfiles_omni dots add --adopt "$@"
 }
 
-# --- brew wrapper: refresh yabai sudoers after install/upgrade --------------
-# yabai's --load-sa sudoers entry pins the binary's SHA256. After any brew
-# action that could have replaced the yabai binary (install / upgrade /
-# reinstall / bundle), invoke update_sudoers.sh. The script is idempotent —
-# no sudo prompt, no output when the hash is already current.
-brew() {
-  command brew "$@"
-  local rc=$?
-
-  case "${1:-}" in
-    install|upgrade|reinstall|bundle)
-      local script="$HOME/.config/yabai/update_sudoers.sh"
-      [[ -x "$script" ]] || return $rc
-      command -v yabai >/dev/null 2>&1 || return $rc
-      local out
-      out=$("$script" 2>&1) || true
-      [[ -n "$out" ]] || return $rc
-      print -u2 ""
-      print -u2 "\033[33m$out\033[0m"
-      if command -v csrutil >/dev/null 2>&1; then
-        local sip_status
-        sip_status=$(csrutil status 2>/dev/null)
-        if [[ "$sip_status" != *"disabled"* && "$sip_status" != *"Custom Configuration"* ]]; then
-          print -u2 "\033[33m! yabai --load-sa requires SIP partially disabled.\033[0m"
-          print -u2 "\033[33m  Boot to recovery → Terminal:\033[0m"
-          print -u2 "\033[33m  csrutil disable --with-kext --with-dtrace --with-nvram --with-basesystem\033[0m"
-        fi
-      fi
-      ;;
-  esac
-  return $rc
-}
-
 vaulttoken() {
-  (umask 077 && print -rn -- "$1" > "$HOME/.vault-token")
-}
-
-# --- macOS session recovery -------------------------------------------------
-fix-secure-input() {
-  emulate -L zsh
-
-  if [[ "${1:-}" != "--yes" ]]; then
-    print "fix-secure-input: this logs out of the macOS GUI session."
-    printf "Continue? [y/N] "
-    local reply
-    read -r reply
-    [[ $reply == [yY]* ]] || { print "fix-secure-input: aborted"; return 1; }
+  local token="${1:-}"
+  if [[ -z "$token" ]]; then
+    if [[ -t 0 ]]; then
+      printf "Vault token: " >&2
+      IFS= read -rs token
+      printf "\n" >&2
+    fi
   fi
-
-  osascript -e 'tell application "System Events" to log out'
+  [[ -n "$token" ]] || { echo "Usage: vaulttoken <token>" >&2; return 1; }
+  (umask 077 && print -rn -- "$token" > "$HOME/.vault-token")
 }
-alias fix-skhd='fix-secure-input'
 
 # --- tmux dev layout --------------------------------------------------------
 tdl() {
   [[ -z $1 ]] && { echo "Usage: tdl <ai> [<second_ai>]"; return 1; }
+  (( $+commands[tmux] )) || { echo "tdl: tmux not found" >&2; return 127; }
   [[ -z $TMUX ]] && { echo "tdl: must be run inside tmux"; return 1; }
 
   local current_dir="${PWD}"
@@ -233,6 +208,8 @@ tdl() {
 
 # --- moshi: attach-or-create tmux session for a project dir -----------------
 moshi() {
+  (( $+commands[tmux] )) || { echo "moshi: tmux not found" >&2; return 127; }
+
   local dir="${1:-$PWD}"
   [[ -d "$dir" ]] || { echo "moshi: not a directory: $dir" >&2; return 1; }
 
@@ -254,6 +231,9 @@ moshi() {
 
 # --- ai-clean: wipe coding-agent caches, show freed space -----------------
 ai-clean() {
+  local confirm=0
+  [[ "${1:-}" == "--yes" ]] && confirm=1
+
   local dirs=(
     ~/.claude/{cache,logs,file-history,shell-snapshots,statsig,todos}
     ~/.codex/{tmp,log,cache,sessions,history,artifacts}
@@ -267,6 +247,15 @@ ai-clean() {
 
   local before after freed
   before=$(du -sc "${targets[@]}" 2>/dev/null | tail -1 | awk '{print $1}')
+  print "ai-clean: targets:"
+  printf '  %s\n' "${targets[@]}"
+  print "ai-clean: estimated cache size $(( before / 1024 ))MB"
+
+  if (( ! confirm )); then
+    print "ai-clean: dry run only; rerun with --yes to delete files and prune Docker"
+    return 0
+  fi
+
   rm -rf "${targets[@]}"/* 2>/dev/null
   after=$(du -sc "${targets[@]}" 2>/dev/null | tail -1 | awk '{print $1}')
   freed=$(( (before - after) / 1024 ))
@@ -280,176 +269,13 @@ ai-clean() {
 }
 
 
-swap-keys() {
-  hidutil property --set '{
-
-  "UserKeyMapping": [
-    {
-      "HIDKeyboardModifierMappingSrc": 0x700000064,
-      "HIDKeyboardModifierMappingDst": 0x700000035
-      },
-      {
-      "HIDKeyboardModifierMappingSrc": 0x700000035,
-      "HIDKeyboardModifierMappingDst": 0x700000064
-      }
-    ]
-  }'  
-}
-
-
 # --- Default gitignore init ---------------------------------------------
 gii() {
-  cat > .gitignore <<'EOF'
-# Secrets
-./secrets/
-
-# General
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-*~
-
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
-
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
-
-# Windows thumbnail cache files
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-
-# Dump file
-*.stackdump
-
-# Folder config file
-[Dd]esktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
-.history/
-*.vsix
-
-# Vim swap
-[._]*.s[a-v][a-z]
-!*.svg
-[._]*.sw[a-p]
-[._]s[a-rt-v][a-z]
-[._]ss[a-gi-z]
-[._]sw[a-p]
-Session.vim
-Sessionx.vim
-.netrwhist
-tags
-[._]*.un~
-
-# JetBrains IDEs (IntelliJ, GoLand, PyCharm, WebStorm, etc.)
-.idea/
-*.iml
-*.iws
-*.ipr
-out/
-.idea_modules/
-
-# Zed
-.zed/
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Emacs
-\#*\#
-.\#*
-.emacs.desktop
-.emacs.desktop.lock
-auto-save-list
-tramp
-
-# Nano
-*.save
-
-# AI local state
-CLAUDE.local.md
-.claude/settings.local.json
-.sisyphus/
-.omc/
-**/.wolf/
-.leankg/
-GEMINI.local.md
-.aider.chat.history.md
-.aider.input.history
-.aider.tags.cache.v*
-.aider.repo.map
-.copilot/
-.codeium/
-.augment/
-.kiro/
-.tabnine/
-.amp/
-.qodo/
-
-# Environment files
-.env
-.env.*
-!.env.example
-!.env.sample
-.envrc
-.direnv/
-
-# SSH / secret material
-*.pem
-*.key
-id_rsa
-id_ed25519
-EOF
+  local template="$HOME/.config/zsh/templates/default.gitignore"
+  [[ -r "$template" ]] || { echo "gii: template not found: $template" >&2; return 1; }
+  if [[ -e .gitignore && "${1:-}" != "--force" ]]; then
+    echo "gii: .gitignore exists; use gii --force to overwrite" >&2
+    return 1
+  fi
+  cp "$template" .gitignore
 }

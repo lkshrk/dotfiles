@@ -3,9 +3,6 @@ alias la='ls -lah'
 alias lh=la
 alias ll='ls -lh'
 
-# brew — note: `brew` itself is wrapped in 60-functions.zsh to refresh
-# the yabai sudoers entry after install/upgrade/reinstall/bundle.
-alias bu='brew update && brew upgrade'
 alias or='omni reconcile -y'
 
 
@@ -44,7 +41,7 @@ alias gcm='git commit -m'
 alias gco='git checkout'
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
 alias glg='git log --decorate --pretty=oneline --abbrev-commit'
-alias gpf='git push -f'
+alias gpf='git push --force-with-lease'
 alias gpl='git pull'
 alias gf='git fetch'
 alias gp='git push'
@@ -55,7 +52,6 @@ alias grbm='git rebase origin/master'
 alias gs='git status'
 alias gd='git diff'
 alias gu='git fetch && git pull'
-alias gup='git reset head^1 && git add . && git commit -m'
 
 # kubernetes
 alias k='kubectl '
@@ -146,6 +142,6 @@ function crur {
 }
 
 
-# ssh — use ~/.config/ssh/config (overrides default ~/.ssh/config location)
+# ssh - use ~/.config/ssh/config (overrides default ~/.ssh/config location)
 alias scp='scp -F ~/.config/ssh/config'
 alias sftp='sftp -F ~/.config/ssh/config'

@@ -1,0 +1,142 @@
+#!/bin/sh
+set -u
+
+ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}"
+RBW_ENV_STRICT="${RBW_ENV_STRICT:-1}"
+
+usage() {
+  printf '%s\n' 'usage: rbw-env <profile> -- <command> [args...]' >&2
+  printf '%s\n' '       rbw-env --pairs <rbw-item> <ENV_VAR> ... -- <command> [args...]' >&2
+}
+
+shift_to_command() {
+  while [ "$#" -gt 0 ] && [ "$1" != "--" ]; do
+    shift
+  done
+  [ "${1:-}" = "--" ] && shift
+  [ "$#" -gt 0 ] || { usage; exit 2; }
+  exec "$@"
+}
+
+validate_var() {
+  case "$1" in
+    ''|[!A-Za-z_]*|*[!A-Za-z0-9_]*)
+      printf 'rbw-env: invalid env var name: %s\n' "$1" >&2
+      return 1
+      ;;
+  esac
+}
+
+rbw_unlock_checked=false
+rbw_unlocked=false
+
+ensure_rbw_unlocked() {
+  [ "$rbw_unlock_checked" = true ] && [ "$rbw_unlocked" = true ] && return 0
+  [ "$rbw_unlock_checked" = true ] && return 1
+
+  rbw_unlock_checked=true
+
+  if rbw unlocked >/dev/null 2>&1; then
+    rbw_unlocked=true
+    return 0
+  fi
+
+  if [ -t 0 ] && [ -t 1 ]; then
+    printf '%s\n' 'rbw-env: rbw locked; unlocking' >&2
+    if rbw unlock </dev/tty >/dev/tty 2>/dev/tty && rbw unlocked >/dev/null 2>&1; then
+      rbw_unlocked=true
+      return 0
+    fi
+  fi
+
+  rbw_unlocked=false
+  return 1
+}
+
+missing_secret=false
+
+inject_secret() {
+  item=$1
+  var=$2
+
+  validate_var "$var" || exit 2
+
+  # POSIX sh has no indirect expansion; validate_var above makes this eval safe.
+  eval "current=\${$var:-}"
+  [ -n "$current" ] && return 0
+
+  if ! ensure_rbw_unlocked; then
+    printf 'rbw-env: rbw is locked; could not retrieve %s for %s\n' "$item" "$var" >&2
+    missing_secret=true
+    return 0
+  fi
+
+  if ! value=$(rbw get "$item" 2>/dev/null); then
+    printf 'rbw-env: could not retrieve %s for %s\n' "$item" "$var" >&2
+    missing_secret=true
+    return 0
+  fi
+
+  export "$var=$value"
+}
+
+[ "$#" -gt 0 ] || { usage; exit 2; }
+
+if ! command -v rbw >/dev/null 2>&1; then
+  if [ "$RBW_ENV_STRICT" = 1 ]; then
+    printf '%s\n' 'rbw-env: rbw not found; refusing to run; set RBW_ENV_STRICT=0 to allow best-effort launch' >&2
+    exit 1
+  fi
+  printf '%s\n' 'rbw-env: rbw not found; running command without injected secrets' >&2
+  shift_to_command "$@"
+fi
+
+if [ "$1" = "--pairs" ]; then
+  shift
+  while [ "$#" -gt 0 ] && [ "$1" != "--" ]; do
+    [ "$#" -ge 2 ] || { usage; exit 2; }
+    inject_secret "$1" "$2"
+    shift 2
+  done
+else
+  profile=$1
+  shift
+
+  case "$profile" in
+    ''|.*|*/*|*'..'*)
+      printf 'rbw-env: invalid profile name: %s\n' "$profile" >&2
+      exit 2
+      ;;
+  esac
+
+  map_file="$ENV_DIR/secrets/$profile.envmap"
+  [ -r "$map_file" ] || {
+    printf 'rbw-env: profile not found: %s\n' "$map_file" >&2
+    exit 2
+  }
+
+  while IFS=' 	' read -r item var extra || [ -n "${item:-}" ]; do
+    case "${item:-}" in
+      ''|'#'*) continue ;;
+    esac
+    [ -n "${var:-}" ] && [ -z "${extra:-}" ] || {
+      printf 'rbw-env: invalid mapping in %s: %s %s %s\n' "$map_file" "${item:-}" "${var:-}" "${extra:-}" >&2
+      exit 2
+    }
+    inject_secret "$item" "$var"
+  done < "$map_file"
+fi
+
+[ "${1:-}" = "--" ] || { usage; exit 2; }
+shift
+[ "$#" -gt 0 ] || { usage; exit 2; }
+
+if [ "$missing_secret" = true ]; then
+  if [ "$RBW_ENV_STRICT" = 1 ]; then
+    printf '%s\n' 'rbw-env: refusing to run with missing secrets; set RBW_ENV_STRICT=0 to allow best-effort launch' >&2
+    exit 1
+  fi
+  printf '%s\n' 'rbw-env: continuing with one or more missing secrets' >&2
+fi
+
+exec "$@"
