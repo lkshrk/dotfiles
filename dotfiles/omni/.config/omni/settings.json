@@ -299,10 +299,6 @@
         {
           "name": "hammerspoon",
           "path": "~/.hammerspoon"
-        },
-        {
-          "name": "macos",
-          "path": "~/.config/zsh/macos"
         }
       ]
     },
