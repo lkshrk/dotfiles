@@ -1,5 +1,5 @@
 # Lazy manual secret helpers backed by Bitwarden via rbw.
-# Command wrappers use env-next/bin/rbw-env instead.
+# Command wrappers use ~/.config/env/bin/rbw-env instead.
 _rbw_available() {
   (( $+commands[rbw] )) || return 1
   rbw config show >/dev/null 2>&1
@@ -21,6 +21,35 @@ _rbw_unlock_if_needed() {
   fi
 
   return 1
+}
+
+_rbw_ssh_agent_ready() {
+  _rbw_available || {
+    print -u2 "rbw: not available or not configured; git over SSH cannot use the rbw SSH agent"
+    return 1
+  }
+
+  _rbw_unlock_if_needed || {
+    print -u2 "rbw: vault locked; git over SSH needs the rbw SSH agent"
+    print -u2 "rbw: run 'rbw unlock' in an interactive shell, then retry"
+    return 1
+  }
+
+  [[ -n "${SSH_AUTH_SOCK:-}" ]] || {
+    print -u2 "rbw: SSH_AUTH_SOCK is not set; git over SSH cannot use the rbw SSH agent"
+    return 1
+  }
+
+  [[ -S "$SSH_AUTH_SOCK" ]] || {
+    print -u2 "rbw: SSH_AUTH_SOCK does not point to a socket: $SSH_AUTH_SOCK"
+    return 1
+  }
+
+  ssh-add -l >/dev/null 2>&1 || {
+    print -u2 "rbw: could not talk to SSH agent at $SSH_AUTH_SOCK"
+    print -u2 "rbw: run 'rbw unlock' in an interactive shell, then retry"
+    return 1
+  }
 }
 
 _rbw_get_or_unlock() {
