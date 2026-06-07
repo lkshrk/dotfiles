@@ -1,17 +1,5 @@
-export EDITOR=nvim
-export HOMEBREW_NO_ENV_HINTS=1
-
-export GOPATH=$HOME/go
-export NVM_DIR="$HOME/.nvm"
-export BUN_INSTALL="$HOME/.bun"
-export PNPM_HOME="$HOME/Library/pnpm"
-export JAVA_HOME="/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home"
-export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
-
-export KUBECONFIG=$HOME/.kube/hcloud:$HOME/.kube/legacy
-
-# SSH agent provided by rbw (Bitwarden CLI)
-export SSH_AUTH_SOCK="${TMPDIR:-/tmp}/rbw-$(id -u)/ssh-agent-socket"
+# Interactive-only. Exported env vars and PATH live in env-next/profile.sh,
+# loaded by shell adapters. Keep only interactive session behavior here.
 
 # Window title: "folder" locally, "host:folder" over SSH
 _update_title() {

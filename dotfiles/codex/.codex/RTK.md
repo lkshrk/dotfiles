@@ -4,7 +4,7 @@
 
 ## Rule
 
-Always prefix shell commands with `rtk`.
+Always prefix shell commands with `rtk`. This includes shell run inside `ctx_execute`/`ctx_batch_execute` — use `rtk <cmd>` there too. rtk compresses output, context-mode sandboxes it; they stack.
 
 Examples:
 

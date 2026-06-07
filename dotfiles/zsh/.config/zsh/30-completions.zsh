@@ -1,5 +1,3 @@
-fpath=("$HOME/.docker/completions" $fpath)
-
 autoload -Uz compinit
 
 _zcd="$HOME/.cache/zsh/zcompdump"

@@ -2,14 +2,14 @@
 # Agent uses this as-is: CA from the pod trust store, no secret injection.
 # Mac extends it in 70-secrets.zsh / 75-secret-wrappers.zsh by overriding
 # _omni_otel_ca (rbw-fetched CA), setting OMNI_OTEL_REQUIRE_CA=1, and the
-# wrappers (with-secrets injection).
+# wrappers (rbw-env injection).
 
 : ${OMNI_OTEL_ENDPOINT:=https://otel.h-cloud.lan}
 : ${OMNI_OTEL_CA_PATH:=/etc/ssl/certs/lan-ca.pem}
 : ${OMNI_OTEL_REQUIRE_CA:=0}  # 1 = refuse to launch if the CA is unavailable
 
 # CA resolver. Agent: static lan CA installed at pod provision. Override on mac.
-_omni_otel_ca() { [[ -r $OMNI_OTEL_CA_PATH ]] && print -r -- "$OMNI_OTEL_CA_PATH" }
+(( $+functions[_omni_otel_ca] )) || _omni_otel_ca() { [[ -r $OMNI_OTEL_CA_PATH ]] && print -r -- "$OMNI_OTEL_CA_PATH" }
 
 # Run a command with OTEL env for <service>. CA is optional by default: if
 # absent the command still runs (export relies on the system trust store).
@@ -41,6 +41,6 @@ _omni_otel_run() {
   "$@"
 }
 
-claude() { ( _omni_otel_run claude-code command claude "$@" ) }
-codex()  { ( _omni_otel_run codex-cli  command codex  "$@" ) }
-oc()     { ( _omni_otel_run opencode    command opencode "$@" ) }
+(( $+functions[claude] )) || claude() { ( _omni_otel_run claude-code command claude "$@" ) }
+(( $+functions[codex]  )) || codex()  { ( _omni_otel_run codex-cli  command codex  "$@" ) }
+(( $+functions[oc]     )) || oc()     { ( _omni_otel_run opencode    command opencode "$@" ) }

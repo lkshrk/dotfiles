@@ -1,5 +1,4 @@
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# ~/.zprofile -- login zsh adapter.
 
-# Added by OrbStack: command-line tools and integration
-# This won't be added again if you remove it.
-source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+: "${ENV_DIR:=${ENV_NEXT_DIR:-$HOME/.config/env}}"
+[ -r "$ENV_DIR/consumers/zprofile.zsh" ] && . "$ENV_DIR/consumers/zprofile.zsh"
