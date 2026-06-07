@@ -1,5 +1,5 @@
 _rbw_env() {
-  local wrapper="${ENV_NEXT_DIR:-$HOME/Dev/dotfiles/dotfiles/env-next}/bin/rbw-env"
+  local wrapper="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/bin/rbw-env"
   if [[ -x "$wrapper" ]]; then
     "$wrapper" "$@"
   else
