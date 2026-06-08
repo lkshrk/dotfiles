@@ -3,7 +3,8 @@
         "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
         "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
         "ECC_GATEGUARD": "off",
-        "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false"
+        "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
+        "SSH_AUTH_SOCK": "/var/folders/xn/60cxwtb13mq7_n0r4zwgy2j00000gn/T/rbw-501/ssh-agent-socket"
     },
     "includeCoAuthoredBy": false,
     "model": "claude-opus-4-8",
