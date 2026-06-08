@@ -42,12 +42,12 @@ install_omni_linux() {
     warn "installed omni is older than $OMNI_MIN_VERSION or cannot read this repo's config; installing current release"
   fi
 
-  OMNI_VERSION=$(curl -s https://api.github.com/repos/lkshrk/Omni/releases/latest | grep tag_name | cut -d '"' -f4 2>/dev/null || true)
-  if [[ -n "$OMNI_VERSION" ]]; then
-    curl -fsSL "https://github.com/lkshrk/Omni/releases/download/${OMNI_VERSION}/Omni_linux_x86_64.tar.gz" | tar xz -C /tmp omni
-    sudo install /tmp/omni /usr/local/bin/omni
-    rm -f /tmp/omni
-  fi
+  # The releases/latest/download redirect is served by github.com and is not
+  # subject to the 60/hr unauthenticated api.github.com rate limit (which a
+  # shared NAT egress IP exhausts and which left omni uninstalled).
+  curl -fsSL "https://github.com/lkshrk/Omni/releases/latest/download/Omni_linux_x86_64.tar.gz" | tar xz -C /tmp omni
+  sudo install /tmp/omni /usr/local/bin/omni
+  rm -f /tmp/omni
 
   if command -v omni >/dev/null 2>&1 && omni_version_is_supported; then
     ok "omni installed: $(omni --version 2>/dev/null || printf 'found')"
