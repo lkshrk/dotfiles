@@ -157,21 +157,22 @@ args = ["mcp"]
 enabled = false
 
 [mcp_servers.node_repl]
+args = []
 command = "/Applications/Codex.app/Contents/Resources/node_repl"
-startup_timeout_sec = 120.0
+startup_timeout_sec = 120
 
 [mcp_servers.node_repl.env]
-BROWSER_USE_AVAILABLE_BACKENDS = "iab"
-BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.602.30954"
-CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
-CODEX_HOME = "/Users/lkshrk/.codex"
-NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
 NODE_REPL_NODE_MODULE_DIRS = ""
 NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/node"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "a0dc4b6aaefe6a6a82d9a34fb524e77df6e0bf71387f0d4760157a46f52e6a93"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lkshrk/.codex"
+CODEX_HOME = "/Users/lkshrk/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "2de792ebdf729e85542c94275f6654821dddce546d9c7374c915f2297529e313"
+BROWSER_USE_AVAILABLE_BACKENDS = "iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.602.40724"
+CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 
 [mcp_servers.linear]
 url = "https://mcp.linear.app/mcp"
@@ -333,8 +334,8 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [marketplaces.context-mode]
-last_updated = "2026-06-07T21:44:38Z"
-last_revision = "bfe07bee614b5ac52fed3fe7211565a3c8028781"
+last_updated = "2026-06-08T10:53:13Z"
+last_revision = "be5db6142aea4f0d97657f69027ef1a950e6d45f"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -343,7 +344,7 @@ source_type = "local"
 source = "/Users/lkshrk/.bun/install/global/node_modules/oh-my-codex"
 
 [marketplaces.openai-bundled]
-last_updated = "2026-06-05T16:29:38Z"
+last_updated = "2026-06-08T12:31:41Z"
 source_type = "local"
 source = "/Users/lkshrk/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -362,7 +363,7 @@ OMX_LORE_COMMIT_GUARD = "0"
 
 [desktop]
 ambient-suggestions-enabled = false
-conversationDetailMode = "STEPS_COMMANDS"
+conversationDetailMode = "STEPS_PROSE"
 
 [mcp_servers.codebase-memory-mcp]
 command = "/Users/lkshrk/.local/bin/codebase-memory-mcp"

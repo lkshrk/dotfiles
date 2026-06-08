@@ -317,7 +317,6 @@
       "name": "priv",
       "tools": [
         "mosh",
-        "moshi-hook",
         "plex",
         "signal",
         "skhd-zig",
@@ -1174,14 +1173,6 @@
         }
       ],
       "git": "https://github.com/mobile-shell/mosh"
-    },
-    "moshi-hook": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "moshi-hook"
-        }
-      ]
     },
     "neovim": {
       "providers": [

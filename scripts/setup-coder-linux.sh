@@ -35,8 +35,11 @@ install_omni_linux() {
   step "omni (Linux)"
 
   if command -v omni >/dev/null 2>&1; then
-    ok "omni already on PATH: $(omni --version 2>/dev/null || printf 'found')"
-    return
+    if omni_version_is_supported && omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1; then
+      ok "omni already on PATH: $(omni --version 2>/dev/null || printf 'found')"
+      return
+    fi
+    warn "installed omni is older than $OMNI_MIN_VERSION or cannot read this repo's config; installing current release"
   fi
 
   OMNI_VERSION=$(curl -s https://api.github.com/repos/lkshrk/Omni/releases/latest | grep tag_name | cut -d '"' -f4 2>/dev/null || true)
@@ -46,10 +49,10 @@ install_omni_linux() {
     rm -f /tmp/omni
   fi
 
-  if command -v omni >/dev/null 2>&1; then
+  if command -v omni >/dev/null 2>&1 && omni_version_is_supported; then
     ok "omni installed: $(omni --version 2>/dev/null || printf 'found')"
   else
-    die "omni is required for the Coder profile but could not be installed"
+    die "omni $OMNI_MIN_VERSION or newer is required for the Coder profile but could not be installed"
   fi
 }
 

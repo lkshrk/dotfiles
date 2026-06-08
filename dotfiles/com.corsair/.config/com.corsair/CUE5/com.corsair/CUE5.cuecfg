@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<map name="Backup">
-		<value name="Version">5.45.71</value>
+		<value name="Version">5.46.67</value>
 	</map>
 	<map name="CommonSettings">
 		<value name="IntegrationsClientsAccessExplicitDecisionPerformed">Stream Deck</value>
 	</map>
 	<map name="DataCollectionSettings">
-		<value name="configuration_loaded_date">2026-06-05T19:29:11.808</value>
+		<value name="configuration_loaded_date">2026-06-08T12:06:09.303</value>
 		<value name="dataConsent">false</value>
 		<map name="hwProfilesHashes">
 			<map name="{32486e58-a900-497e-bc14-280517bd1d15}">
@@ -67,7 +67,7 @@
 	</map>
 	<value name="Language">en</value>
 	<value name="LastDataCollectionConsentAppVersion">5.43.73</value>
-	<value name="LastLoadedAppVersion">5.45.71</value>
+	<value name="LastLoadedAppVersion">5.46.67</value>
 	<map name="LightingLibraryStorage">
 		<value name="version">401</value>
 	</map>
@@ -89,9 +89,9 @@
 		<value name="LastCheckDate">2026-06-16</value>
 	</map>
 	<map name="Update">
-		<value name="PrevUpdateTime">2026-06-05T17:29:09.573Z</value>
-		<value name="UpdateCount">16</value>
-		<value name="UpdateEndTime">2026-06-05T17:29:09.709Z</value>
+		<value name="PrevUpdateTime">2026-06-08T10:06:07.351Z</value>
+		<value name="UpdateCount">18</value>
+		<value name="UpdateEndTime">2026-06-08T10:06:07.374Z</value>
 	</map>
 	<value name="defaultProfile">{6cd71b5b-3931-40b3-b349-10604b36d69e}</value>
 </config>

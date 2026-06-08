@@ -4,6 +4,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
+OMNI_MIN_VERSION="0.8.5"
 CODER_OMNI_HOST="${CODER_OMNI_HOST:-coder}"
 RUN_MACOS_DEFAULTS=0
 SKIP_ADMIN_WARMUP=1
@@ -22,6 +23,38 @@ die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 
 export -f say step ok warn die
 
+omni_version() {
+  omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+(\.[0-9]+){1,2}$/) { print $i; exit } }'
+}
+
+version_at_least() {
+  awk -v current="$1" -v minimum="$2" 'BEGIN {
+    split(current, c, ".")
+    split(minimum, m, ".")
+    for (i = 1; i <= 3; i++) {
+      c[i] += 0
+      m[i] += 0
+      if (c[i] > m[i]) exit 0
+      if (c[i] < m[i]) exit 1
+    }
+    exit 0
+  }'
+}
+
+omni_version_is_supported() {
+  local current
+  current="$(omni_version)"
+  [[ -n "$current" ]] && version_at_least "$current" "$OMNI_MIN_VERSION"
+}
+
+ensure_omni_version() {
+  local current
+  current="$(omni_version)"
+  [[ -n "$current" ]] || die "could not determine omni version"
+  version_at_least "$current" "$OMNI_MIN_VERSION" \
+    || die "installed omni $current is older than required $OMNI_MIN_VERSION"
+}
+
 [[ "$(uname -s)" == "Linux" ]] || die "setup-coder.sh is Linux-only"
 [[ -f "$OMNI_CONFIG_PATH" ]] || die "Omni config not found: $OMNI_CONFIG_PATH"
 
@@ -31,7 +64,10 @@ export c_red c_yel c_grn c_dim c_off
 source "$REPO_DIR/scripts/setup-coder-linux.sh"
 
 command -v omni >/dev/null 2>&1 || die "omni is not installed"
+ensure_omni_version
 omni bootstrap --help >/dev/null 2>&1 || die "installed omni does not support bootstrap"
+omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1 \
+  || die "installed omni cannot read this repo's config"
 
 export OMNI_HOSTNAME="$CODER_OMNI_HOST"
 export DOTFILES_DIR="${DOTFILES_DIR:-$REPO_DIR}"
