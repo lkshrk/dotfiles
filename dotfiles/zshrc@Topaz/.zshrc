@@ -21,3 +21,11 @@ if [[ "$OSTYPE" == darwin* && -d "$HOME/.config/zsh/macos" ]]; then
 fi
 
 # zprof | head -30
+
+# pnpm
+export PNPM_HOME="/Users/lkshrk/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
