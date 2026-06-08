@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v8.schema.json",
-  "version": 8,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v9.schema.json",
+  "version": 9,
   "groups": [
     {
       "name": "ai",
@@ -472,14 +472,33 @@
   ],
   "host_settings": {
     "Topaz": {
+      "ecosystems": {
+        "node": {
+          "manager": "bun"
+        },
+        "python": {
+          "manager": "uv"
+        }
+      },
       "dots_repo": "~/Dev/dotfiles",
       "dots_disabled": false,
-      "dots_git": {}
+      "provider_priority": [
+        "brew",
+        "bun",
+        "pnpm",
+        "apt",
+        "apk",
+        "dnf",
+        "pacman",
+        "zypper",
+        "uv",
+        "npm",
+        "pip"
+      ]
     },
     "coder": {
       "dots_repo": "~/dotfiles",
-      "dots_disabled": false,
-      "dots_git": {}
+      "dots_disabled": false
     }
   },
   "hosts": {
