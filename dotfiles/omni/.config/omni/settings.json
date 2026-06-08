@@ -646,7 +646,26 @@
         }
       ]
     },
-    "cmake": {},
+    "cmake": {
+      "providers": [
+        {
+          "provider": "bun",
+          "package": "cmake"
+        },
+        {
+          "provider": "brew",
+          "package": "cmake"
+        },
+        {
+          "provider": "pnpm",
+          "package": "cmake"
+        },
+        {
+          "provider": "npm",
+          "package": "cmake"
+        }
+      ]
+    },
     "codex": {
       "providers": [
         {
@@ -721,7 +740,14 @@
       ],
       "git": "https://github.com/docker/cli"
     },
-    "docker-buildx": {},
+    "docker-buildx": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "docker-buildx"
+        }
+      ]
+    },
     "docker-buildx-linux": {},
     "docker-compose-v2": {},
     "elgato-stream-deck": {
@@ -811,7 +837,22 @@
       ],
       "git": "https://github.com/ryanoasis/nerd-fonts"
     },
-    "fswatch": {},
+    "fswatch": {
+      "providers": [
+        {
+          "provider": "bun",
+          "package": "fswatch"
+        },
+        {
+          "provider": "brew",
+          "package": "fswatch"
+        },
+        {
+          "provider": "npm",
+          "package": "fswatch"
+        }
+      ]
+    },
     "fzf": {
       "providers": [
         {
@@ -1077,7 +1118,14 @@
       ],
       "git": "https://github.com/evilmartians/lefthook"
     },
-    "libiscsi": {},
+    "libiscsi": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "libiscsi"
+        }
+      ]
+    },
     "linearmouse": {
       "providers": [
         {
@@ -1294,6 +1342,12 @@
       ]
     },
     "parsec": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "parsec"
+        }
+      ],
       "ignore": true
     },
     "pi-coding-agent": {
@@ -1324,7 +1378,14 @@
         }
       ]
     },
-    "pkgconf": {},
+    "pkgconf": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "pkgconf"
+        }
+      ]
+    },
     "plantuml": {
       "providers": [
         {
@@ -1594,6 +1655,12 @@
       ]
     },
     "wget": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "wget"
+        }
+      ],
       "ignore": true
     },
     "wheel": {

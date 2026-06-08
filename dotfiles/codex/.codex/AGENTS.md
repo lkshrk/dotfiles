@@ -274,6 +274,11 @@ Command routing:
 
 Use `omx explore --prompt ...` for simple read-only lookups through the shell-only, allowlisted, read-only path. Use `omx sparkshell` for noisy read-only shell commands, bounded verification, repo-wide listing/search, or explicit `omx sparkshell --tmux-pane` summaries. Treat sparkshell as explicit opt-in. When to use what: keep ambiguous, implementation-heavy, edit-heavy, diagnostics, tests, MCP/web, and complex shell work on the normal path; if `omx explore` or `omx sparkshell` is incomplete, retry narrower or gracefully fall back to the normal path.
 
+Git signing:
+- Commits and signature probes use SSH signing backed by rbw's SSH agent.
+- Codex global config selects the `signed` permissions profile, which extends the workspace sandbox, allows rbw Unix-socket access, and grants `.git/` write access for local commit object creation.
+- If a session predates that config or still fails with `No private key found`, restart the agent session and verify `ssh-add -l` before changing Git config, keys, rbw settings, or blaming `rtk`.
+
 Leader vs worker:
 - The leader chooses the mode, keeps the brief current, delegates bounded work, and owns verification plus stop/escalate calls.
 - Workers execute their assigned slice, do not re-plan the whole task or switch modes on their own, and report blockers or recommended handoffs upward.
