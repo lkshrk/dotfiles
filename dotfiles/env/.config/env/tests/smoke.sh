@@ -39,6 +39,9 @@ zsh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/consumers/zshenv.zs
 printf "\n## profile adapter\n"
 sh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/consumers/profile.sh"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
 
+printf "\n## launchd SSH_AUTH_SOCK override\n"
+sh -c 'SSH_AUTH_SOCK=/var/run/com.apple.launchd.example/Listeners; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; case "$SSH_AUTH_SOCK" in */rbw-*/ssh-agent-socket) printf "launchd-override=rbw\n" ;; *) printf "launchd-override=unexpected:%s\n" "$SSH_AUTH_SOCK"; exit 1 ;; esac'
+
 printf "\n## zprofile adapter\n"
 zsh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/consumers/zprofile.zsh"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
 
