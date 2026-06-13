@@ -23,9 +23,30 @@ _rbw_unlock_if_needed() {
   return 1
 }
 
+_rbw_ssh_auth_sock() {
+  local temp_dir
+  temp_dir=$(getconf DARWIN_USER_TEMP_DIR 2>/dev/null || print -r -- "${TMPDIR:-/tmp}") || return 1
+  print -r -- "${temp_dir%/}/rbw-$(id -u)/ssh-agent-socket"
+}
+
+_rbw_fix_ssh_auth_sock() {
+  case "${SSH_AUTH_SOCK:-}" in
+    ''|/var/run/com.apple.launchd.*/Listeners)
+      local rbw_sock
+      rbw_sock=$(_rbw_ssh_auth_sock) || return 1
+      export SSH_AUTH_SOCK="$rbw_sock"
+      ;;
+  esac
+}
+
 _rbw_ssh_agent_ready() {
   _rbw_available || {
     print -u2 "rbw: not available or not configured; git over SSH cannot use the rbw SSH agent"
+    return 1
+  }
+
+  _rbw_fix_ssh_auth_sock || {
+    print -u2 "rbw: could not determine rbw SSH agent socket"
     return 1
   }
 
