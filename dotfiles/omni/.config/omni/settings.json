@@ -134,11 +134,6 @@
         {
           "name": "zsh",
           "path": "~/.config/zsh",
-          "hosts": {
-            "coder": {
-              "package": "zsh@coder"
-            }
-          },
           "ignore": [
             ".zsh_history",
             ".gitignore",
@@ -155,9 +150,6 @@
           "hosts": {
             "Topaz": {
               "package": "zshrc@Topaz"
-            },
-            "coder": {
-              "package": "zshrc@coder"
             }
           }
         }
