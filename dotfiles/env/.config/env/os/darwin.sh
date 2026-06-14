@@ -10,11 +10,15 @@ export JAVA_HOME="${JAVA_HOME:-/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Con
 # would point agents at a socket path that does not exist.
 env_next_darwin_temp_dir="$(getconf DARWIN_USER_TEMP_DIR 2>/dev/null || printf '%s\n' "${TMPDIR:-/tmp}")"
 env_next_rbw_ssh_auth_sock="${env_next_darwin_temp_dir%/}/rbw-$(id -u)/ssh-agent-socket"
-case "${SSH_AUTH_SOCK:-}" in
-  ''|/var/run/com.apple.launchd.*/Listeners)
-    export SSH_AUTH_SOCK="$env_next_rbw_ssh_auth_sock"
-    ;;
-esac
+if [ -S "$env_next_rbw_ssh_auth_sock" ]; then
+  export SSH_AUTH_SOCK="$env_next_rbw_ssh_auth_sock"
+else
+  case "${SSH_AUTH_SOCK:-}" in
+    ''|/var/run/com.apple.launchd.*/Listeners)
+      export SSH_AUTH_SOCK="$env_next_rbw_ssh_auth_sock"
+      ;;
+  esac
+fi
 unset env_next_rbw_ssh_auth_sock
 unset env_next_darwin_temp_dir
 
