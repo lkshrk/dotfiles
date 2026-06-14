@@ -451,7 +451,7 @@
         },
         {
           "name": "ssh",
-          "path": "~/.config/ssh"
+          "path": "~/.ssh/config"
         },
         {
           "name": "gnupg",

@@ -98,6 +98,9 @@ trust_level = "trusted"
 [projects."/Users/lkshrk/Dev/linear-ai"]
 trust_level = "trusted"
 
+[projects."/Users/lkshrk/Dev/rybbit-oidc"]
+trust_level = "trusted"
+
 [tui]
 status_line = [
   "model-with-reasoning",
@@ -346,8 +349,8 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [marketplaces.context-mode]
-last_updated = "2026-06-08T10:53:13Z"
-last_revision = "be5db6142aea4f0d97657f69027ef1a950e6d45f"
+last_updated = "2026-06-13T01:09:29Z"
+last_revision = "847ab069b048f36787df0c4ad70a55b499bbb9c1"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
