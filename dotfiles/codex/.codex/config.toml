@@ -101,6 +101,18 @@ trust_level = "trusted"
 [projects."/Users/lkshrk/Dev/rybbit-oidc"]
 trust_level = "trusted"
 
+[projects."/Users/lkshrk/Dev/pizzeria-riva"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/ISC"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/pfalz-herz"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/tuppr"]
+trust_level = "trusted"
+
 [tui]
 status_line = [
   "model-with-reasoning",
@@ -173,13 +185,13 @@ enabled = false
 
 [mcp_servers.node_repl]
 args = []
-command = "/Applications/Codex.app/Contents/Resources/node_repl"
+command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
 startup_timeout_sec = 120
 
 [mcp_servers.node_repl.env]
 NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
 NODE_REPL_NODE_MODULE_DIRS = ""
-NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/node"
+NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lkshrk/.codex"
 CODEX_HOME = "/Users/lkshrk/.codex"
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "2de792ebdf729e85542c94275f6654821dddce546d9c7374c915f2297529e313"
@@ -196,6 +208,9 @@ url = "https://mcp.linear.app/mcp"
 approval_mode = "approve"
 
 [mcp_servers.linear.tools.save_comment]
+approval_mode = "approve"
+
+[mcp_servers.linear.tools.save_project]
 approval_mode = "approve"
 
 [plugins."build-ios-apps@openai-curated"]
@@ -231,17 +246,17 @@ js_repl = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
 enabled = false
-trusted_hash = "sha256:7a01a1beee5fad28ec485e3d9c2e7781da5e4690facfa79471ad3c6e557efa8a"
+trusted_hash = "sha256:23a5178fde50dad60ab32f749fcac555ff97a151738270df27ea22da9f85a493"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:post_compact:0:0"]
-trusted_hash = "sha256:82791a6a4be5b677ca76ce31339b211b01ece6e3588706982c94e0437ca8ba5a"
+trusted_hash = "sha256:43f8546002a7a18a3a472bf52b1b4fae30a6feaf37332c634d7316139feb7d54"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:0:0"]
 trusted_hash = "sha256:ee7d802662511d58e1cbd2b8095805a178732f750819e2cb7adc0caee5aec67f"
 enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:1:0"]
-trusted_hash = "sha256:b4b422736cd5e9b9d4b907b346e582f1d0cc8f4579870856eda404a2ee91d42e"
+trusted_hash = "sha256:b956375f4d56a15359546b08402c972a6ba662cc5ec7ae3bc3dcb1acdce3918a"
 enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:0:0"]
@@ -249,7 +264,7 @@ trusted_hash = "sha256:1fe35949e38b6e8e7cb4a030b1126983a2794d0403a562cebdf38ca95
 enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:1:0"]
-trusted_hash = "sha256:eff545cf238198494cc15b7b8786a6ab4f242e3837a6f7d5d76cc907b2d99aab"
+trusted_hash = "sha256:e11236bbbc68b4646cd76fc2837568377e4e0577271f810faca5a5a43b7cda07"
 enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:0:0"]
@@ -257,38 +272,38 @@ enabled = false
 trusted_hash = "sha256:69b4ecce0665d5cf169b85191c0756b43510c358f9e8219b93a52f111f0445fc"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:1:0"]
-trusted_hash = "sha256:cbd932c56e2cf349300c92fcf5a5caf9270198bb675c4fd758fba833a9aaa639"
+trusted_hash = "sha256:33bf0a9dcc186151a39df72d12143b9ac553319a0cbfe1fcf8120d4b61784881"
 enabled = true
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:0:0"]
-trusted_hash = "sha256:5df4ffd020114b087ffbf3b83d154960be164757a04665df7ffca431855d8a72"
+trusted_hash = "sha256:01807a923ff66a5c5b7255428c640963214348e93e8194e044bf36a735c4b2a8"
 enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:1:0"]
 trusted_hash = "sha256:89d0365c3dd05e5503c3948f1be707be703396356341736ea3923fa9e3c3e29a"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:2:0"]
-trusted_hash = "sha256:1408b80ea2bf2d072eefe602c1f186a08838aed2e00d2df9f0b5e6d7027d7af6"
+trusted_hash = "sha256:22df8d6080aa17bf3107280376d3fb1b69b4fde5c8024bd2d54656d07272e24d"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:stop:0:0"]
-trusted_hash = "sha256:86af3eaab244482b4cf6a471d0a3ec3960f5438ae3314fd4fd6bd4edeefb5cb8"
+trusted_hash = "sha256:a12c8a5ead40e65460dba9c1992f2749993d6bb6f4543d9b0591b41ee4d10e8c"
 enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:stop:1:0"]
 trusted_hash = "sha256:9fc7312a4a274d40081f6734c6f6553d494e9cfde20fd01339995232aea2d74a"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:stop:2:0"]
-trusted_hash = "sha256:e0a3fba51376a7b6b11f75d06392c3be21d5d63d34897f8da4ad72936c0af389"
+trusted_hash = "sha256:0479ea6527a477b537bb656d03e9d93b964d9a9b86a367ea7692275980929a44"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:0:0"]
-trusted_hash = "sha256:e1eba3688f3afaf9a4cf827807b19969a19a07dfb02c23ea0d475859771d054b"
+trusted_hash = "sha256:d33d7116a32fe492ef8ffc08e7e87220c846c20b0e420f712ee6683749a7a7c2"
 enabled = false
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:1:0"]
 trusted_hash = "sha256:9f9b46244739e7f6f787757a083d0d65c07db3aa2daaaecb6fe9e65b08f362b2"
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:2:0"]
-trusted_hash = "sha256:8edaf166760a04391496504f67c7eda14b0f4dcc358a901a7549e3137a4e718d"
+trusted_hash = "sha256:3c1c56f603c2026d96f2f67294361c57b59508d5b9c5a7616947fb759364d8ef"
 
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:56da0c4249dc7af048f42ae458fb83931926a8af41ec6fab5ae819ff3a8c83ae"
@@ -349,8 +364,8 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [marketplaces.context-mode]
-last_updated = "2026-06-13T01:09:29Z"
-last_revision = "847ab069b048f36787df0c4ad70a55b499bbb9c1"
+last_updated = "2026-06-14T09:14:59Z"
+last_revision = "78d6ebc586098f37d1e1b7131b5dd8311e9fc2dc"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -368,12 +383,19 @@ last_updated = "2026-06-05T16:29:08Z"
 source_type = "local"
 source = "/Users/lkshrk/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
+[marketplaces.lkshrk]
+last_updated = "2026-06-14T03:36:43Z"
+last_revision = "8bc8621c81713f7633747a293721d3c80c40c4f7"
+source_type = "git"
+source = "https://github.com/lkshrk/agent-marketplace.git"
+
 # Pass the full parent environment to spawned commands (default is "core").
 # Belt-and-suspenders alongside the shell snapshot so PATH/tool env survive.
 [shell_environment_policy]
 inherit = "all"
 
 [shell_environment_policy.set]
+GIT_SSH_COMMAND = "ssh -o PermitLocalCommand=no"
 OMX_LORE_COMMIT_GUARD = "0"
 
 [desktop]
@@ -396,4 +418,7 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.codebase-memory-mcp.tools.get_architecture]
+approval_mode = "approve"
+
+[mcp_servers.codebase-memory-mcp.tools.index_status]
 approval_mode = "approve"
