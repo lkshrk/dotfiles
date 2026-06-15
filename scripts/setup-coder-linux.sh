@@ -45,7 +45,7 @@ install_omni_linux() {
   # The releases/latest/download redirect is served by github.com and is not
   # subject to the 60/hr unauthenticated api.github.com rate limit (which a
   # shared NAT egress IP exhausts and which left omni uninstalled).
-  curl -fsSL "https://github.com/lkshrk/Omni/releases/latest/download/Omni_linux_x86_64.tar.gz" | tar xz -C /tmp omni
+  curl -fsSL "https://github.com/lkshrk/omni/releases/latest/download/omni_linux_x86_64.tar.gz" | tar xz -C /tmp omni
   sudo install /tmp/omni /usr/local/bin/omni
   rm -f /tmp/omni
 
@@ -78,6 +78,25 @@ install_bun_linux() {
   fi
 }
 
+# ─── uv (Linux) ───────────────────────────────────────────────────────────────
+#
+# omni's uv provider (thefuck, …) probes for `uv`; install it before sync.
+# Lands in ~/.local/bin (already on PATH, no sudo needed).
+
+install_uv_linux() {
+  step "uv (Linux)"
+
+  if ! command -v uv >/dev/null 2>&1 && [[ ! -x "$HOME/.local/bin/uv" ]]; then
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="$HOME/.local/bin" sh
+  fi
+
+  if command -v uv >/dev/null 2>&1 || [[ -x "$HOME/.local/bin/uv" ]]; then
+    ok "uv ready: $(uv --version 2>/dev/null || "$HOME/.local/bin/uv" --version 2>/dev/null || printf 'found')"
+  else
+    warn "uv install failed; uv-based tools (thefuck) will be skipped"
+  fi
+}
+
 # ─── PATH for the sync session ────────────────────────────────────────────────
 #
 # This file is *sourced* by setup-coder.sh, so exporting PATH here makes the
@@ -93,4 +112,5 @@ export_sync_path() {
 install_apt_packages
 install_omni_linux
 install_bun_linux
+install_uv_linux
 export_sync_path
