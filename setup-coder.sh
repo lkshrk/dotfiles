@@ -99,58 +99,7 @@ step "omni dotfiles"
 # oh-my-zsh installer writes a real ~/.zshrc; both collide with the symlinks omni
 # wants to stow. Drop them so dots sync links cleanly.
 rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc"
-omni --config "$OMNI_CONFIG_PATH" --yes dots sync
-
-step "coder agent permissions"
-# Local machines keep the symlinked, prompted configs. Coder workspaces use
-# local copies with YOLO permissions because the workspace is externally
-# sandboxed.
-if [[ -f "$HOME/.claude/settings.json" ]]; then
-  cp -f "$HOME/.claude/settings.json" "$HOME/.claude/settings.json.coder"
-  mv -f "$HOME/.claude/settings.json.coder" "$HOME/.claude/settings.json"
-  jq '.permissions.defaultMode = "bypassPermissions"
-    | .permissions.skipDangerousModePermissionPrompt = true' \
-    "$HOME/.claude/settings.json" > "$HOME/.claude/settings.json.tmp"
-  mv -f "$HOME/.claude/settings.json.tmp" "$HOME/.claude/settings.json"
-fi
-
-if [[ -f "$HOME/.codex/config.toml" ]]; then
-  cp -f "$HOME/.codex/config.toml" "$HOME/.codex/config.toml.coder"
-  mv -f "$HOME/.codex/config.toml.coder" "$HOME/.codex/config.toml"
-  awk '
-    BEGIN {
-      saw_approval = 0
-      saw_default_permissions = 0
-      inserted = 0
-    }
-    function insert_coder_permissions() {
-      if (inserted) return
-      if (!saw_approval) print "approval_policy = \"never\""
-      if (!saw_default_permissions) print "default_permissions = \":danger-full-access\""
-      inserted = 1
-    }
-    /^\[/ {
-      insert_coder_permissions()
-      print
-      next
-    }
-    /^approval_policy[[:space:]]*=/ {
-      print "approval_policy = \"never\""
-      saw_approval = 1
-      next
-    }
-    /^default_permissions[[:space:]]*=/ {
-      print "default_permissions = \":danger-full-access\""
-      saw_default_permissions = 1
-      next
-    }
-    { print }
-    END {
-      insert_coder_permissions()
-    }
-  ' "$HOME/.codex/config.toml" > "$HOME/.codex/config.toml.tmp"
-  mv -f "$HOME/.codex/config.toml.tmp" "$HOME/.codex/config.toml"
-fi
+omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 
 # Make zsh the login shell now that the binary is installed (core group).
 if command -v zsh >/dev/null 2>&1; then

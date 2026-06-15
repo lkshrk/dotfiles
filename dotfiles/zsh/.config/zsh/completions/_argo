@@ -1,0 +1,28 @@
+#compdef argo
+
+_argo_namespaces() {
+  command kubectl get namespace -o name 2>/dev/null | sed 's#^namespace/##'
+}
+
+_argo() {
+  local last="${words[CURRENT]}"
+  local previous="${words[CURRENT - 1]}"
+  local -a namespaces
+
+  if [[ "$last" == --namespace=* || "$last" == -n=* ]]; then
+    namespaces=("${(@f)$(_argo_namespaces)}")
+    (( ${#namespaces[@]} )) || return 1
+    compadd -P "${last%%=*}=" -- "${namespaces[@]}"
+    return
+  fi
+
+  if [[ "$previous" == --namespace || "$previous" == -n ]]; then
+    namespaces=("${(@f)$(_argo_namespaces)}")
+    (( ${#namespaces[@]} )) || return 1
+    compadd -- "${namespaces[@]}"
+    return
+  fi
+
+  autoload -Uz _argo_upstream
+  _argo_upstream "$@"
+}
