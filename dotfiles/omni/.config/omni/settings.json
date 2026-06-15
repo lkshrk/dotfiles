@@ -489,7 +489,24 @@
     },
     "coder": {
       "dots_repo": "~/dotfiles",
-      "dots_disabled": false
+      "dots_disabled": false,
+      "ecosystems": {
+        "node": {
+          "manager": "bun"
+        },
+        "python": {
+          "manager": "uv"
+        }
+      },
+      "provider_priority": [
+        "apt",
+        "bun",
+        "uv",
+        "script",
+        "npm",
+        "pnpm",
+        "pip"
+      ]
     }
   },
   "hosts": {
@@ -635,6 +652,10 @@
         {
           "provider": "brew",
           "package": "claude-cmd"
+        },
+        {
+          "provider": "bun",
+          "package": "claude-cmd"
         }
       ],
       "git": "https://github.com/kiliczsh/claude-cmd"
@@ -644,6 +665,10 @@
         {
           "provider": "brew",
           "package": "claude-code"
+        },
+        {
+          "provider": "bun",
+          "package": "@anthropic-ai/claude-code"
         }
       ]
     },
@@ -672,6 +697,10 @@
         {
           "provider": "brew",
           "package": "codex"
+        },
+        {
+          "provider": "bun",
+          "package": "@openai/codex"
         }
       ],
       "git": "https://github.com/openai/codex"
@@ -697,6 +726,10 @@
         {
           "provider": "brew",
           "package": "coreutils"
+        },
+        {
+          "provider": "apt",
+          "package": "coreutils"
         }
       ]
     },
@@ -713,6 +746,10 @@
         {
           "provider": "brew",
           "package": "devcontainer"
+        },
+        {
+          "provider": "bun",
+          "package": "@devcontainers/cli"
         }
       ]
     },
@@ -731,7 +768,25 @@
           "package": "docker"
         }
       ],
-      "git": "https://github.com/docker/cli"
+      "git": "https://github.com/docker/cli",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "docker",
+          "repo": "cli",
+          "url": "https://github.com/docker/cli"
+        },
+        "binary": "docker",
+        "recipe": {
+          "type": "raw_commands"
+        },
+        "commands": {
+          "check": "command -v docker",
+          "install": "sudo install -m 0755 -d /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && sudo chmod a+r /etc/apt/keyrings/docker.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \\\"$VERSION_CODENAME\\\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null && sudo apt-get update && sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
+          "upgrade": "sudo apt-get update && sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
+          "version": "docker --version"
+        }
+      }
     },
     "docker-buildx": {
       "providers": [
@@ -763,6 +818,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "eza"
+        },
+        {
+          "provider": "apt",
           "package": "eza"
         }
       ],
@@ -862,7 +921,25 @@
           "package": "gh"
         }
       ],
-      "git": "https://github.com/cli/cli"
+      "git": "https://github.com/cli/cli",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "cli",
+          "repo": "cli",
+          "url": "https://github.com/cli/cli"
+        },
+        "binary": "gh",
+        "recipe": {
+          "type": "raw_commands"
+        },
+        "commands": {
+          "check": "command -v gh",
+          "install": "sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null && sudo apt-get update && sudo apt-get install -y gh",
+          "upgrade": "sudo apt-get update && sudo apt-get install -y gh",
+          "version": "gh --version"
+        }
+      }
     },
     "ghostty": {
       "providers": [
@@ -879,7 +956,29 @@
           "package": "gibo"
         }
       ],
-      "git": "https://github.com/simonwhitaker/gibo"
+      "git": "https://github.com/simonwhitaker/gibo",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "simonwhitaker",
+          "repo": "gibo",
+          "url": "https://github.com/simonwhitaker/gibo"
+        },
+        "binary": "gibo",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "gibo_Linux_x86_64.tar.gz",
+          "binary_path": "gibo"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "gibo_Linux_x86_64.tar.gz"
+          },
+          "linux/arm64": {
+            "asset_pattern": "gibo_Linux_arm64.tar.gz"
+          }
+        }
+      }
     },
     "git-delta": {
       "providers": [
@@ -888,7 +987,31 @@
           "package": "git-delta"
         }
       ],
-      "git": "https://github.com/dandavison/delta"
+      "git": "https://github.com/dandavison/delta",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "dandavison",
+          "repo": "delta",
+          "url": "https://github.com/dandavison/delta"
+        },
+        "binary": "delta",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "delta-{version}-x86_64-unknown-linux-musl.tar.gz",
+          "binary_path": "delta-{version}-x86_64-unknown-linux-musl/delta"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "delta-{version}-x86_64-unknown-linux-musl.tar.gz",
+            "binary_path": "delta-{version}-x86_64-unknown-linux-musl/delta"
+          },
+          "linux/arm64": {
+            "asset_pattern": "delta-{version}-aarch64-unknown-linux-gnu.tar.gz",
+            "binary_path": "delta-{version}-aarch64-unknown-linux-gnu/delta"
+          }
+        }
+      }
     },
     "git-filter-repo": {
       "providers": [
@@ -906,7 +1029,31 @@
           "package": "glow"
         }
       ],
-      "git": "https://github.com/charmbracelet/glow"
+      "git": "https://github.com/charmbracelet/glow",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "charmbracelet",
+          "repo": "glow",
+          "url": "https://github.com/charmbracelet/glow"
+        },
+        "binary": "glow",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "glow_{version}_Linux_x86_64.tar.gz",
+          "binary_path": "glow_{version}_Linux_x86_64/glow"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "glow_{version}_Linux_x86_64.tar.gz",
+            "binary_path": "glow_{version}_Linux_x86_64/glow"
+          },
+          "linux/arm64": {
+            "asset_pattern": "glow_{version}_Linux_arm64.tar.gz",
+            "binary_path": "glow_{version}_Linux_arm64/glow"
+          }
+        }
+      }
     },
     "gnu-sed": {
       "providers": [
@@ -967,7 +1114,31 @@
           "package": "gum"
         }
       ],
-      "git": "https://github.com/charmbracelet/gum"
+      "git": "https://github.com/charmbracelet/gum",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "charmbracelet",
+          "repo": "gum",
+          "url": "https://github.com/charmbracelet/gum"
+        },
+        "binary": "gum",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "gum_{version}_Linux_x86_64.tar.gz",
+          "binary_path": "gum_{version}_Linux_x86_64/gum"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "gum_{version}_Linux_x86_64.tar.gz",
+            "binary_path": "gum_{version}_Linux_x86_64/gum"
+          },
+          "linux/arm64": {
+            "asset_pattern": "gum_{version}_Linux_arm64.tar.gz",
+            "binary_path": "gum_{version}_Linux_arm64/gum"
+          }
+        }
+      }
     },
     "hammerspoon": {
       "providers": [
@@ -1029,7 +1200,29 @@
           "package": "just"
         }
       ],
-      "git": "https://github.com/casey/just"
+      "git": "https://github.com/casey/just",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "casey",
+          "repo": "just",
+          "url": "https://github.com/casey/just"
+        },
+        "binary": "just",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "just-{version}-{arch}-unknown-linux-musl.tar.gz",
+          "binary_path": "just"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "just-{version}-x86_64-unknown-linux-musl.tar.gz"
+          },
+          "linux/arm64": {
+            "asset_pattern": "just-{version}-aarch64-unknown-linux-musl.tar.gz"
+          }
+        }
+      }
     },
     "karakeep": {
       "providers": [
@@ -1091,7 +1284,29 @@
           "package": "lazydocker"
         }
       ],
-      "git": "https://github.com/jesseduffield/lazydocker"
+      "git": "https://github.com/jesseduffield/lazydocker",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "jesseduffield",
+          "repo": "lazydocker",
+          "url": "https://github.com/jesseduffield/lazydocker"
+        },
+        "binary": "lazydocker",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "lazydocker_{version}_Linux_x86_64.tar.gz",
+          "binary_path": "lazydocker"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "lazydocker_{version}_Linux_x86_64.tar.gz"
+          },
+          "linux/arm64": {
+            "asset_pattern": "lazydocker_{version}_Linux_arm64.tar.gz"
+          }
+        }
+      }
     },
     "lazygit": {
       "providers": [
@@ -1100,12 +1315,38 @@
           "package": "lazygit"
         }
       ],
-      "git": "https://github.com/jesseduffield/lazygit"
+      "git": "https://github.com/jesseduffield/lazygit",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "jesseduffield",
+          "repo": "lazygit",
+          "url": "https://github.com/jesseduffield/lazygit"
+        },
+        "binary": "lazygit",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "lazygit_{version}_linux_x86_64.tar.gz",
+          "binary_path": "lazygit"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "lazygit_{version}_linux_x86_64.tar.gz"
+          },
+          "linux/arm64": {
+            "asset_pattern": "lazygit_{version}_linux_arm64.tar.gz"
+          }
+        }
+      }
     },
     "lefthook": {
       "providers": [
         {
           "provider": "brew",
+          "package": "lefthook"
+        },
+        {
+          "provider": "bun",
           "package": "lefthook"
         }
       ],
@@ -1307,13 +1548,39 @@
           "package": "omni"
         }
       ],
-      "git": "https://github.com/lkshrk/omni"
+      "git": "https://github.com/lkshrk/omni",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "lkshrk",
+          "repo": "omni",
+          "url": "https://github.com/lkshrk/omni"
+        },
+        "binary": "omni",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "omni_linux_x86_64.tar.gz",
+          "binary_path": "omni"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "omni_linux_x86_64.tar.gz"
+          },
+          "linux/arm64": {
+            "asset_pattern": "omni_linux_arm64.tar.gz"
+          }
+        }
+      }
     },
     "opencode": {
       "providers": [
         {
           "provider": "brew",
           "package": "opencode"
+        },
+        {
+          "provider": "bun",
+          "package": "opencode-ai"
         }
       ]
     },
@@ -1349,7 +1616,23 @@
           "provider": "brew",
           "package": "pi-coding-agent"
         }
-      ]
+      ],
+      "fallback": {
+        "source": {
+          "type": "github",
+          "url": "https://pi.dev"
+        },
+        "binary": "pi",
+        "recipe": {
+          "type": "raw_commands"
+        },
+        "commands": {
+          "check": "command -v pi",
+          "install": "curl -fsSL https://pi.dev/install.sh | sh",
+          "upgrade": "curl -fsSL https://pi.dev/install.sh | sh",
+          "version": "pi --version"
+        }
+      }
     },
     "pip": {
       "providers": [
@@ -1454,7 +1737,25 @@
           "package": "rtk"
         }
       ],
-      "git": "https://github.com/rtk-ai/rtk"
+      "git": "https://github.com/rtk-ai/rtk",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "rtk-ai",
+          "repo": "rtk",
+          "url": "https://github.com/rtk-ai/rtk"
+        },
+        "binary": "rtk",
+        "recipe": {
+          "type": "raw_commands"
+        },
+        "commands": {
+          "check": "command -v rtk",
+          "install": "curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
+          "upgrade": "curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
+          "version": "rtk --version"
+        }
+      }
     },
     "signal": {
       "providers": [
@@ -1601,6 +1902,10 @@
         {
           "provider": "brew",
           "package": "tree-sitter-cli"
+        },
+        {
+          "provider": "bun",
+          "package": "tree-sitter-cli"
         }
       ],
       "git": "https://github.com/tree-sitter/tree-sitter"
@@ -1621,7 +1926,31 @@
           "package": "vhs"
         }
       ],
-      "git": "https://github.com/charmbracelet/vhs"
+      "git": "https://github.com/charmbracelet/vhs",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "charmbracelet",
+          "repo": "vhs",
+          "url": "https://github.com/charmbracelet/vhs"
+        },
+        "binary": "vhs",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "vhs_{version}_Linux_x86_64.tar.gz",
+          "binary_path": "vhs_{version}_Linux_x86_64/vhs"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "vhs_{version}_Linux_x86_64.tar.gz",
+            "binary_path": "vhs_{version}_Linux_x86_64/vhs"
+          },
+          "linux/arm64": {
+            "asset_pattern": "vhs_{version}_Linux_arm64.tar.gz",
+            "binary_path": "vhs_{version}_Linux_arm64/vhs"
+          }
+        }
+      }
     },
     "vivaldi": {
       "providers": [
@@ -1731,7 +2060,31 @@
           "package": "yq"
         }
       ],
-      "git": "https://github.com/mikefarah/yq"
+      "git": "https://github.com/mikefarah/yq",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "mikefarah",
+          "repo": "yq",
+          "url": "https://github.com/mikefarah/yq"
+        },
+        "binary": "yq",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "yq_linux_amd64.tar.gz",
+          "binary_path": "yq_linux_amd64"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "yq_linux_amd64.tar.gz",
+            "binary_path": "yq_linux_amd64"
+          },
+          "linux/arm64": {
+            "asset_pattern": "yq_linux_arm64.tar.gz",
+            "binary_path": "yq_linux_arm64"
+          }
+        }
+      }
     },
     "zed": {
       "providers": [
