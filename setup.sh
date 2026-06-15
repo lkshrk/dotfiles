@@ -109,6 +109,24 @@ omni_bootstrap() {
   omni --config "$OMNI_CONFIG_PATH" --yes bootstrap
 }
 
+# ─── Shared: generated shell completions ─────────────────────────────────────
+
+install_zsh_completions() {
+  step "zsh completions"
+
+  local completions_dir="$HOME/.cache/zsh/completions"
+  mkdir -p "$completions_dir"
+
+  if command -v argo >/dev/null 2>&1; then
+    argo completion zsh \
+      | sed '/^#compdef argo$/d; /^compdef _argo argo$/d; s/_argo/_argo_upstream/g' \
+      > "$completions_dir/_argo_upstream"
+    ok "argo completion installed"
+  else
+    warn "argo is not on PATH; skipping argo completion"
+  fi
+}
+
 # ─── Shared: lefthook ─────────────────────────────────────────────────────────
 
 install_lefthook() {
@@ -139,6 +157,7 @@ main() {
 
   ensure_omni_bootstrap
   omni_bootstrap
+  install_zsh_completions
 
   install_lefthook
 

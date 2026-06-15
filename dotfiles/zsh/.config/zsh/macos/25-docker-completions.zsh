@@ -1,3 +1,1 @@
-[[ -d "$HOME/.docker/completions" ]] || return 0
-
-fpath=("$HOME/.docker/completions" $fpath)
+# Docker completions are added before compinit in ../30-completions.zsh.

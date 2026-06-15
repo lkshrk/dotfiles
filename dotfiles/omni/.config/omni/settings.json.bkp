@@ -362,7 +362,6 @@
       "name": "ts",
       "tools": [
         "bun",
-        "corepack",
         "node",
         "nvm",
         "pm2",
@@ -647,9 +646,6 @@
     "context-mode": {
       "provider": "node",
       "package": "context-mode"
-    },
-    "corepack": {
-      "provider": "node"
     },
     "coreutils": {
       "provider": "system"

@@ -252,6 +252,7 @@
     {
       "name": "infra",
       "tools": [
+        "argo",
         "cilium-cli",
         "flux",
         "flux-local",
@@ -350,7 +351,6 @@
       "name": "ts",
       "tools": [
         "bun",
-        "corepack",
         "node",
         "nvm",
         "pm2",
@@ -537,6 +537,15 @@
     }
   },
   "tools": {
+    "argo": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "argo"
+        }
+      ],
+      "git": "https://github.com/argoproj/argo-workflows"
+    },
     "bats-core": {
       "providers": [
         {
@@ -680,14 +689,6 @@
         {
           "provider": "bun",
           "package": "context-mode"
-        }
-      ]
-    },
-    "corepack": {
-      "providers": [
-        {
-          "provider": "bun",
-          "package": "corepack"
         }
       ]
     },
