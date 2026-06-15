@@ -1,6 +1,260 @@
 {
   "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v9.schema.json",
   "version": 9,
+  "agents": {
+    "skills": [
+      {
+        "name": "a11y-audit",
+        "source": "alirezarezvani/claude-skills",
+        "skill_path": "engineering-team/a11y-audit/skills/a11y-audit/SKILL.md"
+      },
+      {
+        "name": "cavecrew",
+        "source": "JuliusBrussee/caveman",
+        "skill_path": "skills/cavecrew/SKILL.md"
+      },
+      {
+        "name": "caveman",
+        "source": "alirezarezvani/claude-skills",
+        "skill_path": "engineering/caveman/skills/caveman/SKILL.md"
+      },
+      {
+        "name": "caveman-commit",
+        "source": "JuliusBrussee/caveman",
+        "skill_path": "skills/caveman-commit/SKILL.md"
+      },
+      {
+        "name": "caveman-compress",
+        "source": "JuliusBrussee/caveman",
+        "skill_path": "caveman-compress/SKILL.md"
+      },
+      {
+        "name": "caveman-help",
+        "source": "JuliusBrussee/caveman",
+        "skill_path": "skills/caveman-help/SKILL.md"
+      },
+      {
+        "name": "caveman-review",
+        "source": "JuliusBrussee/caveman",
+        "skill_path": "skills/caveman-review/SKILL.md"
+      },
+      {
+        "name": "caveman-stats",
+        "source": "JuliusBrussee/caveman",
+        "skill_path": "skills/caveman-stats/SKILL.md"
+      },
+      {
+        "name": "cloud",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/cloud/SKILL.md"
+      },
+      {
+        "name": "cloud_v2",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/cloud_v2/SKILL.md"
+      },
+      {
+        "name": "code-reviewer",
+        "source": "alirezarezvani/claude-skills",
+        "skill_path": "engineering-team/skills/code-reviewer/SKILL.md"
+      },
+      {
+        "name": "compliance-review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/compliance-review/SKILL.md"
+      },
+      {
+        "name": "compress",
+        "source": "JuliusBrussee/caveman",
+        "skill_path": "skills/compress/SKILL.md"
+      },
+      {
+        "name": "create-tests",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/create-tests/SKILL.md"
+      },
+      {
+        "name": "create_e2e_tests",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/create_e2e_tests/SKILL.md"
+      },
+      {
+        "name": "design-review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/design-review/SKILL.md"
+      },
+      {
+        "name": "diagnose",
+        "source": "mattpocock/skills",
+        "skill_path": "skills/engineering/diagnose/SKILL.md"
+      },
+      {
+        "name": "find-skills",
+        "source": "vercel-labs/skills",
+        "skill_path": "skills/find-skills/SKILL.md"
+      },
+      {
+        "name": "geo-review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/geo-review/SKILL.md"
+      },
+      {
+        "name": "grill-me",
+        "source": "mattpocock/skills",
+        "skill_path": "skills/productivity/grill-me/SKILL.md"
+      },
+      {
+        "name": "grill-with-docs",
+        "source": "mattpocock/skills",
+        "skill_path": "skills/engineering/grill-with-docs/SKILL.md"
+      },
+      {
+        "name": "handoff",
+        "source": "mattpocock/skills",
+        "skill_path": "skills/productivity/handoff/SKILL.md"
+      },
+      {
+        "name": "improve-codebase-architecture",
+        "source": "mattpocock/skills",
+        "skill_path": "skills/engineering/improve-codebase-architecture/SKILL.md"
+      },
+      {
+        "name": "linear-batch-close",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-batch-close/SKILL.md"
+      },
+      {
+        "name": "linear-batch-implement",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-batch-implement/SKILL.md"
+      },
+      {
+        "name": "linear-batch-refine",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-batch-refine/SKILL.md"
+      },
+      {
+        "name": "linear-close",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-close/SKILL.md"
+      },
+      {
+        "name": "linear-create-issue",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-create-issue/SKILL.md"
+      },
+      {
+        "name": "linear-deliver-feature",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-deliver-feature/SKILL.md"
+      },
+      {
+        "name": "linear-doctor",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-doctor/SKILL.md"
+      },
+      {
+        "name": "linear-implement",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-implement/SKILL.md"
+      },
+      {
+        "name": "linear-refine",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-refine/SKILL.md"
+      },
+      {
+        "name": "linear-status",
+        "source": "lkshrk/linear-ai",
+        "skill_path": "skills/linear-status/SKILL.md"
+      },
+      {
+        "name": "moshi-best-practices",
+        "source": "rjyo/moshi-skill",
+        "skill_path": "skills/moshi-best-practices/SKILL.md"
+      },
+      {
+        "name": "obsidian-vault",
+        "source": "mattpocock/skills",
+        "skill_path": "skills/personal/obsidian-vault/SKILL.md"
+      },
+      {
+        "name": "performance-review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/performance-review/SKILL.md"
+      },
+      {
+        "name": "privacy-review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/privacy-review/SKILL.md"
+      },
+      {
+        "name": "request-refactor-plan",
+        "source": "mattpocock/skills",
+        "skill_path": "skills/deprecated/request-refactor-plan/SKILL.md"
+      },
+      {
+        "name": "research",
+        "source": "alirezarezvani/claude-skills",
+        "skill_path": "research/research/skills/research/SKILL.md"
+      },
+      {
+        "name": "resilience-review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/resilience-review/SKILL.md"
+      },
+      {
+        "name": "review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/review/SKILL.md"
+      },
+      {
+        "name": "security-review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/security-review/SKILL.md"
+      },
+      {
+        "name": "senior-architect",
+        "source": "alirezarezvani/claude-skills",
+        "skill_path": "engineering-team/skills/senior-architect/SKILL.md"
+      },
+      {
+        "name": "senior-backend",
+        "source": "alirezarezvani/claude-skills",
+        "skill_path": "engineering-team/skills/senior-backend/SKILL.md"
+      },
+      {
+        "name": "senior-devops",
+        "source": "alirezarezvani/claude-skills",
+        "skill_path": "engineering-team/skills/senior-devops/SKILL.md"
+      },
+      {
+        "name": "senior-frontend",
+        "source": "alirezarezvani/claude-skills",
+        "skill_path": "engineering-team/skills/senior-frontend/SKILL.md"
+      },
+      {
+        "name": "seo-review",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/seo-review/SKILL.md"
+      },
+      {
+        "name": "setup-matt-pocock-skills",
+        "source": "mattpocock/skills",
+        "skill_path": "skills/engineering/setup-matt-pocock-skills/SKILL.md"
+      },
+      {
+        "name": "triage",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/triage/SKILL.md"
+      },
+      {
+        "name": "verify",
+        "source": "ShiplightAI/agent-skills",
+        "skill_path": "skills/verify/SKILL.md"
+      }
+    ]
+  },
   "groups": [
     {
       "name": "ai",
