@@ -193,7 +193,6 @@
     {
       "name": "dev",
       "tools": [
-        "gum",
         "lefthook"
       ]
     },
@@ -203,7 +202,6 @@
         "devcontainer",
         "docker",
         "gh",
-        "gibo",
         "git-filter-repo",
         "imagemagick",
         "lazydocker",
@@ -367,7 +365,11 @@
       ]
     },
     {
-      "name": "Topaz",
+      "name": "coder",
+      "special": "host"
+    },
+    {
+      "name": "topaz",
       "special": "host",
       "tools": [
         "cmake",
@@ -455,10 +457,6 @@
           "path": "~/.config/env"
         }
       ]
-    },
-    {
-      "name": "coder",
-      "special": "host"
     }
   ],
   "host_settings": {
@@ -781,9 +779,9 @@
           "type": "raw_commands"
         },
         "commands": {
+          "install": "sudo install -m 0755 -d /etc/apt/keyrings \u0026\u0026 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg \u0026\u0026 sudo chmod a+r /etc/apt/keyrings/docker.gpg \u0026\u0026 echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release \u0026\u0026 echo \\\"$VERSION_CODENAME\\\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list \u003e/dev/null \u0026\u0026 sudo apt-get update \u0026\u0026 sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
           "check": "command -v docker",
-          "install": "sudo install -m 0755 -d /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && sudo chmod a+r /etc/apt/keyrings/docker.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \\\"$VERSION_CODENAME\\\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null && sudo apt-get update && sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
-          "upgrade": "sudo apt-get update && sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
+          "upgrade": "sudo apt-get update \u0026\u0026 sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
           "version": "docker --version"
         }
       }
@@ -934,9 +932,9 @@
           "type": "raw_commands"
         },
         "commands": {
+          "install": "sudo mkdir -p -m 755 /etc/apt/keyrings \u0026\u0026 wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg \u003e/dev/null \u0026\u0026 sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \u0026\u0026 echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list \u003e/dev/null \u0026\u0026 sudo apt-get update \u0026\u0026 sudo apt-get install -y gh",
           "check": "command -v gh",
-          "install": "sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null && sudo apt-get update && sudo apt-get install -y gh",
-          "upgrade": "sudo apt-get update && sudo apt-get install -y gh",
+          "upgrade": "sudo apt-get update \u0026\u0026 sudo apt-get install -y gh",
           "version": "gh --version"
         }
       }
@@ -948,37 +946,6 @@
           "package": "ghostty"
         }
       ]
-    },
-    "gibo": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "gibo"
-        }
-      ],
-      "git": "https://github.com/simonwhitaker/gibo",
-      "fallback": {
-        "source": {
-          "type": "github",
-          "owner": "simonwhitaker",
-          "repo": "gibo",
-          "url": "https://github.com/simonwhitaker/gibo"
-        },
-        "binary": "gibo",
-        "recipe": {
-          "type": "github_release_asset",
-          "asset_pattern": "gibo_Linux_x86_64.tar.gz",
-          "binary_path": "gibo"
-        },
-        "platforms": {
-          "linux/amd64": {
-            "asset_pattern": "gibo_Linux_x86_64.tar.gz"
-          },
-          "linux/arm64": {
-            "asset_pattern": "gibo_Linux_arm64.tar.gz"
-          }
-        }
-      }
     },
     "git-delta": {
       "providers": [
@@ -1010,7 +977,8 @@
             "asset_pattern": "delta-{version}-aarch64-unknown-linux-gnu.tar.gz",
             "binary_path": "delta-{version}-aarch64-unknown-linux-gnu/delta"
           }
-        }
+        },
+        "commands": {}
       }
     },
     "git-filter-repo": {
@@ -1052,7 +1020,8 @@
             "asset_pattern": "glow_{version}_Linux_arm64.tar.gz",
             "binary_path": "glow_{version}_Linux_arm64/glow"
           }
-        }
+        },
+        "commands": {}
       }
     },
     "gnu-sed": {
@@ -1106,39 +1075,6 @@
         }
       ],
       "git": "https://github.com/golang/tools"
-    },
-    "gum": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "gum"
-        }
-      ],
-      "git": "https://github.com/charmbracelet/gum",
-      "fallback": {
-        "source": {
-          "type": "github",
-          "owner": "charmbracelet",
-          "repo": "gum",
-          "url": "https://github.com/charmbracelet/gum"
-        },
-        "binary": "gum",
-        "recipe": {
-          "type": "github_release_asset",
-          "asset_pattern": "gum_{version}_Linux_x86_64.tar.gz",
-          "binary_path": "gum_{version}_Linux_x86_64/gum"
-        },
-        "platforms": {
-          "linux/amd64": {
-            "asset_pattern": "gum_{version}_Linux_x86_64.tar.gz",
-            "binary_path": "gum_{version}_Linux_x86_64/gum"
-          },
-          "linux/arm64": {
-            "asset_pattern": "gum_{version}_Linux_arm64.tar.gz",
-            "binary_path": "gum_{version}_Linux_arm64/gum"
-          }
-        }
-      }
     },
     "hammerspoon": {
       "providers": [
@@ -1221,7 +1157,8 @@
           "linux/arm64": {
             "asset_pattern": "just-{version}-aarch64-unknown-linux-musl.tar.gz"
           }
-        }
+        },
+        "commands": {}
       }
     },
     "karakeep": {
@@ -1305,7 +1242,8 @@
           "linux/arm64": {
             "asset_pattern": "lazydocker_{version}_Linux_arm64.tar.gz"
           }
-        }
+        },
+        "commands": {}
       }
     },
     "lazygit": {
@@ -1336,7 +1274,8 @@
           "linux/arm64": {
             "asset_pattern": "lazygit_{version}_linux_arm64.tar.gz"
           }
-        }
+        },
+        "commands": {}
       }
     },
     "lefthook": {
@@ -1569,7 +1508,8 @@
           "linux/arm64": {
             "asset_pattern": "omni_linux_arm64.tar.gz"
           }
-        }
+        },
+        "commands": {}
       }
     },
     "opencode": {
@@ -1627,8 +1567,8 @@
           "type": "raw_commands"
         },
         "commands": {
-          "check": "command -v pi",
           "install": "curl -fsSL https://pi.dev/install.sh | sh",
+          "check": "command -v pi",
           "upgrade": "curl -fsSL https://pi.dev/install.sh | sh",
           "version": "pi --version"
         }
@@ -1750,8 +1690,8 @@
           "type": "raw_commands"
         },
         "commands": {
-          "check": "command -v rtk",
           "install": "curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
+          "check": "command -v rtk",
           "upgrade": "curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
           "version": "rtk --version"
         }
@@ -1949,7 +1889,8 @@
             "asset_pattern": "vhs_{version}_Linux_arm64.tar.gz",
             "binary_path": "vhs_{version}_Linux_arm64/vhs"
           }
-        }
+        },
+        "commands": {}
       }
     },
     "vivaldi": {
@@ -2083,7 +2024,8 @@
             "asset_pattern": "yq_linux_arm64.tar.gz",
             "binary_path": "yq_linux_arm64"
           }
-        }
+        },
+        "commands": {}
       }
     },
     "zed": {
