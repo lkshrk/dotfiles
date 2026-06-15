@@ -148,10 +148,14 @@
           "name": "zshrc",
           "path": "~/.zshrc",
           "hosts": {
-            "Topaz": {
-              "package": "zshrc@Topaz"
+            "topaz": {
+              "package": "zshrc@topaz"
             }
           }
+        },
+        {
+          "name": "env",
+          "path": "~/.config/env"
         }
       ]
     },
@@ -393,8 +397,8 @@
           "name": "git",
           "path": "~/.config/git",
           "hosts": {
-            "Topaz": {
-              "package": "git@Topaz"
+            "topaz": {
+              "package": "git@topaz"
             }
           },
           "ignore": [
@@ -451,64 +455,44 @@
           "name": "gnupg",
           "path": "~/.gnupg",
           "ignored": true
-        },
-        {
-          "name": "env",
-          "path": "~/.config/env"
         }
       ]
     }
   ],
   "host_settings": {
-    "Topaz": {
-      "ecosystems": {
-        "node": {
-          "manager": "bun"
-        },
-        "python": {
-          "manager": "uv"
-        }
-      },
+    "coder": {
+      "dots_repo": "~/dotfiles",
+      "dots_disabled": false,
+      "provider_priority": [
+        "bun",
+        "uv",
+        "apt",
+        "script",
+        "npm",
+        "pnpm",
+        "pip"
+      ]
+    },
+    "topaz": {
       "dots_repo": "~/Dev/dotfiles",
       "dots_disabled": false,
       "provider_priority": [
-        "brew",
         "bun",
+        "uv",
+        "brew",
         "pnpm",
         "apt",
         "apk",
         "dnf",
         "pacman",
         "zypper",
-        "uv",
         "npm",
-        "pip"
-      ]
-    },
-    "coder": {
-      "dots_repo": "~/dotfiles",
-      "dots_disabled": false,
-      "ecosystems": {
-        "node": {
-          "manager": "bun"
-        },
-        "python": {
-          "manager": "uv"
-        }
-      },
-      "provider_priority": [
-        "apt",
-        "bun",
-        "uv",
-        "script",
-        "npm",
-        "pnpm",
         "pip"
       ]
     }
   },
   "hosts": {
-    "Topaz": [
+    "topaz": [
       "ai",
       "ai-plugins",
       "core",
@@ -549,7 +533,8 @@
   "settings": {
     "dots_git": {
       "auto_commit": true
-    }
+    },
+    "fallback_bin_dir": "~/.local/bin"
   },
   "tools": {
     "argo": {
@@ -566,6 +551,10 @@
         {
           "provider": "brew",
           "package": "bats-core"
+        },
+        {
+          "provider": "apt",
+          "package": "bats"
         }
       ],
       "git": "https://github.com/bats-core/bats-core"
@@ -823,7 +812,29 @@
           "package": "eza"
         }
       ],
-      "git": "https://github.com/eza-community/eza"
+      "git": "https://github.com/eza-community/eza",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "eza-community",
+          "repo": "eza",
+          "url": "https://github.com/eza-community/eza"
+        },
+        "binary": "eza",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "eza_x86_64-unknown-linux-gnu.tar.gz",
+          "binary_path": "eza"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "eza_x86_64-unknown-linux-gnu.tar.gz"
+          },
+          "linux/arm64": {
+            "asset_pattern": "eza_aarch64-unknown-linux-gnu.tar.gz"
+          }
+        }
+      }
     },
     "fd": {
       "providers": [
@@ -832,7 +843,31 @@
           "package": "fd"
         }
       ],
-      "git": "https://github.com/sharkdp/fd"
+      "git": "https://github.com/sharkdp/fd",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "sharkdp",
+          "repo": "fd",
+          "url": "https://github.com/sharkdp/fd"
+        },
+        "binary": "fd",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "fd-v{version}-x86_64-unknown-linux-musl.tar.gz",
+          "binary_path": "fd-v{version}-x86_64-unknown-linux-musl/fd"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "fd-v{version}-x86_64-unknown-linux-musl.tar.gz",
+            "binary_path": "fd-v{version}-x86_64-unknown-linux-musl/fd"
+          },
+          "linux/arm64": {
+            "asset_pattern": "fd-v{version}-aarch64-unknown-linux-gnu.tar.gz",
+            "binary_path": "fd-v{version}-aarch64-unknown-linux-gnu/fd"
+          }
+        }
+      }
     },
     "flux": {
       "providers": [
@@ -908,6 +943,9 @@
         {
           "provider": "brew",
           "package": "fzf"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/junegunn/fzf"
@@ -986,6 +1024,9 @@
         {
           "provider": "brew",
           "package": "git-filter-repo"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/newren/git-filter-repo"
@@ -1116,6 +1157,9 @@
         {
           "provider": "brew",
           "package": "imagemagick"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/ImageMagick/ImageMagick"
@@ -1125,6 +1169,9 @@
         {
           "provider": "brew",
           "package": "jq"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/jqlang/jq"
@@ -1666,6 +1713,9 @@
         {
           "provider": "brew",
           "package": "ripgrep"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/BurntSushi/ripgrep"
@@ -1719,6 +1769,9 @@
         {
           "provider": "brew",
           "package": "skopeo"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/containers/skopeo"
@@ -1754,6 +1807,9 @@
         {
           "provider": "brew",
           "package": "stow"
+        },
+        {
+          "provider": "apt"
         }
       ]
     },
@@ -1806,6 +1862,10 @@
         {
           "provider": "brew",
           "package": "thefuck"
+        },
+        {
+          "provider": "uv",
+          "package": "thefuck"
         }
       ],
       "git": "https://github.com/nvbn/thefuck"
@@ -1815,6 +1875,9 @@
         {
           "provider": "brew",
           "package": "tmux"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/tmux/tmux"
@@ -1824,6 +1887,9 @@
         {
           "provider": "brew",
           "package": "tree"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/Old-Man-Programmer/tree"
@@ -1983,13 +2049,38 @@
           "package": "yamlfmt"
         }
       ],
-      "git": "https://github.com/google/yamlfmt"
+      "git": "https://github.com/google/yamlfmt",
+      "fallback": {
+        "source": {
+          "type": "github",
+          "owner": "google",
+          "repo": "yamlfmt",
+          "url": "https://github.com/google/yamlfmt"
+        },
+        "binary": "yamlfmt",
+        "recipe": {
+          "type": "github_release_asset",
+          "asset_pattern": "yamlfmt_{version}_Linux_x86_64.tar.gz",
+          "binary_path": "yamlfmt"
+        },
+        "platforms": {
+          "linux/amd64": {
+            "asset_pattern": "yamlfmt_{version}_Linux_x86_64.tar.gz"
+          },
+          "linux/arm64": {
+            "asset_pattern": "yamlfmt_{version}_Linux_arm64.tar.gz"
+          }
+        }
+      }
     },
     "yamllint": {
       "providers": [
         {
           "provider": "brew",
           "package": "yamllint"
+        },
+        {
+          "provider": "apt"
         }
       ],
       "git": "https://github.com/adrienverge/yamllint"
@@ -2041,6 +2132,9 @@
         {
           "provider": "brew",
           "package": "zsh"
+        },
+        {
+          "provider": "apt"
         }
       ]
     },
