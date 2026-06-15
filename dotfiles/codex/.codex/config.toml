@@ -63,43 +63,71 @@ session_picker_view = "dense"
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 
-[tui.keymap.editor]
-insert_newline = ["shift-enter"]
-kill_line_start = ["ctrl-u"]
-
 [mcp_servers.context-mode]
 command = "context-mode"
 
-[mcp_servers.context-mode.tools.ctx_batch_execute]
+[mcp_servers.context-mode.tools.ctx_stats]
 approval_mode = "approve"
 
-[mcp_servers.context-mode.tools.ctx_execute]
+[mcp_servers.context-mode.tools.ctx_batch_execute]
 approval_mode = "approve"
 
 [mcp_servers.context-mode.tools.ctx_execute_file]
 approval_mode = "approve"
 
-[mcp_servers.context-mode.tools.ctx_index]
-approval_mode = "approve"
-
-[mcp_servers.context-mode.tools.ctx_search]
-approval_mode = "approve"
-
-[mcp_servers.context-mode.tools.ctx_stats]
+[mcp_servers.context-mode.tools.ctx_execute]
 approval_mode = "approve"
 
 [mcp_servers.context-mode.tools.ctx_upgrade]
 approval_mode = "approve"
 
+[mcp_servers.context-mode.tools.ctx_search]
+approval_mode = "approve"
+
+[mcp_servers.context-mode.tools.ctx_index]
+approval_mode = "approve"
+
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
+env_http_headers = { "CONTEXT7_API_KEY" = "CONTEXT7_API_KEY" }
 
-[mcp_servers.context7.env_http_headers]
-CONTEXT7_API_KEY = "CONTEXT7_API_KEY"
+[tui.keymap.editor]
+insert_newline = ["shift-enter"]
+kill_line_start = ["ctrl-u"]
+
+# BEGIN OMC MANAGED MCP REGISTRY
 
 [mcp_servers.leankg]
 command = "/Users/lkshrk/.local/bin/leankg"
 args = ["mcp-stdio", "--watch"]
+type = "stdio"
+
+[mcp_servers.leankg.tools.mcp_status]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_tested_by]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_code_tree]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.search_code]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_callers]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.query_file]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_dependents]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.get_context]
+approval_mode = "approve"
+
+[mcp_servers.leankg.tools.mcp_index]
+approval_mode = "approve"
 
 [mcp_servers.leankg.tools.ctx_read]
 approval_mode = "approve"
@@ -107,70 +135,25 @@ approval_mode = "approve"
 [mcp_servers.leankg.tools.detect_changes]
 approval_mode = "approve"
 
-[mcp_servers.leankg.tools.get_callers]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.get_code_tree]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.get_context]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.get_dependents]
-approval_mode = "approve"
-
 [mcp_servers.leankg.tools.get_impact_radius]
 approval_mode = "approve"
 
-[mcp_servers.leankg.tools.get_tested_by]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.mcp_index]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.mcp_status]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.query_file]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.search_code]
+[mcp_servers.leankg.tools.find_function]
 approval_mode = "approve"
 
 [mcp_servers.shiplight]
 command = "npx"
 args = ["-y", "@shiplightai/mcp@latest"]
+env = { PWDEBUG = "console" }
+startup_timeout_sec = 15
+
 enabled = false
-startup_timeout_sec = 15.0
-
-[mcp_servers.shiplight.env]
-PWDEBUG = "console"
-
 [mcp_servers.xcodebuildmcp]
 command = "/opt/homebrew/bin/xcodebuildmcp"
 args = ["mcp"]
+type = "stdio"
+
 enabled = false
-
-[mcp_servers.node_repl]
-args = []
-command = "/Applications/Codex.app/Contents/Resources/node_repl"
-startup_timeout_sec = 120
-
-[mcp_servers.node_repl.env]
-NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
-NODE_REPL_NODE_MODULE_DIRS = ""
-NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/node"
-NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lkshrk/.codex"
-CODEX_HOME = "/Users/lkshrk/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "2de792ebdf729e85542c94275f6654821dddce546d9c7374c915f2297529e313"
-BROWSER_USE_AVAILABLE_BACKENDS = "iab"
-NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
-BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.602.40724"
-CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
-
-[mcp_servers.linear]
-url = "https://mcp.linear.app/mcp"
 [plugins."build-ios-apps@openai-curated"]
 enabled = true
 
@@ -269,7 +252,7 @@ trusted_hash = "sha256:114549c484c131b94782d3424527dd1042d48bc3a8616a11299acdf60
 trusted_hash = "sha256:9205c1763e40c0256ab334e2e96c037c1cdf5b8bfaddba31ed19d93d3388586a"
 
 [marketplaces.context-mode]
-last_updated = "2026-06-15T08:59:53Z"
+last_updated = "2026-06-15T09:24:01Z"
 last_revision = "3382f2a529f3833d5b3279582f342076ab1aef12"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
