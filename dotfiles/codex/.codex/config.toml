@@ -97,48 +97,28 @@ kill_line_start = ["ctrl-u"]
 
 # BEGIN OMC MANAGED MCP REGISTRY
 
-[mcp_servers.leankg]
-command = "/Users/lkshrk/.local/bin/leankg"
-args = ["mcp-stdio", "--watch"]
-type = "stdio"
+[mcp_servers.codebase-memory-mcp]
+command = "/Users/lkshrk/.local/bin/codebase-memory-mcp"
 
-[mcp_servers.leankg.tools.mcp_status]
+[mcp_servers.codebase-memory-mcp.tools.list_projects]
 approval_mode = "approve"
 
-[mcp_servers.leankg.tools.get_tested_by]
+[mcp_servers.codebase-memory-mcp.tools.search_graph]
 approval_mode = "approve"
 
-[mcp_servers.leankg.tools.get_code_tree]
+[mcp_servers.codebase-memory-mcp.tools.get_code_snippet]
 approval_mode = "approve"
 
-[mcp_servers.leankg.tools.search_code]
+[mcp_servers.codebase-memory-mcp.tools.search_code]
 approval_mode = "approve"
 
-[mcp_servers.leankg.tools.get_callers]
+[mcp_servers.codebase-memory-mcp.tools.get_architecture]
 approval_mode = "approve"
 
-[mcp_servers.leankg.tools.query_file]
+[mcp_servers.codebase-memory-mcp.tools.index_status]
 approval_mode = "approve"
 
-[mcp_servers.leankg.tools.get_dependents]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.get_context]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.mcp_index]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.ctx_read]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.detect_changes]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.get_impact_radius]
-approval_mode = "approve"
-
-[mcp_servers.leankg.tools.find_function]
+[mcp_servers.codebase-memory-mcp.tools.trace_path]
 approval_mode = "approve"
 
 [mcp_servers.shiplight]
