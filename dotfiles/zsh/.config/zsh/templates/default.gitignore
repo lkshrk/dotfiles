@@ -118,6 +118,7 @@ tramp
 
 # AI local state
 CLAUDE.local.md
+.claude/
 .claude/settings.local.json
 .sisyphus/
 .omc/

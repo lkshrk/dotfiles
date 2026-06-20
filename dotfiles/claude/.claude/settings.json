@@ -8,6 +8,11 @@
     "GIT_SSH_COMMAND": "ssh -o PermitLocalCommand=no"
   },
   "includeCoAuthoredBy": false,
+  "mcpServers": {
+    "codebase-memory-mcp": {
+      "command": "/Users/lkshrk/.local/bin/codebase-memory-mcp"
+    }
+  },
   "model": "claude-opus-4-8",
   "hooks": {
     "SessionStart": [

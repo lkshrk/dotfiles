@@ -144,8 +144,7 @@
           },
           "ignore": [
             ".zsh_history",
-            ".gitignore",
-            ".leankg"
+            ".gitignore"
           ]
         },
         {
