@@ -129,6 +129,8 @@ function _fxr {
 }
 (( $+functions[compdef] )) && compdef _fxr fxr
 
+# woodpecker
+alias wp='woodpecker-cli '
 
 # agents
 alias cr='coder '

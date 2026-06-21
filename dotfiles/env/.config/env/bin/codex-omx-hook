@@ -1,0 +1,44 @@
+#!/bin/sh
+set -eu
+
+ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}"
+if [ -r "$ENV_DIR/profile.sh" ]; then
+  # shellcheck source=/dev/null
+  . "$ENV_DIR/profile.sh"
+fi
+
+node_runner="${CODEX_NODE:-codex-node}"
+if ! command -v "$node_runner" >/dev/null 2>&1; then
+  node_runner=node
+fi
+
+hook_script="${CODEX_OMX_HOOK_SCRIPT:-${OMX_CODEX_NATIVE_HOOK:-}}"
+
+if [ -z "$hook_script" ]; then
+  for root in \
+    "${OH_MY_CODEX_ROOT:-}" \
+    "${OMX_PACKAGE_ROOT:-}" \
+    "${BUN_INSTALL:-$HOME/.bun}/install/global/node_modules/oh-my-codex" \
+    "$HOME/.bun/install/global/node_modules/oh-my-codex"
+  do
+    [ -n "$root" ] || continue
+    candidate="$root/dist/scripts/codex-native-hook.js"
+    if [ -r "$candidate" ]; then
+      hook_script="$candidate"
+      break
+    fi
+  done
+fi
+
+if [ -z "$hook_script" ] && command -v npm >/dev/null 2>&1; then
+  npm_root="$(npm root -g 2>/dev/null || true)"
+  candidate="$npm_root/oh-my-codex/dist/scripts/codex-native-hook.js"
+  [ -r "$candidate" ] && hook_script="$candidate"
+fi
+
+if [ -z "$hook_script" ] || [ ! -r "$hook_script" ]; then
+  printf '%s\n' 'codex-omx-hook: could not resolve oh-my-codex native hook script' >&2
+  exit 127
+fi
+
+exec "$node_runner" "$hook_script" "$@"

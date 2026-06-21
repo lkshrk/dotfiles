@@ -57,6 +57,11 @@ Keep runtime marker contracts stable and non-destructive when overlays are appli
 <!-- OMX:GUIDANCE:OPERATING:END -->
 </operating_principles>
 
+## Global Response Style
+- Default to Caveman-style terse output: no filler, no pleasantries, minimal hedging, exact technical substance, code unchanged.
+- Use concise fragments when clear; expand for safety warnings, irreversible actions, complex multi-step sequences, or user confusion.
+- Treat `normal mode` or `stop caveman` as a request to disable this style for the current session or task; `use caveman` re-enables it.
+
 ## Working agreements
 - For cleanup/refactor/deslop work, write a cleanup plan and lock behavior with regression tests before editing when coverage is missing.
 - Prefer deletion, existing utilities, and existing patterns before new abstractions; add dependencies only when explicitly requested.
@@ -65,6 +70,15 @@ Keep runtime marker contracts stable and non-destructive when overlays are appli
 
 <delegation_rules>
 Default posture: use native subagents whenever they materially improve throughput, review quality, implementation quality, or context hygiene. The user has given standing authorization for bounded explorer, worker, verifier, and review agents across projects; no per-turn confirmation is needed for safe, reversible delegation.
+Use subagents, but keep me informed. Maintain .agent-progress.md with:
+- which subagents were started
+- current hypothesis
+- files inspected
+- blockers
+- next action
+
+Update it after every subagent result and summarize progress before long-running steps.
+
 
 Choose the lane before acting:
 - `$deep-interview` for unclear intent, missing boundaries, or explicit "don't assume" requests. This mode clarifies and hands off; it does not implement.
@@ -277,7 +291,8 @@ Use `omx explore --prompt ...` for simple read-only lookups through the shell-on
 Git signing:
 - Commits and signature probes use SSH signing backed by rbw's SSH agent.
 - Codex global config selects the `signed` permissions profile, which extends the workspace sandbox, allows rbw Unix-socket access, and grants `.git/` write access for local commit object creation.
-- If a session predates that config or still fails with `No private key found`, restart the agent session and verify `ssh-add -l` before changing Git config, keys, rbw settings, or blaming `rtk`.
+- In agent/headless shells, use the real Git binary (`/usr/bin/git` or `command git`) for commit, tag, merge, push, fetch, and pull paths. Do not rely on interactive zsh git wrappers to unlock rbw; they cannot prompt headlessly.
+- If signing fails, verify `SSH_AUTH_SOCK` points at the rbw socket and `ssh-add -l` sees the key before changing Git config, keys, rbw settings, or blaming `rtk`.
 
 Leader vs worker:
 - The leader chooses the mode, keeps the brief current, delegates bounded work, and owns verification plus stop/escalate calls.
@@ -346,7 +361,7 @@ Do not manually duplicate hook-owned activation state unless recovering from mis
 
 Execute `omx setup` to install all components. Execute `omx doctor` to verify installation.
 
-@/Users/lkshrk/.codex/RTK.md
+@RTK.md
 
 <!-- codebase-memory-mcp:start -->
 # Codebase Knowledge Graph (codebase-memory-mcp)

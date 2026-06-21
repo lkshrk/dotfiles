@@ -6,10 +6,18 @@ alias bu='brew update && brew upgrade'
 git() {
   case "${1:-}" in
     commit|tag|merge)
-      (( $+functions[_rbw_unlock_if_needed] )) && _rbw_unlock_if_needed || return
+      if (( $+functions[_rbw_can_prompt] )) && _rbw_can_prompt && (( $+functions[_rbw_unlock_if_needed] )); then
+        _rbw_unlock_if_needed || return
+      else
+        (( $+functions[_rbw_fix_ssh_auth_sock] )) && _rbw_fix_ssh_auth_sock >/dev/null 2>&1 || true
+      fi
       ;;
     push|pull|fetch|clone|ls-remote|submodule)
-      (( $+functions[_rbw_ssh_agent_ready] )) && _rbw_ssh_agent_ready || return
+      if (( $+functions[_rbw_can_prompt] )) && _rbw_can_prompt && (( $+functions[_rbw_ssh_agent_ready] )); then
+        _rbw_ssh_agent_ready || return
+      else
+        (( $+functions[_rbw_fix_ssh_auth_sock] )) && _rbw_fix_ssh_auth_sock >/dev/null 2>&1 || true
+      fi
       ;;
   esac
 

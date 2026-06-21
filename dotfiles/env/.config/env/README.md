@@ -30,9 +30,21 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 ## Current Decisions
 
 - No explicit npm path.
-- No npm/npx compatibility shim; missing npm should surface as a real missing tool.
+- zsh loads the same POSIX profile from `.zshenv`; login shells skip duplicate
+  profile work through the profile load guard.
+- Base env prepends the NVM default Node bin directory, so `#!/usr/bin/env node`
+  CLIs work after Homebrew Node is unlinked.
+- Interactive zsh auto-switches `.nvmrc` through the lightweight resolver and
+  only loads full NVM when the fast installed-version path cannot resolve.
+- No Corepack wrapper. Install `pnpm` as a normal global package in each NVM
+  Node version that needs it.
+- No `PNPM_HOME`; `pnpm` resolves from the active NVM Node bin directory.
 - `NVM_DIR` is metadata only; loading nvm stays out of base env.
-- Homebrew environment policy is macOS-specific.
+- Homebrew environment policy is macOS-specific. `os/darwin.sh` resolves and
+  exports `HOMEBREW_PREFIX`; zsh lazy tool modules consume that variable
+  instead of hardcoding Homebrew install paths.
+- Homebrew OpenJDK is interactive-lazy through zsh wrappers; base env does not
+  export `JAVA_HOME` or prepend Java bins.
 - `KUBECONFIG` is machine-specific, not macOS-specific.
 - `SSH_AUTH_SOCK` for rbw's SSH agent is macOS-specific in this setup.
 - Maestro is project-local via direnv `.envrc`, not global env.
