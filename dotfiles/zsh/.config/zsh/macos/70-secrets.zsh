@@ -5,16 +5,15 @@ _rbw_available() {
   rbw config show >/dev/null 2>&1
 }
 
-_rbw_available || {
-  print -u2 "rbw: not available or not configured; secret helpers disabled"
-  return 0
+_rbw_can_prompt() {
+  [[ -o interactive && -t 0 && -t 1 && -r /dev/tty ]]
 }
 
 _rbw_unlock_if_needed() {
   _rbw_available || return 1
   rbw unlocked >/dev/null 2>&1 && return 0
 
-  if [[ -t 0 && -t 1 ]]; then
+  if _rbw_can_prompt; then
     print -u2 "rbw: vault locked; unlocking"
     rbw unlock </dev/tty >/dev/tty 2>/dev/tty && rbw unlocked >/dev/null 2>&1
     return
@@ -39,22 +38,33 @@ _rbw_fix_ssh_auth_sock() {
   esac
 }
 
-_rbw_ssh_agent_ready() {
-  _rbw_available || {
-    print -u2 "rbw: not available or not configured; git over SSH cannot use the rbw SSH agent"
-    return 1
-  }
+_rbw_ssh_agent_available() {
+  _rbw_fix_ssh_auth_sock || return 1
+  [[ -n "${SSH_AUTH_SOCK:-}" ]] || return 1
+  [[ -S "$SSH_AUTH_SOCK" ]] || return 1
+  ssh-add -l >/dev/null 2>&1
+}
 
+_rbw_ssh_agent_ready() {
   _rbw_fix_ssh_auth_sock || {
     print -u2 "rbw: could not determine rbw SSH agent socket"
     return 1
   }
 
-  _rbw_unlock_if_needed || {
+  _rbw_ssh_agent_available && return 0
+
+  _rbw_available || {
+    print -u2 "rbw: not available or not configured; git over SSH cannot use the rbw SSH agent"
+    return 1
+  }
+
+  if ! _rbw_can_prompt; then
     print -u2 "rbw: vault locked; git over SSH needs the rbw SSH agent"
     print -u2 "rbw: run 'rbw unlock' in an interactive shell, then retry"
     return 1
-  }
+  fi
+
+  _rbw_unlock_if_needed || return 1
 
   [[ -n "${SSH_AUTH_SOCK:-}" ]] || {
     print -u2 "rbw: SSH_AUTH_SOCK is not set; git over SSH cannot use the rbw SSH agent"

@@ -1,5 +1,7 @@
 autoload -Uz compinit
 
+(( $+functions[_main_complete] )) && return 0
+
 _zcd="$HOME/.cache/zsh/zcompdump"
 _zcd_paths="$HOME/.cache/zsh/zcompdump.fpath"
 mkdir -p "${_zcd:h}"
