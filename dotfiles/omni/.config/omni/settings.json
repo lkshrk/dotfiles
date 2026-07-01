@@ -712,6 +712,10 @@
           "name": "gnupg",
           "path": "~/.gnupg",
           "ignored": true
+        },
+        {
+          "name": "profile",
+          "path": "~/.profile"
         }
       ]
     }
