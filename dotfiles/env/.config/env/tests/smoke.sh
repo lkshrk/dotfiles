@@ -72,16 +72,19 @@ run_probe "bash -lc" bash -lc
 run_probe "sh -c" sh -c
 
 printf "\n## zshenv adapter\n"
-zsh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/consumers/zshenv.zsh"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
+zsh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$HOME/.zshenv"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
 
-printf "\n## profile adapter\n"
-sh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/consumers/profile.sh"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
+printf "\n## profile entrypoint (sh)\n"
+sh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
 
 printf "\n## launchd SSH_AUTH_SOCK override\n"
 sh -c 'SSH_AUTH_SOCK=/var/run/com.apple.launchd.example/Listeners; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; case "$SSH_AUTH_SOCK" in */rbw-*/ssh-agent-socket) printf "launchd-override=rbw\n" ;; *) printf "launchd-override=unexpected:%s\n" "$SSH_AUTH_SOCK"; exit 1 ;; esac'
 
-printf "\n## zprofile adapter\n"
-zsh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/consumers/zprofile.zsh"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
+printf "\n## machine host normalization\n"
+sh -c 'unset KUBECONFIG ENV_NEXT_MACHINE HOSTNAME; HOST=Topaz.local; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"; case "${KUBECONFIG:-}" in "$HOME/.kube/hcloud:$HOME/.kube/legacy") ;; *) exit 1 ;; esac'
+
+printf "\n## zshrc reloads stale env\n"
+zsh -f -c 'unset KUBECONFIG ENV_NEXT_MACHINE HOSTNAME; HOST=Topaz.local; PATH=/usr/bin:/bin; ENV_NEXT_PROFILE_LOADED=1; ENV_NEXT_PROFILE_PATH=$PATH; unset ENV_NEXT_PROFILE_VERSION; source "$HOME/.zshrc"; printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"; case "${KUBECONFIG:-}" in "$HOME/.kube/hcloud:$HOME/.kube/legacy") ;; *) exit 1 ;; esac'
 
 printf "\n## zshenv no lazy wrappers\n"
 nvm_probe_dir=$(mktemp -d)
@@ -159,9 +162,9 @@ case "$1" in
 esac
 EOF
 chmod +x "$tmpdir/rbw"
-PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" \
+env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" \
   claude \
-  -- sh -c 'printf "OPENAI_API_KEY=%s\n" "$OPENAI_API_KEY"'
+  -- sh -c 'printf "HF_TOKEN=%s\n" "$HF_TOKEN"'
 
 printf "\n## rbw-env locked non-interactive\n"
 cat > "$tmpdir/rbw" <<'EOF'
@@ -174,7 +177,7 @@ case "$1" in
 esac
 EOF
 chmod +x "$tmpdir/rbw"
-if PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" claude -- sh -c 'printf "unexpected-run\n"' >/dev/null 2>&1; then
+if env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" claude -- sh -c 'printf "unexpected-run\n"' >/dev/null 2>&1; then
   printf '%s\n' 'locked=unexpected-run'
   exit 1
 else
@@ -184,7 +187,7 @@ fi
 printf "\n## rbw-env missing rbw strict\n"
 empty_path="$tmpdir/empty"
 mkdir -p "$empty_path"
-if PATH="$empty_path" "$ENV_DIR/bin/rbw-env" claude -- sh -c 'printf "unexpected-run\n"' >/dev/null 2>&1; then
+if env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$empty_path" "$ENV_DIR/bin/rbw-env" claude -- sh -c 'printf "unexpected-run\n"' >/dev/null 2>&1; then
   printf '%s\n' 'missing-rbw=unexpected-run'
   exit 1
 else

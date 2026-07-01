@@ -1,6 +1,4 @@
 # --- git --------------------------------------------------------------------
-unalias gup gupf 2>/dev/null
-
 gupf() {
   [[ -n $1 ]] || { echo "Usage: gupf <commit-message>" >&2; return 1; }
   git add -A && git commit --amend -m "$1" && git push --force-with-lease

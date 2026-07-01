@@ -1,4 +1,3 @@
 # ~/.zprofile -- login zsh adapter.
-
-: "${ENV_DIR:=${ENV_NEXT_DIR:-$HOME/.config/env}}"
-[ -r "$ENV_DIR/consumers/zprofile.zsh" ] && . "$ENV_DIR/consumers/zprofile.zsh"
+# Env is loaded by ~/.zshenv (every zsh shell, login included), so nothing to
+# source here. Keep this file for login-only behavior if ever needed.

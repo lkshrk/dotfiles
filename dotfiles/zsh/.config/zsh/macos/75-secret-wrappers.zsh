@@ -38,7 +38,7 @@ codex() {
     _otel_ca=$(_root_ca_cert_file) || return
     NODE_EXTRA_CA_CERTS="$_otel_ca" \
     OTEL_SERVICE_NAME="codex-cli" \
-    OTEL_RESOURCE_ATTRIBUTES="cli_tool=codex-cli,user=lkshrk" \
+    OTEL_RESOURCE_ATTRIBUTES="cli_tool=codex-cli,user=${USER}" \
     _rbw_env codex -- command codex "$@"
   )
 }
@@ -49,18 +49,18 @@ oc() {
     _otel_ca=$(_root_ca_cert_file) || return
     OPENCODE_ENABLE_TELEMETRY=1 \
     OPENCODE_OTLP_PROTOCOL="http/protobuf" \
-    OPENCODE_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
+    OPENCODE_OTLP_ENDPOINT="${OMNI_OTEL_ENDPOINT}" \
     OPENCODE_OTLP_METRICS_INTERVAL=1000 \
     OPENCODE_OTLP_LOGS_INTERVAL=1000 \
-    OPENCODE_RESOURCE_ATTRIBUTES="service.name=opencode,cli_tool=opencode,user=lkshrk" \
+    OPENCODE_RESOURCE_ATTRIBUTES="service.name=opencode,cli_tool=opencode,user=${USER}" \
     OTEL_BSP_SCHEDULE_DELAY=1000 \
     OTEL_BLRP_SCHEDULE_DELAY=1000 \
     OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf" \
-    OTEL_EXPORTER_OTLP_ENDPOINT="https://otel.h-cloud.lan" \
-    OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="https://otel.h-cloud.lan/v1/logs" \
-    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://otel.h-cloud.lan/v1/traces" \
+    OTEL_EXPORTER_OTLP_ENDPOINT="${OMNI_OTEL_ENDPOINT}" \
+    OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="${OMNI_OTEL_ENDPOINT}/v1/logs" \
+    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="${OMNI_OTEL_ENDPOINT}/v1/traces" \
     OTEL_SERVICE_NAME="opencode" \
-    OTEL_RESOURCE_ATTRIBUTES="cli_tool=opencode,user=lkshrk" \
+    OTEL_RESOURCE_ATTRIBUTES="cli_tool=opencode,user=${USER}" \
     NODE_EXTRA_CA_CERTS="$_otel_ca" \
     _rbw_env opencode -- command opencode --port "$@"
   )

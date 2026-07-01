@@ -5,10 +5,15 @@ input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // ""')
 folder=$(basename "$cwd")
 
-# --- git branch (skip optional locks) ---
+# --- git branch + worktree (skip optional locks) ---
 branch=""
+worktree=""
 if [ -n "$cwd" ] && [ -d "$cwd/.git" ] || git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   branch=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null)
+  git_dir=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" rev-parse --git-dir 2>/dev/null)
+  case "$git_dir" in
+    */worktrees/*) worktree=$(basename "$git_dir") ;;
+  esac
 fi
 
 # --- model display name ---
@@ -53,6 +58,9 @@ fi
 
 if [ -n "$branch" ]; then
   parts="${parts}  ${branch}"
+  if [ -n "$worktree" ]; then
+    parts="${parts} ⑂${worktree}"
+  fi
 fi
 
 if [ -n "$model" ]; then

@@ -4,6 +4,9 @@
 # Optional profiler — uncomment top + bottom block to debug startup time
 # zmodload zsh/zprof
 
+: "${ENV_DIR:=${ENV_NEXT_DIR:-$HOME/.config/env}}"
+[[ -r "$ENV_DIR/profile.sh" ]] && source "$ENV_DIR/profile.sh"
+
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
 
 if [[ -d "$HOME/.config/zsh" ]]; then
@@ -22,10 +25,4 @@ fi
 
 # zprof | head -30
 
-# pnpm
-export PNPM_HOME="/Users/lkshrk/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
+[[ -r "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"

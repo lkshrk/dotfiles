@@ -45,9 +45,7 @@ install_omni_linux() {
   # The releases/latest/download redirect is served by github.com and is not
   # subject to the 60/hr unauthenticated api.github.com rate limit (which a
   # shared NAT egress IP exhausts and which left omni uninstalled).
-  curl -fsSL "https://github.com/lkshrk/omni/releases/latest/download/omni_linux_x86_64.tar.gz" | tar xz -C /tmp omni
-  sudo install /tmp/omni /usr/local/bin/omni
-  rm -f /tmp/omni
+  curl -fsSL https://raw.githubusercontent.com/lkshrk/omni/main/scripts/linux-install.sh | bash
 
   if command -v omni >/dev/null 2>&1 && omni_version_is_supported; then
     ok "omni installed: $(omni --version 2>/dev/null || printf 'found')"
@@ -78,6 +76,33 @@ install_bun_linux() {
   fi
 }
 
+# ─── nvm + Node (Linux) ──────────────────────────────────────────────────────
+
+install_nvm_node_linux() {
+  step "nvm + Node 24 (Linux)"
+
+  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+
+  if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
+    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+  fi
+
+  if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+    # shellcheck source=/dev/null
+    . "$NVM_DIR/nvm.sh" --no-use
+  fi
+
+  if ! command -v nvm >/dev/null 2>&1; then
+    die "nvm is required for the Coder Node profile but could not be installed"
+  fi
+
+  nvm install 24 --latest-npm
+  nvm alias default 24
+  nvm use --silent default
+
+  ok "node ready: $(node --version 2>/dev/null || printf 'found')"
+}
+
 # ─── uv (Linux) ───────────────────────────────────────────────────────────────
 #
 # omni's uv provider (thefuck, …) probes for `uv`; install it before sync.
@@ -104,7 +129,14 @@ install_uv_linux() {
 # that follow, before the login shell's zsh PATH config is in effect.
 
 export_sync_path() {
-  export PATH="$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
+  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+  if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+    # shellcheck source=/dev/null
+    . "$NVM_DIR/nvm.sh" --no-use
+    nvm use --silent default >/dev/null 2>&1 || true
+  fi
+
+  export PATH="${NVM_BIN:+$NVM_BIN:}$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
 }
 
 # ─── main ─────────────────────────────────────────────────────────────────────
@@ -112,5 +144,6 @@ export_sync_path() {
 install_apt_packages
 install_omni_linux
 install_bun_linux
+install_nvm_node_linux
 install_uv_linux
 export_sync_path

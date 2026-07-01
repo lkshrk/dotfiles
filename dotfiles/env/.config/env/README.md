@@ -11,12 +11,12 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 - `lib/path.sh`: POSIX-safe path helpers.
 - `os/<name>.sh`: OS-specific env and PATH facts.
 - `machine/<name>.sh`: machine-specific env and PATH facts.
-- `consumers/<name>`: tiny future adapters for shell startup files.
-  `zprofile.zsh` delegates to the POSIX profile adapter.
 - `bin/rbw-env`: shell-neutral secret injection wrapper for agents, zsh
   wrappers, and one-off commands.
 - `secrets/*.envmap`: rbw item to environment variable mappings by consumer.
 - `tests/smoke.sh`: shell-mode checks before migration.
+- `tests/linux-smoke.sh`: clean Linux env checks with fake HOME/NVM and
+  optional rbw socket coverage.
 
 ## Stow/Omni Package Shape
 
@@ -24,8 +24,8 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 - `zsh@darwin`: macOS-only interactive zsh modules, including direnv, Docker
   completions, Homebrew-backed lazy tool loaders, rbw-backed CA lookup, and
   AI CLI secret wrappers.
-- `zshenv`, `zprofile`, and future profile packages should stay tiny and only
-  delegate into `env-next` consumers.
+- `zshenv` sources `profile.sh` directly (covers every zsh shell, login
+  included). `zprofile` carries only login-only behavior, if any.
 
 ## Current Decisions
 
@@ -46,7 +46,9 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 - Homebrew OpenJDK is interactive-lazy through zsh wrappers; base env does not
   export `JAVA_HOME` or prepend Java bins.
 - `KUBECONFIG` is machine-specific, not macOS-specific.
-- `SSH_AUTH_SOCK` for rbw's SSH agent is macOS-specific in this setup.
+- `SSH_AUTH_SOCK` preserves existing agents by default. macOS points launchd
+  shells at the rbw socket path; Linux adopts an existing rbw socket when one is
+  present but does not require or invoke rbw.
 - Maestro is project-local via direnv `.envrc`, not global env.
 - Rust/Cargo is not included until Rust is actually installed.
 - `~/.local/bin` wins over package-manager binaries.
