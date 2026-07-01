@@ -1094,6 +1094,9 @@
           "linux/arm64": {
             "asset_pattern": "eza_aarch64-unknown-linux-gnu.tar.gz"
           }
+        },
+        "commands": {
+          "check": "command -v eza"
         }
       }
     },
@@ -1127,6 +1130,9 @@
             "asset_pattern": "fd-v{version}-aarch64-unknown-linux-gnu.tar.gz",
             "binary_path": "fd-v{version}-aarch64-unknown-linux-gnu/fd"
           }
+        },
+        "commands": {
+          "check": "command -v fd"
         }
       }
     },
@@ -1277,7 +1283,9 @@
             "binary_path": "delta-{version}-aarch64-unknown-linux-gnu/delta"
           }
         },
-        "commands": {}
+        "commands": {
+          "check": "command -v delta"
+        }
       }
     },
     "git-filter-repo": {
@@ -1323,7 +1331,9 @@
             "binary_path": "glow_{version}_Linux_arm64/glow"
           }
         },
-        "commands": {}
+        "commands": {
+          "check": "command -v glow"
+        }
       }
     },
     "gnu-sed": {
@@ -1466,7 +1476,9 @@
             "asset_pattern": "just-{version}-aarch64-unknown-linux-musl.tar.gz"
           }
         },
-        "commands": {}
+        "commands": {
+          "check": "command -v just"
+        }
       }
     },
     "karakeep": {
@@ -1551,7 +1563,9 @@
             "asset_pattern": "lazydocker_{version}_Linux_arm64.tar.gz"
           }
         },
-        "commands": {}
+        "commands": {
+          "check": "command -v lazydocker"
+        }
       }
     },
     "lazygit": {
@@ -1583,7 +1597,9 @@
             "asset_pattern": "lazygit_{version}_linux_arm64.tar.gz"
           }
         },
-        "commands": {}
+        "commands": {
+          "check": "command -v lazygit"
+        }
       }
     },
     "lefthook": {
@@ -1817,7 +1833,9 @@
             "asset_pattern": "omni_linux_arm64.tar.gz"
           }
         },
-        "commands": {}
+        "commands": {
+          "check": "command -v omni"
+        }
       }
     },
     "opencode": {
@@ -1868,7 +1886,9 @@
       "fallback": {
         "source": {
           "type": "github",
-          "url": "https://pi.dev"
+          "url": "https://github.com/badlogic/pi-mono",
+          "owner": "badlogic",
+          "repo": "pi-mono"
         },
         "binary": "pi",
         "recipe": {
@@ -2217,7 +2237,9 @@
             "binary_path": "vhs_{version}_Linux_arm64/vhs"
           }
         },
-        "commands": {}
+        "commands": {
+          "check": "command -v vhs"
+        }
       }
     },
     "vivaldi": {
@@ -2331,6 +2353,9 @@
           "linux/arm64": {
             "asset_pattern": "yamlfmt_{version}_Linux_arm64.tar.gz"
           }
+        },
+        "commands": {
+          "check": "command -v yamlfmt"
         }
       }
     },
@@ -2377,7 +2402,9 @@
             "binary_path": "yq_linux_arm64"
           }
         },
-        "commands": {}
+        "commands": {
+          "check": "command -v yq"
+        }
       }
     },
     "zed": {
