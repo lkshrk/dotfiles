@@ -1,3 +1,9 @@
+.path [
+    "/opt/homebrew/bin"
+    "/opt/homebrew/sbin"
+    "/usr/local/bin"
+  ]
+
 # App shortcuts
 alt + ctrl + cmd - b : ~/.config/yabai/focus-app.sh 'Vivaldi'
 alt + ctrl + cmd - c : ~/.config/yabai/focus-app.sh 'Chatterino'
@@ -5,6 +11,7 @@ alt + ctrl + cmd - d : ~/.config/yabai/focus-app.sh 'Discord'
 alt + ctrl + cmd - e : ~/.config/yabai/focus-editor.sh
 alt + ctrl + cmd + shift - e : ~/.config/yabai/focus-editor.sh --reverse
 alt + ctrl + cmd - g : ~/.config/yabai/focus-gaming.sh
+alt + ctrl + cmd - k : ~/.config/yabai/focus-app.sh 'Linear'
 alt + ctrl + cmd - n : ~/.config/yabai/focus-app.sh 'Obsidian'
 alt + ctrl + cmd - o : ~/.config/yabai/focus-app.sh 'OBS'
 alt + ctrl + cmd - v : ~/.config/yabai/focus-app.sh 'Brave Browser'

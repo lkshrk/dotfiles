@@ -1,10 +1,14 @@
 # POSIX-safe env entrypoint.
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
-if [ "${ENV_NEXT_PROFILE_LOADED:-}" = 1 ] && [ "${ENV_NEXT_PROFILE_PATH:-}" = "${PATH:-}" ]; then
+ENV_NEXT_PROFILE_CURRENT_VERSION=3
+if [ "${ENV_NEXT_PROFILE_LOADED:-}" = 1 ] && [ "${ENV_NEXT_PROFILE_PATH:-}" = "${PATH:-}" ] && [ "${ENV_NEXT_PROFILE_VERSION:-}" = "$ENV_NEXT_PROFILE_CURRENT_VERSION" ]; then
+  unset ENV_NEXT_PROFILE_CURRENT_VERSION
   return 0 2>/dev/null || exit 0
 fi
-ENV_NEXT_PROFILE_LOADED=1
+# Exported so child shells (agent subshell storms) inherit the guard and skip
+# the full re-run; PROFILE_VERSION forces a reload when this file is bumped.
+export ENV_NEXT_PROFILE_LOADED=1
 
 ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 
@@ -18,6 +22,11 @@ fi
 # shellcheck source=lib/nvm-node.sh
 if [ -r "$ENV_DIR/lib/nvm-node.sh" ]; then
   . "$ENV_DIR/lib/nvm-node.sh"
+fi
+
+# shellcheck source=lib/rbw-sock.sh
+if [ -r "$ENV_DIR/lib/rbw-sock.sh" ]; then
+  . "$ENV_DIR/lib/rbw-sock.sh"
 fi
 
 export EDITOR="${EDITOR:-nvim}"
@@ -46,24 +55,12 @@ fi
 
 env_next_machine="${ENV_NEXT_MACHINE:-${HOST:-${HOSTNAME:-}}}"
 [ -n "$env_next_machine" ] || env_next_machine="$(hostname -s 2>/dev/null || hostname 2>/dev/null || printf unknown)"
+env_next_machine="${env_next_machine%%.*}"
+env_next_machine="$(printf '%s' "$env_next_machine" | tr '[:upper:]' '[:lower:]')"
 if [ -r "$ENV_DIR/machine/$env_next_machine.sh" ]; then
   # shellcheck source=/dev/null
   . "$ENV_DIR/machine/$env_next_machine.sh"
 fi
-
-unset PNPM_HOME
-env_next_homebrew_prefix="${HOMEBREW_PREFIX:-}"
-env_next_homebrew_openjdk=
-if [ -n "$env_next_homebrew_prefix" ]; then
-  env_next_homebrew_openjdk="$env_next_homebrew_prefix/opt/openjdk/libexec/openjdk.jdk/Contents/Home"
-fi
-if [ -n "$env_next_homebrew_openjdk" ] && [ "${JAVA_HOME:-}" = "$env_next_homebrew_openjdk" ]; then
-  unset JAVA_HOME
-fi
-env_next_path_remove "$HOME/Library/pnpm"
-env_next_path_remove "$HOME/Library/pnpm/bin"
-env_next_path_remove "$HOME/.local/share/pnpm"
-[ -z "$env_next_homebrew_openjdk" ] || env_next_path_remove "$env_next_homebrew_openjdk/bin"
 
 env_next_nvm_bin=
 if command -v env_next_nvm_resolve_bin >/dev/null 2>&1; then
@@ -77,14 +74,17 @@ env_next_path_prepend "$HOME/.local/bin"
 env_next_path_prepend "$HOME/.mimocode/bin"
 
 unset env_next_os env_next_machine env_next_nvm_bin
-unset env_next_homebrew_prefix env_next_homebrew_openjdk
 unset env_next_nvm_lookup env_next_nvm_root env_next_nvm_i env_next_nvm_line
 unset env_next_nvm_pattern env_next_nvm_best env_next_nvm_best_major env_next_nvm_best_minor
 unset env_next_nvm_best_patch env_next_nvm_candidate env_next_nvm_name env_next_nvm_version
 unset env_next_nvm_major env_next_nvm_rest env_next_nvm_minor env_next_nvm_patch
 unset env_next_nvm_target env_next_nvm_dir
-unset -f env_next_nvm_alias_target env_next_nvm_best_dir_for_pattern 2>/dev/null || true
+unset env_next_rbw_uid_val env_next_rbw_tmp env_next_rbw_sock env_next_rbw_candidate
+unset -f env_next_nvm_alias_target env_next_nvm_best_dir_from_candidates 2>/dev/null || true
 unset -f env_next_nvm_resolve_dir env_next_nvm_resolve_bin 2>/dev/null || true
+unset -f env_next_rbw_uid env_next_rbw_sock_darwin env_next_rbw_sock_linux 2>/dev/null || true
 unset -f env_next_path_remove env_next_path_prepend env_next_path_append 2>/dev/null || true
 
-ENV_NEXT_PROFILE_PATH=$PATH
+export ENV_NEXT_PROFILE_PATH=$PATH
+export ENV_NEXT_PROFILE_VERSION=$ENV_NEXT_PROFILE_CURRENT_VERSION
+unset ENV_NEXT_PROFILE_CURRENT_VERSION

@@ -23,9 +23,10 @@ _rbw_unlock_if_needed() {
 }
 
 _rbw_ssh_auth_sock() {
-  local temp_dir
-  temp_dir=$(getconf DARWIN_USER_TEMP_DIR 2>/dev/null || print -r -- "${TMPDIR:-/tmp}") || return 1
-  print -r -- "${temp_dir%/}/rbw-$(id -u)/ssh-agent-socket"
+  local lib="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/lib/rbw-sock.sh"
+  [[ -r "$lib" ]] || return 1
+  source "$lib"
+  env_next_rbw_sock_darwin
 }
 
 _rbw_fix_ssh_auth_sock() {
@@ -104,7 +105,6 @@ _lazy_secret() {
   fi
 }
 
-openai_key()   { _lazy_secret OPENAI_API_KEY    openai-api-key; }
 hf_key()       { _lazy_secret HF_TOKEN          hf-token; }
 context7_key() { _lazy_secret CONTEXT7_API_KEY  context7-api-key; }
 pocket_id_key()   { _lazy_secret POCKET_ID_API_KEY    pocket-id-api-key; }

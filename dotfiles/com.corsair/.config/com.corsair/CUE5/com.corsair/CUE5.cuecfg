@@ -7,7 +7,7 @@
 		<value name="IntegrationsClientsAccessExplicitDecisionPerformed">Stream Deck</value>
 	</map>
 	<map name="DataCollectionSettings">
-		<value name="configuration_loaded_date">2026-06-15T08:58:22.193</value>
+		<value name="configuration_loaded_date">2026-06-29T21:55:46.098</value>
 		<value name="dataConsent">false</value>
 		<map name="hwProfilesHashes">
 			<map name="{32486e58-a900-497e-bc14-280517bd1d15}">
@@ -86,12 +86,12 @@
 		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-sensors-UserProps">true</value>
 	</map>
 	<map name="SwUpdate">
-		<value name="LastCheckDate">2026-06-16</value>
+		<value name="LastCheckDate">2026-06-30</value>
 	</map>
 	<map name="Update">
-		<value name="PrevUpdateTime">2026-06-15T06:58:20.890Z</value>
-		<value name="UpdateCount">22</value>
-		<value name="UpdateEndTime">2026-06-15T06:58:20.935Z</value>
+		<value name="PrevUpdateTime">2026-06-29T19:55:45.126Z</value>
+		<value name="UpdateCount">34</value>
+		<value name="UpdateEndTime">2026-06-29T19:55:45.184Z</value>
 	</map>
 	<value name="defaultProfile">{6cd71b5b-3931-40b3-b349-10604b36d69e}</value>
 </config>

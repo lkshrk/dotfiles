@@ -3,17 +3,26 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
     "ECC_GATEGUARD": "off",
+    "ECC_DISABLED_HOOKS": "stop:desktop-notify",
     "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
     "SSH_AUTH_SOCK": "/var/folders/xn/60cxwtb13mq7_n0r4zwgy2j00000gn/T/rbw-501/ssh-agent-socket",
     "GIT_SSH_COMMAND": "ssh -o PermitLocalCommand=no"
   },
   "includeCoAuthoredBy": false,
-  "mcpServers": {
-    "codebase-memory-mcp": {
-      "command": "/Users/lkshrk/.local/bin/codebase-memory-mcp"
-    }
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "mcp__plugin_context-mode_context-mode",
+      "mcp__plugin_context-mode_context-mode__*",
+      "mcp__linear-server",
+      "mcp__linear-server__*",
+      "Edit(frontend/eslint.config.js)",
+      "Write(frontend/eslint.config.js)"
+    ]
   },
-  "model": "claude-opus-4-8",
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -67,6 +76,16 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10
           }
         ]
       }
@@ -155,6 +174,108 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
+            "timeout": 10,
+            "async": true
+          }
+        ]
       }
     ]
   },
@@ -171,8 +292,7 @@
     "github@claude-plugins-official": true,
     "ecc@ecc": true,
     "swift-lsp@claude-plugins-official": true,
-    "academic-research-skills@academic-research-skills": true,
-    "linear-ai@lkshrk": true
+    "academic-research-skills@academic-research-skills": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -198,22 +318,18 @@
         "source": "github",
         "repo": "Imbad0202/academic-research-skills"
       }
-    },
-    "lkshrk": {
-      "source": {
-        "source": "github",
-        "repo": "lkshrk/agent-marketplace"
-      }
     }
-  },
-  "permissions": {
-    "allow": [
-      "Bash(git push:*)",
-      "Bash(git fetch:*)"
-    ]
   },
   "effortLevel": "medium",
   "autoUpdatesChannel": "stable",
+  "tui": "fullscreen",
   "theme": "dark-daltonized",
-  "skipAutoPermissionPrompt": true
+  "verbose": true,
+  "preferredNotifChannel": "notifications_disabled",
+  "skipAutoPermissionPrompt": true,
+  "mcpServers": {
+    "codebase-memory-mcp": {
+      "command": "/Users/lkshrk/.local/bin/codebase-memory-mcp"
+    }
+  }
 }

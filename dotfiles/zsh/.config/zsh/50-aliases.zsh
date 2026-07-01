@@ -5,38 +5,20 @@ alias ll='ls -lh'
 
 alias or='omni reconcile -y'
 
-
+#github
+alias gh="GITHUB_TOKEN= command gh"
 # git
-function ga() {
-  if [[ $# -eq 0 ]]; then
-    git add .
-  else
-    git add "$@"
-  fi
+ga() { git add "${@:-.}"; }
+
+# Table-driven completion: complete an alias as if typing its base command.
+typeset -gA _subcmd_base=(ga 'git add' fxr 'flux reconcile')
+_subcmd_complete() {
+  local base=(${=_subcmd_base[$words[1]]}) w=("${words[@]}") c=$CURRENT
+  words=($base "${w[2,-1]}"); (( CURRENT = c + ${#base} - 1 ))
+  (( $+functions[_${base[1]}] )) && _${base[1]} || _default
+  local st=$?; words=("${w[@]}"); CURRENT=$c; return $st
 }
-function _ga {
-  local -a _ga_words
-  local _ga_current _ga_status
-
-  _ga_words=("${words[@]}")
-  _ga_current=$CURRENT
-
-  words=(git add "${_ga_words[2,-1]}")
-  (( CURRENT = _ga_current + 1 ))
-
-  if (( $+functions[_git] )); then
-    _git
-    _ga_status=$?
-  else
-    _default
-    _ga_status=$?
-  fi
-
-  words=("${_ga_words[@]}")
-  CURRENT=$_ga_current
-  return $_ga_status
-}
-(( $+functions[compdef] )) && compdef _ga ga
+(( $+functions[compdef] )) && compdef _subcmd_complete ga fxr
 alias gcm='git commit -m'
 alias gco='git checkout'
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
@@ -94,40 +76,15 @@ alias kgh='kubectl get helmreleases.helm.toolkit.fluxcd.io '
 # talos
 alias tc='talosctl '
 alias tcg='talosctl get '
-unalias tcd 2>/dev/null
 function tcd {
   talosctl -n "k8s-$1" dashboard
 }
 
 # flux
 alias fx='flux '
-unalias fxr 2>/dev/null
 function fxr {
   flux reconcile "$@" --with-source
 }
-function _fxr {
-  local -a _fxr_words
-  local _fxr_current _fxr_status
-
-  _fxr_words=("${words[@]}")
-  _fxr_current=$CURRENT
-
-  words=(flux reconcile "${_fxr_words[2,-1]}")
-  (( CURRENT = _fxr_current + 1 ))
-
-  if (( $+functions[_flux] )); then
-    _flux
-    _fxr_status=$?
-  else
-    _default
-    _fxr_status=$?
-  fi
-
-  words=("${_fxr_words[@]}")
-  CURRENT=$_fxr_current
-  return $_fxr_status
-}
-(( $+functions[compdef] )) && compdef _fxr fxr
 
 # woodpecker
 alias wp='woodpecker-cli '
@@ -137,7 +94,6 @@ alias cr='coder '
 alias crs='coder ssh '
 alias cru='coder update '
 alias crr='coder restart '
-unalias crur 2>/dev/null
 function crur {
   coder update "$@"
   coder restart "$@" --yes
