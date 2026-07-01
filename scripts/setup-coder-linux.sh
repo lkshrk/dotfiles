@@ -8,6 +8,10 @@ set -euo pipefail
 
 [[ "$(uname -s)" == "Linux" ]] || { echo "setup-coder-linux.sh must run on Linux" >&2; return 1; }
 
+# omni's installer and uv land binaries in ~/.local/bin; the Coder agent's
+# non-login shell does not have it on PATH.
+export PATH="$HOME/.local/bin:$PATH"
+
 # ─── Coder base packages via apt ──────────────────────────────────────────────
 
 install_apt_packages() {
