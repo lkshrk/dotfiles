@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v9.schema.json",
-  "version": 9,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v11.schema.json",
+  "version": 11,
   "agents": {
     "skills": [
       {
@@ -753,6 +753,15 @@
     }
   },
   "hosts": {
+    "coder": [
+      "ai",
+      "ai-plugins",
+      "coder-workspace",
+      "core",
+      "dev",
+      "dev-tooling",
+      "test-tooling"
+    ],
     "topaz": [
       "ai",
       "ai-plugins",
@@ -770,15 +779,6 @@
       "test-tooling",
       "ts",
       "utils"
-    ],
-    "coder": [
-      "ai",
-      "ai-plugins",
-      "coder-workspace",
-      "core",
-      "dev",
-      "dev-tooling",
-      "test-tooling"
     ]
   },
   "ignore": {
