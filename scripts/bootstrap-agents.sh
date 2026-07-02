@@ -35,8 +35,9 @@ for source, names in sorted(by_source.items()):
     print(source + '|' + ' '.join(sorted(names)))
 " | while IFS='|' read -r source names; do
         echo "→ $source: $names"
+        # stdin from /dev/null: the skills CLI eats the loop's read input otherwise
         # shellcheck disable=SC2086
-        bunx skills@latest add "$source" --skill $names -g -y || echo "! failed: $source"
+        bunx skills@latest add "$source" --skill $names -g -y </dev/null || echo "! failed: $source"
       done
     fi
   else
