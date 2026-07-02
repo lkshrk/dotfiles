@@ -6,10 +6,10 @@
       "custom_name": null,
       "identity_cwd": "/Users/lkshrk/Dev/routivo",
       "public_pane_numbers": {
-        "16": 7,
+        "4": 6,
         "1": 1,
-        "14": 5,
-        "15": 6
+        "2": 7,
+        "3": 5
       },
       "next_public_pane_number": 8,
       "public_tab_numbers": [
@@ -31,7 +31,7 @@
                     "Pane": 1
                   },
                   "second": {
-                    "Pane": 16
+                    "Pane": 2
                   }
                 }
               },
@@ -40,20 +40,20 @@
                   "direction": "Vertical",
                   "ratio": 0.5,
                   "first": {
-                    "Pane": 14
+                    "Pane": 3
                   },
                   "second": {
-                    "Pane": 15
+                    "Pane": 4
                   }
                 }
               }
             }
           },
           "panes": {
-            "15": {
+            "2": {
               "cwd": "/Users/lkshrk/Dev/routivo"
             },
-            "14": {
+            "3": {
               "cwd": "/Users/lkshrk/Dev/linear-ai",
               "agent_session": {
                 "source": "herdr:codex",
@@ -62,15 +62,21 @@
                 "value": "019eef8c-723e-7121-b0fc-440c8ab18747"
               }
             },
-            "16": {
-              "cwd": "/Users/lkshrk/Dev/routivo"
-            },
             "1": {
               "cwd": "/Users/lkshrk/Dev/routivo"
+            },
+            "4": {
+              "cwd": "/Users/lkshrk/Dev/routivo",
+              "agent_session": {
+                "source": "herdr:codex",
+                "agent": "codex",
+                "kind": "id",
+                "value": "019f1f09-10e0-7bb3-8ff5-c74b7442c4d9"
+              }
             }
           },
           "zoomed": false,
-          "focused": 16,
+          "focused": 2,
           "root_pane": 1
         }
       ],
@@ -81,10 +87,10 @@
       "custom_name": null,
       "identity_cwd": "/Users/lkshrk/Dev/better-audio-mixer",
       "public_pane_numbers": {
-        "7": 1,
-        "11": 5,
-        "12": 6,
-        "13": 7
+        "8": 6,
+        "5": 1,
+        "6": 7,
+        "7": 5
       },
       "next_public_pane_number": 8,
       "public_tab_numbers": [
@@ -103,10 +109,10 @@
                   "direction": "Horizontal",
                   "ratio": 0.5,
                   "first": {
-                    "Pane": 7
+                    "Pane": 5
                   },
                   "second": {
-                    "Pane": 13
+                    "Pane": 6
                   }
                 }
               },
@@ -115,32 +121,32 @@
                   "direction": "Horizontal",
                   "ratio": 0.5,
                   "first": {
-                    "Pane": 11
+                    "Pane": 7
                   },
                   "second": {
-                    "Pane": 12
+                    "Pane": 8
                   }
                 }
               }
             }
           },
           "panes": {
-            "11": {
-              "cwd": "/Users/lkshrk/Dev/civora"
-            },
-            "13": {
-              "cwd": "/Users/lkshrk/Dev/civora"
-            },
-            "12": {
+            "6": {
               "cwd": "/Users/lkshrk/Dev/civora"
             },
             "7": {
+              "cwd": "/Users/lkshrk/Dev/civora"
+            },
+            "8": {
+              "cwd": "/Users/lkshrk/Dev/civora"
+            },
+            "5": {
               "cwd": "/Users/lkshrk/Dev/better-audio-mixer"
             }
           },
           "zoomed": false,
-          "focused": 11,
-          "root_pane": 7
+          "focused": 7,
+          "root_pane": 5
         }
       ],
       "active_tab": 0
@@ -148,7 +154,6 @@
   ],
   "active": 0,
   "selected": 0,
-  "agent_panel_scope": "AllWorkspaces",
   "sidebar_width": 26,
   "sidebar_section_split": 0.5058824,
   "collapsed_space_keys": []

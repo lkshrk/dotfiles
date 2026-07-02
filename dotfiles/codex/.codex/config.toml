@@ -293,9 +293,39 @@ enabled = false
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:stop:0:0"]
 trusted_hash = "sha256:9205c1763e40c0256ab334e2e96c037c1cdf5b8bfaddba31ed19d93d3388586a"
 
+[hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:2:0"]
+trusted_hash = "sha256:e21fff15066163507ddff25814ad5000473d5271752198c5842f84f0386a878a"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:1:0"]
+trusted_hash = "sha256:7902e7a2969ab57b3f003acccc26df9d1f3af19380402b92f67d93f06802cbed"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:3:0"]
+trusted_hash = "sha256:f6d1f59dd6ac01b8a8c7ec34eee482337505583e0b820bc8eae147ed49b6c633"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:74e9cb0fab5c73ed10389b44aeedfd6e7f9c7009c950c58f34fdcd9a4674168f"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:pre_tool_use:1:0"]
+trusted_hash = "sha256:750e4607af5ed1e1764f0413bbd454a6bbf566720d25bb8b9c14cc27ba45eac0"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:f073acf0c27223664e64fa1743d65ed567ec84e05230194902f0cd3ea892a2d2"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:1:0"]
+trusted_hash = "sha256:01dd44c4263c3835652627dfe8cf57a1344997ba48fbbcb9c49d708887a2bbf4"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:2:0"]
+trusted_hash = "sha256:ed6f430ea6e8f890da5e339f3b4d7b14b28b85716e7d831de84253db24a362c7"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59aa45aa6"
+
+[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
+
 [marketplaces.context-mode]
-last_updated = "2026-07-01T14:04:36Z"
-last_revision = "3fbc6ea6569db1b1c6524d3543dc95f50bb5363a"
+last_updated = "2026-07-02T07:29:52Z"
+last_revision = "40f2332464c4e5b5cf2b01f1f0ee2003dbdd42bb"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
