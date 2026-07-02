@@ -95,10 +95,13 @@ if [[ -n "${CODER_OMNI_STACKS:-}" ]]; then
 fi
 
 step "omni dotfiles"
-# Coder's codex module writes a real ~/.codex/config.toml at agent start, and the
-# oh-my-zsh installer writes a real ~/.zshrc; both collide with the symlinks omni
-# wants to stow. Drop them so dots sync links cleanly.
+# Coder's codex module writes a real ~/.codex/config.toml at agent start, the
+# oh-my-zsh installer writes a real ~/.zshrc, and opencode replaces its config
+# symlinks with real files at runtime; all collide with the symlinks omni wants
+# to stow (--use-repo does not resolve a replaced-symlink conflict). Drop them
+# so dots sync links cleanly.
 rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc"
+rm -rf "$HOME/.config/opencode"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 
 # Make zsh the login shell now that the binary is installed (core group).
