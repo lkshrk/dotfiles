@@ -19,7 +19,26 @@ if [[ -f "$SKILL_LOCK" ]]; then
     echo "Non-interactive: auto-restoring skills"
   fi
   if [[ "$answer" =~ ^[Yy]$ ]]; then
-    bunx skills@latest experimental_install
+    if omni agents restore skills --help >/dev/null 2>&1; then
+      omni --yes agents restore skills
+    else
+      # experimental_install only restores project-scope skills-lock.json;
+      # global skills need explicit re-adds until omni agents restore ships.
+      python3 -c "
+import json
+from collections import defaultdict
+skills = json.load(open('$SKILL_LOCK'))['skills']
+by_source = defaultdict(list)
+for name, meta in skills.items():
+    by_source[meta['source']].append(name)
+for source, names in sorted(by_source.items()):
+    print(source + '|' + ' '.join(sorted(names)))
+" | while IFS='|' read -r source names; do
+        echo "→ $source: $names"
+        # shellcheck disable=SC2086
+        bunx skills@latest add "$source" --skill $names -g -y || echo "! failed: $source"
+      done
+    fi
   else
     echo "Skipped"
   fi
