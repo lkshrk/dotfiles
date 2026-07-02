@@ -1024,7 +1024,7 @@
           "repo": "cli",
           "url": "https://github.com/docker/cli"
         },
-        "status": "failed",
+        "status": "unverified",
         "binary": "docker",
         "recipe": {
           "type": "raw_commands"
