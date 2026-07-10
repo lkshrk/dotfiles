@@ -222,7 +222,7 @@
       "name": "ai",
       "tools": [
         "claude-code",
-        "codex"
+        "@openai/codex"
       ],
       "dots": [
         {
@@ -757,6 +757,15 @@
     "fallback_bin_dir": "~/.local/bin"
   },
   "tools": {
+    "@openai/codex": {
+      "providers": [
+        {
+          "provider": "bun",
+          "package": "@openai/codex"
+        }
+      ],
+      "git": "https://github.com/openai/codex"
+    },
     "argo": {
       "providers": [
         {
@@ -886,19 +895,6 @@
           "package": "cmake"
         }
       ]
-    },
-    "codex": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "codex"
-        },
-        {
-          "provider": "bun",
-          "package": "@openai/codex"
-        }
-      ],
-      "git": "https://github.com/openai/codex"
     },
     "codex-app": {
       "providers": [

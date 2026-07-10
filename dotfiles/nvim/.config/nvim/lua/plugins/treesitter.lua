@@ -15,13 +15,20 @@ return {
       'c',
       'diff',
       'html',
+      'javascript',
+      'json',
       'lua',
       'luadoc',
       'markdown',
       'markdown_inline',
+      'python',
       'query',
+      'toml',
+      'tsx',
+      'typescript',
       'vim',
       'vimdoc',
+      'yaml',
     }
 
     -- install() is async and a no-op when parsers are already present.

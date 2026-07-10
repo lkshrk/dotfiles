@@ -1,4 +1,10 @@
 return {
+  {
+    'j-hui/fidget.nvim',
+    event = 'LspAttach',
+    opts = {},
+  },
+
   -- lazydev: Lua LSP tuned for Neovim config/runtime/plugins
   {
     'folke/lazydev.nvim',
@@ -16,7 +22,6 @@ return {
       { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      { 'j-hui/fidget.nvim', opts = {} },
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
@@ -53,7 +58,8 @@ return {
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
-            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+            local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
+            vim.api.nvim_clear_autocmds { group = highlight_augroup, buffer = event.buf }
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -68,7 +74,7 @@ return {
               group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+                vim.api.nvim_clear_autocmds { group = 'lsp-highlight', buffer = event2.buf }
               end,
             })
           end
@@ -151,20 +157,18 @@ return {
             },
           },
         },
+        pyright = {},
+        ts_ls = {},
+        bashls = {},
       }
 
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua',
-        'yamlls',
-        'jsonls',
-        'taplo',
-      })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup {
+        ensure_installed = { 'stylua', 'markdownlint' },
+      }
 
       require('mason-lspconfig').setup {
-        ensure_installed = {},
-        automatic_installation = false,
+        ensure_installed = vim.tbl_keys(servers),
+        automatic_installation = true,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
