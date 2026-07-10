@@ -482,6 +482,31 @@
         {
           "name": "profile",
           "path": "~/.profile"
+        },
+        {
+          "name": "abtop",
+          "path": "~/.config/abtop",
+          "ignored": true
+        },
+        {
+          "name": "cargo",
+          "path": "~/.cargo",
+          "ignored": true
+        },
+        {
+          "name": "fish",
+          "path": "~/.config/fish",
+          "ignored": true
+        },
+        {
+          "name": "mac-disk-reclaim",
+          "path": "~/.config/mac-disk-reclaim",
+          "ignored": true
+        },
+        {
+          "name": "mimocode",
+          "path": "~/.config/mimocode",
+          "ignored": true
         }
       ]
     }

@@ -9,10 +9,6 @@
     "SSH_AUTH_SOCK": "/var/folders/xn/60cxwtb13mq7_n0r4zwgy2j00000gn/T/rbw-501/ssh-agent-socket",
     "GIT_SSH_COMMAND": "ssh -o PermitLocalCommand=no"
   },
-  "fallbackModel": [
-    "claude-sonnet-5",
-    "claude-haiku-4-5"
-  ],
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
@@ -28,6 +24,10 @@
     ]
   },
   "model": "claude-fable-5[1m]",
+  "fallbackModel": [
+    "claude-sonnet-5",
+    "claude-haiku-4-5"
+  ],
   "hooks": {
     "SessionStart": [
       {
@@ -297,7 +297,8 @@
     "github@claude-plugins-official": true,
     "ecc@ecc": true,
     "swift-lsp@claude-plugins-official": true,
-    "academic-research-skills@academic-research-skills": true
+    "academic-research-skills@academic-research-skills": true,
+    "lua-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -328,6 +329,7 @@
   "effortLevel": "medium",
   "autoUpdatesChannel": "stable",
   "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
   "verbose": true,
   "preferredNotifChannel": "notifications_disabled",
@@ -336,6 +338,5 @@
     "codebase-memory-mcp": {
       "command": "/Users/lkshrk/.local/bin/codebase-memory-mcp"
     }
-  },
-  "skipWorkflowUsageWarning": true
+  }
 }
