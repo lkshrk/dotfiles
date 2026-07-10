@@ -26,6 +26,19 @@ vim.keymap.set('n', '<C-x>', function()
   vim.cmd 'bd #'
 end, { desc = 'Close buffer' })
 
+-- Keep visual selection after indenting.
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('v', '>', '>gv')
+
+-- Paste clipboard with a space prepended (charwise); linewise falls back to p.
+vim.keymap.set('n', '<M-p>', function()
+  local reg = vim.fn.getreg '+'
+  if vim.fn.getregtype '+' ~= 'v' then
+    return vim.api.nvim_feedkeys('"+p', 'n', false)
+  end
+  vim.api.nvim_put({ ' ' .. reg }, 'c', true, true)
+end, { desc = 'Paste with space before' })
+
 -- [[ Clipboard / register shortcuts ]]
 vim.keymap.set({ 'n', 'v' }, 'y', '"+y')
 vim.keymap.set('n', 'yy', '"+yy')
