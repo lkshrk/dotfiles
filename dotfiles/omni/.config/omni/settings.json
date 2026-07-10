@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v13.schema.json",
-  "version": 13,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v14.schema.json",
+  "version": 14,
   "agents": {
     "packages": [
       {
@@ -52,58 +52,8 @@
       ],
       "dots": [
         {
-          "name": "claude",
-          "path": "~/.claude",
-          "ignore": [
-            "*",
-            "!/settings.json",
-            "!/CLAUDE.md",
-            "!/mcp.json",
-            "!/plugins",
-            "!/agents/",
-            "!/.omc-config.json",
-            "!/keybindings.json",
-            "!/statusline-command.sh"
-          ]
-        },
-        {
-          "name": "codex",
-          "path": "~/.codex",
-          "ignore": [
-            "*",
-            "!/config.toml",
-            "!/mcp.json",
-            "!/AGENTS.md",
-            "!/RTK.md",
-            "/skills/.system/",
-            "!/agents",
-            "!/CONTEXT_MODE.md"
-          ]
-        },
-        {
           "name": "free-claude-code",
           "path": "~/.config/free-claude-code"
-        },
-        {
-          "name": "opencode",
-          "path": "~/.config/opencode",
-          "ignore": [
-            "oh-my-openagent.json.backup-2026-04-13T15-21-36-926Z",
-            "oh-my-openagent.json.backup-2026-04-15T16-55-25-356Z",
-            "oh-my-openagent.json.backup-2026-05-01T14-49-32-879Z",
-            "oh-my-openagent.json.bak.2026-04-18T12-06-45-874Z",
-            "oh-my-opencode.json.clean",
-            "oh-my-opencode.json.opt",
-            "opencode.json.backup-2026-04-12T10-07-04-579Z",
-            "opencode.json.backup-2026-04-13T15-14-05-965Z",
-            "opencode.json.backup-2026-04-15T16-55-25-352Z",
-            "opencode.json.backup-2026-05-01T14-49-32-875Z",
-            ".gitignore"
-          ]
-        },
-        {
-          "name": "skill-lock.json",
-          "path": "~/.agents/.skill-lock.json"
         }
       ]
     },
