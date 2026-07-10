@@ -84,7 +84,6 @@
         "lkshrk/linear-ai"
       ],
       "mcp_servers": [
-        "context-mode",
         "node_repl"
       ]
     },
