@@ -208,7 +208,9 @@
         "presentations",
         "documents",
         "build-ios-apps",
-        "academic-research-skills"
+        "academic-research-skills",
+        "browser",
+        "pdf"
       ],
       "marketplaces": [
         "openai-primary-runtime",
@@ -693,6 +695,18 @@
             "!/.omc-config.json",
             "!/keybindings.json",
             "!/statusline-command.sh"
+          ]
+        },
+        {
+          "name": "codex",
+          "path": "~/.codex",
+          "ignore": [
+            "*",
+            "!/config.toml",
+            "!/mcp.json",
+            "!/AGENTS.md",
+            "!/RTK.md",
+            "!/rules/"
           ]
         }
       ]

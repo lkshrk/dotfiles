@@ -13,21 +13,11 @@
     "superpowers@claude-plugins-official": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0",
-        "version": "5.1.0",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1",
+        "version": "6.1.1",
         "installedAt": "2026-05-29T18:13:14.916Z",
-        "lastUpdated": "2026-05-29T18:13:14.916Z",
+        "lastUpdated": "2026-07-03T20:09:08.829Z",
         "gitCommitSha": "f2cbfbefebbfef77321e4c9abc9e949826bea9d7"
-      }
-    ],
-    "caveman@caveman": [
-      {
-        "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/caveman/caveman/655b7d9c5431",
-        "version": "655b7d9c5431",
-        "installedAt": "2026-05-29T18:14:21.337Z",
-        "lastUpdated": "2026-05-29T18:14:21.337Z",
-        "gitCommitSha": "655b7d9c5431f822264b7732e9901c5578ac84cf"
       }
     ],
     "code-simplifier@claude-plugins-official": [
@@ -42,11 +32,11 @@
     "context-mode@context-mode": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/context-mode/context-mode/1.0.151",
-        "version": "1.0.151",
+        "installPath": "/Users/lkshrk/.codex/plugins/cache/context-mode/context-mode/1.0.169",
+        "version": "1.0.169",
         "installedAt": "2026-05-29T18:15:29.811Z",
-        "lastUpdated": "2026-06-05T09:01:37.256Z",
-        "gitCommitSha": "f66230d94f03e5ae43d14c1d267f9b037e06e895"
+        "lastUpdated": "2026-07-10T17:40:38.794Z",
+        "gitCommitSha": "0120fb352a52c70e692632e07b4bbaa687dcca37"
       }
     ],
     "github@claude-plugins-official": [
@@ -55,17 +45,17 @@
         "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/github/unknown",
         "version": "unknown",
         "installedAt": "2026-05-29T18:15:46.391Z",
-        "lastUpdated": "2026-05-29T18:15:46.391Z"
+        "lastUpdated": "2026-07-10T22:14:08.284Z"
       }
     ],
     "ecc@ecc": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/ecc/ecc/2.0.0-rc.1",
-        "version": "2.0.0-rc.1",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/ecc/ecc/2.0.0",
+        "version": "2.0.0",
         "installedAt": "2026-05-29T18:16:58.105Z",
-        "lastUpdated": "2026-05-29T18:16:58.105Z",
-        "gitCommitSha": "64cd1ba248e77e377e76f70fc4e6434bfdddd511"
+        "lastUpdated": "2026-06-19T20:06:14.330Z",
+        "gitCommitSha": "34faa39bd3cd496a0aece0245f2b7e38b7923abc"
       }
     ],
     "swift-lsp@claude-plugins-official": [
@@ -76,9 +66,45 @@
         "installedAt": "2026-05-30T00:27:02.250Z",
         "lastUpdated": "2026-05-30T00:27:02.250Z"
       }
+    ],
+    "academic-research-skills@academic-research-skills": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/academic-research-skills/academic-research-skills/3.13.0",
+        "version": "3.13.0",
+        "installedAt": "2026-06-09T15:05:18.422Z",
+        "lastUpdated": "2026-06-19T20:06:32.597Z",
+        "gitCommitSha": "b446752cd1af819dd8941de5b030c97e20edc456"
+      }
+    ],
+    "frontend-design@claude-plugins-official": [
+      {
+        "scope": "local",
+        "projectPath": "/Users/lkshrk/Dev/routivo/.claude/worktrees/rou-42-branding/frontend",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/frontend-design/unknown",
+        "version": "unknown",
+        "installedAt": "2026-06-21T06:56:14.250Z",
+        "lastUpdated": "2026-06-21T06:56:14.250Z"
+      }
+    ],
+    "lua-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/lua-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-07-10T02:31:13.859Z",
+        "lastUpdated": "2026-07-10T02:31:13.859Z"
+      }
+    ],
+    "caveman@caveman": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/caveman/caveman/0d95a81d35a9",
+        "version": "0d95a81d35a9",
+        "installedAt": "2026-07-10T22:12:13.205Z",
+        "lastUpdated": "2026-07-10T22:12:13.205Z",
+        "gitCommitSha": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0"
+      }
     ]
-  },
-  "enabledPlugins": {
-    "context-mode@context-mode": true
   }
 }
