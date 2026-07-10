@@ -79,6 +79,14 @@
         "agents": [
           "codex"
         ]
+      },
+      {
+        "name": "context-mode",
+        "transport": "stdio",
+        "command": "node ./start.mjs",
+        "agents": [
+          "codex"
+        ]
       }
     ],
     "marketplaces": [
@@ -167,11 +175,21 @@
         "agents": [
           "claude-code"
         ]
+      },
+      {
+        "name": "lua-lsp",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
       }
     ],
     "ignore": {
       "skills": [
         "academic-research-skills"
+      ],
+      "mcp_servers": [
+        "xcodebuildmcp"
       ]
     }
   },
@@ -209,7 +227,8 @@
       "mcp_servers": [
         "node_repl",
         "linear",
-        "context7"
+        "context7",
+        "context-mode"
       ],
       "plugins": [
         "superpowers",
@@ -218,7 +237,8 @@
         "context-mode",
         "caveman",
         "gopls-lsp",
-        "code-simplifier"
+        "code-simplifier",
+        "lua-lsp"
       ],
       "marketplaces": [
         "lkshrk",
