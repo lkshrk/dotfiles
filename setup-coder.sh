@@ -106,6 +106,15 @@ rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc" \
 rm -rf "$HOME/.config/opencode"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 
+# Prewarm nvim plugins headlessly so the first interactive launch is instant.
+# Needs both the binary (tools sync) and the stowed config (dots sync above).
+if command -v nvim >/dev/null 2>&1 || [ -x "$HOME/.local/bin/nvim" ]; then
+  step "nvim plugins"
+  PATH="$HOME/.local/bin:$PATH" nvim --headless "+Lazy! restore" +qa >/dev/null 2>&1 \
+    || PATH="$HOME/.local/bin:$PATH" nvim --headless "+Lazy! sync" +qa >/dev/null 2>&1 \
+    || warn "nvim plugin sync failed; plugins will install on first launch"
+fi
+
 # Make zsh the login shell now that the binary is installed (core group).
 if command -v zsh >/dev/null 2>&1; then
   _zsh_path="$(command -v zsh)"
