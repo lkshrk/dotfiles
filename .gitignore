@@ -42,6 +42,7 @@ Temporary Items
 # zsh runtime
 dotfiles/zsh/.config/zsh/.zcompdump*
 dotfiles/zsh/.config/zsh/.zsh_history
+dotfiles/zsh/.config/zsh/**/*.zwc
 
 # nvim vendored/runtime files
 dotfiles/nvim/.config/nvim/lazy-lock.json
