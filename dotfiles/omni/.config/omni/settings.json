@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v12.schema.json",
-  "version": 12,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v13.schema.json",
+  "version": 13,
   "agents": {
     "packages": [
       {
@@ -1736,27 +1736,18 @@
         {
           "provider": "brew",
           "package": "rtk"
+        },
+        {
+          "provider": "script",
+          "options": {
+            "check": "test -x $HOME/.local/bin/rtk",
+            "install": "curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
+            "uninstall": "rm -f $HOME/.local/bin/rtk",
+            "upgrade": "curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh"
+          }
         }
       ],
-      "git": "https://github.com/rtk-ai/rtk",
-      "fallback": {
-        "source": {
-          "type": "github",
-          "owner": "rtk-ai",
-          "repo": "rtk",
-          "url": "https://github.com/rtk-ai/rtk"
-        },
-        "binary": "rtk",
-        "recipe": {
-          "type": "raw_commands"
-        },
-        "commands": {
-          "install": "curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
-          "check": "command -v rtk",
-          "upgrade": "curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
-          "version": "rtk --version"
-        }
-      }
+      "git": "https://github.com/rtk-ai/rtk"
     },
     "signal": {
       "providers": [

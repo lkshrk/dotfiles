@@ -1,7 +1,6 @@
 model_auto_compact_token_limit = 217600
-model = "gpt-5.5"
-model_reasoning_effort = "high"
-plan_mode_reasoning_effort = "xhigh"
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
 approvals_reviewer = "user"
 approval_policy = "never"
 sandbox_mode = "workspace-write"
@@ -20,6 +19,9 @@ extends = ":workspace"
 enabled = true
 dangerously_allow_all_unix_sockets = true
 
+[agents]
+max_threads = 6
+max_depth = 2
 
 [otel]
 environment = "dev"
@@ -96,12 +98,13 @@ trust_level = "trusted"
 [tui]
 session_picker_view = "dense"
 
-[tui.model_availability_nux]
-"gpt-5.5" = 4
-
 [tui.keymap.editor]
 insert_newline = ["shift-enter"]
 kill_line_start = ["ctrl-u"]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+"gpt-5.6-sol" = 2
 
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
@@ -324,8 +327,8 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-10T05:56:06Z"
-last_revision = "96446b9c3636f2d92cbe748a77889043d663abdb"
+last_updated = "2026-07-10T07:27:57Z"
+last_revision = "b13cfa83e7b7d8255f0585f5f83aee757f9a414c"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
