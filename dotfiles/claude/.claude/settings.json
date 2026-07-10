@@ -170,64 +170,56 @@
           }
         ]
       }
-    ],
-    "statusLine": {
-      "type": "command",
-      "command": "sh \"/Users/lkshrk/.claude/statusline-command.sh\""
-    },
-    "enabledPlugins": {
-      "gopls-lsp@claude-plugins-official": true,
-      "superpowers@claude-plugins-official": true,
-      "caveman@caveman": true,
-      "code-simplifier@claude-plugins-official": true,
-      "context-mode@context-mode": true,
-      "github@claude-plugins-official": true,
-      "ecc@ecc": true,
-      "swift-lsp@claude-plugins-official": true,
-      "academic-research-skills@academic-research-skills": true,
-      "lua-lsp@claude-plugins-official": true
-    },
-    "extraKnownMarketplaces": {
-      "caveman": {
-        "source": {
-          "source": "github",
-          "repo": "JuliusBrussee/caveman"
-        }
-      },
-      "context-mode": {
-        "source": {
-          "source": "github",
-          "repo": "mksglu/context-mode"
-        }
-      },
-      "ecc": {
-        "source": {
-          "source": "github",
-          "repo": "affaan-m/everything-claude-code"
-        }
-      },
-      "academic-research-skills": {
-        "source": {
-          "source": "github",
-          "repo": "Imbad0202/academic-research-skills"
-        }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "sh \"/Users/lkshrk/.claude/statusline-command.sh\""
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "caveman@caveman": true,
+    "code-simplifier@claude-plugins-official": true,
+    "context-mode@context-mode": true,
+    "github@claude-plugins-official": true,
+    "ecc@ecc": true,
+    "swift-lsp@claude-plugins-official": true,
+    "academic-research-skills@academic-research-skills": true,
+    "lua-lsp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
       }
     },
-    "effortLevel": "medium",
-    "autoUpdatesChannel": "stable",
-    "tui": "fullscreen",
-    "skipWorkflowUsageWarning": true,
-    "theme": "dark-daltonized",
-    "verbose": true,
-    "preferredNotifChannel": "notifications_disabled",
-    "skipAutoPermissionPrompt": true,
-    "mcpServers": {
-      "codebase-memory-mcp": {
-        "command": "/Users/lkshrk/.local/bin/codebase-memory-mcp"
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/context-mode"
+      }
+    },
+    "ecc": {
+      "source": {
+        "source": "github",
+        "repo": "affaan-m/everything-claude-code"
+      }
+    },
+    "academic-research-skills": {
+      "source": {
+        "source": "github",
+        "repo": "Imbad0202/academic-research-skills"
       }
     }
   },
-  "enabledPlugins": {
-    "context-mode@context-mode": true
-  }
+  "effortLevel": "medium",
+  "autoUpdatesChannel": "stable",
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark-daltonized",
+  "verbose": true,
+  "preferredNotifChannel": "notifications_disabled",
+  "skipAutoPermissionPrompt": true
 }
