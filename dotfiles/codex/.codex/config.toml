@@ -184,18 +184,21 @@ enabled = true
 enabled = true
 
 [plugins."documents@openai-primary-runtime"]
-enabled = true
+enabled = false
 
 [plugins."pdf@openai-primary-runtime"]
 enabled = true
 
 [plugins."spreadsheets@openai-primary-runtime"]
-enabled = true
+enabled = false
 
 [plugins."presentations@openai-primary-runtime"]
-enabled = true
+enabled = false
 
 [plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."ponytail@ponytail"]
 enabled = true
 
 # END OMC MANAGED MCP REGISTRY
@@ -296,6 +299,15 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 [hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:stop:0:0"]
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:6a6f42bc3b58d6262db38bfd74d7f340fcca2b09cdb134aad365063f0bfefca4"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:subagent_start:0:0"]
+trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7a6e70ef"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:session_start:0:0"]
+trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
+
 [marketplaces.context-mode]
 last_updated = "2026-07-10T20:14:51Z"
 last_revision = "a6a990f0727c86ec126b6347123e3887dfa1d256"
@@ -317,6 +329,12 @@ last_updated = "2026-07-10T05:56:07Z"
 last_revision = "eb55ff46087b75b3fcebaad182b9f02c1284fe17"
 source_type = "git"
 source = "https://github.com/lkshrk/agent-marketplace.git"
+
+[marketplaces.ponytail]
+last_updated = "2026-07-10T22:15:25Z"
+last_revision = "14a0d79548d4de8fc2de95c1b94bb0de63a739d3"
+source_type = "git"
+source = "https://github.com/DietrichGebert/ponytail.git"
 
 [desktop]
 followUpQueueMode = "queue"

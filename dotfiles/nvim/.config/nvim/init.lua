@@ -1,4 +1,6 @@
 -- [[ Entry point ]]
+vim.loader.enable()
+
 -- Order matters: options sets the leader before lazy bootstraps plugins.
 require 'config.options'
 require 'config.keymaps'

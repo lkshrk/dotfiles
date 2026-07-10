@@ -1,5 +1,6 @@
 return {
   'echasnovski/mini.nvim',
+  event = 'VeryLazy',
   config = function()
     -- Better Around/Inside textobjects: va), yinq, ci', etc.
     require('mini.ai').setup { n_lines = 500 }

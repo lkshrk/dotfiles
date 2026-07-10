@@ -127,60 +127,6 @@
       "installedAt": "2026-04-27T03:38:51.355Z",
       "updatedAt": "2026-06-15T19:47:05.843Z"
     },
-    "cavecrew": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
-      "skillPath": "skills/cavecrew/SKILL.md",
-      "skillFolderHash": "326ab384eb445cc0a74608d6f0c0abe6558bb44a",
-      "installedAt": "2026-05-01T12:54:35.924Z",
-      "updatedAt": "2026-07-10T04:16:43.159Z"
-    },
-    "caveman-commit": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
-      "skillPath": "skills/caveman-commit/SKILL.md",
-      "skillFolderHash": "6ba13fa3503e9607eed8f94828b524510d83b7ef",
-      "installedAt": "2026-05-01T12:54:35.928Z",
-      "updatedAt": "2026-06-15T19:47:03.782Z"
-    },
-    "caveman-compress": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
-      "skillPath": "skills/caveman-compress/SKILL.md",
-      "skillFolderHash": "1284ac809fbdaeb9e871f84ee850aebe10c85030",
-      "installedAt": "2026-05-01T12:54:35.929Z",
-      "updatedAt": "2026-07-10T04:16:45.068Z"
-    },
-    "caveman-help": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
-      "skillPath": "skills/caveman-help/SKILL.md",
-      "skillFolderHash": "b4f5ebc5f3ce9bfa652996b5161bbe3cc0b88297",
-      "installedAt": "2026-05-01T12:54:35.930Z",
-      "updatedAt": "2026-06-15T19:47:03.783Z"
-    },
-    "caveman-review": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
-      "skillPath": "skills/caveman-review/SKILL.md",
-      "skillFolderHash": "2d9762b7aec395b9713fde57fb8965bc3bbd2c3f",
-      "installedAt": "2026-05-01T12:54:35.931Z",
-      "updatedAt": "2026-06-15T19:47:03.783Z"
-    },
-    "caveman-stats": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
-      "skillPath": "skills/caveman-stats/SKILL.md",
-      "skillFolderHash": "62b175240e2851f0b9be4f279737cbd74ed2e769",
-      "installedAt": "2026-05-01T12:54:35.931Z",
-      "updatedAt": "2026-06-15T19:47:03.784Z"
-    },
     "compress": {
       "source": "JuliusBrussee/caveman",
       "sourceType": "github",
@@ -189,15 +135,6 @@
       "skillFolderHash": "d9f3edbb403bb351a6c6968fc7fcd7c861450c0d",
       "installedAt": "2026-05-01T12:54:35.932Z",
       "updatedAt": "2026-05-01T12:54:35.932Z"
-    },
-    "create-tests": {
-      "source": "ShiplightAI/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
-      "skillPath": "skills/create-tests/SKILL.md",
-      "skillFolderHash": "32766777c02f033d2a033609fcf4db2fabf46d91",
-      "installedAt": "2026-05-10T06:24:54.939Z",
-      "updatedAt": "2026-07-10T04:16:22.369Z"
     },
     "grill-me": {
       "source": "mattpocock/skills",
@@ -234,15 +171,6 @@
       "skillFolderHash": "e5beae48471adf87c513b5cbcb0ca347467546da",
       "installedAt": "2026-05-16T14:04:53.302Z",
       "updatedAt": "2026-07-10T04:16:29.337Z"
-    },
-    "setup-matt-pocock-skills": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
-      "skillFolderHash": "ed1bbe6a06bb049aaa95bfe2c487bdb7a8300838",
-      "installedAt": "2026-05-16T14:04:53.302Z",
-      "updatedAt": "2026-07-10T14:45:14.859Z"
     },
     "obsidian-vault": {
       "source": "mattpocock/skills",
@@ -400,15 +328,6 @@
       "installedAt": "2026-06-15T19:47:09.194Z",
       "updatedAt": "2026-07-10T14:45:15.936Z"
     },
-    "tdd": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/engineering/tdd/SKILL.md",
-      "skillFolderHash": "57e1bee887816ed2af745e5fd388f224f6e61ada",
-      "installedAt": "2026-06-15T19:47:09.196Z",
-      "updatedAt": "2026-07-10T04:16:33.529Z"
-    },
     "writing-beats": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -444,24 +363,6 @@
       "skillFolderHash": "f02ae7c2de75270e93a200e11a7e466ece897353",
       "installedAt": "2026-06-15T19:47:09.201Z",
       "updatedAt": "2026-06-15T19:47:09.201Z"
-    },
-    "migrate-to-shoehorn": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/misc/migrate-to-shoehorn/SKILL.md",
-      "skillFolderHash": "ad722b79beb1c1fb998678d498ba11760d53714b",
-      "installedAt": "2026-06-15T19:47:09.201Z",
-      "updatedAt": "2026-06-15T19:47:09.201Z"
-    },
-    "scaffold-exercises": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/misc/scaffold-exercises/SKILL.md",
-      "skillFolderHash": "ef19ca90ec6645b23dc7e68601552ab795e3e6ee",
-      "installedAt": "2026-06-15T19:47:09.202Z",
-      "updatedAt": "2026-06-15T19:47:09.202Z"
     },
     "setup-pre-commit": {
       "source": "mattpocock/skills",
@@ -554,33 +455,6 @@
       "skillFolderHash": "d9cffe56d26d4af7687299e391a7be1cfaf46c1b",
       "installedAt": "2026-07-01T00:58:22.587Z",
       "updatedAt": "2026-07-01T00:58:22.587Z"
-    },
-    "ai-context": {
-      "source": "sopaco/deepwiki-rs",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/sopaco/deepwiki-rs.git",
-      "skillPath": ".ai-context/SKILL.md",
-      "skillFolderHash": "45306c8fa32ff4cbef29e148ea2a7fb4bdcada6c",
-      "installedAt": "2026-07-01T11:38:53.572Z",
-      "updatedAt": "2026-07-01T11:38:53.572Z"
-    },
-    "ai-context-generator": {
-      "source": "sopaco/deepwiki-rs",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/sopaco/deepwiki-rs.git",
-      "skillPath": ".agents/skills/ai-context-generator/SKILL.md",
-      "skillFolderHash": "4be6019474a704ff2b4492a08c58ad2431fc0a4f",
-      "installedAt": "2026-07-01T11:38:53.575Z",
-      "updatedAt": "2026-07-01T11:38:53.575Z"
-    },
-    "litho-document-skill": {
-      "source": "sopaco/deepwiki-rs",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/sopaco/deepwiki-rs.git",
-      "skillPath": ".agents/skills/litho-documents-skill/SKILL.md",
-      "skillFolderHash": "033863d832444db9a9245e75c11b0c1bd9634d97",
-      "installedAt": "2026-07-01T11:38:53.577Z",
-      "updatedAt": "2026-07-01T11:38:53.577Z"
     },
     "smart-docs": {
       "source": "sopaco/deepwiki-rs",
