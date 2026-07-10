@@ -98,8 +98,3 @@ function crur {
   coder update "$@"
   coder restart "$@" --yes
 }
-
-
-# ssh - use ~/.config/ssh/config (overrides default ~/.ssh/config location)
-alias scp='scp -F ~/.config/ssh/config'
-alias sftp='sftp -F ~/.config/ssh/config'
