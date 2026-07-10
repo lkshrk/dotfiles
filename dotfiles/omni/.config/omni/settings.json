@@ -196,7 +196,8 @@
     ],
     "ignore": {
       "skills": [
-        "academic-research-skills"
+        "academic-research-skills",
+        "rjyo/moshi-skill"
       ],
       "mcp_servers": [
         "xcodebuildmcp"
