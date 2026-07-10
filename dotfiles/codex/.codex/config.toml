@@ -324,8 +324,8 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-05T20:12:32Z"
-last_revision = "4f60c870eee0358e8a21d5b374a4821b70d79975"
+last_updated = "2026-07-10T05:56:06Z"
+last_revision = "96446b9c3636f2d92cbe748a77889043d663abdb"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -340,8 +340,8 @@ source_type = "local"
 source = "/Users/lkshrk/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [marketplaces.lkshrk]
-last_updated = "2026-06-30T09:47:29Z"
-last_revision = "9079187114c41f23bd1957289501a5e62656244b"
+last_updated = "2026-07-10T05:56:07Z"
+last_revision = "eb55ff46087b75b3fcebaad182b9f02c1284fe17"
 source_type = "git"
 source = "https://github.com/lkshrk/agent-marketplace.git"
 

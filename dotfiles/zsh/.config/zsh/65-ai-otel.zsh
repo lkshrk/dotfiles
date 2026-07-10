@@ -9,7 +9,17 @@
 : ${OMNI_OTEL_REQUIRE_CA:=0}  # 1 = refuse to launch if the CA is unavailable
 
 # CA resolver. Agent: static lan CA installed at pod provision. Override on mac.
-(( $+functions[_omni_otel_ca] )) || _omni_otel_ca() { [[ -r $OMNI_OTEL_CA_PATH ]] && print -r -- "$OMNI_OTEL_CA_PATH" }
+(( $+functions[_omni_otel_ca] )) || _omni_otel_ca() {
+  local ca
+  for ca in \
+    "$OMNI_OTEL_CA_PATH" \
+    "$HOME/.local/share/certs/lan-ca.pem" \
+    /usr/local/share/ca-certificates/lan-ca.crt \
+    /etc/ssl/certs/lan-ca.pem
+  do
+    [[ -r $ca ]] && { print -r -- "$ca"; return 0; }
+  done
+}
 
 # Run a command with OTEL env for <service>. CA is optional by default: if
 # absent the command still runs (export relies on the system trust store).
@@ -26,6 +36,7 @@ _omni_otel_run() {
   # recognized as an assignment prefix by zsh and would be run as a command.
   # Callers always invoke this in a subshell, so the export does not leak.
   [[ -n $ca ]] && export NODE_EXTRA_CA_CERTS="$ca"
+  [[ -n $ca ]] && export OTEL_EXPORTER_OTLP_CERTIFICATE="$ca"
   CLAUDE_CODE_ENABLE_TELEMETRY=1 \
   CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1 \
   OTEL_METRICS_EXPORTER=otlp \

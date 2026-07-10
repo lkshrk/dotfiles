@@ -34,9 +34,7 @@
       "name": "ai",
       "tools": [
         "claude-code",
-        "codex",
-        "opencode",
-        "pi-coding-agent"
+        "codex"
       ],
       "dots": [
         {
@@ -115,7 +113,6 @@
         "coreutils",
         "eza",
         "fd",
-        "fzf",
         "jq",
         "just",
         "neovim",
@@ -194,8 +191,7 @@
         "obsidian",
         "font-hack-nerd-font",
         "font-intel-one-mono",
-        "font-jetbrains-mono-nerd-font",
-        "karakeep"
+        "font-jetbrains-mono-nerd-font"
       ],
       "dots": [
         {
@@ -226,7 +222,6 @@
     {
       "name": "dev-tooling",
       "tools": [
-        "devcontainer",
         "docker",
         "gh",
         "git-filter-repo",
@@ -407,9 +402,7 @@
         "parsec",
         "certifi",
         "numpy",
-        "npm",
-        "cursor-cli",
-        "quarkdown"
+        "npm"
       ],
       "dots": [
         {
@@ -616,7 +609,8 @@
           "provider": "brew",
           "package": "battle-net"
         }
-      ]
+      ],
+      "ignore": true
     },
     "bcrypt": {
       "providers": [
@@ -771,26 +765,6 @@
         }
       ]
     },
-    "cursor-cli": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "cursor-cli"
-        }
-      ]
-    },
-    "devcontainer": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "devcontainer"
-        },
-        {
-          "provider": "bun",
-          "package": "@devcontainers/cli"
-        }
-      ]
-    },
     "discord": {
       "providers": [
         {
@@ -820,9 +794,9 @@
           "type": "raw_commands"
         },
         "commands": {
-          "install": "sudo install -m 0755 -d /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --batch --yes --dearmor -o /etc/apt/keyrings/docker.gpg && sudo chmod a+r /etc/apt/keyrings/docker.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \\\"$VERSION_CODENAME\\\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null && sudo apt-get update && sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
+          "install": "sudo install -m 0755 -d /etc/apt/keyrings \u0026\u0026 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --batch --yes --dearmor -o /etc/apt/keyrings/docker.gpg \u0026\u0026 sudo chmod a+r /etc/apt/keyrings/docker.gpg \u0026\u0026 echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release \u0026\u0026 echo \\\"$VERSION_CODENAME\\\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list \u003e/dev/null \u0026\u0026 sudo apt-get update \u0026\u0026 sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
           "check": "command -v docker",
-          "upgrade": "sudo apt-get update && sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
+          "upgrade": "sudo apt-get update \u0026\u0026 sudo apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin",
           "version": "docker --version"
         }
       }
@@ -849,7 +823,8 @@
           "provider": "brew",
           "package": "elgato-wave-link"
         }
-      ]
+      ],
+      "ignore": true
     },
     "eza": {
       "providers": [
@@ -884,10 +859,10 @@
           "asset_download_url": "https://github.com/eza-community/eza/releases/download/v0.23.4/eza_x86_64-unknown-linux-musl.tar.gz"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'eza_x86_64-unknown-linux-musl.tar.gz' && curl -fsSL 'https://github.com/eza-community/eza/releases/download/v0.23.4/eza_x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'eza_x86_64-unknown-linux-musl.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/eza-community/eza/releases/download/v0.23.4/eza_x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'eza_x86_64-unknown-linux-musl.tar.gz' && curl -fsSL 'https://github.com/eza-community/eza/releases/download/v0.23.4/eza_x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'eza_x86_64-unknown-linux-musl.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/eza-community/eza/releases/download/v0.23.4/eza_x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
@@ -922,10 +897,10 @@
           "installed_version": "10.4.2"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz' && curl -fsSL 'https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz' && curl -fsSL 'https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
@@ -999,18 +974,6 @@
         }
       ]
     },
-    "fzf": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "fzf"
-        },
-        {
-          "provider": "apt"
-        }
-      ],
-      "git": "https://github.com/junegunn/fzf"
-    },
     "gh": {
       "providers": [
         {
@@ -1032,9 +995,9 @@
           "type": "raw_commands"
         },
         "commands": {
-          "install": "sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null && sudo apt-get update && sudo apt-get install -y gh",
+          "install": "sudo mkdir -p -m 755 /etc/apt/keyrings \u0026\u0026 wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg \u003e/dev/null \u0026\u0026 sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \u0026\u0026 echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list \u003e/dev/null \u0026\u0026 sudo apt-get update \u0026\u0026 sudo apt-get install -y gh",
           "check": "command -v gh",
-          "upgrade": "sudo apt-get update && sudo apt-get install -y gh",
+          "upgrade": "sudo apt-get update \u0026\u0026 sudo apt-get install -y gh",
           "version": "gh --version"
         }
       }
@@ -1130,10 +1093,10 @@
           "installed_version": "2.1.2"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'glow_2.1.2_Linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/charmbracelet/glow/releases/download/v2.1.2/glow_2.1.2_Linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'glow_2.1.2_Linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/charmbracelet/glow/releases/download/v2.1.2/glow_2.1.2_Linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'glow_2.1.2_Linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/charmbracelet/glow/releases/download/v2.1.2/glow_2.1.2_Linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'glow_2.1.2_Linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/charmbracelet/glow/releases/download/v2.1.2/glow_2.1.2_Linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
@@ -1279,21 +1242,13 @@
           "installed_version": "1.55.1"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'just-1.55.1-x86_64-unknown-linux-musl.tar.gz' && curl -fsSL 'https://github.com/casey/just/releases/download/1.55.1/just-1.55.1-x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'just-1.55.1-x86_64-unknown-linux-musl.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/casey/just/releases/download/1.55.1/just-1.55.1-x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'just-1.55.1-x86_64-unknown-linux-musl.tar.gz' && curl -fsSL 'https://github.com/casey/just/releases/download/1.55.1/just-1.55.1-x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'just-1.55.1-x86_64-unknown-linux-musl.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/casey/just/releases/download/1.55.1/just-1.55.1-x86_64-unknown-linux-musl.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
-    },
-    "karakeep": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "karakeep"
-        }
-      ]
     },
     "krew": {
       "providers": [
@@ -1370,10 +1325,10 @@
           "installed_version": "0.25.2"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'lazydocker_0.25.2_Linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/jesseduffield/lazydocker/releases/download/v0.25.2/lazydocker_0.25.2_Linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'lazydocker_0.25.2_Linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/jesseduffield/lazydocker/releases/download/v0.25.2/lazydocker_0.25.2_Linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'lazydocker_0.25.2_Linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/jesseduffield/lazydocker/releases/download/v0.25.2/lazydocker_0.25.2_Linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'lazydocker_0.25.2_Linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/jesseduffield/lazydocker/releases/download/v0.25.2/lazydocker_0.25.2_Linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
@@ -1408,10 +1363,10 @@
           "installed_version": "0.62.2"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'lazygit_0.62.2_linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/jesseduffield/lazygit/releases/download/v0.62.2/lazygit_0.62.2_linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'lazygit_0.62.2_linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/jesseduffield/lazygit/releases/download/v0.62.2/lazygit_0.62.2_linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'lazygit_0.62.2_linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/jesseduffield/lazygit/releases/download/v0.62.2/lazygit_0.62.2_linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'lazygit_0.62.2_linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/jesseduffield/lazygit/releases/download/v0.62.2/lazygit_0.62.2_linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
@@ -1618,7 +1573,7 @@
             "check": "test -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
             "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"",
             "uninstall": "rm -rf $HOME/.oh-my-zsh",
-            "upgrade": "(cd $HOME/.oh-my-zsh && git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done"
+            "upgrade": "(cd $HOME/.oh-my-zsh \u0026\u0026 git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done"
           }
         }
       ]
@@ -1652,25 +1607,13 @@
           "asset_download_url": "https://github.com/lkshrk/omni/releases/download/v0.8.7/omni_linux_x86_64.tar.gz"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/omni.tar.gz && curl -fsSL 'https://github.com/lkshrk/omni/releases/download/v0.8.7/omni_linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && tar -xzf \"$asset\" -C \"$tmp\" && found=\"$(find \"$tmp\" -type f -perm -111 -name omni | head -n 1)\" && test -n \"$found\" && install -m 755 \"$found\" \"$tmp/omni.new\" && mv -f \"$tmp/omni.new\" {{bin_dir}}/omni",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/omni.tar.gz \u0026\u0026 curl -fsSL 'https://github.com/lkshrk/omni/releases/download/v0.8.7/omni_linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 tar -xzf \"$asset\" -C \"$tmp\" \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name omni | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 install -m 755 \"$found\" \"$tmp/omni.new\" \u0026\u0026 mv -f \"$tmp/omni.new\" {{bin_dir}}/omni",
           "check": "command -v omni",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/omni.tar.gz && curl -fsSL 'https://github.com/lkshrk/omni/releases/download/v0.8.7/omni_linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && tar -xzf \"$asset\" -C \"$tmp\" && found=\"$(find \"$tmp\" -type f -perm -111 -name omni | head -n 1)\" && test -n \"$found\" && install -m 755 \"$found\" \"$tmp/omni.new\" && mv -f \"$tmp/omni.new\" {{bin_dir}}/omni",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/omni.tar.gz \u0026\u0026 curl -fsSL 'https://github.com/lkshrk/omni/releases/download/v0.8.7/omni_linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 tar -xzf \"$asset\" -C \"$tmp\" \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name omni | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 install -m 755 \"$found\" \"$tmp/omni.new\" \u0026\u0026 mv -f \"$tmp/omni.new\" {{bin_dir}}/omni",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
-    },
-    "opencode": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "opencode"
-        },
-        {
-          "provider": "bun",
-          "package": "opencode-ai"
-        }
-      ]
     },
     "opentofu": {
       "providers": [
@@ -1697,32 +1640,6 @@
         }
       ],
       "ignore": true
-    },
-    "pi-coding-agent": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "pi-coding-agent"
-        }
-      ],
-      "fallback": {
-        "source": {
-          "type": "github",
-          "owner": "badlogic",
-          "repo": "pi-mono",
-          "url": "https://github.com/badlogic/pi-mono"
-        },
-        "binary": "pi",
-        "recipe": {
-          "type": "raw_commands"
-        },
-        "commands": {
-          "install": "curl -fsSL https://pi.dev/install.sh | sh",
-          "check": "command -v pi",
-          "upgrade": "curl -fsSL https://pi.dev/install.sh | sh",
-          "version": "pi --version"
-        }
-      }
     },
     "pip": {
       "providers": [
@@ -1792,15 +1709,6 @@
           "package": "python@3.14"
         }
       ]
-    },
-    "quarkdown": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "quarkdown"
-        }
-      ],
-      "git": "https://github.com/iamgio/quarkdown"
     },
     "rbw": {
       "providers": [
@@ -2058,10 +1966,10 @@
           "installed_version": "0.11.0"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'vhs_0.11.0_Linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/charmbracelet/vhs/releases/download/v0.11.0/vhs_0.11.0_Linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'vhs_0.11.0_Linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/charmbracelet/vhs/releases/download/v0.11.0/vhs_0.11.0_Linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'vhs_0.11.0_Linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/charmbracelet/vhs/releases/download/v0.11.0/vhs_0.11.0_Linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'vhs_0.11.0_Linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/charmbracelet/vhs/releases/download/v0.11.0/vhs_0.11.0_Linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
@@ -2179,10 +2087,10 @@
           "installed_version": "0.21.0"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'yamlfmt_0.21.0_Linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/google/yamlfmt/releases/download/v0.21.0/yamlfmt_0.21.0_Linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'yamlfmt_0.21.0_Linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/google/yamlfmt/releases/download/v0.21.0/yamlfmt_0.21.0_Linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'yamlfmt_0.21.0_Linux_x86_64.tar.gz' && curl -fsSL 'https://github.com/google/yamlfmt/releases/download/v0.21.0/yamlfmt_0.21.0_Linux_x86_64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'yamlfmt_0.21.0_Linux_x86_64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/google/yamlfmt/releases/download/v0.21.0/yamlfmt_0.21.0_Linux_x86_64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name {{binary}} | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
@@ -2228,10 +2136,10 @@
           "asset_download_url": "https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64.tar.gz"
         },
         "commands": {
-          "install": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'yq_linux_amd64.tar.gz' && curl -fsSL 'https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name 'yq_linux_amd64' | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "install": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'yq_linux_amd64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name 'yq_linux_amd64' | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "check": "test -x {{bin_dir}}/{{binary}}",
           "uninstall": "rm -f {{bin_dir}}/{{binary}}",
-          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} && asset={{cache_dir}}/'yq_linux_amd64.tar.gz' && curl -fsSL 'https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64.tar.gz' -o \"$asset\" && tmp=\"$(mktemp -d)\" && case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac && found=\"$(find \"$tmp\" -type f -perm -111 -name 'yq_linux_amd64' | head -n 1)\" && test -n \"$found\" && cp \"$found\" {{bin_dir}}/{{binary}} && chmod +x {{bin_dir}}/{{binary}}",
+          "upgrade": "mkdir -p {{cache_dir}} {{bin_dir}} \u0026\u0026 asset={{cache_dir}}/'yq_linux_amd64.tar.gz' \u0026\u0026 curl -fsSL 'https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64.tar.gz' -o \"$asset\" \u0026\u0026 tmp=\"$(mktemp -d)\" \u0026\u0026 case \"$asset\" in *.zip) unzip -q \"$asset\" -d \"$tmp\" ;; *.tar.gz|*.tgz) tar -xzf \"$asset\" -C \"$tmp\" ;; *) cp \"$asset\" \"$tmp/\"{{binary}} ;; esac \u0026\u0026 found=\"$(find \"$tmp\" -type f -perm -111 -name 'yq_linux_amd64' | head -n 1)\" \u0026\u0026 test -n \"$found\" \u0026\u0026 cp \"$found\" {{bin_dir}}/{{binary}} \u0026\u0026 chmod +x {{bin_dir}}/{{binary}}",
           "version": "{{bin_dir}}/{{binary}} --version"
         }
       }
