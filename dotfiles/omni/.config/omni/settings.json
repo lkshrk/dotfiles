@@ -239,6 +239,12 @@
         "openwolf",
         "rtk"
       ],
+      "dots": [
+        {
+          "name": "agents-skill-lock",
+          "path": "~/.agents/.skill-lock.json"
+        }
+      ],
       "skills": [
         "ShiplightAI/agent-skills",
         "alirezarezvani/claude-skills",
@@ -669,10 +675,6 @@
           "name": "mimocode",
           "path": "~/.config/mimocode",
           "ignored": true
-        },
-        {
-          "name": "agents-skill-lock",
-          "path": "~/.agents/.skill-lock.json"
         }
       ]
     }
