@@ -26,8 +26,22 @@
       },
       {
         "source": "rjyo/moshi-skill"
+      },
+      {
+        "source": "lkshrk/useful-skills"
       }
-    ]
+    ],
+    "mcp_servers": [
+      {
+        "name": "context-mode",
+        "transport": "stdio",
+        "command": "node ./start.mjs",
+        "agents": [
+          "codex"
+        ]
+      }
+    ],
+    "ignore": {}
   },
   "groups": [
     {
@@ -106,7 +120,12 @@
       "skills": [
         "ShiplightAI/agent-skills",
         "alirezarezvani/claude-skills",
-        "vercel-labs/skills"
+        "vercel-labs/skills",
+        "lkshrk/useful-skills",
+        "lkshrk/linear-ai"
+      ],
+      "mcp_servers": [
+        "context-mode"
       ]
     },
     {
