@@ -676,6 +676,56 @@
       "skillFolderHash": "ba780910e98dcb29790e4a0ff0aa495ba8c702d6",
       "installedAt": "2026-07-01T11:38:53.578Z",
       "updatedAt": "2026-07-01T11:38:53.578Z"
+    },
+    "loc-change-table": {
+      "source": "lkshrk/useful-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/lkshrk/useful-skills.git",
+      "skillPath": "skills/loc-change-table/SKILL.md",
+      "skillFolderHash": "bb8870430e8f92705f896d60c60976c32a5fb802",
+      "pluginName": "useful-skills",
+      "installedAt": "2026-07-10T01:38:50.793Z",
+      "updatedAt": "2026-07-10T01:38:50.793Z"
+    },
+    "mac-disk-reclaim": {
+      "source": "lkshrk/useful-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/lkshrk/useful-skills.git",
+      "skillPath": "skills/mac-disk-reclaim/SKILL.md",
+      "skillFolderHash": "1d1f2d3cb4f5c69c9c32c63a04f385d49d17e516",
+      "pluginName": "useful-skills",
+      "installedAt": "2026-07-10T01:38:50.796Z",
+      "updatedAt": "2026-07-10T01:38:50.796Z"
+    },
+    "project-tool-allowlist": {
+      "source": "lkshrk/useful-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/lkshrk/useful-skills.git",
+      "skillPath": "skills/project-tool-allowlist/SKILL.md",
+      "skillFolderHash": "9c988b24cd62ff709c569119c30fa9158e17f888",
+      "pluginName": "useful-skills",
+      "installedAt": "2026-07-10T01:38:50.796Z",
+      "updatedAt": "2026-07-10T01:38:50.796Z"
+    },
+    "upgrade-deps": {
+      "source": "lkshrk/useful-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/lkshrk/useful-skills.git",
+      "skillPath": "skills/upgrade-deps/SKILL.md",
+      "skillFolderHash": "2ca8a7d1c7d999cc8aec3e510db1c3641b358b17",
+      "pluginName": "useful-skills",
+      "installedAt": "2026-07-10T01:38:50.797Z",
+      "updatedAt": "2026-07-10T01:38:50.797Z"
+    },
+    "yabai-skhd-doctor": {
+      "source": "lkshrk/useful-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/lkshrk/useful-skills.git",
+      "skillPath": "skills/yabai-skhd-doctor/SKILL.md",
+      "skillFolderHash": "aad75bdf9eafa4dd74c46ae9e65446997ca436b1",
+      "pluginName": "useful-skills",
+      "installedAt": "2026-07-10T01:38:50.797Z",
+      "updatedAt": "2026-07-10T01:38:50.797Z"
     }
   },
   "dismissed": {

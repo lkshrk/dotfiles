@@ -110,14 +110,6 @@
       ]
     },
     {
-      "name": "coder-workspace",
-      "description": "Coder workspace base: container tooling shared by every workspace",
-      "tools": [
-        "docker-buildx-linux",
-        "docker-compose-v2"
-      ]
-    },
-    {
       "name": "core",
       "tools": [
         "coreutils",
@@ -530,7 +522,6 @@
     "coder": [
       "ai",
       "ai-plugins",
-      "coder-workspace",
       "core",
       "dev",
       "dev-tooling",
@@ -819,8 +810,6 @@
         }
       ]
     },
-    "docker-buildx-linux": {},
-    "docker-compose-v2": {},
     "elgato-stream-deck": {
       "providers": [
         {
