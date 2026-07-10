@@ -106,6 +106,37 @@ csh() {
   kubectl run -it --rm --restart=Never --image=busybox "tmp-shell-${USER:-user}-$$" -n "$ns" -- sh
 }
 
+# --- coder: login + create-from-preset + connect -----------------------------
+code() {
+  local -a o_cpu o_mem o_disk
+  zparseopts -D -E -- -cpu:=o_cpu -memory:=o_mem -disk:=o_disk
+  local preset=$1 template=${2:-$CODER_TEMPLATE}
+  local -a params
+  [[ -n ${o_cpu[2]} ]]  && params+=(--parameter "cpu=${o_cpu[2]}")
+  [[ -n ${o_mem[2]} ]]  && params+=(--parameter "memory=${o_mem[2]}")
+  [[ -n ${o_disk[2]} ]] && params+=(--parameter "disk_size=${o_disk[2]}")
+  [[ -n $preset ]] || { echo "Usage: code [--cpu N] [--memory N] [--disk N] <preset> [template]" >&2; return 1; }
+  (( $+commands[coder] )) || { echo "code: coder not found" >&2; return 127; }
+  coder whoami &>/dev/null || coder login || return
+  if ! coder show "$preset" &>/dev/null; then
+    if [[ -z $template ]]; then
+      local t
+      for t in $(coder templates list -o json 2>/dev/null | jq -r '.[].Template.name'); do
+        if coder templates presets list "$t" -o json 2>/dev/null \
+             | jq -e --arg p "$preset" 'any(.[]; .TemplatePreset.Name == $p)' &>/dev/null; then
+          template=$t
+          break
+        fi
+      done
+      [[ -n $template ]] || { echo "code: no template has preset '$preset'" >&2; return 1; }
+    fi
+    coder create "$preset" -t "$template" --preset "$preset" "${params[@]}" \
+      --use-parameter-defaults -y || return
+  fi
+  # ssh autostarts a stopped workspace, so no explicit start needed
+  coder ssh "$preset"
+}
+
 # --- ssh wrapper - use ~/.config/ssh/config ----------------------------------
 # Title is set by LocalCommand in ssh config.
 ssh() { command ssh -F "$HOME/.config/ssh/config" "$@"; }
