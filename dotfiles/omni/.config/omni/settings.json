@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v14.schema.json",
-  "version": 14,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v15.schema.json",
+  "version": 15,
   "agents": {
     "packages": [
       {
@@ -33,17 +33,18 @@
     ],
     "mcp_servers": [
       {
-        "name": "context-mode",
-        "transport": "stdio",
-        "command": "node ./start.mjs",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
         "name": "node_repl",
         "transport": "stdio",
         "command": "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl",
+        "agents": [
+          "codex"
+        ]
+      }
+    ],
+    "marketplaces": [
+      {
+        "name": "context-mode",
+        "source": "https://github.com/mksglu/context-mode.git",
         "agents": [
           "codex"
         ]

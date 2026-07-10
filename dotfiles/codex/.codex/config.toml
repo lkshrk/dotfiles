@@ -185,10 +185,6 @@ approval_mode = "approve"
 
 [mcp_servers.node_repl]
 command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
-
-[mcp_servers.context-mode]
-command = "node"
-args = ["./start.mjs"]
 [plugins."build-ios-apps@openai-curated"]
 enabled = false
 
