@@ -39,6 +39,14 @@
         "agents": [
           "codex"
         ]
+      },
+      {
+        "name": "node_repl",
+        "transport": "stdio",
+        "command": "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl",
+        "agents": [
+          "codex"
+        ]
       }
     ],
     "ignore": {}
@@ -75,7 +83,8 @@
         "lkshrk/linear-ai"
       ],
       "mcp_servers": [
-        "context-mode"
+        "context-mode",
+        "node_repl"
       ]
     },
     {
@@ -117,7 +126,12 @@
         },
         {
           "name": "tmux",
-          "path": "~/.config/tmux"
+          "path": "~/.config/tmux",
+          "hosts": {
+            "coder": {
+              "package": "tmux@coder"
+            }
+          }
         },
         {
           "name": "vim",
