@@ -7,8 +7,6 @@ sandbox_mode = "workspace-write"
 default_permissions = "signed"
 
 
-notify = ["/Users/lkshrk/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"bash\",\"~\\/.claude\\/hooks\\/peon-ping\\/adapters\\/codex.sh\"]"]
-
 [permissions.signed]
 extends = ":workspace"
 
@@ -104,7 +102,7 @@ kill_line_start = ["ctrl-u"]
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
-"gpt-5.6-sol" = 3
+"gpt-5.6-sol" = 4
 
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
@@ -170,18 +168,6 @@ enabled = false
 
 [mcp_servers.linear]
 url = "https://mcp.linear.app/mcp"
-
-[mcp_servers.linear.tools.delete_comment]
-approval_mode = "approve"
-
-[mcp_servers.linear.tools.save_comment]
-approval_mode = "approve"
-
-[mcp_servers.linear.tools.save_issue]
-approval_mode = "approve"
-
-[mcp_servers.linear.tools.save_project]
-approval_mode = "approve"
 
 [mcp_servers.node_repl]
 command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
@@ -311,8 +297,8 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-10T07:27:57Z"
-last_revision = "b13cfa83e7b7d8255f0585f5f83aee757f9a414c"
+last_updated = "2026-07-10T20:14:51Z"
+last_revision = "a6a990f0727c86ec126b6347123e3887dfa1d256"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 

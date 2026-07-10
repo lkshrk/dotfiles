@@ -83,16 +83,6 @@
             "command": "~/.claude/hooks/cbm-session-reminder"
           }
         ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10
-          }
-        ]
       }
     ],
     "PreToolUse": [
@@ -179,164 +169,65 @@
             "timeout": 10
           }
         ]
+      }
+    ],
+    "statusLine": {
+      "type": "command",
+      "command": "sh \"/Users/lkshrk/.claude/statusline-command.sh\""
+    },
+    "enabledPlugins": {
+      "gopls-lsp@claude-plugins-official": true,
+      "superpowers@claude-plugins-official": true,
+      "caveman@caveman": true,
+      "code-simplifier@claude-plugins-official": true,
+      "context-mode@context-mode": true,
+      "github@claude-plugins-official": true,
+      "ecc@ecc": true,
+      "swift-lsp@claude-plugins-official": true,
+      "academic-research-skills@academic-research-skills": true,
+      "lua-lsp@claude-plugins-official": true
+    },
+    "extraKnownMarketplaces": {
+      "caveman": {
+        "source": {
+          "source": "github",
+          "repo": "JuliusBrussee/caveman"
+        }
       },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+      "context-mode": {
+        "source": {
+          "source": "github",
+          "repo": "mksglu/context-mode"
+        }
+      },
+      "ecc": {
+        "source": {
+          "source": "github",
+          "repo": "affaan-m/everything-claude-code"
+        }
+      },
+      "academic-research-skills": {
+        "source": {
+          "source": "github",
+          "repo": "Imbad0202/academic-research-skills"
+        }
       }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+    },
+    "effortLevel": "medium",
+    "autoUpdatesChannel": "stable",
+    "tui": "fullscreen",
+    "skipWorkflowUsageWarning": true,
+    "theme": "dark-daltonized",
+    "verbose": true,
+    "preferredNotifChannel": "notifications_disabled",
+    "skipAutoPermissionPrompt": true,
+    "mcpServers": {
+      "codebase-memory-mcp": {
+        "command": "/Users/lkshrk/.local/bin/codebase-memory-mcp"
       }
-    ],
-    "SubagentStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/lkshrk/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "sh \"/Users/lkshrk/.claude/statusline-command.sh\""
+    }
   },
   "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "caveman@caveman": true,
-    "code-simplifier@claude-plugins-official": true,
-    "context-mode@context-mode": true,
-    "github@claude-plugins-official": true,
-    "ecc@ecc": true,
-    "swift-lsp@claude-plugins-official": true,
-    "academic-research-skills@academic-research-skills": true,
-    "lua-lsp@claude-plugins-official": true
-  },
-  "extraKnownMarketplaces": {
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
-    },
-    "context-mode": {
-      "source": {
-        "source": "github",
-        "repo": "mksglu/context-mode"
-      }
-    },
-    "ecc": {
-      "source": {
-        "source": "github",
-        "repo": "affaan-m/everything-claude-code"
-      }
-    },
-    "academic-research-skills": {
-      "source": {
-        "source": "github",
-        "repo": "Imbad0202/academic-research-skills"
-      }
-    }
-  },
-  "effortLevel": "medium",
-  "autoUpdatesChannel": "stable",
-  "tui": "fullscreen",
-  "skipWorkflowUsageWarning": true,
-  "theme": "dark-daltonized",
-  "verbose": true,
-  "preferredNotifChannel": "notifications_disabled",
-  "skipAutoPermissionPrompt": true,
-  "mcpServers": {
-    "codebase-memory-mcp": {
-      "command": "/Users/lkshrk/.local/bin/codebase-memory-mcp"
-    }
+    "context-mode@context-mode": true
   }
 }
