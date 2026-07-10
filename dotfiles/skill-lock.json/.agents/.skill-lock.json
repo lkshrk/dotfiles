@@ -311,100 +311,100 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-close/SKILL.md",
-      "skillFolderHash": "2f58ba074386f8eaac8d2e39eb8933f18fba02cf",
+      "skillFolderHash": "69dd443de12d39906b5c322aad47e720d7e3477b",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-13T12:41:28.985Z",
-      "updatedAt": "2026-06-30T06:12:08.288Z"
+      "updatedAt": "2026-07-10T01:56:20.457Z"
     },
     "linear-create-issue": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-create-issue/SKILL.md",
-      "skillFolderHash": "9e23decb1cacdb940678f2ab685ce98ce6c94529",
+      "skillFolderHash": "4ec524589c535fbd6c1153701dfb4af5b10510bd",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-13T12:41:28.986Z",
-      "updatedAt": "2026-06-30T06:12:08.288Z"
+      "updatedAt": "2026-07-10T01:56:20.458Z"
     },
     "linear-deliver-feature": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-deliver-feature/SKILL.md",
-      "skillFolderHash": "b368d6ee7d6c080d38466f062b7f0a52789f17e3",
+      "skillFolderHash": "dfdc2dfc992d9cee3d7347fd59d6e64e2dadb883",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-13T12:41:28.986Z",
-      "updatedAt": "2026-06-30T06:12:08.289Z"
+      "updatedAt": "2026-07-10T01:56:20.459Z"
     },
     "linear-doctor": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-doctor/SKILL.md",
-      "skillFolderHash": "e2f6ff52c5a4367ff0af8e395e9a7ffe959f0d8f",
+      "skillFolderHash": "1cdd7eb18a0912b748c573582d1d3d557b4efc28",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-13T12:41:28.987Z",
-      "updatedAt": "2026-06-30T06:12:08.289Z"
+      "updatedAt": "2026-07-10T01:56:20.460Z"
     },
     "linear-implement": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-implement/SKILL.md",
-      "skillFolderHash": "0f4b168f108f9bf9778353bae72740fdc42154ec",
+      "skillFolderHash": "236d72481f6a18b952a9eeb4c0b7285262d41780",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-13T12:41:28.987Z",
-      "updatedAt": "2026-06-30T06:12:08.289Z"
+      "updatedAt": "2026-07-10T01:56:20.460Z"
     },
     "linear-refine": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-refine/SKILL.md",
-      "skillFolderHash": "b1b778cf1cffd9c81761597a99a2fe176c9c8955",
+      "skillFolderHash": "98ecaec28726a156ff64184c3ee52ec7b4e3bcb3",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-13T12:41:28.987Z",
-      "updatedAt": "2026-06-30T06:12:08.289Z"
+      "updatedAt": "2026-07-10T01:56:20.462Z"
     },
     "linear-status": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-status/SKILL.md",
-      "skillFolderHash": "3cd4170085b9cbbbe97ec2c61f6cdca3fe8723ad",
+      "skillFolderHash": "e934d8f45df41a424b18e8eda1ff53658305b906",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-13T12:41:28.987Z",
-      "updatedAt": "2026-06-30T06:12:08.290Z"
+      "updatedAt": "2026-07-10T01:56:20.463Z"
     },
     "linear-batch-close": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-batch-close/SKILL.md",
-      "skillFolderHash": "e6ba3bfe4960020018b358480844d3becc3602ac",
+      "skillFolderHash": "a981550b2127ee31c71514e9886a8e29aff4c11a",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-14T07:20:39.902Z",
-      "updatedAt": "2026-06-30T06:12:08.287Z"
+      "updatedAt": "2026-07-10T01:56:20.453Z"
     },
     "linear-batch-implement": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-batch-implement/SKILL.md",
-      "skillFolderHash": "053f1331bcca80868eb2237f9085a8c72d9af4b6",
+      "skillFolderHash": "0cdd17d75c13b1bdc5a949b22d9bfb8e45f28428",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-14T07:20:39.904Z",
-      "updatedAt": "2026-06-30T06:12:08.288Z"
+      "updatedAt": "2026-07-10T01:56:20.456Z"
     },
     "linear-batch-refine": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-batch-refine/SKILL.md",
-      "skillFolderHash": "fbcfc32d9928e2bae6e4a9748bdca9987f9df756",
+      "skillFolderHash": "efa4b43593b1ca10a611f7175ac98856defebdcb",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-14T07:20:39.904Z",
-      "updatedAt": "2026-06-30T06:12:08.288Z"
+      "updatedAt": "2026-07-10T01:56:20.456Z"
     },
     "write-a-skill": {
       "source": "mattpocock/skills",
@@ -589,20 +589,20 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-review/SKILL.md",
-      "skillFolderHash": "4e2a181bc0e57e72f820d7c07638982cf23ec314",
+      "skillFolderHash": "9875c331141d4a0f7e40250b3f1689bbad438cfd",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-21T13:25:15.838Z",
-      "updatedAt": "2026-06-30T06:12:08.290Z"
+      "updatedAt": "2026-07-10T01:56:20.463Z"
     },
     "linear-repo-reconcile": {
       "source": "lkshrk/linear-ai",
       "sourceType": "github",
       "sourceUrl": "https://github.com/lkshrk/linear-ai.git",
       "skillPath": "skills/linear-repo-reconcile/SKILL.md",
-      "skillFolderHash": "6ac7b8a2c3e55a4f7603f1e7338696534582ffb0",
+      "skillFolderHash": "fdc448cd2485094d74530ebbeae1fd27c53f8bc4",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-22T16:41:46.298Z",
-      "updatedAt": "2026-06-30T06:12:08.290Z"
+      "updatedAt": "2026-07-10T01:56:20.462Z"
     },
     "linear-nontech-intake": {
       "source": "lkshrk/linear-ai",
@@ -612,7 +612,7 @@
       "skillFolderHash": "caece5a98e391896386e45507310822ea1a3c1a6",
       "pluginName": "linear-ai",
       "installedAt": "2026-06-30T06:12:08.289Z",
-      "updatedAt": "2026-06-30T06:12:08.289Z"
+      "updatedAt": "2026-07-10T01:56:20.461Z"
     },
     "design-taste-frontend": {
       "source": "Leonxlnx/taste-skill",
