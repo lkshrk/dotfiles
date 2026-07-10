@@ -106,6 +106,40 @@ rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc" \
 rm -rf "$HOME/.config/opencode"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 
+step "codex telemetry"
+_codex_config="$HOME/.codex/config.toml"
+if [[ -e "$_codex_config" ]]; then
+  _codex_config_target="$(readlink -f "$_codex_config" 2>/dev/null || printf '%s' "$_codex_config")"
+  _codex_otel_ca=""
+  for _ca in \
+    /etc/ssl/certs/lan-ca.pem \
+    "$HOME/.local/share/certs/lan-ca.pem" \
+    /usr/local/share/ca-certificates/lan-ca.crt
+  do
+    if [[ -r "$_ca" ]]; then
+      _codex_otel_ca="$_ca"
+      break
+    fi
+  done
+  if [[ -n "$_codex_otel_ca" ]]; then
+    sed -i -E \
+      -e "s|^([[:space:]]*ca-certificate = ).*|\\1\"$_codex_otel_ca\"|" \
+      -e 's#^notify = .*#notify = []#' \
+      "$_codex_config_target"
+    ok "Codex OTEL uses $_codex_otel_ca"
+  else
+    sed -i \
+      -e '/^[[:space:]]*ca-certificate = /d' \
+      -e 's#^notify = .*#notify = []#' \
+      "$_codex_config_target"
+    warn "Codex OTEL CA missing; removed explicit ca-certificate entries"
+  fi
+  unset _codex_config_target _codex_otel_ca _ca
+else
+  warn "Codex config not found after dots sync"
+fi
+unset _codex_config
+
 # Prewarm nvim plugins headlessly so the first interactive launch is instant.
 # Needs both the binary (tools sync) and the stowed config (dots sync above).
 if command -v nvim >/dev/null 2>&1 || [ -x "$HOME/.local/bin/nvim" ]; then
