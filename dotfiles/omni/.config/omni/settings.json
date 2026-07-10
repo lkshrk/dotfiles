@@ -29,6 +29,9 @@
       },
       {
         "source": "lkshrk/useful-skills"
+      },
+      {
+        "source": "sopaco/deepwiki-rs"
       }
     ],
     "mcp_servers": [
@@ -182,6 +185,13 @@
         "agents": [
           "claude-code"
         ]
+      },
+      {
+        "name": "frontend-design",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
       }
     ],
     "ignore": {
@@ -190,6 +200,19 @@
       ],
       "mcp_servers": [
         "xcodebuildmcp"
+      ],
+      "plugins": [
+        "swift-lsp",
+        "spreadsheets",
+        "presentations",
+        "documents",
+        "build-ios-apps",
+        "academic-research-skills"
+      ],
+      "marketplaces": [
+        "openai-primary-runtime",
+        "openai-curated",
+        "academic-research-skills"
       ]
     }
   },
@@ -211,7 +234,6 @@
       "name": "ai-plugins",
       "tools": [
         "ccundo",
-        "claude-cmd",
         "context-mode",
         "oh-my-codex",
         "openwolf",
@@ -222,7 +244,8 @@
         "alirezarezvani/claude-skills",
         "vercel-labs/skills",
         "lkshrk/useful-skills",
-        "lkshrk/linear-ai"
+        "lkshrk/linear-ai",
+        "sopaco/deepwiki-rs"
       ],
       "mcp_servers": [
         "node_repl",
@@ -238,7 +261,8 @@
         "caveman",
         "gopls-lsp",
         "code-simplifier",
-        "lua-lsp"
+        "lua-lsp",
+        "frontend-design"
       ],
       "marketplaces": [
         "lkshrk",
@@ -645,6 +669,10 @@
           "name": "mimocode",
           "path": "~/.config/mimocode",
           "ignored": true
+        },
+        {
+          "name": "agents-skill-lock",
+          "path": "~/.agents/.skill-lock.json"
         }
       ]
     }
@@ -823,19 +851,6 @@
         }
       ],
       "git": "https://github.com/cilium/cilium-cli"
-    },
-    "claude-cmd": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "claude-cmd"
-        },
-        {
-          "provider": "bun",
-          "package": "claude-cmd"
-        }
-      ],
-      "git": "https://github.com/kiliczsh/claude-cmd"
     },
     "claude-code": {
       "providers": [
