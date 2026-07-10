@@ -137,10 +137,6 @@ code() {
   coder ssh "$preset"
 }
 
-# --- ssh wrapper - use ~/.config/ssh/config ----------------------------------
-# Title is set by LocalCommand in ssh config.
-ssh() { command ssh -F "$HOME/.config/ssh/config" "$@"; }
-
 # --- herdr ------------------------------------------------------------------
 herdr() {
   (( $+commands[herdr] )) || { echo "herdr: command not found" >&2; return 127; }
