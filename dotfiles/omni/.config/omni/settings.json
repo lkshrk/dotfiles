@@ -1515,8 +1515,13 @@
           "package": "neovim"
         },
         {
-          "provider": "pnpm",
-          "package": "neovim"
+          "provider": "script",
+          "options": {
+            "check": "test -x $HOME/.local/bin/nvim",
+            "install": "arch=$(uname -m); case $arch in aarch64) asset=nvim-linux-arm64 ;; *) asset=nvim-linux-x86_64 ;; esac; mkdir -p $HOME/.local; curl -fsSL https://github.com/neovim/neovim/releases/latest/download/$asset.tar.gz | tar -xz -C $HOME/.local --strip-components=1",
+            "uninstall": "rm -rf $HOME/.local/bin/nvim $HOME/.local/lib/nvim $HOME/.local/share/nvim/runtime",
+            "upgrade": "arch=$(uname -m); case $arch in aarch64) asset=nvim-linux-arm64 ;; *) asset=nvim-linux-x86_64 ;; esac; curl -fsSL https://github.com/neovim/neovim/releases/latest/download/$asset.tar.gz | tar -xz -C $HOME/.local --strip-components=1"
+          }
         }
       ],
       "git": "https://github.com/neovim/neovim"
