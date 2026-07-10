@@ -81,6 +81,17 @@ return {
       defaults = {
         -- Show filename first, path (greyed) after — boosts basename match weight visually and in scoring.
         path_display = { 'filename_first' },
+        -- --follow: stowed dotfiles are symlinks; rg skips them by default.
+        vimgrep_arguments = {
+          'rg',
+          '--color=never',
+          '--no-heading',
+          '--with-filename',
+          '--line-number',
+          '--column',
+          '--smart-case',
+          '--follow',
+        },
         file_ignore_patterns = {
           'node_modules',
           '%.git/',
@@ -185,7 +196,8 @@ return {
     local find_files = function()
       builtin.find_files {
         hidden = true,
-        find_command = { 'fd', '--type', 'f', '--hidden', '--strip-cwd-prefix' },
+        -- --follow: stowed dotfiles are symlinks; --type f alone drops them.
+        find_command = { 'fd', '--type', 'f', '--follow', '--hidden', '--strip-cwd-prefix' },
         entry_maker = make_git_entry_maker {},
       }
     end
