@@ -61,7 +61,9 @@
             "!/mcp.json",
             "!/AGENTS.md",
             "!/RTK.md",
-            "/skills/.system/"
+            "/skills/.system/",
+            "!/agents",
+            "!/CONTEXT_MODE.md"
           ]
         },
         {
