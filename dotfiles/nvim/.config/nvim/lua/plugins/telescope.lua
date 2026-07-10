@@ -9,6 +9,7 @@ return {
       build = 'make',
     },
     { 'nvim-telescope/telescope-ui-select.nvim' },
+    { 'nvim-telescope/telescope-frecency.nvim' },
     { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
   },
   config = function()
@@ -131,11 +132,18 @@ return {
         ['ui-select'] = {
           require('telescope.themes').get_dropdown(),
         },
+        frecency = {
+          default_workspace = 'CWD',
+          show_scores = false,
+          -- Unindexed scan must follow symlinks too (stowed dotfiles).
+          workspace_scan_cmd = { 'fd', '--type', 'f', '--follow', '--hidden', '--exclude', '.git', '.' },
+        },
       },
     }
 
     pcall(require('telescope').load_extension, 'fzf')
     pcall(require('telescope').load_extension, 'ui-select')
+    pcall(require('telescope').load_extension, 'frecency')
 
     local builtin = require 'telescope.builtin'
     local entry_display = require 'telescope.pickers.entry_display'
@@ -202,7 +210,11 @@ return {
       }
     end
     vim.keymap.set('n', '<leader>sf', find_files, { desc = '[S]earch [F]iles' })
-    vim.keymap.set('n', '<C-f>', find_files, { desc = '[S]earch [F]iles' })
+    -- Frecency: empty prompt ranks recently/frequently opened files first;
+    -- unindexed workspace files fill in below.
+    vim.keymap.set('n', '<C-f>', function()
+      require('telescope').extensions.frecency.frecency { workspace = 'CWD' }
+    end, { desc = 'Find Files (frecency)' })
     vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
     vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
     vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
