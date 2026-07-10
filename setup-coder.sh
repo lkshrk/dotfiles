@@ -96,11 +96,13 @@ fi
 
 step "omni dotfiles"
 # Coder's codex module writes a real ~/.codex/config.toml at agent start, the
-# oh-my-zsh installer writes a real ~/.zshrc, and opencode replaces its config
-# symlinks with real files at runtime; all collide with the symlinks omni wants
-# to stow (--use-repo does not resolve a replaced-symlink conflict). Drop them
-# so dots sync links cleanly.
-rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc"
+# oh-my-zsh installer writes a real ~/.zshrc, opencode replaces its config
+# symlinks with real files at runtime, and Claude Code rewrites
+# .claude/plugins/installed_plugins.json; all collide with the symlinks omni
+# wants to stow (--use-repo does not resolve a replaced-symlink conflict).
+# Drop them so dots sync links cleanly.
+rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc" \
+  "$HOME/.claude/plugins/installed_plugins.json"
 rm -rf "$HOME/.config/opencode"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 

@@ -29,7 +29,8 @@ install_apt_packages() {
     jq \
     build-essential \
     ca-certificates \
-    unzip
+    unzip \
+    zsh
   ok "base apt packages installed"
 }
 
@@ -104,6 +105,16 @@ install_nvm_node_linux() {
   nvm alias default 24
   nvm use --silent default
 
+  # Agent-spawned shells never source profile.sh, so without these links they
+  # fall back to the system node (v18, too old for pnpm and friends).
+  if [[ -n "${NVM_BIN:-}" ]]; then
+    mkdir -p "$HOME/.local/bin"
+    local bin
+    for bin in node npm npx corepack; do
+      [[ -x "$NVM_BIN/$bin" ]] && ln -sf "$NVM_BIN/$bin" "$HOME/.local/bin/$bin"
+    done
+  fi
+
   ok "node ready: $(node --version 2>/dev/null || printf 'found')"
 }
 
@@ -140,7 +151,12 @@ export_sync_path() {
     nvm use --silent default >/dev/null 2>&1 || true
   fi
 
-  export PATH="${NVM_BIN:+$NVM_BIN:}$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
+  # pnpm errors on `pnpm ls -g` when its global bin dir is off PATH, which
+  # aborts omni's bulk status check and with it the whole tools sync.
+  export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
+  mkdir -p "$PNPM_HOME/bin"
+
+  export PATH="${NVM_BIN:+$NVM_BIN:}$PNPM_HOME/bin:$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
 }
 
 # ─── main ─────────────────────────────────────────────────────────────────────

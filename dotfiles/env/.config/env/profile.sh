@@ -1,7 +1,7 @@
 # POSIX-safe env entrypoint.
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
-ENV_NEXT_PROFILE_CURRENT_VERSION=3
+ENV_NEXT_PROFILE_CURRENT_VERSION=4
 if [ "${ENV_NEXT_PROFILE_LOADED:-}" = 1 ] && [ "${ENV_NEXT_PROFILE_PATH:-}" = "${PATH:-}" ] && [ "${ENV_NEXT_PROFILE_VERSION:-}" = "$ENV_NEXT_PROFILE_CURRENT_VERSION" ]; then
   unset ENV_NEXT_PROFILE_CURRENT_VERSION
   return 0 2>/dev/null || exit 0
