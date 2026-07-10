@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v15.schema.json",
-  "version": 15,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v16.schema.json",
+  "version": 16,
   "agents": {
     "packages": [
       {
@@ -39,6 +39,46 @@
         "agents": [
           "codex"
         ]
+      },
+      {
+        "name": "linear",
+        "transport": "http",
+        "url": "https://mcp.linear.app/mcp",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "linear-server",
+        "transport": "http",
+        "url": "https://mcp.linear.app/mcp",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "shiplight",
+        "transport": "stdio",
+        "command": "/Users/lkshrk/.bun/bin/bunx @shiplightai/mcp@latest",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "codebase-memory-mcp",
+        "transport": "stdio",
+        "command": "/Users/lkshrk/.local/bin/codebase-memory-mcp",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "context7",
+        "transport": "http",
+        "url": "https://mcp.context7.com/mcp",
+        "agents": [
+          "codex"
+        ]
       }
     ],
     "marketplaces": [
@@ -48,9 +88,92 @@
         "agents": [
           "codex"
         ]
+      },
+      {
+        "name": "lkshrk",
+        "source": "https://github.com/lkshrk/agent-marketplace.git",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "caveman",
+        "source": "JuliusBrussee/caveman",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "claude-plugins-official",
+        "source": "anthropics/claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "ecc",
+        "source": "affaan-m/everything-claude-code",
+        "agents": [
+          "claude-code"
+        ]
       }
     ],
-    "ignore": {}
+    "plugins": [
+      {
+        "name": "superpowers",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "github",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "ecc",
+        "marketplace": "ecc",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "context-mode",
+        "marketplace": "context-mode",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "caveman",
+        "marketplace": "caveman",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "gopls-lsp",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "code-simplifier",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      }
+    ],
+    "ignore": {
+      "skills": [
+        "academic-research-skills"
+      ]
+    }
   },
   "groups": [
     {
@@ -84,7 +207,24 @@
         "lkshrk/linear-ai"
       ],
       "mcp_servers": [
-        "node_repl"
+        "node_repl",
+        "linear",
+        "context7"
+      ],
+      "plugins": [
+        "superpowers",
+        "github",
+        "ecc",
+        "context-mode",
+        "caveman",
+        "gopls-lsp",
+        "code-simplifier"
+      ],
+      "marketplaces": [
+        "lkshrk",
+        "caveman",
+        "claude-plugins-official",
+        "ecc"
       ]
     },
     {

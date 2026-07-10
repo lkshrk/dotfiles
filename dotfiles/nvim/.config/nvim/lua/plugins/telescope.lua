@@ -213,7 +213,10 @@ return {
     -- Frecency: empty prompt ranks recently/frequently opened files first;
     -- unindexed workspace files fill in below.
     vim.keymap.set('n', '<C-f>', function()
-      require('telescope').extensions.frecency.frecency { workspace = 'CWD' }
+      require('telescope').extensions.frecency.frecency {
+        workspace = 'CWD',
+        default_text = '',
+      }
     end, { desc = 'Find Files (frecency)' })
     vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
     vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
