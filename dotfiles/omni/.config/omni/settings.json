@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v11.schema.json",
-  "version": 11,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v12.schema.json",
+  "version": 12,
   "agents": {
     "packages": [
       {
