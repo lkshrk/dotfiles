@@ -676,6 +676,24 @@
           "name": "mimocode",
           "path": "~/.config/mimocode",
           "ignored": true
+        },
+        {
+          "name": "claude",
+          "path": "~/.claude",
+          "ignore": [
+            "*",
+            "!/settings.json",
+            "!/CLAUDE.md",
+            "!/mcp.json",
+            "!/plugins",
+            "!/plugins/installed_plugins.json",
+            "!/agents/",
+            "!/hooks/",
+            "!/scripts/",
+            "!/.omc-config.json",
+            "!/keybindings.json",
+            "!/statusline-command.sh"
+          ]
         }
       ]
     }
