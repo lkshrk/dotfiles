@@ -35,9 +35,9 @@
       "dots_disabled": false,
       "dots_git": {},
       "provider_priority": [
+        "brew",
         "bun",
         "uv",
-        "brew",
         "pnpm",
         "apt",
         "apk",
