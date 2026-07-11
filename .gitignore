@@ -53,8 +53,11 @@ dotfiles/nvim/.config/nvim/README.md
 dotfiles/opencode/.config/opencode/*.backup-*
 dotfiles/opencode/.config/opencode/*.bak.*
 
-# omni runtime backups
-dotfiles/omni/.config/omni/*.bak*
+# omni runtime; keep tracked settings.json + settings.d fragments
+dotfiles/omni/.config/omni/*
+!dotfiles/omni/.config/omni/settings.json
+!dotfiles/omni/.config/omni/settings.d/
+!dotfiles/omni/.config/omni/settings.d/**
 
 # intentionally unmanaged ~/.config trees
 dotfiles/acli/.config/acli/
