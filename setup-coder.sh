@@ -4,7 +4,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_MIN_VERSION="0.8.5"
+OMNI_MIN_VERSION="0.8.8"
 CODER_OMNI_HOST="${CODER_OMNI_HOST:-coder}"
 RUN_MACOS_DEFAULTS=0
 SKIP_ADMIN_WARMUP=1
@@ -140,6 +140,43 @@ else
 fi
 unset _codex_config
 
+# Omni MCP restore references this binary; the dotfiles copy is macOS-only.
+if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
+  step "codebase-memory-mcp"
+  mkdir -p "$HOME/.local/bin"
+  arch="$(uname -m)"
+  case "$arch" in
+    aarch64|arm64)
+      asset=codebase-memory-mcp-linux-arm64.tar.gz
+      ;;
+    *)
+      asset=codebase-memory-mcp-linux-amd64.tar.gz
+      ;;
+  esac
+  curl -fsSL "https://github.com/DeusData/codebase-memory-mcp/releases/latest/download/$asset" \
+    | tar -xz -C "$HOME/.local/bin" codebase-memory-mcp \
+    || warn "codebase-memory-mcp install failed; omni MCP restore may skip it"
+fi
+
+export OMNI_AGENTS_REQUIRED=1 OMNI_MIN_VERSION
+bash "$REPO_DIR/scripts/bootstrap-agents.sh"
+
+step "grok auth"
+_grok_auth="$HOME/.grok/auth.json"
+if [[ -n "${GROK_AUTH_JSON:-}" ]] && [[ ! -s "$_grok_auth" ]]; then
+  mkdir -p "$HOME/.grok"
+  printf '%s' "$GROK_AUTH_JSON" > "$_grok_auth"
+  chmod 600 "$_grok_auth"
+  ok "seeded grok auth from GROK_AUTH_JSON"
+elif [[ -n "${XAI_API_KEY:-}" ]]; then
+  ok "XAI_API_KEY available for grok"
+elif [[ -s "$_grok_auth" ]]; then
+  ok "grok auth already present"
+else
+  warn "no grok auth; set GROK_AUTH_JSON, XAI_API_KEY, or run: grok login --device-auth"
+fi
+unset _grok_auth
+
 # Prewarm nvim plugins headlessly so the first interactive launch is instant.
 # Needs both the binary (tools sync) and the stowed config (dots sync above).
 if command -v nvim >/dev/null 2>&1 || [ -x "$HOME/.local/bin/nvim" ]; then
@@ -159,5 +196,3 @@ if command -v zsh >/dev/null 2>&1; then
   fi
   unset _zsh_path
 fi
-
-bash "$REPO_DIR/scripts/bootstrap-agents.sh"
