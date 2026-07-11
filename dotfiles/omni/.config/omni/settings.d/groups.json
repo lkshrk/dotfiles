@@ -29,16 +29,43 @@
         }
       ],
       "skills": [
-        "@agents.packages"
+        "JuliusBrussee/caveman",
+        "ShiplightAI/agent-skills",
+        "mattpocock/skills",
+        "vercel-labs/skills",
+        "lkshrk/linear-ai",
+        "rjyo/moshi-skill",
+        "lkshrk/useful-skills",
+        "sopaco/deepwiki-rs"
       ],
       "mcp_servers": [
-        "@agents.mcp_servers"
+        "node_repl",
+        "linear",
+        "linear-server",
+        "shiplight",
+        "codebase-memory-mcp",
+        "context7",
+        "context-mode"
       ],
       "plugins": [
-        "@agents.plugins"
+        "superpowers",
+        "github",
+        "ecc",
+        "context-mode",
+        "caveman",
+        "gopls-lsp",
+        "code-simplifier",
+        "lua-lsp",
+        "frontend-design",
+        "ponytail"
       ],
       "marketplaces": [
-        "@agents.marketplaces"
+        "context-mode",
+        "lkshrk",
+        "caveman",
+        "claude-plugins-official",
+        "ecc",
+        "ponytail"
       ]
     },
     {
@@ -73,7 +100,9 @@
           "name": "omni",
           "path": "~/.config/omni",
           "ignore": [
-            "settings.json.bak.20260508102147"
+            "*",
+            "!/settings.json",
+            "!/settings.d/"
           ]
         },
         {

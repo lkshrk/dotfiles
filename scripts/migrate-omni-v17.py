@@ -218,6 +218,21 @@ def fix_script_hygiene(tools: dict[str, Any]) -> list[str]:
     return changed
 
 
+OMNI_DOT_IGNORE = ["*", "!/settings.json", "!/settings.d/"]
+
+
+def update_omni_dot_ignore(groups: list[dict[str, Any]]) -> bool:
+    for group in groups:
+        for dot in group.get("dots") or []:
+            if dot.get("name") != "omni" or dot.get("path") != "~/.config/omni":
+                continue
+            if dot.get("ignore") == OMNI_DOT_IGNORE:
+                return False
+            dot["ignore"] = list(OMNI_DOT_IGNORE)
+            return True
+    return False
+
+
 def update_ai_plugins_group(groups: list[dict[str, Any]]) -> bool:
     for group in groups:
         if group.get("name") == "ai-plugins":
@@ -274,6 +289,8 @@ def migrate(cfg: dict[str, Any], *, compact_only: bool) -> tuple[dict[str, Any],
             notes.append(f"fixed script hygiene: {', '.join(sorted(set(hygiene)))}")
         if update_ai_plugins_group(cfg.get("groups", [])):
             notes.append("ai-plugins group now uses @agents.* refs")
+        if update_omni_dot_ignore(cfg.get("groups", [])):
+            notes.append("omni dot ignore allowlists settings.json + settings.d/")
 
     agents = cfg.get("agents", {})
     groups = cfg.get("groups", [])
