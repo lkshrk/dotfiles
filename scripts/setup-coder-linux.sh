@@ -118,6 +118,28 @@ install_nvm_node_linux() {
   ok "node ready: $(node --version 2>/dev/null || printf 'found')"
 }
 
+# ─── grok (Linux) ─────────────────────────────────────────────────────────────
+#
+# Omni's agents restore targets grok for plugins/MCP; install the CLI before
+# agents restore. Lands in ~/.grok/bin (added to PATH in export_sync_path).
+
+install_grok_linux() {
+  step "grok (Linux)"
+
+  if command -v grok >/dev/null 2>&1 || [[ -x "$HOME/.grok/bin/grok" ]]; then
+    ok "grok ready: $(grok --version 2>/dev/null | head -n1 || printf 'found')"
+    return
+  fi
+
+  curl -fsSL https://x.ai/cli/install.sh | bash
+
+  if command -v grok >/dev/null 2>&1 || [[ -x "$HOME/.grok/bin/grok" ]]; then
+    ok "grok installed: $(grok --version 2>/dev/null | head -n1 || printf 'found')"
+  else
+    warn "grok install failed; grok plugins/MCP restore will be skipped"
+  fi
+}
+
 # ─── uv (Linux) ───────────────────────────────────────────────────────────────
 #
 # omni's uv provider (thefuck, …) probes for `uv`; install it before sync.
@@ -156,7 +178,7 @@ export_sync_path() {
   export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
   mkdir -p "$PNPM_HOME/bin"
 
-  export PATH="${NVM_BIN:+$NVM_BIN:}$PNPM_HOME/bin:$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
+  export PATH="${NVM_BIN:+$NVM_BIN:}$PNPM_HOME/bin:$HOME/.grok/bin:$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
 }
 
 # ─── main ─────────────────────────────────────────────────────────────────────
@@ -165,5 +187,6 @@ install_apt_packages
 install_omni_linux
 install_bun_linux
 install_nvm_node_linux
+install_grok_linux
 install_uv_linux
 export_sync_path

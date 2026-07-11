@@ -1,61 +1,93 @@
 #!/usr/bin/env bash
-# restore-skills.sh — Restore agent skills and Claude plugins from lockfiles.
+# bootstrap-agents.sh — Restore agent skills, MCP servers, and plugins via omni.
 set -euo pipefail
 
-SKILL_LOCK="$HOME/.agents/.skill-lock.json"
+REPO_DIR="${REPO_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
+OMNI_MIN_VERSION="${OMNI_MIN_VERSION:-0.8.8}"
+OMNI_AGENTS_REQUIRED="${OMNI_AGENTS_REQUIRED:-0}"
 
-# Non-interactive: auto-yes for skills, skip doctor
-is_interactive() { [[ -t 0 && -t 1 ]]; }
+_bootstrap_say()  { if declare -F say  >/dev/null 2>&1; then command say  "$@"; else printf '%s\n' "$@"; fi; }
+_bootstrap_step() { if declare -F step >/dev/null 2>&1; then command step "$@"; else printf '==> %s\n' "$*"; fi; }
+_bootstrap_ok()   { if declare -F ok   >/dev/null 2>&1; then command ok   "$@"; else _bootstrap_say "OK $*"; fi; }
+_bootstrap_warn() { if declare -F warn >/dev/null 2>&1; then command warn "$@"; else _bootstrap_say "! $*" >&2; fi; }
+_bootstrap_die()  { if declare -F die  >/dev/null 2>&1; then command die  "$@"; else _bootstrap_say "x $*" >&2; exit 1; fi; }
 
-# ─── Agent Skills ─────────────────────────────────────────────────────────────
+omni_version() {
+  omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+(\.[0-9]+){1,2}$/) { print $i; exit } }'
+}
 
-if [[ -f "$SKILL_LOCK" ]]; then
-  count=$(python3 -c "import json; print(len(json.load(open('$SKILL_LOCK'))['skills']))" 2>/dev/null || echo "?")
-  echo "Found skill lockfile ($count skills): $SKILL_LOCK"
-  if is_interactive; then
-    read -rp "Restore agent skills from lockfile? [y/N] " answer
-  else
-    answer="y"
-    echo "Non-interactive: auto-restoring skills"
+version_at_least() {
+  awk -v current="$1" -v minimum="$2" 'BEGIN {
+    split(current, c, ".")
+    split(minimum, m, ".")
+    for (i = 1; i <= 3; i++) {
+      c[i] += 0
+      m[i] += 0
+      if (c[i] > m[i]) exit 0
+      if (c[i] < m[i]) exit 1
+    }
+    exit 0
+  }'
+}
+
+export_agent_path() {
+  export PATH="$HOME/.grok/bin:$HOME/.bun/bin:$HOME/.local/bin:$PATH"
+}
+
+if ! command -v omni >/dev/null 2>&1; then
+  if [[ "$OMNI_AGENTS_REQUIRED" == "1" ]]; then
+    _bootstrap_die "omni is not installed"
   fi
-  if [[ "$answer" =~ ^[Yy]$ ]]; then
-    if omni agents restore skills --help >/dev/null 2>&1; then
-      omni --yes agents restore skills
-    else
-      # experimental_install only restores project-scope skills-lock.json;
-      # global skills need explicit re-adds until omni agents restore ships.
-      python3 -c "
-import json
-from collections import defaultdict
-skills = json.load(open('$SKILL_LOCK'))['skills']
-by_source = defaultdict(list)
-for name, meta in skills.items():
-    by_source[meta['source']].append(name)
-for source, names in sorted(by_source.items()):
-    print(source + '|' + ' '.join(sorted(names)))
-" | while IFS='|' read -r source names; do
-        echo "→ $source: $names"
-        # stdin from /dev/null: the skills CLI eats the loop's read input otherwise
-        # shellcheck disable=SC2086
-        bunx skills@latest add "$source" --skill $names -g -y </dev/null || echo "! failed: $source"
-      done
-    fi
-  else
-    echo "Skipped"
-  fi
-else
-  echo "No skill lockfile at $SKILL_LOCK"
+  _bootstrap_warn "omni not found; skipping agent restore"
+  exit 0
 fi
 
-echo ""
-
-# ─── Claude Doctor ────────────────────────────────────────────────────────────
-
-if is_interactive; then
-  read -rp "Run claude doctor? [y/N] " answer
-  if [[ "$answer" =~ ^[Yy]$ ]]; then
-    claude doctor
+current="$(omni_version)"
+if [[ -z "$current" ]] || ! version_at_least "$current" "$OMNI_MIN_VERSION"; then
+  if [[ "$OMNI_AGENTS_REQUIRED" == "1" ]]; then
+    _bootstrap_die "omni $OMNI_MIN_VERSION or newer is required for agents restore (found: ${current:-unknown})"
   fi
-else
-  echo "Non-interactive: skipping claude doctor"
+  _bootstrap_warn "omni ${current:-unknown} is older than $OMNI_MIN_VERSION; skipping agent restore"
+  exit 0
 fi
+
+export_agent_path
+
+omni_cmd() {
+  if [[ -f "$OMNI_CONFIG_PATH" ]]; then
+    omni --config "$OMNI_CONFIG_PATH" --yes "$@"
+  else
+    omni --yes "$@"
+  fi
+}
+
+agents_restore_available() {
+  omni_cmd agents skills restore --help >/dev/null 2>&1 \
+    && omni_cmd agents mcp restore --help >/dev/null 2>&1 \
+    && omni_cmd agents plugins restore --help >/dev/null 2>&1
+}
+
+if ! agents_restore_available; then
+  if [[ "$OMNI_AGENTS_REQUIRED" == "1" ]]; then
+    _bootstrap_die "installed omni does not support agents restore; update omni and rerun setup"
+  fi
+  _bootstrap_warn "omni agents restore is unavailable; skipping"
+  exit 0
+fi
+
+restore_component() {
+  local label="$1"
+  shift
+  _bootstrap_step "omni agents $label"
+  if omni_cmd "$@" restore; then
+    _bootstrap_ok "agent $label restore complete"
+  else
+    _bootstrap_warn "agent $label restore had errors"
+  fi
+}
+
+_bootstrap_step "omni agents"
+restore_component skills agents skills
+restore_component mcp agents mcp
+restore_component plugins agents plugins

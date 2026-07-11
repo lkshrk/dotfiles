@@ -66,6 +66,8 @@ local function setup_telescope()
 
   require('telescope').setup {
     defaults = {
+      -- Avoid stray "A" in prompt on Neovim 0.12 (see frecency() above).
+      initial_mode = 'normal',
       -- Show filename first, path (greyed) after — boosts basename match weight visually and in scoring.
       path_display = { 'filename_first' },
       -- --follow: stowed dotfiles are symlinks; rg skips them by default.
@@ -196,10 +198,19 @@ local function find_files()
 end
 
 local function frecency()
+  -- Telescope 0.1.x + Neovim 0.12: insert-mode pickers feedkeys("A") to place
+  -- the cursor, but that keystroke lands as literal prompt text instead.
   require('telescope').extensions.frecency.frecency {
     workspace = 'CWD',
     default_text = '',
+    initial_mode = 'normal',
   }
+  -- Enter insert mode without re-triggering the broken "A" cursor placement.
+  vim.defer_fn(function()
+    if vim.fn.mode() == 'n' then
+      vim.api.nvim_feedkeys('i', 'n', true)
+    end
+  end, 0)
 end
 
 return {

@@ -5,7 +5,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_MIN_VERSION="0.8.5"
+OMNI_MIN_VERSION="0.8.8"
 RUN_MACOS_DEFAULTS=0
 
 usage() {
@@ -106,7 +106,10 @@ ensure_omni_bootstrap() {
 
 omni_bootstrap() {
   step "omni bootstrap"
-  omni --config "$OMNI_CONFIG_PATH" --yes bootstrap
+  omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
+
+  step "omni tools"
+  omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
 }
 
 # ─── Shared: generated shell completions ─────────────────────────────────────
@@ -161,6 +164,7 @@ main() {
 
   install_lefthook
 
+  export OMNI_AGENTS_REQUIRED=1 OMNI_MIN_VERSION
   bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 }
 

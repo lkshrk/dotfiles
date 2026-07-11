@@ -15,11 +15,11 @@ The setup flow:
 1. Verifies Xcode Command Line Tools and `swiftc`.
 2. Ensures Homebrew is installed and on `PATH`.
 3. Installs the bootstrap tools with Brew: GNU Stow, Omni, Bun, and uv.
-4. Runs `omni --config dotfiles/omni/.config/omni/settings.json --yes bootstrap`.
+4. Runs `omni bootstrap --no-import`, then `omni tools sync --all`.
 5. Compiles `~/.local/bin/sleep-on-lock` from the tracked Swift source.
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
 7. Refreshes the yabai sudoers entry.
-8. Installs lefthook hooks and restores agent skills from the lockfile.
+8. Installs lefthook hooks and restores agent skills, MCP servers, and plugins via `omni agents … restore`.
 
 Admin-required package actions are handled by normal macOS authentication. Setup warms the sudo session with `sudo -v` when running in an interactive terminal.
 
