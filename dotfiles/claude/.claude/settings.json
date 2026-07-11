@@ -188,7 +188,8 @@
     "swift-lsp@claude-plugins-official": true,
     "academic-research-skills@academic-research-skills": true,
     "lua-lsp@claude-plugins-official": true,
-    "caveman@caveman": true
+    "caveman@caveman": true,
+    "codex@openai-codex": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -213,6 +214,12 @@
       "source": {
         "source": "github",
         "repo": "Imbad0202/academic-research-skills"
+      }
+    },
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
       }
     }
   },

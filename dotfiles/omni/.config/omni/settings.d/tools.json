@@ -1,4 +1,13 @@
 {
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v17.schema.json",
+  "version": 17,
+  "agents": {
+    "ignore": {}
+  },
+  "ignore": {},
+  "settings": {
+    "dots_git": {}
+  },
   "tools": {
     "@openai/codex": {
       "providers": [
@@ -64,13 +73,13 @@
         },
         {
           "provider": "script",
+          "options": {
+            "check_path": "$HOME/.bun/bin/bun",
+            "uninstall": "rm -rf $HOME/.bun",
+            "url": "https://bun.sh/install"
+          },
           "recipe": {
             "type": "curl_install_script"
-          },
-          "options": {
-            "url": "https://bun.sh/install",
-            "check_path": "$HOME/.bun/bin/bun",
-            "uninstall": "rm -rf $HOME/.bun"
           }
         }
       ],
@@ -194,14 +203,14 @@
         },
         {
           "provider": "script",
-          "recipe": {
-            "type": "apt_repo"
-          },
           "options": {
             "key_url": "https://download.docker.com/linux/ubuntu/gpg",
+            "packages": "docker-ce-cli docker-buildx-plugin docker-compose-plugin",
             "signed_by": "/etc/apt/keyrings/docker.asc",
-            "sources_format": "Types: deb\nURIs: https://download.docker.com/linux/ubuntu\nSuites: {suite}\nComponents: stable\nArchitectures: $(dpkg --print-architecture)\nSigned-By: /etc/apt/keyrings/docker.asc",
-            "packages": "docker-ce-cli docker-buildx-plugin docker-compose-plugin"
+            "sources_format": "Types: deb\nURIs: https://download.docker.com/linux/ubuntu\nSuites: {suite}\nComponents: stable\nArchitectures: $(dpkg --print-architecture)\nSigned-By: /etc/apt/keyrings/docker.asc"
+          },
+          "recipe": {
+            "type": "apt_repo"
           }
         }
       ],
@@ -244,6 +253,7 @@
         },
         {
           "provider": "script",
+          "bin": "eza",
           "source": {
             "type": "github",
             "owner": "eza-community",
@@ -252,8 +262,7 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "eza_{arch}-unknown-linux-gnu.tar.gz"
-          },
-          "bin": "eza"
+          }
         }
       ],
       "git": "https://github.com/eza-community/eza"
@@ -349,14 +358,14 @@
         },
         {
           "provider": "script",
-          "recipe": {
-            "type": "apt_repo"
-          },
           "options": {
             "key_url": "https://cli.github.com/packages/githubcli-archive-keyring.gpg",
+            "packages": "gh",
             "signed_by": "/etc/apt/keyrings/githubcli-archive-keyring.gpg",
-            "sources_format": "deb [arch={arch} signed-by={signed_by}] https://cli.github.com/packages stable main",
-            "packages": "gh"
+            "sources_format": "deb [arch={arch} signed-by={signed_by}] https://cli.github.com/packages stable main"
+          },
+          "recipe": {
+            "type": "apt_repo"
           }
         }
       ],
@@ -404,6 +413,10 @@
         },
         {
           "provider": "script",
+          "bin": "glow",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
+          },
           "source": {
             "type": "github",
             "owner": "charmbracelet",
@@ -413,29 +426,10 @@
             "type": "github_release_asset",
             "asset_pattern": "glow_2.1.2_Linux_{arch}.tar.gz",
             "tag_name": "v2.1.2"
-          },
-          "bin": "glow",
-          "options": {
-            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
       "git": "https://github.com/charmbracelet/glow"
-    },
-    "grok": {
-      "providers": [
-        {
-          "provider": "script",
-          "recipe": {
-            "type": "curl_install_script"
-          },
-          "options": {
-            "url": "https://x.ai/cli/install.sh",
-            "check_path": "grok",
-            "uninstall": "rm -rf $HOME/.grok/bin"
-          }
-        }
-      ]
     },
     "gnu-sed": {
       "providers": [
@@ -488,6 +482,21 @@
         }
       ],
       "git": "https://github.com/golang/tools"
+    },
+    "grok": {
+      "providers": [
+        {
+          "provider": "script",
+          "options": {
+            "check_path": "grok",
+            "uninstall": "rm -rf $HOME/.grok/bin",
+            "url": "https://x.ai/cli/install.sh"
+          },
+          "recipe": {
+            "type": "curl_install_script"
+          }
+        }
+      ]
     },
     "hammerspoon": {
       "providers": [
@@ -558,7 +567,7 @@
           "provider": "script",
           "options": {
             "check": "command -v just || test -x \"$HOME/.local/bin/just\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to \"$HOME/.local/bin\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to \"$HOME/.local/bin\"",
             "uninstall": "rm -f \"$HOME/.local/bin/just\""
           }
         }
@@ -620,7 +629,7 @@
           "provider": "script",
           "options": {
             "check": "command -v lazydocker || test -x \"$HOME/.local/bin/lazydocker\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | DIR=\"$HOME/.local/bin\" bash",
+            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | DIR=\"$HOME/.local/bin\" bash",
             "uninstall": "rm -f \"$HOME/.local/bin/lazydocker\""
           }
         }
@@ -635,6 +644,10 @@
         },
         {
           "provider": "script",
+          "bin": "lazygit",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
+          },
           "source": {
             "type": "github",
             "owner": "jesseduffield",
@@ -644,10 +657,6 @@
             "type": "github_release_asset",
             "asset_pattern": "lazygit_0.62.2_linux_{arch}.tar.gz",
             "tag_name": "v0.62.2"
-          },
-          "bin": "lazygit",
-          "options": {
-            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -779,6 +788,12 @@
         {
           "provider": "script",
           "bin": "nvim",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
+            "extract_dir": "$HOME/.local",
+            "strip_components": "1",
+            "uninstall": "rm -rf $HOME/.local/bin/nvim $HOME/.local/lib/nvim $HOME/.local/share/nvim/runtime"
+          },
           "source": {
             "type": "github",
             "owner": "neovim",
@@ -787,12 +802,6 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "nvim-linux-{arch}.tar.gz"
-          },
-          "options": {
-            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
-            "extract_dir": "$HOME/.local",
-            "strip_components": "1",
-            "uninstall": "rm -rf $HOME/.local/bin/nvim $HOME/.local/lib/nvim $HOME/.local/share/nvim/runtime"
           }
         }
       ],
@@ -824,7 +833,7 @@
         {
           "provider": "script",
           "options": {
-            "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" && . \"$NVM_DIR/nvm.sh\" --no-use && nvm version default 2>/dev/null | grep -q '^v24'",
+            "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" \u0026\u0026 . \"$NVM_DIR/nvm.sh\" --no-use \u0026\u0026 nvm version default 2\u003e/dev/null | grep -q '^v24'",
             "install": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; PROFILE=/dev/null bash -c 'curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash'; . \"$NVM_DIR/nvm.sh\" --no-use; nvm install 24 --latest-npm; nvm alias default 24; nvm use --silent default",
             "uninstall": "rm -rf \"$HOME/.nvm\""
           }
@@ -863,7 +872,7 @@
           "provider": "script",
           "options": {
             "check": "test -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
-            "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"; (cd $HOME/.oh-my-zsh && git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done",
+            "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"; (cd $HOME/.oh-my-zsh \u0026\u0026 git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done",
             "uninstall": "rm -rf $HOME/.oh-my-zsh"
           }
         }
@@ -877,6 +886,10 @@
         },
         {
           "provider": "script",
+          "bin": "omni",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
+          },
           "source": {
             "type": "github",
             "owner": "lkshrk",
@@ -885,10 +898,6 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "omni_{os}_{arch}.tar.gz"
-          },
-          "bin": "omni",
-          "options": {
-            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -983,7 +992,13 @@
           "provider": "brew",
           "package": "pnpm"
         }
-      ]
+      ],
+      "hosts": {
+        "topaz": {
+          "provider": "bun",
+          "package": "pnpm"
+        }
+      }
     },
     "python@3.14": {
       "providers": [
@@ -1208,14 +1223,14 @@
         },
         {
           "provider": "script",
-          "recipe": {
-            "type": "curl_install_script"
-          },
           "options": {
-            "url": "https://astral.sh/uv/install.sh",
             "check_path": "uv",
             "env": "UV_INSTALL_DIR=\"$HOME/.local/bin\"",
-            "uninstall": "rm -f $HOME/.local/bin/uv"
+            "uninstall": "rm -f $HOME/.local/bin/uv",
+            "url": "https://astral.sh/uv/install.sh"
+          },
+          "recipe": {
+            "type": "curl_install_script"
           }
         }
       ],
@@ -1229,6 +1244,10 @@
         },
         {
           "provider": "script",
+          "bin": "vhs",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
+          },
           "source": {
             "type": "github",
             "owner": "charmbracelet",
@@ -1238,10 +1257,6 @@
             "type": "github_release_asset",
             "asset_pattern": "vhs_0.11.0_Linux_{arch}.tar.gz",
             "tag_name": "v0.11.0"
-          },
-          "bin": "vhs",
-          "options": {
-            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -1338,6 +1353,10 @@
         },
         {
           "provider": "script",
+          "bin": "yamlfmt",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
+          },
           "source": {
             "type": "github",
             "owner": "google",
@@ -1347,10 +1366,6 @@
             "type": "github_release_asset",
             "asset_pattern": "yamlfmt_0.21.0_Linux_{arch}.tar.gz",
             "tag_name": "v0.21.0"
-          },
-          "bin": "yamlfmt",
-          "options": {
-            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -1376,6 +1391,10 @@
         },
         {
           "provider": "script",
+          "bin": "yq",
+          "options": {
+            "arch_map": "aarch64:linux_arm64,x86_64:linux_amd64,arm64:linux_arm64,amd64:linux_amd64"
+          },
           "source": {
             "type": "github",
             "owner": "mikefarah",
@@ -1384,10 +1403,6 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "yq_{arch}"
-          },
-          "bin": "yq",
-          "options": {
-            "arch_map": "aarch64:linux_arm64,x86_64:linux_amd64,arm64:linux_arm64,amd64:linux_amd64"
           }
         }
       ],
