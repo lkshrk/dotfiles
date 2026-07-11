@@ -4,7 +4,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_MIN_VERSION="0.8.8"
+OMNI_MIN_VERSION="0.9.4"
 CODER_OMNI_HOST="${CODER_OMNI_HOST:-coder}"
 RUN_MACOS_DEFAULTS=0
 SKIP_ADMIN_WARMUP=1
@@ -28,8 +28,34 @@ omni_reads_config() {
     && omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1
 }
 
+omni_version() {
+  omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+(\.[0-9]+){1,2}$/) { print $i; exit } }'
+}
+
+version_at_least() {
+  awk -v current="$1" -v minimum="$2" 'BEGIN {
+    split(current, c, ".")
+    split(minimum, m, ".")
+    for (i = 1; i <= 3; i++) {
+      c[i] += 0; m[i] += 0
+      if (c[i] > m[i]) exit 0
+      if (c[i] < m[i]) exit 1
+    }
+    exit 0
+  }'
+}
+
 ensure_omni_version() {
-  omni_reads_config || die "omni cannot read $OMNI_CONFIG_PATH; install latest omni and rerun setup"
+  local current
+  current="$(omni_version)"
+  if ! omni_reads_config || [[ -z "$current" ]] || ! version_at_least "$current" "$OMNI_MIN_VERSION"; then
+    step "omni upgrade"
+    bash "$REPO_DIR/scripts/install-omni-latest.sh"
+  fi
+  omni_reads_config || die "omni cannot read $OMNI_CONFIG_PATH after upgrade"
+  current="$(omni_version)"
+  version_at_least "$current" "$OMNI_MIN_VERSION" \
+    || die "omni $current is older than required $OMNI_MIN_VERSION"
 }
 
 [[ "$(uname -s)" == "Linux" ]] || die "setup-coder.sh is Linux-only"
@@ -117,6 +143,7 @@ if [[ -e "$_codex_config" ]]; then
   _codex_config_target="$(readlink -f "$_codex_config" 2>/dev/null || printf '%s' "$_codex_config")"
   _codex_otel_ca=""
   for _ca in \
+    "${OMNI_OTEL_CA_PATH:-}" \
     /etc/ssl/certs/lan-ca.pem \
     "$HOME/.local/share/certs/lan-ca.pem" \
     /usr/local/share/ca-certificates/lan-ca.crt
