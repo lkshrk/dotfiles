@@ -102,6 +102,12 @@ dotfiles/claude/.claude/*
 !dotfiles/claude/.claude/.omc-config.json
 !dotfiles/claude/.claude/settings.json
 !dotfiles/claude/.claude/statusline-command.sh
+!dotfiles/claude/.claude/tokenline.sh
+!dotfiles/claude/.claude/RTK.md
+!dotfiles/claude/.claude/rules/
+!dotfiles/claude/.claude/rules/**
+!dotfiles/claude/.claude/commands/
+!dotfiles/claude/.claude/commands/**
 !dotfiles/claude/.claude/agents/
 !dotfiles/claude/.claude/agents/**
 !dotfiles/claude/.claude/hooks/
