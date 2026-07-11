@@ -404,10 +404,19 @@
         },
         {
           "provider": "script",
+          "source": {
+            "type": "github",
+            "owner": "charmbracelet",
+            "repo": "glow"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "glow_2.1.2_Linux_{arch}.tar.gz",
+            "tag_name": "v2.1.2"
+          },
+          "bin": "glow",
           "options": {
-            "check": "command -v glow || test -x \"$HOME/.local/bin/glow\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && arch=$(uname -m) && case \"$arch\" in aarch64|arm64) arch=arm64 ;; x86_64|amd64) arch=x86_64 ;; *) exit 1 ;; esac && asset=\"glow_2.1.2_Linux_${arch}.tar.gz\" && url=\"https://github.com/charmbracelet/glow/releases/download/v2.1.2/$asset\" && tmp=$(mktemp -d) && curl -fsSL \"$url\" | tar -xz -C \"$tmp\" && found=$(find \"$tmp\" -type f -perm -111 -name glow | head -n1) && test -n \"$found\" && install -Dm755 \"$found\" \"$HOME/.local/bin/glow\"",
-            "uninstall": "rm -f \"$HOME/.local/bin/glow\""
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -626,10 +635,19 @@
         },
         {
           "provider": "script",
+          "source": {
+            "type": "github",
+            "owner": "jesseduffield",
+            "repo": "lazygit"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "lazygit_0.62.2_linux_{arch}.tar.gz",
+            "tag_name": "v0.62.2"
+          },
+          "bin": "lazygit",
           "options": {
-            "check": "command -v lazygit || test -x \"$HOME/.local/bin/lazygit\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && arch=$(uname -m) && case \"$arch\" in aarch64|arm64) arch=arm64 ;; x86_64|amd64) arch=x86_64 ;; *) exit 1 ;; esac && asset=\"lazygit_0.62.2_linux_${arch}.tar.gz\" && url=\"https://github.com/jesseduffield/lazygit/releases/download/v0.62.2/$asset\" && tmp=$(mktemp -d) && curl -fsSL \"$url\" | tar -xz -C \"$tmp\" && install -Dm755 \"$tmp/lazygit\" \"$HOME/.local/bin/lazygit\"",
-            "uninstall": "rm -f \"$HOME/.local/bin/lazygit\""
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -760,11 +778,21 @@
         },
         {
           "provider": "script",
+          "bin": "nvim",
+          "source": {
+            "type": "github",
+            "owner": "neovim",
+            "repo": "neovim"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "nvim-linux-{arch}.tar.gz"
+          },
           "options": {
-            "check": "test -x $HOME/.local/bin/nvim",
-            "install": "arch=$(uname -m); case $arch in aarch64) asset=nvim-linux-arm64 ;; *) asset=nvim-linux-x86_64 ;; esac; mkdir -p $HOME/.local; curl -fsSL https://github.com/neovim/neovim/releases/latest/download/$asset.tar.gz | tar -xz -C $HOME/.local --strip-components=1",
-            "uninstall": "rm -rf $HOME/.local/bin/nvim $HOME/.local/lib/nvim $HOME/.local/share/nvim/runtime",
-            "upgrade": "arch=$(uname -m); case $arch in aarch64) asset=nvim-linux-arm64 ;; *) asset=nvim-linux-x86_64 ;; esac; curl -fsSL https://github.com/neovim/neovim/releases/latest/download/$asset.tar.gz | tar -xz -C $HOME/.local --strip-components=1"
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
+            "extract_dir": "$HOME/.local",
+            "strip_components": "1",
+            "uninstall": "rm -rf $HOME/.local/bin/nvim $HOME/.local/lib/nvim $HOME/.local/share/nvim/runtime"
           }
         }
       ],
@@ -798,8 +826,7 @@
           "options": {
             "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" && . \"$NVM_DIR/nvm.sh\" --no-use && nvm version default 2>/dev/null | grep -q '^v24'",
             "install": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; PROFILE=/dev/null bash -c 'curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash'; . \"$NVM_DIR/nvm.sh\" --no-use; nvm install 24 --latest-npm; nvm alias default 24; nvm use --silent default",
-            "uninstall": "rm -rf \"$HOME/.nvm\"",
-            "upgrade": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; . \"$NVM_DIR/nvm.sh\" --no-use; nvm install 24 --latest-npm; nvm alias default 24; nvm use --silent default"
+            "uninstall": "rm -rf \"$HOME/.nvm\""
           }
         }
       ],
@@ -836,9 +863,8 @@
           "provider": "script",
           "options": {
             "check": "test -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
-            "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"",
-            "uninstall": "rm -rf $HOME/.oh-my-zsh",
-            "upgrade": "(cd $HOME/.oh-my-zsh && git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done"
+            "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"; (cd $HOME/.oh-my-zsh && git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done",
+            "uninstall": "rm -rf $HOME/.oh-my-zsh"
           }
         }
       ]
@@ -851,10 +877,18 @@
         },
         {
           "provider": "script",
+          "source": {
+            "type": "github",
+            "owner": "lkshrk",
+            "repo": "omni"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "omni_{os}_{arch}.tar.gz"
+          },
+          "bin": "omni",
           "options": {
-            "check": "command -v omni",
-            "install": "bin_dir=\"${DIR:-$HOME/.local/bin}\"; mkdir -p \"$bin_dir\"; arch=$(uname -m); case \"$arch\" in x86_64|amd64) arch=x86_64 ;; aarch64*|arm64) arch=arm64 ;; *) exit 1 ;; esac; os=$(uname -s | tr '[:upper:]' '[:lower:]'); url=\"https://github.com/lkshrk/omni/releases/latest/download/omni_${os}_${arch}.tar.gz\"; tmp=$(mktemp -d); curl -fsSL \"$url\" -o \"$tmp/omni.tar.gz\"; tar -xzf \"$tmp/omni.tar.gz\" -C \"$tmp\" omni; install -Dm 755 \"$tmp/omni\" \"$bin_dir/omni\"; rm -rf \"$tmp\"",
-            "uninstall": "rm -f $HOME/.local/bin/omni"
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -1195,10 +1229,19 @@
         },
         {
           "provider": "script",
+          "source": {
+            "type": "github",
+            "owner": "charmbracelet",
+            "repo": "vhs"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "vhs_0.11.0_Linux_{arch}.tar.gz",
+            "tag_name": "v0.11.0"
+          },
+          "bin": "vhs",
           "options": {
-            "check": "command -v vhs || test -x \"$HOME/.local/bin/vhs\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && arch=$(uname -m) && case \"$arch\" in aarch64|arm64) arch=arm64 ;; x86_64|amd64) arch=x86_64 ;; *) exit 1 ;; esac && asset=\"vhs_0.11.0_Linux_${arch}.tar.gz\" && url=\"https://github.com/charmbracelet/vhs/releases/download/v0.11.0/$asset\" && tmp=$(mktemp -d) && curl -fsSL \"$url\" | tar -xz -C \"$tmp\" && found=$(find \"$tmp\" -type f -perm -111 -name vhs | head -n1) && test -n \"$found\" && install -Dm755 \"$found\" \"$HOME/.local/bin/vhs\"",
-            "uninstall": "rm -f \"$HOME/.local/bin/vhs\""
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -1295,10 +1338,19 @@
         },
         {
           "provider": "script",
+          "source": {
+            "type": "github",
+            "owner": "google",
+            "repo": "yamlfmt"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "yamlfmt_0.21.0_Linux_{arch}.tar.gz",
+            "tag_name": "v0.21.0"
+          },
+          "bin": "yamlfmt",
           "options": {
-            "check": "command -v yamlfmt || test -x \"$HOME/.local/bin/yamlfmt\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && arch=$(uname -m) && case \"$arch\" in aarch64|arm64) arch=arm64 ;; x86_64|amd64) arch=x86_64 ;; *) exit 1 ;; esac && asset=\"yamlfmt_0.21.0_Linux_${arch}.tar.gz\" && url=\"https://github.com/google/yamlfmt/releases/download/v0.21.0/$asset\" && tmp=$(mktemp -d) && curl -fsSL \"$url\" | tar -xz -C \"$tmp\" && found=$(find \"$tmp\" -type f -perm -111 -name yamlfmt | head -n1) && test -n \"$found\" && install -Dm755 \"$found\" \"$HOME/.local/bin/yamlfmt\"",
-            "uninstall": "rm -f \"$HOME/.local/bin/yamlfmt\""
+            "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64"
           }
         }
       ],
@@ -1324,10 +1376,18 @@
         },
         {
           "provider": "script",
+          "source": {
+            "type": "github",
+            "owner": "mikefarah",
+            "repo": "yq"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "yq_{arch}"
+          },
+          "bin": "yq",
           "options": {
-            "check": "command -v yq || test -x \"$HOME/.local/bin/yq\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && arch=$(uname -m) && case \"$arch\" in aarch64|arm64) p=linux_arm64 ;; x86_64|amd64) p=linux_amd64 ;; *) exit 1 ;; esac && curl -fsSL \"https://github.com/mikefarah/yq/releases/latest/download/yq_${p}\" -o \"$HOME/.local/bin/yq\" && chmod +x \"$HOME/.local/bin/yq\"",
-            "uninstall": "rm -f \"$HOME/.local/bin/yq\""
+            "arch_map": "aarch64:linux_arm64,x86_64:linux_amd64,arm64:linux_arm64,amd64:linux_amd64"
           }
         }
       ],
