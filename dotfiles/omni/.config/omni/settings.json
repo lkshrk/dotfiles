@@ -235,8 +235,7 @@
       "name": "ai",
       "tools": [
         "claude-code",
-        "@openai/codex",
-        "grok"
+        "@openai/codex"
       ],
       "dots": [
         {
@@ -724,6 +723,17 @@
             "!/AGENTS.md",
             "!/RTK.md",
             "!/rules/"
+          ]
+        },
+        {
+          "name": "grok",
+          "path": "~/.grok",
+          "ignore": [
+            "*",
+            "!/config.toml",
+            "!/skills/",
+            "!/commands/",
+            "!/hooks/"
           ]
         }
       ]
@@ -1363,25 +1373,6 @@
         }
       ],
       "git": "https://github.com/golang/tools"
-    },
-    "grok": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "grok"
-        },
-        {
-          "provider": "script",
-          "options": {
-            "check": "command -v grok || test -x $HOME/.grok/bin/grok",
-            "install": "curl -fsSL https://x.ai/cli/install.sh | bash",
-            "uninstall": "rm -f \"$HOME/.grok/bin/grok\" \"$HOME/.grok/bin/agent\" \"$HOME/.local/bin/grok\" \"$HOME/.local/bin/agent\" && rm -f \"$HOME/.grok/downloads\"/grok-* && rm -rf \"$HOME/.grok/completions\"",
-            "upgrade": "grok update 2\u003e/dev/null || curl -fsSL https://x.ai/cli/install.sh | bash",
-            "version": "grok --version"
-          }
-        }
-      ],
-      "git": "https://github.com/xai-org/grok-cli"
     },
     "hammerspoon": {
       "providers": [
