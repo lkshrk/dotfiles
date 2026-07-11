@@ -2,6 +2,9 @@
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
 ENV_NEXT_PROFILE_CURRENT_VERSION=4
+if [ -n "${CODER_OMNI_HOST:-}" ]; then
+  export OMNI_HOSTNAME="$CODER_OMNI_HOST"
+fi
 if [ "${ENV_NEXT_PROFILE_LOADED:-}" = 1 ] && [ "${ENV_NEXT_PROFILE_PATH:-}" = "${PATH:-}" ] && [ "${ENV_NEXT_PROFILE_VERSION:-}" = "$ENV_NEXT_PROFILE_CURRENT_VERSION" ]; then
   unset ENV_NEXT_PROFILE_CURRENT_VERSION
   return 0 2>/dev/null || exit 0
