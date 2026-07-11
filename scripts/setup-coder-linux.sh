@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/setup-coder-linux.sh - minimal Linux prerequisites for Coder.
+# scripts/setup-coder-linux.sh - minimal Linux bootstrap before omni can run.
 # Sourced variables from setup-coder.sh: REPO_DIR, OMNI_CONFIG_PATH,
 #   c_red/c_yel/c_grn/c_dim/c_off.
 # Helper functions (say/step/ok/warn/die) are exported from setup-coder.sh.
@@ -8,8 +8,7 @@ set -euo pipefail
 
 [[ "$(uname -s)" == "Linux" ]] || { echo "setup-coder-linux.sh must run on Linux" >&2; return 1; }
 
-# omni's installer and uv land binaries in ~/.local/bin; the Coder agent's
-# non-login shell does not have it on PATH.
+# omni lands binaries in ~/.local/bin; Coder agent shells often start without it.
 export PATH="$HOME/.local/bin:$PATH"
 
 # ─── Coder base packages via apt ──────────────────────────────────────────────
@@ -34,136 +33,80 @@ install_apt_packages() {
   ok "base apt packages installed"
 }
 
-# ─── Omni on Linux ────────────────────────────────────────────────────────────
+# ─── Login shell (Linux) ───────────────────────────────────────────────────────
+
+activate_zsh_login_shell() {
+  command -v zsh >/dev/null 2>&1 || return 0
+
+  local zsh_path
+  zsh_path="$(command -v zsh)"
+  grep -qx "$zsh_path" /etc/shells 2>/dev/null || echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+  if [[ "${SHELL:-}" != "$zsh_path" ]]; then
+    step "login shell -> zsh"
+    sudo chsh -s "$zsh_path" "$USER" || warn "chsh to zsh failed; set login shell manually"
+  else
+    ok "login shell already zsh"
+  fi
+}
+
+# ─── Omni on Linux (chicken-and-egg) ──────────────────────────────────────────
+
+omni_reads_config() {
+  command -v omni >/dev/null 2>&1 \
+    && omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1
+}
 
 install_omni_linux() {
   step "omni (Linux)"
 
-  if command -v omni >/dev/null 2>&1; then
-    if omni_version_is_supported && omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1; then
-      ok "omni already on PATH: $(omni --version 2>/dev/null || printf 'found')"
-      return
-    fi
-    warn "installed omni is older than $OMNI_MIN_VERSION or cannot read this repo's config; installing current release"
-  fi
-
-  # The releases/latest/download redirect is served by github.com and is not
-  # subject to the 60/hr unauthenticated api.github.com rate limit (which a
-  # shared NAT egress IP exhausts and which left omni uninstalled).
-  curl -fsSL https://raw.githubusercontent.com/lkshrk/omni/main/scripts/linux-install.sh | bash
-
-  if command -v omni >/dev/null 2>&1 && omni_version_is_supported; then
-    ok "omni installed: $(omni --version 2>/dev/null || printf 'found')"
-  else
-    die "omni $OMNI_MIN_VERSION or newer is required for the Coder profile but could not be installed"
-  fi
-}
-
-# ─── bun (Linux) ──────────────────────────────────────────────────────────────
-#
-# Installed up-front, before `omni tools sync`, for two reasons:
-#   1. omni's node provider probes `command -v bun`; without it on PATH the whole
-#      node ecosystem (yaml-language-server, yaml-lint, …) is skipped.
-#   2. Several script-provider installers (codex, devcontainer, …) shell out to
-#      "$HOME/.bun/bin/bun add -g", so bun must exist regardless of sync order.
-
-install_bun_linux() {
-  step "bun (Linux)"
-
-  if [[ ! -x "$HOME/.bun/bin/bun" ]]; then
-    curl -fsSL https://bun.sh/install | bash
-  fi
-
-  if [[ -x "$HOME/.bun/bin/bun" ]]; then
-    ok "bun ready: $("$HOME/.bun/bin/bun" --version 2>/dev/null || printf 'found')"
-  else
-    warn "bun install failed; node ecosystem and bun-based tools will be skipped"
-  fi
-}
-
-# ─── nvm + Node (Linux) ──────────────────────────────────────────────────────
-
-install_nvm_node_linux() {
-  step "nvm + Node 24 (Linux)"
-
-  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-
-  if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
-    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-  fi
-
-  if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-    # shellcheck source=/dev/null
-    . "$NVM_DIR/nvm.sh" --no-use
-  fi
-
-  if ! command -v nvm >/dev/null 2>&1; then
-    die "nvm is required for the Coder Node profile but could not be installed"
-  fi
-
-  nvm install 24 --latest-npm
-  nvm alias default 24
-  nvm use --silent default
-
-  # Agent-spawned shells never source profile.sh, so without these links they
-  # fall back to the system node (v18, too old for pnpm and friends).
-  if [[ -n "${NVM_BIN:-}" ]]; then
-    mkdir -p "$HOME/.local/bin"
-    local bin
-    for bin in node npm npx corepack; do
-      [[ -x "$NVM_BIN/$bin" ]] && ln -sf "$NVM_BIN/$bin" "$HOME/.local/bin/$bin"
-    done
-  fi
-
-  ok "node ready: $(node --version 2>/dev/null || printf 'found')"
-}
-
-# ─── grok (Linux) ─────────────────────────────────────────────────────────────
-#
-# Omni's agents restore targets grok for plugins/MCP; install the CLI before
-# agents restore. Lands in ~/.grok/bin (added to PATH in export_sync_path).
-
-install_grok_linux() {
-  step "grok (Linux)"
-
-  if command -v grok >/dev/null 2>&1 || [[ -x "$HOME/.grok/bin/grok" ]]; then
-    ok "grok ready: $(grok --version 2>/dev/null | head -n1 || printf 'found')"
+  if omni_reads_config; then
+    ok "omni already on PATH: $(omni --version 2>/dev/null || printf 'found')"
     return
   fi
 
-  curl -fsSL https://x.ai/cli/install.sh | bash
+  if command -v omni >/dev/null 2>&1; then
+    warn "installed omni cannot read this repo's config; installing latest release"
+  fi
 
-  if command -v grok >/dev/null 2>&1 || [[ -x "$HOME/.grok/bin/grok" ]]; then
-    ok "grok installed: $(grok --version 2>/dev/null | head -n1 || printf 'found')"
+  bash "$REPO_DIR/scripts/install-omni-latest.sh"
+
+  if omni_reads_config; then
+    ok "omni installed: $(omni --version 2>/dev/null || printf 'found')"
   else
-    warn "grok install failed; grok plugins/MCP restore will be skipped"
+    die "latest omni could not read $OMNI_CONFIG_PATH"
   fi
 }
 
-# ─── uv (Linux) ───────────────────────────────────────────────────────────────
+# ─── nvm symlinks for agent shells ────────────────────────────────────────────
 #
-# omni's uv provider (thefuck, …) probes for `uv`; install it before sync.
-# Lands in ~/.local/bin (already on PATH, no sudo needed).
+# Agent subshells never source zshenv; keep node on PATH via ~/.local/bin.
 
-install_uv_linux() {
-  step "uv (Linux)"
+sync_nvm_local_bin_links() {
+  local nvm_node_bin="${1:-}"
+  local env_nvm_lib="${REPO_DIR}/dotfiles/env/.config/env/lib/nvm-node.sh"
 
-  if ! command -v uv >/dev/null 2>&1 && [[ ! -x "$HOME/.local/bin/uv" ]]; then
-    curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="$HOME/.local/bin" sh
+  if [[ -z "$nvm_node_bin" && -r "$env_nvm_lib" ]]; then
+    # shellcheck source=/dev/null
+    . "$env_nvm_lib"
+    nvm_node_bin="$(env_next_nvm_resolve_bin default 2>/dev/null || true)"
+    unset -f env_next_nvm_alias_target env_next_nvm_best_dir_from_candidates 2>/dev/null || true
+    unset -f env_next_nvm_resolve_dir env_next_nvm_resolve_bin 2>/dev/null || true
   fi
 
-  if command -v uv >/dev/null 2>&1 || [[ -x "$HOME/.local/bin/uv" ]]; then
-    ok "uv ready: $(uv --version 2>/dev/null || "$HOME/.local/bin/uv" --version 2>/dev/null || printf 'found')"
-  else
-    warn "uv install failed; uv-based tools (thefuck) will be skipped"
+  if [[ -z "$nvm_node_bin" && -n "${NVM_BIN:-}" ]]; then
+    nvm_node_bin="$NVM_BIN"
   fi
+
+  [[ -n "$nvm_node_bin" && -x "$nvm_node_bin/node" ]] || return 0
+
+  mkdir -p "$HOME/.local/bin"
+  local bin
+  for bin in node npm npx corepack; do
+    [[ -x "$nvm_node_bin/$bin" ]] && ln -sf "$nvm_node_bin/$bin" "$HOME/.local/bin/$bin"
+  done
 }
 
-# ─── PATH for the sync session ────────────────────────────────────────────────
-#
-# This file is *sourced* by setup-coder.sh, so exporting PATH here makes the
-# freshly installed binaries (and bun) visible to the omni bootstrap/sync steps
-# that follow, before the login shell's zsh PATH config is in effect.
+# ─── PATH for the bootstrap bash session ──────────────────────────────────────
 
 export_sync_path() {
   export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
@@ -173,20 +116,14 @@ export_sync_path() {
     nvm use --silent default >/dev/null 2>&1 || true
   fi
 
-  # pnpm errors on `pnpm ls -g` when its global bin dir is off PATH, which
-  # aborts omni's bulk status check and with it the whole tools sync.
   export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
   mkdir -p "$PNPM_HOME/bin"
 
   export PATH="${NVM_BIN:+$NVM_BIN:}$PNPM_HOME/bin:$HOME/.grok/bin:$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
 }
 
-# ─── main ─────────────────────────────────────────────────────────────────────
+# ─── main (phase 1: only what omni cannot do for itself) ─────────────────────
 
 install_apt_packages
+activate_zsh_login_shell
 install_omni_linux
-install_bun_linux
-install_nvm_node_linux
-install_grok_linux
-install_uv_linux
-export_sync_path

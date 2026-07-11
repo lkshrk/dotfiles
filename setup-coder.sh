@@ -23,36 +23,13 @@ die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 
 export -f say step ok warn die
 
-omni_version() {
-  omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+(\.[0-9]+){1,2}$/) { print $i; exit } }'
-}
-
-version_at_least() {
-  awk -v current="$1" -v minimum="$2" 'BEGIN {
-    split(current, c, ".")
-    split(minimum, m, ".")
-    for (i = 1; i <= 3; i++) {
-      c[i] += 0
-      m[i] += 0
-      if (c[i] > m[i]) exit 0
-      if (c[i] < m[i]) exit 1
-    }
-    exit 0
-  }'
-}
-
-omni_version_is_supported() {
-  local current
-  current="$(omni_version)"
-  [[ -n "$current" ]] && version_at_least "$current" "$OMNI_MIN_VERSION"
+omni_reads_config() {
+  command -v omni >/dev/null 2>&1 \
+    && omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1
 }
 
 ensure_omni_version() {
-  local current
-  current="$(omni_version)"
-  [[ -n "$current" ]] || die "could not determine omni version"
-  version_at_least "$current" "$OMNI_MIN_VERSION" \
-    || die "installed omni $current is older than required $OMNI_MIN_VERSION"
+  omni_reads_config || die "omni cannot read $OMNI_CONFIG_PATH; install latest omni and rerun setup"
 }
 
 [[ "$(uname -s)" == "Linux" ]] || die "setup-coder.sh is Linux-only"
@@ -77,6 +54,21 @@ ok "using Omni host profile: $OMNI_HOSTNAME"
 
 step "omni bootstrap"
 omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
+
+step "shell (zsh + oh-my-zsh)"
+# oh-my-zsh writes a real ~/.zshrc; drop it before install and again before stow.
+rm -f "$HOME/.zshrc"
+omni --config "$OMNI_CONFIG_PATH" --yes tools sync shell
+rm -f "$HOME/.zshrc"
+for _dot in zshenv zshrc zsh env; do
+  omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo "$_dot"
+done
+unset _dot
+ok "shell ready: $(command -v zsh 2>/dev/null || printf 'zsh')"
+
+step "toolchain prerequisites"
+omni --config "$OMNI_CONFIG_PATH" --yes tools sync prereqs
+export_sync_path
 
 step "omni tools"
 omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
@@ -105,6 +97,13 @@ rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc" \
   "$HOME/.claude/plugins/installed_plugins.json"
 rm -rf "$HOME/.config/opencode"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
+
+# tools sync may replace ~/.local/bin/node; re-point at the nvm default after stow.
+if declare -F sync_nvm_local_bin_links >/dev/null 2>&1; then
+  step "nvm local bin links"
+  sync_nvm_local_bin_links
+  ok "node links: $(readlink -f "$HOME/.local/bin/node" 2>/dev/null || printf 'updated')"
+fi
 
 step "codex telemetry"
 _codex_config="$HOME/.codex/config.toml"
@@ -186,13 +185,4 @@ if command -v nvim >/dev/null 2>&1 || [ -x "$HOME/.local/bin/nvim" ]; then
     || warn "nvim plugin sync failed; plugins will install on first launch"
 fi
 
-# Make zsh the login shell now that the binary is installed (core group).
-if command -v zsh >/dev/null 2>&1; then
-  _zsh_path="$(command -v zsh)"
-  grep -qx "$_zsh_path" /etc/shells 2>/dev/null || echo "$_zsh_path" | sudo tee -a /etc/shells >/dev/null
-  if [[ "${SHELL:-}" != "$_zsh_path" ]]; then
-    step "login shell -> zsh"
-    sudo chsh -s "$_zsh_path" "$USER" || warn "chsh to zsh failed; set login shell manually"
-  fi
-  unset _zsh_path
-fi
+activate_zsh_login_shell

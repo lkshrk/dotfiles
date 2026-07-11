@@ -93,11 +93,9 @@ _env_next_use_nvmrc() {
   local nvmrc wanted resolved current
 
   if ! nvmrc="$(_env_next_find_nvmrc)"; then
-    if [[ -n "${_ENV_NEXT_NVMRC_ACTIVE:-}" ]]; then
-      _env_next_use_node_fast default || {
-        _env_next_load_nvm && nvm use --silent default >/dev/null 2>&1
-      }
-    fi
+    _env_next_use_node_fast default || {
+      _env_next_load_nvm && nvm use --silent default >/dev/null 2>&1
+    }
     unset _ENV_NEXT_NVMRC_ACTIVE
     return 0
   fi
