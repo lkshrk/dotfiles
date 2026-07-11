@@ -1,4 +1,4 @@
-model_auto_compact_token_limit = 217600
+model_auto_compact_token_limit = 217_600
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 approvals_reviewer = "user"
@@ -6,16 +6,15 @@ approval_policy = "never"
 sandbox_mode = "workspace-write"
 default_permissions = "signed"
 
-
 [permissions.signed]
 extends = ":workspace"
 
 [permissions.signed.filesystem.":workspace_roots"]
 ".git/" = "write"
 
-[permissions.signed.network]
-enabled = true
-dangerously_allow_all_unix_sockets = true
+  [permissions.signed.network]
+  enabled = true
+  dangerously_allow_all_unix_sockets = true
 
 [agents]
 max_threads = 6
@@ -29,22 +28,23 @@ log_user_prompt = true
 endpoint = "https://otel.h-cloud.lan/v1/logs"
 protocol = "binary"
 
-[otel.exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+  [otel.exporter.otlp-http.tls]
+  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [otel.trace_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/traces"
 protocol = "binary"
 
-[otel.trace_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+  [otel.trace_exporter.otlp-http.tls]
+  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [otel.metrics_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/metrics"
 protocol = "binary"
 
-[otel.metrics_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+  [otel.metrics_exporter.otlp-http.tls]
+  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+
 [projects."/Users/lkshrk"]
 trust_level = "trusted"
 
@@ -93,20 +93,16 @@ trust_level = "trusted"
 [projects."/Users/lkshrk/Dev/better-audio-mixer"]
 trust_level = "trusted"
 
-[projects."/Users/lkshrk/.local/share/shiplight-mcp"]
-trust_level = "trusted"
-
-
 [tui]
 session_picker_view = "dense"
 
 [tui.keymap.editor]
-insert_newline = ["shift-enter"]
-kill_line_start = ["ctrl-u"]
+insert_newline = [ "shift-enter" ]
+kill_line_start = [ "ctrl-u" ]
 
-[tui.model_availability_nux]
-"gpt-5.5" = 4
-"gpt-5.6-sol" = 4
+  [tui.model_availability_nux]
+  "gpt-5.5" = 4
+  "gpt-5.6-sol" = 4
 
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
@@ -158,7 +154,7 @@ approval_mode = "approve"
 
 [mcp_servers.xcodebuildmcp]
 command = "xcodebuildmcp"
-args = ["mcp"]
+args = [ "mcp" ]
 enabled = false
 
 [mcp_servers.linear]
@@ -168,12 +164,13 @@ url = "https://mcp.linear.app/mcp"
 command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
 
 [mcp_servers.shiplight]
-command = "npx"
-args = ["-y", "@shiplightai/mcp@latest"]
+command = "/Users/lkshrk/.bun/bin/bunx"
+args = ["@shiplightai/mcp@latest"]
+startup_timeout_sec = 60
 
 [mcp_servers.shiplight.env]
-SHIPLIGHT_RELAY_PORT = "15170"
 PWDEBUG = "console"
+PATH = "/Users/lkshrk/.bun/bin:/usr/bin:/bin"
 
 [plugins."context-mode@context-mode"]
 enabled = true
@@ -202,13 +199,9 @@ enabled = true
 [plugins."ponytail@ponytail"]
 enabled = true
 
-# END OMC MANAGED MCP REGISTRY
-
 [features]
 hooks = true
 js_repl = false
-
-[hooks.state]
 
 [hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
 trusted_hash = "sha256:63e01e74b8b5125c7c0cebb705b28592d25ae24613a5a8af4c453e4d09608ec6"
