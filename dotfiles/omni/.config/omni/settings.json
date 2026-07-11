@@ -31,6 +31,9 @@
       },
       {
         "source": "sopaco/deepwiki-rs"
+      },
+      {
+        "source": "ShiplightAI/agent-skills-v2"
       }
     ],
     "mcp_servers": [
@@ -288,7 +291,8 @@
         "lkshrk/linear-ai",
         "rjyo/moshi-skill",
         "lkshrk/useful-skills",
-        "sopaco/deepwiki-rs"
+        "sopaco/deepwiki-rs",
+        "ShiplightAI/agent-skills-v2"
       ],
       "mcp_servers": [
         "node_repl",
