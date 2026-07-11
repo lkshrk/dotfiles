@@ -131,6 +131,10 @@
           "path": "~/.zshenv"
         },
         {
+          "name": "bashrc",
+          "path": "~/.bashrc"
+        },
+        {
           "name": "zshrc",
           "path": "~/.zshrc",
           "hosts": {
