@@ -4,7 +4,7 @@
       "name": "ai",
       "tools": [
         "claude-code",
-        "cloder",
+        "coder",
         "@openai/codex"
       ],
       "dots": [
@@ -390,7 +390,10 @@
     },
     {
       "name": "coder",
-      "special": "host"
+      "special": "host",
+      "tools": [
+        "bubblewrap"
+      ]
     },
     {
       "name": "topaz",

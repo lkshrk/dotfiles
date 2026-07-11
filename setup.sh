@@ -106,6 +106,13 @@ ensure_omni_bootstrap() {
 
 omni_bootstrap() {
   step "omni bootstrap"
+  # Codex may replace the managed symlink with a real config before bootstrap.
+  # Keep the local copy, then let Omni install the tracked version.
+  local codex_config="$HOME/.codex/config.toml"
+  if [[ -e "$codex_config" && ! -L "$codex_config" ]]; then
+    mv "$codex_config" "$codex_config.pre-omni-$(date +%Y%m%d%H%M%S)"
+    warn "backed up local Codex config before dots sync"
+  fi
   omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
 
   step "omni tools"
