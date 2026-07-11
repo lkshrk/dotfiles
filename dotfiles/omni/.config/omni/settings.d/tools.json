@@ -27,6 +27,35 @@
       ],
       "git": "https://github.com/argoproj/argo-workflows"
     },
+    "bat": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "bat"
+        },
+        {
+          "provider": "apt",
+          "package": "bat"
+        },
+        {
+          "provider": "apk",
+          "package": "bat"
+        },
+        {
+          "provider": "dnf",
+          "package": "bat"
+        },
+        {
+          "provider": "pacman",
+          "package": "bat"
+        },
+        {
+          "provider": "zypper",
+          "package": "bat"
+        }
+      ],
+      "git": "https://github.com/sharkdp/bat"
+    },
     "bats-core": {
       "providers": [
         {
@@ -99,6 +128,17 @@
         {
           "provider": "bun",
           "package": "ccundo"
+        }
+      ]
+    },
+    "cloder": {
+      "providers": [
+        {
+          "provider": "script",
+          "options": {
+            "check": "command -v cloder",
+            "install": "curl -fsSL https://coder.h-cloud.io/install.sh | sudo sh"
+          }
         }
       ]
     },

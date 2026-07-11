@@ -259,12 +259,25 @@
       "name": "ai",
       "tools": [
         "claude-code",
+        "cloder",
         "@openai/codex"
       ],
       "dots": [
         {
           "name": "free-claude-code",
           "path": "~/.config/free-claude-code"
+        },
+        {
+          "name": "codex",
+          "path": "~/.codex",
+          "ignore": [
+            "*",
+            "!/config.toml",
+            "!/mcp.json",
+            "!/AGENTS.md",
+            "!/RTK.md",
+            "!/rules/"
+          ]
         }
       ]
     },
@@ -329,6 +342,7 @@
     {
       "name": "core",
       "tools": [
+        "bat",
         "coreutils",
         "eza",
         "fd",
@@ -463,6 +477,12 @@
         "yamlfmt",
         "yamllint",
         "git-delta"
+      ],
+      "dots": [
+        {
+          "name": "gh",
+          "path": "~/.config/gh"
+        }
       ]
     },
     {
@@ -646,10 +666,6 @@
       ],
       "dots": [
         {
-          "name": "gh",
-          "path": "~/.config/gh"
-        },
-        {
           "name": "git",
           "path": "~/.config/git",
           "hosts": {
@@ -757,18 +773,6 @@
             "!/keybindings.json",
             "!/statusline-command.sh",
             "!/tokenline.sh"
-          ]
-        },
-        {
-          "name": "codex",
-          "path": "~/.codex",
-          "ignore": [
-            "*",
-            "!/config.toml",
-            "!/mcp.json",
-            "!/AGENTS.md",
-            "!/RTK.md",
-            "!/rules/"
           ]
         },
         {
@@ -890,6 +894,35 @@
       ],
       "git": "https://github.com/argoproj/argo-workflows"
     },
+    "bat": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "bat"
+        },
+        {
+          "provider": "apt",
+          "package": "bat"
+        },
+        {
+          "provider": "apk",
+          "package": "bat"
+        },
+        {
+          "provider": "dnf",
+          "package": "bat"
+        },
+        {
+          "provider": "pacman",
+          "package": "bat"
+        },
+        {
+          "provider": "zypper",
+          "package": "bat"
+        }
+      ],
+      "git": "https://github.com/sharkdp/bat"
+    },
     "bats-core": {
       "providers": [
         {
@@ -962,6 +995,17 @@
         {
           "provider": "bun",
           "package": "ccundo"
+        }
+      ]
+    },
+    "cloder": {
+      "providers": [
+        {
+          "provider": "script",
+          "options": {
+            "check": "command -v cloder",
+            "install": "curl -fsSL https://coder.h-cloud.io/install.sh | sudo sh"
+          }
         }
       ]
     },

@@ -53,9 +53,10 @@ step "omni coder profile"
 ok "using Omni host profile: $OMNI_HOSTNAME"
 
 step "omni bootstrap"
-# Ubuntu skel ships a real ~/.bashrc; bootstrap's internal dots sync runs
-# without --use-repo and cannot auto-resolve that conflict.
-rm -f "$HOME/.bashrc"
+# Bootstrap's internal dots sync runs before this script can pass --use-repo.
+# Remove files Coder and shell installers create so Omni never adopts them into
+# the dotfiles checkout.
+rm -f "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.codex/config.toml"
 omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
 
 step "shell (zsh + oh-my-zsh)"
