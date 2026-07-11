@@ -7,11 +7,12 @@ OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.j
 OMNI_MIN_VERSION="${OMNI_MIN_VERSION:-0.8.8}"
 OMNI_AGENTS_REQUIRED="${OMNI_AGENTS_REQUIRED:-0}"
 
-_bootstrap_say()  { if declare -F say  >/dev/null 2>&1; then command say  "$@"; else printf '%s\n' "$@"; fi; }
-_bootstrap_step() { if declare -F step >/dev/null 2>&1; then command step "$@"; else printf '==> %s\n' "$*"; fi; }
-_bootstrap_ok()   { if declare -F ok   >/dev/null 2>&1; then command ok   "$@"; else _bootstrap_say "OK $*"; fi; }
-_bootstrap_warn() { if declare -F warn >/dev/null 2>&1; then command warn "$@"; else _bootstrap_say "! $*" >&2; fi; }
-_bootstrap_die()  { if declare -F die  >/dev/null 2>&1; then command die  "$@"; else _bootstrap_say "x $*" >&2; exit 1; fi; }
+# 'command' would bypass the functions setup-coder.sh exports; call them directly.
+_bootstrap_say()  { if declare -F say  >/dev/null 2>&1; then say  "$@"; else printf '%s\n' "$@"; fi; }
+_bootstrap_step() { if declare -F step >/dev/null 2>&1; then step "$@"; else printf '==> %s\n' "$*"; fi; }
+_bootstrap_ok()   { if declare -F ok   >/dev/null 2>&1; then ok   "$@"; else _bootstrap_say "OK $*"; fi; }
+_bootstrap_warn() { if declare -F warn >/dev/null 2>&1; then warn "$@"; else _bootstrap_say "! $*" >&2; fi; }
+_bootstrap_die()  { if declare -F die  >/dev/null 2>&1; then die  "$@"; else _bootstrap_say "x $*" >&2; exit 1; fi; }
 
 omni_version() {
   omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+(\.[0-9]+){1,2}$/) { print $i; exit } }'

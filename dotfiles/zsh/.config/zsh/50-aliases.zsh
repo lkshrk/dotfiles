@@ -3,6 +3,8 @@ alias la='ls -lah'
 alias lh=la
 alias ll='ls -lh'
 
+alias cat='bat'
+
 alias or='omni reconcile -y'
 
 #github
