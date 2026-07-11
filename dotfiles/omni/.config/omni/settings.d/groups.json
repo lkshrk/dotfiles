@@ -1,11 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v17.schema.json",
-  "version": 17,
-  "$include": [
-    "settings.d/agents.json",
-    "settings.d/groups.json",
-    "settings.d/tools.json"
-  ],
   "groups": [
     {
       "name": "ai",
@@ -36,43 +29,16 @@
         }
       ],
       "skills": [
-        "JuliusBrussee/caveman",
-        "ShiplightAI/agent-skills",
-        "mattpocock/skills",
-        "vercel-labs/skills",
-        "lkshrk/linear-ai",
-        "rjyo/moshi-skill",
-        "lkshrk/useful-skills",
-        "sopaco/deepwiki-rs"
+        "@agents.packages"
       ],
       "mcp_servers": [
-        "node_repl",
-        "linear",
-        "linear-server",
-        "shiplight",
-        "codebase-memory-mcp",
-        "context7",
-        "context-mode"
+        "@agents.mcp_servers"
       ],
       "plugins": [
-        "superpowers",
-        "github",
-        "ecc",
-        "context-mode",
-        "caveman",
-        "gopls-lsp",
-        "code-simplifier",
-        "lua-lsp",
-        "frontend-design",
-        "ponytail"
+        "@agents.plugins"
       ],
       "marketplaces": [
-        "context-mode",
-        "lkshrk",
-        "caveman",
-        "claude-plugins-official",
-        "ecc",
-        "ponytail"
+        "@agents.marketplaces"
       ]
     },
     {
@@ -527,91 +493,5 @@
         }
       ]
     }
-  ],
-  "host_settings": {
-    "coder": {
-      "dots_repo": "~/dotfiles",
-      "dots_disabled": false,
-      "dots_git": {},
-      "disabled_providers": [
-        "brew"
-      ],
-      "provider_priority": [
-        "bun",
-        "uv",
-        "apt",
-        "script",
-        "npm",
-        "pnpm",
-        "pip"
-      ]
-    },
-    "topaz": {
-      "dots_repo": "~/Dev/dotfiles",
-      "dots_disabled": false,
-      "dots_git": {},
-      "provider_priority": [
-        "bun",
-        "uv",
-        "brew",
-        "pnpm",
-        "apt",
-        "apk",
-        "dnf",
-        "pacman",
-        "zypper",
-        "npm",
-        "pip"
-      ]
-    }
-  },
-  "hosts": {
-    "coder": [
-      "ai",
-      "ai-plugins",
-      "core",
-      "dev",
-      "dev-tooling",
-      "prereqs",
-      "shell",
-      "test-tooling"
-    ],
-    "topaz": [
-      "ai",
-      "ai-plugins",
-      "core",
-      "desk",
-      "dev",
-      "dev-tooling",
-      "gaming",
-      "go",
-      "infra",
-      "lua",
-      "mac",
-      "prereqs",
-      "priv",
-      "python",
-      "shell",
-      "test-tooling",
-      "ts",
-      "utils"
-    ]
-  },
-  "ignore": {
-    "tools": [
-      "cmake",
-      "docker-buildx",
-      "fswatch",
-      "libiscsi",
-      "pkgconf",
-      "npm",
-      "asyncpg"
-    ]
-  },
-  "settings": {
-    "fallback_bin_dir": "~/.local/bin",
-    "dots_git": {
-      "auto_commit": true
-    }
-  }
+  ]
 }
