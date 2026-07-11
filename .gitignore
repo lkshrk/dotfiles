@@ -38,6 +38,7 @@ Temporary Items
 /CLAUDE.local.md
 /GEMINI.local.md
 .omc/
+.wolf/
 
 # zsh runtime
 dotfiles/zsh/.config/zsh/.zcompdump*
