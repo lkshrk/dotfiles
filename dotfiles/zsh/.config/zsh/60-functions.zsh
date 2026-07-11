@@ -108,17 +108,21 @@ csh() {
 
 # --- coder: login + create-from-preset + connect -----------------------------
 code() {
-  local -a o_cpu o_mem o_disk
-  zparseopts -D -E -- -cpu:=o_cpu -memory:=o_mem -disk:=o_disk
-  local preset=$1 template=${2:-$CODER_TEMPLATE}
+  local -a o_cpu o_mem o_disk o_name
+  zparseopts -D -E -- -cpu:=o_cpu -memory:=o_mem -disk:=o_disk -name:=o_name
+  local preset=$1 template=${2:-$CODER_TEMPLATE} workspace=${o_name[2]:-$1}
   local -a params
   [[ -n ${o_cpu[2]} ]]  && params+=(--parameter "cpu=${o_cpu[2]}")
   [[ -n ${o_mem[2]} ]]  && params+=(--parameter "memory=${o_mem[2]}")
   [[ -n ${o_disk[2]} ]] && params+=(--parameter "disk_size=${o_disk[2]}")
-  [[ -n $preset ]] || { echo "Usage: code [--cpu N] [--memory N] [--disk N] <preset> [template]" >&2; return 1; }
+  [[ -n $preset ]] || { echo "Usage: code [--name workspace] [--cpu N] [--memory N] [--disk N] <preset> [template|reboot]" >&2; return 1; }
   (( $+commands[coder] )) || { echo "code: coder not found" >&2; return 127; }
-  coder whoami &>/dev/null || coder login || return
-  if ! coder show "$preset" &>/dev/null; then
+  coder whoami &>/dev/null || coder login "${CODER_URL:-https://coder.h-cloud.io}" || return
+  if [[ $2 == reboot ]]; then
+    coder restart "$workspace" --yes
+    return
+  fi
+  if ! coder show "$workspace" &>/dev/null; then
     if [[ -z $template ]]; then
       local t
       for t in $(coder templates list -o json 2>/dev/null | jq -r '.[].Template.name'); do
@@ -130,11 +134,11 @@ code() {
       done
       [[ -n $template ]] || { echo "code: no template has preset '$preset'" >&2; return 1; }
     fi
-    coder create "$preset" -t "$template" --preset "$preset" "${params[@]}" \
+    coder create "$workspace" -t "$template" --preset "$preset" "${params[@]}" \
       --use-parameter-defaults -y || return
   fi
   # ssh autostarts a stopped workspace, so no explicit start needed
-  coder ssh "$preset"
+  coder ssh "$workspace"
 }
 
 # --- herdr ------------------------------------------------------------------
