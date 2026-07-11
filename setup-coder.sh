@@ -42,7 +42,6 @@ source "$REPO_DIR/scripts/setup-coder-linux.sh"
 
 command -v omni >/dev/null 2>&1 || die "omni is not installed"
 ensure_omni_version
-omni bootstrap --help >/dev/null 2>&1 || die "installed omni does not support bootstrap"
 omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1 \
   || die "installed omni cannot read this repo's config"
 
@@ -52,12 +51,9 @@ export DOTFILES_DIR="${DOTFILES_DIR:-$REPO_DIR}"
 step "omni coder profile"
 ok "using Omni host profile: $OMNI_HOSTNAME"
 
-step "omni bootstrap"
-# Bootstrap's internal dots sync runs before this script can pass --use-repo.
-# Remove files Coder and shell installers create so Omni never adopts them into
-# the dotfiles checkout.
-rm -f "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.codex/config.toml"
-omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
+# The Coder host is already declared in the shared config. Do not run
+# `omni bootstrap`: its unconditional tool and dots sync happen before this
+# script can apply the Coder-specific install order and conflict policy.
 
 step "shell (zsh + oh-my-zsh)"
 # oh-my-zsh writes a real ~/.zshrc; drop it before install and again before stow.
@@ -77,6 +73,12 @@ export_sync_path
 step "omni tools"
 omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
 
+# Ubuntu packages bat as `batcat`; keep the cross-platform command name.
+if ! command -v bat >/dev/null 2>&1 && command -v batcat >/dev/null 2>&1; then
+  mkdir -p "$HOME/.local/bin"
+  ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
+fi
+
 # Hard-sync extra language/tooling groups selected on the workspace (CODER_OMNI_STACKS,
 # comma-separated), regardless of host membership. e.g. "python,ts,infra".
 if [[ -n "${CODER_OMNI_STACKS:-}" ]]; then
@@ -91,13 +93,13 @@ if [[ -n "${CODER_OMNI_STACKS:-}" ]]; then
 fi
 
 step "omni dotfiles"
-# Coder's codex module writes a real ~/.codex/config.toml at agent start, the
+# Coder's codex module writes real ~/.codex files at agent start, the
 # oh-my-zsh installer writes a real ~/.zshrc, opencode replaces its config
 # symlinks with real files at runtime, and Claude Code rewrites
 # .claude/plugins/installed_plugins.json; all collide with the symlinks omni
 # wants to stow (--use-repo does not resolve a replaced-symlink conflict).
 # Drop them so dots sync links cleanly.
-rm -f "$HOME/.codex/config.toml" "$HOME/.zshrc" \
+rm -f "$HOME/.codex/config.toml" "$HOME/.codex/mcp.json" "$HOME/.zshrc" \
   "$HOME/.claude/plugins/installed_plugins.json"
 rm -rf "$HOME/.config/opencode"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo

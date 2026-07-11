@@ -259,7 +259,7 @@
       "name": "ai",
       "tools": [
         "claude-code",
-        "cloder",
+        "coder",
         "@openai/codex"
       ],
       "dots": [
@@ -648,7 +648,10 @@
     },
     {
       "name": "coder",
-      "special": "host"
+      "special": "host",
+      "tools": [
+        "bubblewrap"
+      ]
     },
     {
       "name": "topaz",
@@ -961,6 +964,14 @@
         }
       ]
     },
+    "bubblewrap": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "bubblewrap"
+        }
+      ]
+    },
     "bun": {
       "providers": [
         {
@@ -970,12 +981,9 @@
         {
           "provider": "script",
           "options": {
-            "check_path": "$HOME/.bun/bin/bun",
-            "uninstall": "rm -rf $HOME/.bun",
-            "url": "https://bun.sh/install"
-          },
-          "recipe": {
-            "type": "curl_install_script"
+            "check": "test -x \"$HOME/.bun/bin/bun\"",
+            "install": "curl -fsSL https://bun.sh/install | bash",
+            "uninstall": "rm -rf $HOME/.bun"
           }
         }
       ],
@@ -998,12 +1006,12 @@
         }
       ]
     },
-    "cloder": {
+    "coder": {
       "providers": [
         {
           "provider": "script",
           "options": {
-            "check": "command -v cloder",
+            "check": "command -v coder",
             "install": "curl -fsSL https://coder.h-cloud.io/install.sh | sudo sh"
           }
         }
@@ -1690,6 +1698,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "neovim"
+        },
+        {
+          "provider": "apt",
           "package": "neovim"
         },
         {
