@@ -17,3 +17,6 @@ compact_mode = true
 permission_mode = "always-approve"
 remember_tool_approvals = true
 auto_interject_on_task_wait = true
+
+[models]
+default = "grok-build"

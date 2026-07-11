@@ -93,6 +93,10 @@ trust_level = "trusted"
 [projects."/Users/lkshrk/Dev/better-audio-mixer"]
 trust_level = "trusted"
 
+[projects."/Users/lkshrk/.local/share/shiplight-mcp"]
+trust_level = "trusted"
+
+
 [tui]
 session_picker_view = "dense"
 
@@ -152,15 +156,6 @@ approval_mode = "approve"
 [mcp_servers.codebase-memory-mcp.tools.trace_path]
 approval_mode = "approve"
 
-[mcp_servers.shiplight]
-command = "npx"
-args = ["-y", "@shiplightai/mcp@latest"]
-enabled = false
-startup_timeout_sec = 15.0
-
-[mcp_servers.shiplight.env]
-PWDEBUG = "console"
-
 [mcp_servers.xcodebuildmcp]
 command = "xcodebuildmcp"
 args = ["mcp"]
@@ -171,8 +166,14 @@ url = "https://mcp.linear.app/mcp"
 
 [mcp_servers.node_repl]
 command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
-[plugins."build-ios-apps@openai-curated"]
-enabled = false
+
+[mcp_servers.shiplight]
+command = "npx"
+args = ["-y", "@shiplightai/mcp@latest"]
+
+[mcp_servers.shiplight.env]
+SHIPLIGHT_RELAY_PORT = "15170"
+PWDEBUG = "console"
 
 [plugins."context-mode@context-mode"]
 enabled = true
@@ -309,8 +310,8 @@ trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7
 trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-10T20:14:51Z"
-last_revision = "a6a990f0727c86ec126b6347123e3887dfa1d256"
+last_updated = "2026-07-11T07:22:10Z"
+last_revision = "6118634f8420238af9c3b086782d688347b223ef"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
