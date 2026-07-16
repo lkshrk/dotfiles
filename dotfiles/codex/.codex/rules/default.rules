@@ -1019,3 +1019,4 @@ prefix_rule(pattern=["/bin/zsh", "-lc", "PYTHONDONTWRITEBYTECODE=1 uv run mypy -
 prefix_rule(pattern=["/bin/zsh", "-lc", "PYTHONDONTWRITEBYTECODE=1 uv run ruff check --no-cache ."], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "PYTHONDONTWRITEBYTECODE=1 uv run mypy --cache-dir /private/tmp/routivo-rou251-mypy-cache app"], decision="allow")
 prefix_rule(pattern=["curl", "-sS"], decision="allow")
+prefix_rule(pattern=["/usr/bin/git", "add", "backend/app/config.py", "backend/config.example.yaml", "backend/tests/test_config.py", "docs/postmortems/2026-07-15-live-planner-timeout.md"], decision="allow")

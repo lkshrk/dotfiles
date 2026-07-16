@@ -303,8 +303,8 @@ trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7
 trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-11T15:00:21Z"
-last_revision = "85ed032ece1c3c42580e1d62df9c3345a4ddaf54"
+last_updated = "2026-07-16T20:40:22Z"
+last_revision = "b6f25a6feeca09e8ee0407c7d77be5b805f55d44"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -325,8 +325,8 @@ source_type = "git"
 source = "https://github.com/lkshrk/agent-marketplace.git"
 
 [marketplaces.ponytail]
-last_updated = "2026-07-10T22:15:25Z"
-last_revision = "14a0d79548d4de8fc2de95c1b94bb0de63a739d3"
+last_updated = "2026-07-16T20:40:23Z"
+last_revision = "16f29800fd2681bdf24f3eb4ccffe38be3baec6b"
 source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
 
