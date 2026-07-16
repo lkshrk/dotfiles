@@ -7,6 +7,10 @@ alias cat='bat'
 
 alias or='omni reconcile -y'
 
+if ! command -v terraform >/dev/null 2>&1 && command -v tofu >/dev/null 2>&1; then
+  alias terraform='tofu'
+fi
+
 #github
 alias gh="GITHUB_TOKEN= command gh"
 # git

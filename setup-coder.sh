@@ -209,6 +209,41 @@ else
 fi
 unset _grok_auth
 
+# Activate git hooks in the project repos the template clones. The git-clone
+# module runs in parallel with this bootstrap, so wait briefly for each clone.
+# CODER_REPO_DIRS: comma-separated folder names under $HOME, set by the template.
+if [[ -n "${CODER_REPO_DIRS:-}" ]]; then
+  step "lefthook hooks"
+  if PATH="$HOME/.local/bin:$PATH" command -v lefthook >/dev/null 2>&1; then
+    IFS=',' read -r -a _repo_dirs <<< "$CODER_REPO_DIRS"
+    for _repo in "${_repo_dirs[@]}"; do
+      _repo="${_repo//[[:space:]]/}"
+      [[ -n "$_repo" ]] || continue
+      _repo_path="$HOME/$_repo"
+      for _ in $(seq 1 60); do
+        [[ -d "$_repo_path/.git" ]] && break
+        sleep 5
+      done
+      if [[ ! -d "$_repo_path/.git" ]]; then
+        warn "repo never appeared at $_repo_path; skipping lefthook install"
+        continue
+      fi
+      if compgen -G "$_repo_path/lefthook.y*ml" >/dev/null || compgen -G "$_repo_path/.lefthook.y*ml" >/dev/null; then
+        if (cd "$_repo_path" && PATH="$HOME/.local/bin:$PATH" lefthook install); then
+          ok "lefthook hooks installed in $_repo_path"
+        else
+          warn "lefthook install failed in $_repo_path"
+        fi
+      else
+        ok "no lefthook config in $_repo_path; nothing to do"
+      fi
+    done
+    unset _repo_dirs _repo _repo_path
+  else
+    warn "lefthook binary missing; skipping repo hook install"
+  fi
+fi
+
 # Prewarm nvim plugins headlessly so the first interactive launch is instant.
 # Needs both the binary (tools sync) and the stowed config (dots sync above).
 if command -v nvim >/dev/null 2>&1 || [ -x "$HOME/.local/bin/nvim" ]; then
