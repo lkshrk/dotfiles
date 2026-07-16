@@ -1,7 +1,6 @@
 {
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-5",
     "CLAUDE_CODE_SYNTAX_HIGHLIGHT": "false",
     "ECC_GATEGUARD": "off",
     "ECC_DISABLED_HOOKS": "stop:desktop-notify",
@@ -20,11 +19,10 @@
       "mcp__plugin_context-mode_context-mode__*",
       "mcp__linear-server",
       "mcp__linear-server__*",
-      "Edit(frontend/eslint.config.js)",
-      "Write(frontend/eslint.config.js)"
+      "Edit(frontend/eslint.config.js)"
     ]
   },
-  "model": "claude-fable-5[1m]",
+  "model": "best",
   "fallbackModel": [
     "claude-sonnet-5",
     "claude-haiku-4-5"
@@ -224,7 +222,7 @@
     }
   },
   "effortLevel": "medium",
-  "autoUpdatesChannel": "stable",
+  "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",

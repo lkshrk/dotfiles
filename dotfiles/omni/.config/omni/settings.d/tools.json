@@ -175,12 +175,15 @@
     "claude-code": {
       "providers": [
         {
-          "provider": "brew",
-          "package": "claude-code"
-        },
-        {
-          "provider": "bun",
-          "package": "@anthropic-ai/claude-code"
+          "provider": "script",
+          "options": {
+            "check_path": "claude",
+            "uninstall": "rm -rf $HOME/.local/bin/claude $HOME/.local/share/claude",
+            "url": "https://claude.ai/install.sh"
+          },
+          "recipe": {
+            "type": "curl_install_script"
+          }
         }
       ]
     },
