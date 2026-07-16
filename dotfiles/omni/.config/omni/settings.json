@@ -12,9 +12,6 @@
         "source": "JuliusBrussee/caveman"
       },
       {
-        "source": "ShiplightAI/agent-skills"
-      },
-      {
         "source": "mattpocock/skills"
       },
       {
@@ -298,7 +295,6 @@
       ],
       "skills": [
         "JuliusBrussee/caveman",
-        "ShiplightAI/agent-skills",
         "mattpocock/skills",
         "vercel-labs/skills",
         "lkshrk/linear-ai",
