@@ -126,6 +126,33 @@
         {
           "name": "gh",
           "path": "~/.config/gh"
+        },
+        {
+          "name": "lazygit",
+          "path": "~/.config/lazygit",
+          "ignore": [
+            "state.yml"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "go",
+      "dots": [
+        {
+          "name": "go-config",
+          "path": "~/.config/go",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "prereqs",
+      "dots": [
+        {
+          "name": "uv",
+          "path": "~/.config/uv",
+          "ignored": true
         }
       ]
     },
