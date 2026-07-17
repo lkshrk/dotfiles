@@ -43,6 +43,10 @@ omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1 \
 export OMNI_HOSTNAME="$CODER_OMNI_HOST"
 export DOTFILES_DIR="${DOTFILES_DIR:-$REPO_DIR}"
 
+mkdir -p "$HOME/.local/bin"
+ln -sf "$REPO_DIR/scripts/capture-coder-dotfiles" \
+  "$HOME/.local/bin/capture-coder-dotfiles"
+
 step "omni coder profile"
 ok "using Omni host profile: $OMNI_HOSTNAME"
 

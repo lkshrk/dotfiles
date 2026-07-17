@@ -9,7 +9,7 @@
   ],
   "host_settings": {
     "coder": {
-      "dots_repo": "~/dotfiles",
+      "dots_repo": "~/.local/share/dotfiles-runtime",
       "dots_disabled": false,
       "dots_git": {},
       "disabled_providers": [
