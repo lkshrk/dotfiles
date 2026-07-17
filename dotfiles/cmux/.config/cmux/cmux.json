@@ -1,0 +1,28 @@
+{
+  "$schema" : "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json",
+  "schemaVersion" : 1,
+  "shortcuts" : {
+    "bindings" : {
+      "splitDown" : {
+        "first" : {
+          "command" : true,
+          "control" : false,
+          "key" : "h",
+          "keyCode" : 4,
+          "option" : false,
+          "shift" : false
+        }
+      },
+      "splitRight" : {
+        "first" : {
+          "command" : true,
+          "control" : false,
+          "key" : "v",
+          "keyCode" : 9,
+          "option" : false,
+          "shift" : false
+        }
+      }
+    }
+  }
+}
