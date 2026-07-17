@@ -301,7 +301,8 @@
         "rjyo/moshi-skill",
         "lkshrk/useful-skills",
         "sopaco/deepwiki-rs",
-        "ShiplightAI/agent-skills-v2"
+        "ShiplightAI/agent-skills-v2",
+        "ShiplightAI/agent-skills"
       ],
       "mcp_servers": [
         "node_repl",
@@ -771,7 +772,8 @@
             "!/.omc-config.json",
             "!/keybindings.json",
             "!/statusline-command.sh",
-            "!/tokenline.sh"
+            "!/tokenline.sh",
+            "!/RTK.md"
           ]
         },
         {
@@ -784,6 +786,15 @@
             "!/commands/",
             "!/hooks/"
           ]
+        },
+        {
+          "name": "amp",
+          "path": "~/.config/amp",
+          "ignored": true
+        },
+        {
+          "name": "cmux",
+          "path": "~/.config/cmux"
         }
       ]
     }
