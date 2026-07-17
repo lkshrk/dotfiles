@@ -113,12 +113,19 @@
         "lazydocker",
         "lazygit",
         "skopeo",
-        "vhs",
         "yaml-language-server",
         "yaml-lint",
         "yamlfmt",
         "yamllint",
         "git-delta"
+      ]
+    },
+    {
+      "name": "omni",
+      "tools": [
+        "ffmpeg",
+        "ttyd",
+        "vhs"
       ]
     },
     {
