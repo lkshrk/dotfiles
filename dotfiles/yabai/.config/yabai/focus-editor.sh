@@ -10,7 +10,10 @@ NVIM_IDS="$(yabai -m query --windows | jq -r 'map(select(.title | test("\\.nvim\
 # Zed windows not already captured by the nvim title match
 ZED_IDS="$(yabai -m query --windows | jq -r 'map(select(.app == "Zed" and (.title | test("\\.nvim\\."; "") | not))) | .[].id')"
 
-ALL_IDS="$(printf '%s\n' $NVIM_IDS $ZED_IDS | awk 'NF && !seen[$0]++')"
+# cmux windows participate in the editor cycle.
+CMUX_IDS="$(yabai -m query --windows | jq -r 'map(select(.app == "cmux")) | .[].id')"
+
+ALL_IDS="$(printf '%s\n' $NVIM_IDS $ZED_IDS $CMUX_IDS | awk 'NF && !seen[$0]++')"
 
 if [ -z "$ALL_IDS" ]; then
   open -na "Ghostty" --args -e nvim
