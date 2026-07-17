@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Copy the current local Codex login to a Coder workspace before its SSH shell
+# starts. Invoked through ~/.ssh/config's LocalCommand for *.coder hosts.
+set -euo pipefail
+
+target="${1:?usage: coder-sync-codex-auth <workspace.coder>}"
+auth_file="${CODEX_AUTH_FILE:-$HOME/.codex/auth.json}"
+
+# This hook is only for Coder aliases. Reject anything that could be interpreted
+# as an SSH option or a path when called outside its SSH-config entry.
+if [[ "$target" != *.coder || "$target" == -* || "$target" == */* ]]; then
+  printf '%s\n' "coder auth sync: refusing non-Coder host" >&2
+  exit 0
+fi
+
+# A missing local login must not prevent connecting to the workspace.
+[[ -f "$auth_file" && ! -L "$auth_file" ]] || exit 0
+
+# A single SSH connection streams to a temporary file and atomically replaces
+# the remote credential. Disable LocalCommand to avoid recursively syncing.
+if ! ssh -T -o PermitLocalCommand=no -o LogLevel=ERROR "$target" \
+  'umask 077; mkdir -p "$HOME/.codex"; cat > "$HOME/.codex/auth.json.tmp" && chmod 600 "$HOME/.codex/auth.json.tmp" && mv "$HOME/.codex/auth.json.tmp" "$HOME/.codex/auth.json"' \
+  < "$auth_file"; then
+  printf '%s\n' "coder auth sync: failed; continuing with existing workspace login" >&2
+fi

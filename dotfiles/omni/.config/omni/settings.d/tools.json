@@ -483,6 +483,10 @@
         {
           "provider": "brew",
           "package": "go"
+        },
+        {
+          "provider": "apt",
+          "package": "golang-go"
         }
       ]
     },
@@ -491,6 +495,14 @@
         {
           "provider": "brew",
           "package": "go-task"
+        },
+        {
+          "provider": "script",
+          "options": {
+            "check": "command -v task || test -x \"$HOME/.local/bin/task\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" && curl -fsSL https://taskfile.dev/install.sh | sh -s -- -d -b \"$HOME/.local/bin\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/task\""
+          }
         }
       ],
       "git": "https://github.com/go-task/task"
@@ -500,6 +512,14 @@
         {
           "provider": "brew",
           "package": "golangci-lint"
+        },
+        {
+          "provider": "script",
+          "options": {
+            "check": "command -v golangci-lint || test -x \"$HOME/.local/bin/golangci-lint\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" && curl -fsSL https://golangci-lint.run/install.sh | sh -s -- -b \"$HOME/.local/bin\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/golangci-lint\""
+          }
         }
       ],
       "git": "https://github.com/golangci/golangci-lint"
@@ -509,6 +529,14 @@
         {
           "provider": "brew",
           "package": "gomplate"
+        },
+        {
+          "provider": "script",
+          "options": {
+            "check": "command -v gomplate || test -x \"$HOME/.local/bin/gomplate\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" && arch=$(uname -m) && case \"$arch\" in x86_64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) exit 1 ;; esac && curl -fsSL \"https://github.com/hairyhenderson/gomplate/releases/latest/download/gomplate_linux-$arch\" -o \"$HOME/.local/bin/gomplate\" && chmod +x \"$HOME/.local/bin/gomplate\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/gomplate\""
+          }
         }
       ],
       "git": "https://github.com/hairyhenderson/gomplate"
@@ -518,6 +546,14 @@
         {
           "provider": "brew",
           "package": "gopls"
+        },
+        {
+          "provider": "script",
+          "options": {
+            "check": "command -v gopls || test -x \"$HOME/.local/bin/gopls\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" && GOBIN=\"$HOME/.local/bin\" go install golang.org/x/tools/gopls@latest",
+            "uninstall": "rm -f \"$HOME/.local/bin/gopls\""
+          }
         }
       ],
       "git": "https://github.com/golang/tools"
@@ -664,10 +700,6 @@
       "providers": [
         {
           "provider": "brew",
-          "package": "lazygit"
-        },
-        {
-          "provider": "apt",
           "package": "lazygit"
         },
         {

@@ -41,6 +41,7 @@
         "github",
         "ecc",
         "context-mode",
+        "ponytail",
         "caveman",
         "gopls-lsp",
         "code-simplifier",
