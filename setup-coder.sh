@@ -93,12 +93,88 @@ step "omni dotfiles"
 # symlinks with real files at runtime, and Claude Code rewrites
 # .claude/plugins/installed_plugins.json; all collide with the symlinks omni
 # wants to stow (--use-repo does not resolve a replaced-symlink conflict).
-# Drop them so dots sync links cleanly. Grok is no longer managed; remove its
-# legacy configuration so existing Coder workspaces converge with the profile.
+# Drop them so dots sync links cleanly.
 rm -f "$HOME/.codex/config.toml" "$HOME/.codex/mcp.json" "$HOME/.zshrc" \
   "$HOME/.claude/plugins/installed_plugins.json"
-rm -rf "$HOME/.config/opencode" "$HOME/.grok"
+rm -rf "$HOME/.config/opencode"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
+
+# Claude Code may update settings at runtime. Keep the Coder copy writable and
+# apply its externally-sandboxed workspace policy without mutating dotfiles.
+_claude_settings="$HOME/.claude/settings.json"
+if [[ -L "$_claude_settings" ]]; then
+  _claude_settings_template="$(readlink -f "$_claude_settings")"
+  rm "$_claude_settings"
+  cp "$_claude_settings_template" "$_claude_settings"
+  unset _claude_settings_template
+fi
+if [[ -f "$_claude_settings" ]]; then
+  _claude_settings_tmp="$(mktemp)"
+  jq '(.permissions //= {})
+    | .permissions.defaultMode = "bypassPermissions"
+    | .permissions.skipDangerousModePermissionPrompt = true' \
+    "$_claude_settings" > "$_claude_settings_tmp"
+  mv "$_claude_settings_tmp" "$_claude_settings"
+  unset _claude_settings_tmp
+fi
+unset _claude_settings
+
+# Codex persists runtime state (hook hashes, bundled marketplace paths) into
+# config.toml. Keep Coder's copy writable so that state never mutates the
+# stowed, portable template in the dotfiles checkout.
+_codex_config="$HOME/.codex/config.toml"
+if [[ -L "$_codex_config" ]]; then
+  _codex_config_template="$(readlink -f "$_codex_config")"
+  rm "$_codex_config"
+  cp "$_codex_config_template" "$_codex_config"
+  unset _codex_config_template
+fi
+
+if [[ -f "$_codex_config" ]]; then
+  _codex_config_tmp="$(mktemp)"
+  awk '
+    BEGIN {
+      saw_approval = 0
+      saw_default_permissions = 0
+      inserted = 0
+    }
+    function insert_coder_permissions() {
+      if (inserted) return
+      if (!saw_approval) print "approval_policy = \"never\""
+      if (!saw_default_permissions) print "default_permissions = \":danger-full-access\""
+      inserted = 1
+    }
+    /^\[/ {
+      insert_coder_permissions()
+      print
+      next
+    }
+    /^approval_policy[[:space:]]*=/ {
+      print "approval_policy = \"never\""
+      saw_approval = 1
+      next
+    }
+    /^default_permissions[[:space:]]*=/ {
+      print "default_permissions = \":danger-full-access\""
+      saw_default_permissions = 1
+      next
+    }
+    { print }
+    END {
+      insert_coder_permissions()
+    }
+  ' "$_codex_config" > "$_codex_config_tmp"
+  mv "$_codex_config_tmp" "$_codex_config"
+
+  # node_repl points at a Codex.app path that only exists on macOS.
+  _codex_config_tmp="$(mktemp)"
+  awk '
+    /^\[/ { drop = ($0 ~ /^\[mcp_servers\.node_repl[\].]/) }
+    !drop { print }
+  ' "$_codex_config" > "$_codex_config_tmp"
+  mv "$_codex_config_tmp" "$_codex_config"
+  unset _codex_config_tmp
+fi
 
 # tools sync may replace ~/.local/bin/node; re-point at the nvm default after stow.
 if declare -F sync_nvm_local_bin_links >/dev/null 2>&1; then
@@ -108,7 +184,6 @@ if declare -F sync_nvm_local_bin_links >/dev/null 2>&1; then
 fi
 
 step "codex telemetry"
-_codex_config="$HOME/.codex/config.toml"
 if [[ -e "$_codex_config" ]]; then
   _codex_config_target="$(readlink -f "$_codex_config" 2>/dev/null || printf '%s' "$_codex_config")"
   _codex_otel_ca=""
@@ -126,13 +201,11 @@ if [[ -e "$_codex_config" ]]; then
   if [[ -n "$_codex_otel_ca" ]]; then
     sed -i -E \
       -e "s|^([[:space:]]*ca-certificate = ).*|\\1\"$_codex_otel_ca\"|" \
-      -e 's#^notify = .*#notify = []#' \
       "$_codex_config_target"
     ok "Codex OTEL uses $_codex_otel_ca"
   else
     sed -i \
       -e '/^[[:space:]]*ca-certificate = /d' \
-      -e 's#^notify = .*#notify = []#' \
       "$_codex_config_target"
     warn "Codex OTEL CA missing; removed explicit ca-certificate entries"
   fi

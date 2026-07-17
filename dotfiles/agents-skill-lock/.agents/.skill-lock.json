@@ -28,11 +28,11 @@
       "installedAt": "2026-04-27T03:38:47.374Z",
       "updatedAt": "2026-06-15T19:47:05.833Z"
     },
-    "create_e2e_tests": {
+    "create-yaml-tests": {
       "source": "ShiplightAI/agent-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/ShiplightAI/agent-skills.git",
-      "skillPath": "skills/create_e2e_tests/SKILL.md",
+      "skillPath": "skills/create-yaml-tests/SKILL.md",
       "skillFolderHash": "9961b8b2768cbec94c97d1d7636e9ea78ad063f7",
       "installedAt": "2026-04-27T03:38:48.019Z",
       "updatedAt": "2026-04-27T03:38:48.019Z"
@@ -55,11 +55,11 @@
       "installedAt": "2026-04-27T03:38:51.355Z",
       "updatedAt": "2026-06-15T19:47:05.843Z"
     },
-    "compress": {
+    "caveman-compress": {
       "source": "JuliusBrussee/caveman",
       "sourceType": "github",
       "sourceUrl": "https://github.com/JuliusBrussee/caveman.git",
-      "skillPath": "skills/compress/SKILL.md",
+      "skillPath": "skills/caveman-compress/SKILL.md",
       "skillFolderHash": "d9f3edbb403bb351a6c6968fc7fcd7c861450c0d",
       "installedAt": "2026-05-01T12:54:35.932Z",
       "updatedAt": "2026-05-01T12:54:35.932Z"

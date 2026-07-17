@@ -9,11 +9,6 @@ approval_policy = "never"
 sandbox_mode = "workspace-write"
 default_permissions = "signed"
 
-notify = [
-  "/Users/lkshrk/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient",
-  "turn-ended",
-]
-
 [permissions.signed]
 extends = ":workspace"
 
@@ -52,54 +47,6 @@ protocol = "binary"
 
 [otel.metrics_exporter.otlp-http.tls]
 ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
-
-[projects."/Users/lkshrk"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/omni"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/.config"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/h-cloud"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/sonarr-season-reminder"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/Decide It"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/dotfiles"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/civora"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/portfolio"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/civora/civora-backend"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/quintessenz"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/dstreamy"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/routivo"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/civora-civ-98"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/linear-ai"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/better-audio-mixer"]
-trust_level = "trusted"
 
 [tui]
 session_picker_view = "dense"
@@ -175,20 +122,13 @@ approval_mode = "approve"
 [mcp_servers.linear.tools.save_comment]
 approval_mode = "approve"
 
-CODEX_HOME = "/Users/lkshrk/.codex"
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.623.141536"
-CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
-
 [mcp_servers.shiplight]
-command = "/Users/lkshrk/.bun/bin/bunx"
+command = "bunx"
 args = ["@shiplightai/mcp@latest"]
 startup_timeout_sec = 60
 
 [mcp_servers.shiplight.env]
 PWDEBUG = "console"
-PATH = "/Users/lkshrk/.bun/bin:/usr/bin:/bin"
 
 [plugins."context-mode@context-mode"]
 enabled = true
@@ -221,44 +161,18 @@ enabled = true
 hooks = true
 js_repl = false
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
-trusted_hash = "sha256:63e01e74b8b5125c7c0cebb705b28592d25ae24613a5a8af4c453e4d09608ec6"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:1:0"]
-trusted_hash = "sha256:3b7947d7ce46afc8ec30b0ab433ca40143a7a71e1160ae8f7565d1ed642fc25b"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:post_compact:0:0"]
-trusted_hash = "sha256:d72d3d3642f9542e7fc43a814963432282f642886aca7f764b25d18db2013a4a"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:0:0"]
-trusted_hash = "sha256:28610159a66e6c025b019ca2ae4789ef6ae2174246a9912d5f621e27e5db93c2"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:0:0"]
-trusted_hash = "sha256:efd098f14671c8c1d5db29b82d42b397b063cf1464824f764f82793c9fb4bfc7"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:0:0"]
-trusted_hash = "sha256:7edf638204001b0fdb0e0d1b513795e5e64a89e2b327a084f0edf1a288877c0c"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:0:0"]
-trusted_hash = "sha256:ec4341530e4bab6d6c0dd0db61f481d3f370c02786ae247871a09a8a9083fd1c"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:1:0"]
-trusted_hash = "sha256:a2c53b588ce1acc282fd4719c4a4e7b07319720a7eef5d3be64b6d47cdd2888b"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:2:0"]
-trusted_hash = "sha256:ffd43ee8424b7041f25d71a90e1bc9a27b952bac570a16d3635f8cd858918b37"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:0:0"]
-trusted_hash = "sha256:b69741e322a04f96b2ff31b639e044808b8daa585d193f2953a9b25fbf33e9fd"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:1:0"]
-trusted_hash = "sha256:09cf1a4e630ae88d4ddb16f74bed02f5c2d5ebfb48436fa5dff394229ef8d812"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:2:0"]
-trusted_hash = "sha256:068e805cc2052d0d4b1b514a87fa254339ee96101b7a10588c262406bf024bff"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:0:0"]
-trusted_hash = "sha256:2fbf0ce436afeb71cad950871c320f7ed9ec65ac7fc4987fe1277f9cd4da02b6"
 
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:56da0c4249dc7af048f42ae458fb83931926a8af41ec6fab5ae819ff3a8c83ae"
@@ -281,35 +195,15 @@ enabled = false
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:stop:0:0"]
 trusted_hash = "sha256:9205c1763e40c0256ab334e2e96c037c1cdf5b8bfaddba31ed19d93d3388586a"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:2:0"]
-trusted_hash = "sha256:e21fff15066163507ddff25814ad5000473d5271752198c5842f84f0386a878a"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:1:0"]
-trusted_hash = "sha256:7902e7a2969ab57b3f003acccc26df9d1f3af19380402b92f67d93f06802cbed"
 
-[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:3:0"]
-trusted_hash = "sha256:f6d1f59dd6ac01b8a8c7ec34eee482337505583e0b820bc8eae147ed49b6c633"
 
-[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:pre_tool_use:0:0"]
-trusted_hash = "sha256:74e9cb0fab5c73ed10389b44aeedfd6e7f9c7009c950c58f34fdcd9a4674168f"
 
-[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:pre_tool_use:1:0"]
-trusted_hash = "sha256:750e4607af5ed1e1764f0413bbd454a6bbf566720d25bb8b9c14cc27ba45eac0"
 
-[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:0:0"]
-trusted_hash = "sha256:f073acf0c27223664e64fa1743d65ed567ec84e05230194902f0cd3ea892a2d2"
 
-[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:1:0"]
-trusted_hash = "sha256:01dd44c4263c3835652627dfe8cf57a1344997ba48fbbcb9c49d708887a2bbf4"
 
-[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:post_tool_use:2:0"]
-trusted_hash = "sha256:ed6f430ea6e8f890da5e339f3b4d7b14b28b85716e7d831de84253db24a362c7"
 
-[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:session_start:0:0"]
-trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59aa45aa6"
 
-[hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:stop:0:0"]
-trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
 trusted_hash = "sha256:6a6f42bc3b58d6262db38bfd74d7f340fcca2b09cdb134aad365063f0bfefca4"
@@ -325,16 +219,6 @@ last_updated = "2026-07-17T12:31:05Z"
 last_revision = "c13d6be3c59706834ecd19d48f21c49b32cbb466"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
-
-[marketplaces.openai-bundled]
-last_updated = "2026-07-17T08:18:04Z"
-source_type = "local"
-source = "/Users/lkshrk/.codex/.tmp/bundled-marketplaces/openai-bundled"
-
-[marketplaces.openai-primary-runtime]
-last_updated = "2026-06-30T09:43:09Z"
-source_type = "local"
-source = "/Users/lkshrk/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [marketplaces.lkshrk]
 last_updated = "2026-07-10T05:56:07Z"
