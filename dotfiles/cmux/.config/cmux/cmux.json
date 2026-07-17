@@ -3,26 +3,20 @@
   "schemaVersion" : 1,
   "shortcuts" : {
     "bindings" : {
-      "splitDown" : {
-        "first" : {
-          "command" : true,
-          "control" : false,
-          "key" : "h",
-          "keyCode" : 4,
-          "option" : false,
-          "shift" : false
-        }
-      },
-      "splitRight" : {
-        "first" : {
-          "command" : true,
-          "control" : false,
-          "key" : "v",
-          "keyCode" : 9,
-          "option" : false,
-          "shift" : false
-        }
-      }
+      "splitDown" : ["ctrl+space", "h"],
+      "splitRight" : ["ctrl+space", "v"],
+      "closeTab" : ["ctrl+space", "x"],
+      "equalizeSplits" : ["ctrl+space", "t"],
+      "focusLeft" : "ctrl+opt+left",
+      "focusRight" : "ctrl+opt+right",
+      "focusUp" : "ctrl+opt+up",
+      "focusDown" : "ctrl+opt+down",
+      "renameWorkspace" : ["ctrl+space", "r"],
+      "newTab" : ["ctrl+space", "c"],
+      "closeWorkspace" : ["ctrl+space", "k"],
+      "selectWorkspaceByNumber" : "opt+1",
+      "prevSidebarTab" : "opt+left",
+      "nextSidebarTab" : "opt+right"
     }
   }
 }

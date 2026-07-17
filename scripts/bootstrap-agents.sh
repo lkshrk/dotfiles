@@ -61,6 +61,9 @@ restore_component() {
 }
 
 _bootstrap_step "omni agents"
+# Plugin marketplace snapshots must be present before MCP restore. The latter
+# runs Codex's plugin-shadow check, which otherwise reads stale snapshots from
+# a previous workspace start and emits a spurious missing-manifest warning.
+restore_component plugins agents plugins
 restore_component skills agents skills
 restore_component mcp agents mcp
-restore_component plugins agents plugins
