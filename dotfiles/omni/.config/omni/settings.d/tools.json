@@ -532,10 +532,19 @@
         },
         {
           "provider": "script",
+          "bin": "gomplate",
           "options": {
-            "check": "command -v gomplate || test -x \"$HOME/.local/bin/gomplate\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && arch=$(uname -m) && case \"$arch\" in x86_64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) exit 1 ;; esac && curl -fsSL \"https://github.com/hairyhenderson/gomplate/releases/latest/download/gomplate_linux-$arch\" -o \"$HOME/.local/bin/gomplate\" && chmod +x \"$HOME/.local/bin/gomplate\"",
+            "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
             "uninstall": "rm -f \"$HOME/.local/bin/gomplate\""
+          },
+          "source": {
+            "type": "github",
+            "owner": "hairyhenderson",
+            "repo": "gomplate"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "gomplate_linux-{arch}"
           }
         }
       ],
@@ -846,10 +855,6 @@
           "package": "neovim"
         },
         {
-          "provider": "apt",
-          "package": "neovim"
-        },
-        {
           "provider": "script",
           "bin": "nvim",
           "options": {
@@ -1056,13 +1061,7 @@
           "provider": "brew",
           "package": "pnpm"
         }
-      ],
-      "hosts": {
-        "topaz": {
-          "provider": "bun",
-          "package": "pnpm"
-        }
-      }
+      ]
     },
     "python@3.14": {
       "providers": [
