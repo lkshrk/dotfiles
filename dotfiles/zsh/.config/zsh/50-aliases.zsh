@@ -6,6 +6,7 @@ alias ll='ls -lh'
 alias cat='bat'
 
 alias or='omni reconcile -y'
+alias fixterm='stty sane; printf "\033[?1000l\033[?1002l\033[?1003l\033[?1006l"; reset'
 
 if ! command -v terraform >/dev/null 2>&1 && command -v tofu >/dev/null 2>&1; then
   alias terraform='tofu'
