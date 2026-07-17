@@ -1,6 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v17.schema.json",
-  "version": 17,
   "agents": {
     "ignore": {}
   },
@@ -136,17 +135,6 @@
         }
       ]
     },
-    "coder": {
-      "providers": [
-        {
-          "provider": "script",
-          "options": {
-            "check": "command -v coder",
-            "install": "curl -fsSL https://coder.h-cloud.io/install.sh | sudo sh"
-          }
-        }
-      ]
-    },
     "certifi": {
       "providers": [
         {
@@ -204,6 +192,17 @@
         {
           "provider": "npm",
           "package": "cmake"
+        }
+      ]
+    },
+    "coder": {
+      "providers": [
+        {
+          "provider": "script",
+          "options": {
+            "check": "command -v coder",
+            "install": "curl -fsSL https://coder.h-cloud.io/install.sh | sudo sh"
+          }
         }
       ]
     },
@@ -1492,5 +1491,6 @@
       ],
       "git": "https://github.com/facebook/zstd"
     }
-  }
+  },
+  "version": 17
 }

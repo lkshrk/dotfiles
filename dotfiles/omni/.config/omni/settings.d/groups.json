@@ -6,24 +6,6 @@
         "claude-code",
         "coder",
         "@openai/codex"
-      ],
-      "dots": [
-        {
-          "name": "free-claude-code",
-          "path": "~/.config/free-claude-code"
-        },
-        {
-          "name": "codex",
-          "path": "~/.codex",
-          "ignore": [
-            "*",
-            "!/config.toml",
-            "!/mcp.json",
-            "!/AGENTS.md",
-            "!/RTK.md",
-            "!/rules/"
-          ]
-        }
       ]
     },
     {
@@ -34,12 +16,6 @@
         "oh-my-codex",
         "openwolf",
         "rtk"
-      ],
-      "dots": [
-        {
-          "name": "agents-skill-lock",
-          "path": "~/.agents/.skill-lock.json"
-        }
       ],
       "skills": [
         "JuliusBrussee/caveman",
@@ -104,66 +80,6 @@
         "yq",
         "omni",
         "glow"
-      ],
-      "dots": [
-        {
-          "name": "nvim",
-          "path": "~/.config/nvim",
-          "ignore": [
-            ".gitignore"
-          ]
-        },
-        {
-          "name": "omni",
-          "path": "~/.config/omni",
-          "ignore": [
-            "*",
-            "!/settings.json",
-            "!/settings.d/"
-          ]
-        },
-        {
-          "name": "tmux",
-          "path": "~/.config/tmux",
-          "hosts": {
-            "coder": {
-              "package": "tmux@coder"
-            }
-          }
-        },
-        {
-          "name": "vim",
-          "path": "~/.vim"
-        },
-        {
-          "name": "zsh",
-          "path": "~/.config/zsh",
-          "ignore": [
-            ".zsh_history",
-            ".gitignore"
-          ]
-        },
-        {
-          "name": "zshenv",
-          "path": "~/.zshenv"
-        },
-        {
-          "name": "bashrc",
-          "path": "~/.bashrc"
-        },
-        {
-          "name": "zshrc",
-          "path": "~/.zshrc",
-          "hosts": {
-            "topaz": {
-              "package": "zshrc@topaz"
-            }
-          }
-        },
-        {
-          "name": "env",
-          "path": "~/.config/env"
-        }
       ]
     },
     {
@@ -179,25 +95,6 @@
         "font-hack-nerd-font",
         "font-intel-one-mono",
         "font-jetbrains-mono-nerd-font"
-      ],
-      "dots": [
-        {
-          "name": "sleep-on-lock",
-          "path": "~/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
-        },
-        {
-          "name": "ghostty",
-          "path": "~/.config/ghostty"
-        },
-        {
-          "name": "zed",
-          "path": "~/.config/zed",
-          "ignore": [
-            "settings_backup.json",
-            "prompts/prompts-library-db.0.mdb",
-            "conversations"
-          ]
-        }
       ]
     },
     {
@@ -222,12 +119,6 @@
         "yamlfmt",
         "yamllint",
         "git-delta"
-      ],
-      "dots": [
-        {
-          "name": "gh",
-          "path": "~/.config/gh"
-        }
       ]
     },
     {
@@ -240,16 +131,6 @@
         "moonlight",
         "obs",
         "linearmouse"
-      ],
-      "dots": [
-        {
-          "name": "com.corsair",
-          "path": "~/.config/com.corsair"
-        },
-        {
-          "name": "linearmouse",
-          "path": "~/.config/linearmouse"
-        }
       ]
     },
     {
@@ -311,12 +192,6 @@
         "mlx",
         "flux-markdown",
         "tree-sitter"
-      ],
-      "dots": [
-        {
-          "name": "hammerspoon",
-          "path": "~/.hammerspoon"
-        }
       ]
     },
     {
@@ -338,19 +213,6 @@
         "vivaldi",
         "vlc",
         "yabai"
-      ],
-      "dots": [
-        {
-          "name": "yabai",
-          "path": "~/.config/yabai",
-          "ignore": [
-            "sleep-on-lock"
-          ]
-        },
-        {
-          "name": "skhd",
-          "path": "~/.config/skhd"
-        }
       ]
     },
     {
@@ -411,142 +273,6 @@
         "certifi",
         "numpy",
         "npm"
-      ],
-      "dots": [
-        {
-          "name": "git",
-          "path": "~/.config/git",
-          "hosts": {
-            "topaz": {
-              "package": "git@topaz"
-            }
-          },
-          "ignore": [
-            "hooks/pre-commit.old"
-          ]
-        },
-        {
-          "name": "karabiner",
-          "path": "~/.config/karabiner",
-          "ignored": true
-        },
-        {
-          "name": "moshi",
-          "path": "~/.config/moshi",
-          "ignored": true
-        },
-        {
-          "name": "taskless",
-          "path": "~/.config/taskless"
-        },
-        {
-          "name": "talos",
-          "path": "~/.config/talos",
-          "ignored": true
-        },
-        {
-          "name": "CLAUDE.md",
-          "path": "~/.config/CLAUDE.md",
-          "ignored": true
-        },
-        {
-          "name": "cagent",
-          "path": "~/.config/cagent",
-          "ignored": true
-        },
-        {
-          "name": "containers",
-          "path": "~/.config/containers",
-          "ignored": true
-        },
-        {
-          "name": "herdr",
-          "path": "~/.config/herdr"
-        },
-        {
-          "name": "zprofile",
-          "path": "~/.zprofile"
-        },
-        {
-          "name": "ssh",
-          "path": "~/.ssh/config"
-        },
-        {
-          "name": "gnupg",
-          "path": "~/.gnupg",
-          "ignored": true
-        },
-        {
-          "name": "profile",
-          "path": "~/.profile"
-        },
-        {
-          "name": "abtop",
-          "path": "~/.config/abtop",
-          "ignored": true
-        },
-        {
-          "name": "cargo",
-          "path": "~/.cargo",
-          "ignored": true
-        },
-        {
-          "name": "fish",
-          "path": "~/.config/fish",
-          "ignored": true
-        },
-        {
-          "name": "mac-disk-reclaim",
-          "path": "~/.config/mac-disk-reclaim",
-          "ignored": true
-        },
-        {
-          "name": "mimocode",
-          "path": "~/.config/mimocode",
-          "ignored": true
-        },
-        {
-          "name": "claude",
-          "path": "~/.claude",
-          "ignore": [
-            "*",
-            "!/settings.json",
-            "!/CLAUDE.md",
-            "!/mcp.json",
-            "!/plugins",
-            "!/agents/",
-            "!/hooks/",
-            "!/scripts/",
-            "!/.omc-config.json",
-            "!/keybindings.json",
-            "!/statusline-command.sh",
-            "!/tokenline.sh",
-            "!/RTK.md",
-            "!/plugins/installed_plugins.json",
-            "!/commands/",
-            "!/rules/"
-          ]
-        },
-        {
-          "name": "grok",
-          "path": "~/.grok",
-          "ignore": [
-            "*",
-            "!/config.toml",
-            "!/skills/",
-            "!/commands/",
-            "!/hooks/"
-          ]
-        },
-        {
-          "name": "amp",
-          "path": "~/.config/amp",
-          "ignored": true
-        },
-        {
-          "name": "cmux",
-          "path": "~/.config/cmux"
-        }
       ]
     }
   ]
