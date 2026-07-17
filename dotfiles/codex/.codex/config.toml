@@ -205,9 +205,6 @@ enabled = false
 [plugins."template-creator@openai-primary-runtime"]
 enabled = true
 
-[plugins."ponytail@ponytail"]
-enabled = true
-
 [plugins."browser@openai-bundled"]
 enabled = true
 

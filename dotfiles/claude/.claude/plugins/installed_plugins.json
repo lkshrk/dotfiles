@@ -115,6 +115,15 @@
         "lastUpdated": "2026-07-11T08:12:54.080Z",
         "gitCommitSha": "db52e28f4d9ded852ab3942cea316258ae4ef346"
       }
+    ],
+    "claude-md-management@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/claude-md-management/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-07-17T10:26:21.505Z",
+        "lastUpdated": "2026-07-17T10:26:21.505Z"
+      }
     ]
   }
 }

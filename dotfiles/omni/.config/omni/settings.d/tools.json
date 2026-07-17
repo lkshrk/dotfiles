@@ -1,247 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v17.schema.json",
-  "agents": {
-    "packages": [
-      {
-        "source": "JuliusBrussee/caveman"
-      },
-      {
-        "source": "mattpocock/skills"
-      },
-      {
-        "source": "vercel-labs/skills"
-      },
-      {
-        "source": "lkshrk/linear-ai"
-      },
-      {
-        "source": "rjyo/moshi-skill"
-      },
-      {
-        "source": "lkshrk/useful-skills"
-      },
-      {
-        "source": "sopaco/deepwiki-rs"
-      },
-      {
-        "source": "ShiplightAI/agent-skills-v2"
-      },
-      {
-        "source": "ShiplightAI/agent-skills"
-      }
-    ],
-    "mcp_servers": [
-      {
-        "name": "linear",
-        "transport": "http",
-        "url": "https://mcp.linear.app/mcp",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
-        "name": "linear-server",
-        "transport": "http",
-        "url": "https://mcp.linear.app/mcp",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "shiplight",
-        "transport": "stdio",
-        "command": "bunx @shiplightai/mcp@latest",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "codebase-memory-mcp",
-        "transport": "stdio",
-        "command": "codebase-memory-mcp",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "context7",
-        "transport": "http",
-        "url": "https://mcp.context7.com/mcp",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
-        "name": "context-mode",
-        "transport": "stdio",
-        "command": "node ./start.mjs",
-        "agents": [
-          "codex"
-        ]
-      }
-    ],
-    "marketplaces": [
-      {
-        "name": "context-mode",
-        "source": "https://github.com/mksglu/context-mode.git",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
-        "name": "lkshrk",
-        "source": "https://github.com/lkshrk/agent-marketplace.git",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
-        "name": "caveman",
-        "source": "JuliusBrussee/caveman",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "claude-plugins-official",
-        "source": "anthropics/claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "ecc",
-        "source": "affaan-m/everything-claude-code",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "ponytail",
-        "source": "https://github.com/DietrichGebert/ponytail.git",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
-        "name": "openai-codex",
-        "source": "openai/codex-plugin-cc",
-        "agents": [
-          "claude-code"
-        ]
-      }
-    ],
-    "plugins": [
-      {
-        "name": "superpowers",
-        "marketplace": "claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "github",
-        "marketplace": "claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "ecc",
-        "marketplace": "ecc",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "context-mode",
-        "marketplace": "context-mode",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
-        "name": "caveman",
-        "marketplace": "caveman",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "gopls-lsp",
-        "marketplace": "claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "code-simplifier",
-        "marketplace": "claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "lua-lsp",
-        "marketplace": "claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "frontend-design",
-        "marketplace": "claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "ponytail",
-        "marketplace": "ponytail",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
-        "name": "codex",
-        "marketplace": "openai-codex",
-        "agents": [
-          "claude-code"
-        ]
-      }
-    ],
-    "ignore": {
-      "skills": [
-        "academic-research-skills",
-        "rjyo/moshi-skill"
-      ],
-      "mcp_servers": [
-        "xcodebuildmcp"
-      ],
-      "plugins": [
-        "swift-lsp",
-        "spreadsheets",
-        "presentations",
-        "documents",
-        "build-ios-apps",
-        "academic-research-skills",
-        "browser",
-        "pdf",
-        "template-creator"
-      ],
-      "marketplaces": [
-        "openai-primary-runtime",
-        "openai-curated",
-        "academic-research-skills",
-        "openai-bundled",
-        "openai-codex"
-      ]
-    }
-  },
-  "ignore": {},
-  "settings": {
-    "dots_git": {}
-  },
   "tools": {
     "@openai/codex": {
       "providers": [
@@ -834,7 +591,7 @@
           "provider": "script",
           "options": {
             "check": "command -v just || test -x \"$HOME/.local/bin/just\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to \"$HOME/.local/bin\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" && curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to \"$HOME/.local/bin\"",
             "uninstall": "rm -f \"$HOME/.local/bin/just\""
           }
         }
@@ -896,7 +653,7 @@
           "provider": "script",
           "options": {
             "check": "command -v lazydocker || test -x \"$HOME/.local/bin/lazydocker\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | DIR=\"$HOME/.local/bin\" bash",
+            "install": "mkdir -p \"$HOME/.local/bin\" && curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | DIR=\"$HOME/.local/bin\" bash",
             "uninstall": "rm -f \"$HOME/.local/bin/lazydocker\""
           }
         }
@@ -1108,7 +865,7 @@
         {
           "provider": "script",
           "options": {
-            "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" \u0026\u0026 . \"$NVM_DIR/nvm.sh\" --no-use \u0026\u0026 nvm version default 2\u003e/dev/null | grep -q '^v24'",
+            "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" && . \"$NVM_DIR/nvm.sh\" --no-use && nvm version default 2>/dev/null | grep -q '^v24'",
             "install": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; PROFILE=/dev/null bash -c 'curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash'; . \"$NVM_DIR/nvm.sh\" --no-use; nvm install 24 --latest-npm; nvm alias default 24; nvm use --silent default",
             "uninstall": "rm -rf \"$HOME/.nvm\""
           }
@@ -1147,7 +904,7 @@
           "provider": "script",
           "options": {
             "check": "test -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
-            "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"; (cd $HOME/.oh-my-zsh \u0026\u0026 git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done",
+            "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"; (cd $HOME/.oh-my-zsh && git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done",
             "uninstall": "rm -rf $HOME/.oh-my-zsh"
           }
         }
@@ -1711,6 +1468,5 @@
       ],
       "git": "https://github.com/facebook/zstd"
     }
-  },
-  "version": 17
+  }
 }
