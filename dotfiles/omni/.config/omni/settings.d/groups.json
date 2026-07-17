@@ -29,7 +29,6 @@
         "ShiplightAI/agent-skills"
       ],
       "mcp_servers": [
-        "node_repl",
         "linear",
         "linear-server",
         "shiplight",
@@ -47,8 +46,8 @@
         "code-simplifier",
         "lua-lsp",
         "frontend-design",
-        "ponytail",
-        "codex"
+        "codex",
+        "claude-md-management"
       ],
       "marketplaces": [
         "context-mode",

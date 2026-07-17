@@ -31,14 +31,6 @@
     ],
     "mcp_servers": [
       {
-        "name": "node_repl",
-        "transport": "stdio",
-        "command": "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
         "name": "linear",
         "transport": "http",
         "url": "https://mcp.linear.app/mcp",
@@ -203,15 +195,15 @@
         ]
       },
       {
-        "name": "ponytail",
-        "marketplace": "ponytail",
+        "name": "codex",
+        "marketplace": "openai-codex",
         "agents": [
-          "codex"
+          "claude-code"
         ]
       },
       {
-        "name": "codex",
-        "marketplace": "openai-codex",
+        "name": "claude-md-management",
+        "marketplace": "claude-plugins-official",
         "agents": [
           "claude-code"
         ]
