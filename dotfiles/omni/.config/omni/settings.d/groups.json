@@ -517,7 +517,10 @@
             "!/.omc-config.json",
             "!/keybindings.json",
             "!/statusline-command.sh",
-            "!/tokenline.sh"
+            "!/tokenline.sh",
+            "!/RTK.md",
+            "!/commands/",
+            "!/rules/"
           ]
         },
         {
