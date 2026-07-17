@@ -510,7 +510,7 @@
             "!/settings.json",
             "!/CLAUDE.md",
             "!/mcp.json",
-            "!/plugins",
+            "!/plugins", "!/plugins/installed_plugins.json",
             "!/agents/",
             "!/hooks/",
             "!/scripts/",
