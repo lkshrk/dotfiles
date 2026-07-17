@@ -774,7 +774,9 @@
             "!/statusline-command.sh",
             "!/tokenline.sh",
             "!/RTK.md",
-            "!/plugins/installed_plugins.json"
+            "!/plugins/installed_plugins.json",
+            "!/commands/",
+            "!/rules/"
           ]
         },
         {

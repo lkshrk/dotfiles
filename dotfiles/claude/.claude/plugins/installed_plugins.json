@@ -35,7 +35,7 @@
         "installPath": "/Users/lkshrk/.codex/plugins/cache/context-mode/context-mode/1.0.169",
         "version": "1.0.169",
         "installedAt": "2026-05-29T18:15:29.811Z",
-        "lastUpdated": "2026-07-10T17:40:38.794Z",
+        "lastUpdated": "2026-07-16T21:30:36.823Z",
         "gitCommitSha": "0120fb352a52c70e692632e07b4bbaa687dcca37"
       }
     ],
@@ -45,7 +45,7 @@
         "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/github/unknown",
         "version": "unknown",
         "installedAt": "2026-05-29T18:15:46.391Z",
-        "lastUpdated": "2026-07-10T22:14:08.284Z"
+        "lastUpdated": "2026-07-17T03:46:13.142Z"
       }
     ],
     "ecc@ecc": [
@@ -70,11 +70,11 @@
     "academic-research-skills@academic-research-skills": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.claude/plugins/cache/academic-research-skills/academic-research-skills/3.13.0",
-        "version": "3.13.0",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/academic-research-skills/academic-research-skills/3.17.0",
+        "version": "3.17.0",
         "installedAt": "2026-06-09T15:05:18.422Z",
-        "lastUpdated": "2026-06-19T20:06:32.597Z",
-        "gitCommitSha": "b446752cd1af819dd8941de5b030c97e20edc456"
+        "lastUpdated": "2026-07-16T22:09:51.697Z",
+        "gitCommitSha": "039d94f670c47d996ca919d37b8753b0a8d4a140"
       }
     ],
     "frontend-design@claude-plugins-official": [
@@ -84,7 +84,7 @@
         "installPath": "/Users/lkshrk/.claude/plugins/cache/claude-plugins-official/frontend-design/unknown",
         "version": "unknown",
         "installedAt": "2026-06-21T06:56:14.250Z",
-        "lastUpdated": "2026-06-21T06:56:14.250Z"
+        "lastUpdated": "2026-07-17T02:41:40.290Z"
       }
     ],
     "lua-lsp@claude-plugins-official": [
@@ -104,6 +104,16 @@
         "installedAt": "2026-07-10T22:12:13.205Z",
         "lastUpdated": "2026-07-10T22:12:13.205Z",
         "gitCommitSha": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0"
+      }
+    ],
+    "codex@openai-codex": [
+      {
+        "scope": "user",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/openai-codex/codex/1.0.6",
+        "version": "1.0.6",
+        "installedAt": "2026-07-11T08:12:54.080Z",
+        "lastUpdated": "2026-07-11T08:12:54.080Z",
+        "gitCommitSha": "db52e28f4d9ded852ab3942cea316258ae4ef346"
       }
     ]
   }
