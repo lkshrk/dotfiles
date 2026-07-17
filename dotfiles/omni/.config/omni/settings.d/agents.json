@@ -160,6 +160,13 @@
         ]
       },
       {
+        "name": "ponytail",
+        "marketplace": "ponytail",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
         "name": "caveman",
         "marketplace": "caveman",
         "agents": [

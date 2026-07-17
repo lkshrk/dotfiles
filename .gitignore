@@ -35,6 +35,7 @@ Temporary Items
 /.windsurf/
 /.aider*
 /AGENTS.local.md
+/.agent-progress.md
 /CLAUDE.local.md
 /GEMINI.local.md
 .omc/
