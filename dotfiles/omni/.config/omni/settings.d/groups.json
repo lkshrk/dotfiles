@@ -199,8 +199,7 @@
       "tools": [
         "bun",
         "nvm",
-        "uv",
-        "grok"
+        "uv"
       ]
     },
     {

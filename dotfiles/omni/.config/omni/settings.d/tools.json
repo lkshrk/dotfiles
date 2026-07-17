@@ -530,21 +530,6 @@
       ],
       "git": "https://github.com/golang/tools"
     },
-    "grok": {
-      "providers": [
-        {
-          "provider": "script",
-          "options": {
-            "check_path": "grok",
-            "uninstall": "rm -rf $HOME/.grok/bin",
-            "url": "https://x.ai/cli/install.sh"
-          },
-          "recipe": {
-            "type": "curl_install_script"
-          }
-        }
-      ]
-    },
     "hammerspoon": {
       "providers": [
         {

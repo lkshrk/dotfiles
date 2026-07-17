@@ -49,34 +49,6 @@ activate_zsh_login_shell() {
   fi
 }
 
-# ─── Omni on Linux (chicken-and-egg) ──────────────────────────────────────────
-
-omni_reads_config() {
-  command -v omni >/dev/null 2>&1 \
-    && omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1
-}
-
-install_omni_linux() {
-  step "omni (Linux)"
-
-  if omni_reads_config; then
-    ok "omni already on PATH: $(omni --version 2>/dev/null || printf 'found')"
-    return
-  fi
-
-  if command -v omni >/dev/null 2>&1; then
-    warn "installed omni cannot read this repo's config; installing latest release"
-  fi
-
-  bash "$REPO_DIR/scripts/install-omni-latest.sh"
-
-  if omni_reads_config; then
-    ok "omni installed: $(omni --version 2>/dev/null || printf 'found')"
-  else
-    die "latest omni could not read $OMNI_CONFIG_PATH"
-  fi
-}
-
 # ─── nvm symlinks for agent shells ────────────────────────────────────────────
 #
 # Agent subshells never source zshenv; keep node on PATH via ~/.local/bin.
@@ -119,11 +91,9 @@ export_sync_path() {
   export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
   mkdir -p "$PNPM_HOME/bin"
 
-  export PATH="${NVM_BIN:+$NVM_BIN:}$PNPM_HOME/bin:$HOME/.grok/bin:$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
+  export PATH="${NVM_BIN:+$NVM_BIN:}$PNPM_HOME/bin:$HOME/.local/bin:$HOME/.bun/bin:$HOME/.krew/bin:$HOME/.cargo/bin:$PATH"
 }
 
 # ─── main (phase 1: only what omni cannot do for itself) ─────────────────────
 
 install_apt_packages
-activate_zsh_login_shell
-install_omni_linux

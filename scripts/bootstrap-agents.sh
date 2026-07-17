@@ -4,7 +4,6 @@ set -euo pipefail
 
 REPO_DIR="${REPO_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_MIN_VERSION="${OMNI_MIN_VERSION:-0.8.8}"
 OMNI_AGENTS_REQUIRED="${OMNI_AGENTS_REQUIRED:-0}"
 
 # 'command' would bypass the functions setup-coder.sh exports; call them directly.
@@ -14,26 +13,8 @@ _bootstrap_ok()   { if declare -F ok   >/dev/null 2>&1; then ok   "$@"; else _bo
 _bootstrap_warn() { if declare -F warn >/dev/null 2>&1; then warn "$@"; else _bootstrap_say "! $*" >&2; fi; }
 _bootstrap_die()  { if declare -F die  >/dev/null 2>&1; then die  "$@"; else _bootstrap_say "x $*" >&2; exit 1; fi; }
 
-omni_version() {
-  omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+(\.[0-9]+){1,2}$/) { print $i; exit } }'
-}
-
-version_at_least() {
-  awk -v current="$1" -v minimum="$2" 'BEGIN {
-    split(current, c, ".")
-    split(minimum, m, ".")
-    for (i = 1; i <= 3; i++) {
-      c[i] += 0
-      m[i] += 0
-      if (c[i] > m[i]) exit 0
-      if (c[i] < m[i]) exit 1
-    }
-    exit 0
-  }'
-}
-
 export_agent_path() {
-  export PATH="$HOME/.grok/bin:$HOME/.bun/bin:$HOME/.local/bin:$PATH"
+  export PATH="$HOME/.bun/bin:$HOME/.local/bin:$PATH"
 }
 
 if ! command -v omni >/dev/null 2>&1; then
@@ -41,15 +22,6 @@ if ! command -v omni >/dev/null 2>&1; then
     _bootstrap_die "omni is not installed"
   fi
   _bootstrap_warn "omni not found; skipping agent restore"
-  exit 0
-fi
-
-current="$(omni_version)"
-if [[ -z "$current" ]] || ! version_at_least "$current" "$OMNI_MIN_VERSION"; then
-  if [[ "$OMNI_AGENTS_REQUIRED" == "1" ]]; then
-    _bootstrap_die "omni $OMNI_MIN_VERSION or newer is required for agents restore (found: ${current:-unknown})"
-  fi
-  _bootstrap_warn "omni ${current:-unknown} is older than $OMNI_MIN_VERSION; skipping agent restore"
   exit 0
 fi
 
