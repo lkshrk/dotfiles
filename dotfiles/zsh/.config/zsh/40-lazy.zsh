@@ -113,12 +113,20 @@ _env_next_use_nvmrc() {
 
   resolved="$(nvm version "$wanted" 2>/dev/null || true)"
   if [[ -z "$resolved" || "$resolved" == "N/A" ]]; then
-    if [[ "$_ENV_NEXT_NVMRC_MISSING" != "$nvmrc:$wanted" ]]; then
-      print -u2 "nvm: $wanted from $nvmrc is not installed"
-      _ENV_NEXT_NVMRC_MISSING="$nvmrc:$wanted"
+    if [[ "$_ENV_NEXT_NVMRC_MISSING" == "$nvmrc:$wanted" ]]; then
+      _ENV_NEXT_NVMRC_ACTIVE="$nvmrc:$wanted"
+      return 0
     fi
-    _ENV_NEXT_NVMRC_ACTIVE="$nvmrc:$wanted"
-    return 0
+    print -u2 "nvm: installing $wanted (from $nvmrc)"
+    if ! nvm install "$wanted" >/dev/null 2>&1; then
+      print -u2 "nvm: failed to install $wanted"
+      _ENV_NEXT_NVMRC_MISSING="$nvmrc:$wanted"
+      _ENV_NEXT_NVMRC_ACTIVE="$nvmrc:$wanted"
+      return 0
+    fi
+    resolved="$(nvm version "$wanted" 2>/dev/null || true)"
+    [[ -n "$resolved" && "$resolved" != "N/A" ]] || return 0
+    unset _ENV_NEXT_NVMRC_MISSING
   fi
 
   current="$(nvm version current 2>/dev/null || true)"
