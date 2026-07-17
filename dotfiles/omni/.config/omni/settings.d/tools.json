@@ -337,6 +337,34 @@
         }
       ]
     },
+    "ffmpeg": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "ffmpeg"
+        },
+        {
+          "provider": "apt",
+          "package": "ffmpeg"
+        },
+        {
+          "provider": "apk",
+          "package": "ffmpeg"
+        },
+        {
+          "provider": "dnf",
+          "package": "ffmpeg"
+        },
+        {
+          "provider": "pacman",
+          "package": "ffmpeg"
+        },
+        {
+          "provider": "zypper",
+          "package": "ffmpeg"
+        }
+      ]
+    },
     "flux-markdown": {
       "providers": [
         {
@@ -1277,6 +1305,35 @@
         }
       ],
       "git": "https://github.com/tree-sitter/tree-sitter"
+    },
+    "ttyd": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "ttyd"
+        },
+        {
+          "provider": "apt",
+          "package": "ttyd"
+        },
+        {
+          "provider": "apk",
+          "package": "ttyd"
+        },
+        {
+          "provider": "dnf",
+          "package": "ttyd"
+        },
+        {
+          "provider": "pacman",
+          "package": "ttyd"
+        },
+        {
+          "provider": "zypper",
+          "package": "ttyd"
+        }
+      ],
+      "git": "https://github.com/tsl0922/ttyd"
     },
     "uv": {
       "providers": [
