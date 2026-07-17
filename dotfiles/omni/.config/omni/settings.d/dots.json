@@ -267,7 +267,7 @@
             "!/mcp.json",
             "!/plugins",
             "!/agents/",
-            "!/hooks/",
+            "!/hooks/**",
             "!/scripts/",
             "!/.omc-config.json",
             "!/keybindings.json",
