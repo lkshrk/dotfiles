@@ -43,13 +43,14 @@
       ],
       "skills": [
         "JuliusBrussee/caveman",
-        "ShiplightAI/agent-skills",
         "mattpocock/skills",
         "vercel-labs/skills",
         "lkshrk/linear-ai",
         "rjyo/moshi-skill",
         "lkshrk/useful-skills",
-        "sopaco/deepwiki-rs"
+        "sopaco/deepwiki-rs",
+        "ShiplightAI/agent-skills-v2",
+        "ShiplightAI/agent-skills"
       ],
       "mcp_servers": [
         "node_repl",
@@ -70,7 +71,8 @@
         "code-simplifier",
         "lua-lsp",
         "frontend-design",
-        "ponytail"
+        "ponytail",
+        "codex"
       ],
       "marketplaces": [
         "context-mode",
@@ -78,7 +80,8 @@
         "caveman",
         "claude-plugins-official",
         "ecc",
-        "ponytail"
+        "ponytail",
+        "openai-codex"
       ]
     },
     {
@@ -510,7 +513,7 @@
             "!/settings.json",
             "!/CLAUDE.md",
             "!/mcp.json",
-            "!/plugins", "!/plugins/installed_plugins.json",
+            "!/plugins",
             "!/agents/",
             "!/hooks/",
             "!/scripts/",
@@ -519,6 +522,7 @@
             "!/statusline-command.sh",
             "!/tokenline.sh",
             "!/RTK.md",
+            "!/plugins/installed_plugins.json",
             "!/commands/",
             "!/rules/"
           ]
@@ -533,6 +537,15 @@
             "!/commands/",
             "!/hooks/"
           ]
+        },
+        {
+          "name": "amp",
+          "path": "~/.config/amp",
+          "ignored": true
+        },
+        {
+          "name": "cmux",
+          "path": "~/.config/cmux"
         }
       ]
     }
