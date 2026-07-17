@@ -773,7 +773,8 @@
             "!/keybindings.json",
             "!/statusline-command.sh",
             "!/tokenline.sh",
-            "!/RTK.md"
+            "!/RTK.md",
+            "!/plugins/installed_plugins.json"
           ]
         },
         {
