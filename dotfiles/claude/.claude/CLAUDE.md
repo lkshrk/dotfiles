@@ -72,10 +72,6 @@ Both orchestration layers above/below are installed and compose. Where they disa
 - Role contracts: the loaded files in `~/.claude/agents/` are authoritative. `executor`, `verifier`, `security-reviewer`, and `Explore` carry pilotfish contracts (judgment executor; CONFIRMED/REFUTED refuter; read-only no-Bash evidence gatherer; Haiku built-in shadow). Ignore stale OMC reference text describing older versions of these roles, including any `explore` (lowercase) references — that role was replaced by `Explore`.
 - Verification: OMC's "use code-reviewer or verifier for the approval pass" stands, but a `verifier` brief requests only CONFIRMED/REFUTED; plan readiness goes to `plan-verifier` (READY/REVISE).
 
-## Code comments
-
-No comments that explain or justify an edit. Comment only for constraints the code cannot show, and match the comment density of the file being edited.
-
 @RTK.md
 
 <!-- pilotfish:begin -->

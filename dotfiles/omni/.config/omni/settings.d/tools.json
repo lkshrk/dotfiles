@@ -1,7 +1,242 @@
 {
   "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v17.schema.json",
   "agents": {
-    "ignore": {}
+    "packages": [
+      {
+        "source": "JuliusBrussee/caveman"
+      },
+      {
+        "source": "mattpocock/skills"
+      },
+      {
+        "source": "vercel-labs/skills"
+      },
+      {
+        "source": "lkshrk/linear-ai"
+      },
+      {
+        "source": "rjyo/moshi-skill"
+      },
+      {
+        "source": "lkshrk/useful-skills"
+      },
+      {
+        "source": "sopaco/deepwiki-rs"
+      },
+      {
+        "source": "ShiplightAI/agent-skills-v2"
+      },
+      {
+        "source": "ShiplightAI/agent-skills"
+      }
+    ],
+    "mcp_servers": [
+      {
+        "name": "linear",
+        "transport": "http",
+        "url": "https://mcp.linear.app/mcp",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "linear-server",
+        "transport": "http",
+        "url": "https://mcp.linear.app/mcp",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "shiplight",
+        "transport": "stdio",
+        "command": "bunx @shiplightai/mcp@latest",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "codebase-memory-mcp",
+        "transport": "stdio",
+        "command": "codebase-memory-mcp",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "context7",
+        "transport": "http",
+        "url": "https://mcp.context7.com/mcp",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "context-mode",
+        "transport": "stdio",
+        "command": "node ./start.mjs",
+        "agents": [
+          "codex"
+        ]
+      }
+    ],
+    "marketplaces": [
+      {
+        "name": "context-mode",
+        "source": "https://github.com/mksglu/context-mode.git",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "lkshrk",
+        "source": "https://github.com/lkshrk/agent-marketplace.git",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "caveman",
+        "source": "JuliusBrussee/caveman",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "claude-plugins-official",
+        "source": "anthropics/claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "ecc",
+        "source": "affaan-m/everything-claude-code",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "ponytail",
+        "source": "https://github.com/DietrichGebert/ponytail.git",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "openai-codex",
+        "source": "openai/codex-plugin-cc",
+        "agents": [
+          "claude-code"
+        ]
+      }
+    ],
+    "plugins": [
+      {
+        "name": "superpowers",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "github",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "ecc",
+        "marketplace": "ecc",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "context-mode",
+        "marketplace": "context-mode",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "caveman",
+        "marketplace": "caveman",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "gopls-lsp",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "code-simplifier",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "lua-lsp",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "frontend-design",
+        "marketplace": "claude-plugins-official",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "ponytail",
+        "marketplace": "ponytail",
+        "agents": [
+          "codex"
+        ]
+      },
+      {
+        "name": "codex",
+        "marketplace": "openai-codex",
+        "agents": [
+          "claude-code"
+        ]
+      }
+    ],
+    "ignore": {
+      "skills": [
+        "academic-research-skills",
+        "rjyo/moshi-skill"
+      ],
+      "mcp_servers": [
+        "xcodebuildmcp"
+      ],
+      "plugins": [
+        "swift-lsp",
+        "spreadsheets",
+        "presentations",
+        "documents",
+        "build-ios-apps",
+        "academic-research-skills",
+        "browser",
+        "pdf",
+        "template-creator"
+      ],
+      "marketplaces": [
+        "openai-primary-runtime",
+        "openai-curated",
+        "academic-research-skills",
+        "openai-bundled",
+        "openai-codex"
+      ]
+    }
   },
   "ignore": {},
   "settings": {
@@ -143,11 +378,11 @@
       ],
       "ignore": true
     },
-    "chatgpt": {
+    "chatgpt-classic": {
       "providers": [
         {
           "provider": "brew",
-          "package": "chatgpt"
+          "package": "chatgpt-classic"
         }
       ]
     },
