@@ -1,3 +1,6 @@
+# Clear mouse modes left behind when cmux replaces a disconnected session.
+printf '\033[?1000l\033[?1002l\033[?1003l\033[?1005l\033[?1006l\033[?1015l\033[?1016l' > /dev/tty 2>/dev/null || true
+
 # Interactive Coder terminals (including browser terminals, which do not set
 # SSH_TTY) land in a shared tmux session. Avoid nesting when the caller is
 # already inside tmux.

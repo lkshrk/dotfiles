@@ -76,7 +76,12 @@
         },
         {
           "name": "bashrc",
-          "path": "~/.bashrc"
+          "path": "~/.bashrc",
+          "hosts": {
+            "coder": {
+              "package": "bashrc@coder"
+            }
+          }
         },
         {
           "name": "zshrc",
