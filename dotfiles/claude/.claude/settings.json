@@ -1,345 +1,248 @@
 {
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0",
-    "CLAUDE_CODE_SYNTAX_HIGHLIGHT": "false",
-    "ECC_GATEGUARD": "off",
-    "ECC_DISABLED_HOOKS": "stop:desktop-notify",
-    "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
-    "FORCE_PROMPT_CACHING_5M": "1",
-    "SSH_AUTH_SOCK": "/var/folders/xn/60cxwtb13mq7_n0r4zwgy2j00000gn/T/rbw-501/ssh-agent-socket",
-    "GIT_SSH_COMMAND": "ssh -o PermitLocalCommand=no"
-  },
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
-  "includeCoAuthoredBy": false,
-  "permissions": {
-    "allow": [
-      "Bash(git:*)",
-      "Bash(git push:*)",
-      "Bash(git fetch:*)",
-      "mcp__plugin_context-mode_context-mode",
-      "mcp__plugin_context-mode_context-mode__*",
-      "mcp__linear-server",
-      "mcp__linear-server__*",
-      "Edit(frontend/eslint.config.js)"
-    ]
-  },
-  "model": "opus[1m]",
-  "fallbackModel": [
-    "claude-sonnet-5",
-    "claude-haiku-4-5"
-  ],
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$HOME/.claude/hooks/context-mode-cache-heal.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" || true",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "startup",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "resume",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "clear",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/openwolf-git-gate.sh",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" || true",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" || true",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Grep|Glob",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-code-discovery-gate",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" || true",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" || true",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" || true",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "StopFailure": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "SubagentStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "TeammateIdle": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -f '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/lkshrk/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
-            "timeout": 10
-          }
-        ]
-      }
-    ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "bash \"$HOME/.claude/tokenline.sh\"",
-    "refreshInterval": 1
-  },
-  "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "context-mode@context-mode": true,
-    "github@claude-plugins-official": true,
-    "ecc@ecc": true,
-    "swift-lsp@claude-plugins-official": true,
-    "academic-research-skills@academic-research-skills": true,
-    "lua-lsp@claude-plugins-official": true,
-    "caveman@caveman": true,
-    "codex@openai-codex": true,
-    "claude-md-management@claude-plugins-official": true
-  },
-  "extraKnownMarketplaces": {
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
+    "env": {
+        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0",
+        "CLAUDE_CODE_SYNTAX_HIGHLIGHT": "false",
+        "ECC_GATEGUARD": "off",
+        "ECC_DISABLED_HOOKS": "stop:desktop-notify",
+        "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
+        "FORCE_PROMPT_CACHING_5M": "1",
+        "SSH_AUTH_SOCK": "/var/folders/xn/60cxwtb13mq7_n0r4zwgy2j00000gn/T/rbw-501/ssh-agent-socket",
+        "GIT_SSH_COMMAND": "ssh -o PermitLocalCommand=no"
     },
-    "context-mode": {
-      "source": {
-        "source": "github",
-        "repo": "mksglu/context-mode"
-      }
+    "attribution": {
+        "commit": "",
+        "pr": ""
     },
-    "ecc": {
-      "source": {
-        "source": "github",
-        "repo": "affaan-m/everything-claude-code"
-      }
+    "includeCoAuthoredBy": false,
+    "permissions": {
+        "allow": [
+            "Bash(git:*)",
+            "Bash(git push:*)",
+            "Bash(git fetch:*)",
+            "mcp__plugin_context-mode_context-mode",
+            "mcp__plugin_context-mode_context-mode__*",
+            "mcp__linear-server",
+            "mcp__linear-server__*",
+            "Edit(frontend/eslint.config.js)"
+        ]
     },
-    "academic-research-skills": {
-      "source": {
-        "source": "github",
-        "repo": "Imbad0202/academic-research-skills"
-      }
+    "model": "best",
+    "fallbackModel": [
+        "claude-sonnet-5",
+        "claude-haiku-4-5"
+    ],
+    "hooks": {
+        "SessionStart": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "\"$HOME/.claude/hooks/context-mode-cache-heal.mjs\""
+                    }
+                ]
+            },
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" || true",
+                        "timeout": 5
+                    }
+                ]
+            },
+            {
+                "matcher": "startup",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-session-reminder"
+                    }
+                ]
+            },
+            {
+                "matcher": "resume",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-session-reminder"
+                    }
+                ]
+            },
+            {
+                "matcher": "clear",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-session-reminder"
+                    }
+                ]
+            },
+            {
+                "matcher": "compact",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-session-reminder"
+                    }
+                ]
+            }
+        ],
+        "PreToolUse": [
+            {
+                "matcher": "Bash",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "rtk hook claude",
+                        "timeout": 5
+                    }
+                ]
+            },
+            {
+                "matcher": "Write|Edit|MultiEdit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/openwolf-git-gate.sh",
+                        "timeout": 5
+                    }
+                ]
+            },
+            {
+                "matcher": "Read",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" || true",
+                        "timeout": 5
+                    }
+                ]
+            },
+            {
+                "matcher": "Write|Edit|MultiEdit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" || true",
+                        "timeout": 5
+                    }
+                ]
+            },
+            {
+                "matcher": "Grep|Glob",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-code-discovery-gate",
+                        "timeout": 5
+                    }
+                ]
+            }
+        ],
+        "PostToolUse": [
+            {
+                "matcher": "Read",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" || true",
+                        "timeout": 5
+                    }
+                ]
+            },
+            {
+                "matcher": "Write|Edit|MultiEdit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" || true",
+                        "timeout": 10
+                    }
+                ]
+            }
+        ],
+        "Stop": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" || true",
+                        "timeout": 10
+                    }
+                ]
+            }
+        ],
+        "SubagentStart": [
+            {
+                "matcher": "*",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-subagent-reminder"
+                    }
+                ]
+            }
+        ]
     },
-    "openai-codex": {
-      "source": {
-        "source": "github",
-        "repo": "openai/codex-plugin-cc"
-      }
-    }
-  },
-  "effortLevel": "medium",
-  "autoUpdatesChannel": "latest",
-  "tui": "fullscreen",
-  "skipWorkflowUsageWarning": true,
-  "theme": "dark-daltonized",
-  "verbose": true,
-  "preferredNotifChannel": "notifications_disabled",
-  "skipAutoPermissionPrompt": true
+    "statusLine": {
+        "type": "command",
+        "command": "bash \"$HOME/.claude/tokenline.sh\"",
+        "refreshInterval": 1
+    },
+    "enabledPlugins": {
+        "gopls-lsp@claude-plugins-official": true,
+        "superpowers@claude-plugins-official": true,
+        "code-simplifier@claude-plugins-official": true,
+        "context-mode@context-mode": true,
+        "github@claude-plugins-official": true,
+        "ecc@ecc": true,
+        "swift-lsp@claude-plugins-official": true,
+        "academic-research-skills@academic-research-skills": true,
+        "lua-lsp@claude-plugins-official": true,
+        "caveman@caveman": true,
+        "codex@openai-codex": true,
+        "claude-md-management@claude-plugins-official": true
+    },
+    "extraKnownMarketplaces": {
+        "caveman": {
+            "source": {
+                "source": "github",
+                "repo": "JuliusBrussee/caveman"
+            }
+        },
+        "context-mode": {
+            "source": {
+                "source": "github",
+                "repo": "mksglu/context-mode"
+            }
+        },
+        "ecc": {
+            "source": {
+                "source": "github",
+                "repo": "affaan-m/everything-claude-code"
+            }
+        },
+        "academic-research-skills": {
+            "source": {
+                "source": "github",
+                "repo": "Imbad0202/academic-research-skills"
+            }
+        },
+        "openai-codex": {
+            "source": {
+                "source": "github",
+                "repo": "openai/codex-plugin-cc"
+            }
+        }
+    },
+    "effortLevel": "medium",
+    "autoUpdatesChannel": "latest",
+    "tui": "fullscreen",
+    "skipWorkflowUsageWarning": true,
+    "theme": "dark-daltonized",
+    "verbose": true,
+    "preferredNotifChannel": "notifications_disabled",
+    "skipAutoPermissionPrompt": true
 }
