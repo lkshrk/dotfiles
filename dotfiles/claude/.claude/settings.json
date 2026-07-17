@@ -1,12 +1,11 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_SYNTAX_HIGHLIGHT": "false",
     "ECC_GATEGUARD": "off",
     "ECC_DISABLED_HOOKS": "stop:desktop-notify",
     "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
     "FORCE_PROMPT_CACHING_5M": "1",
-    "SSH_AUTH_SOCK": "/var/folders/xn/60cxwtb13mq7_n0r4zwgy2j00000gn/T/rbw-501/ssh-agent-socket",
     "GIT_SSH_COMMAND": "ssh -o PermitLocalCommand=no"
   },
   "attribution": {
@@ -36,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$HOME/.claude/hooks/context-mode-cache-heal.mjs\""
+            "command": "~/.claude/hooks/context-mode-cache-heal.mjs"
           }
         ]
       },
@@ -187,7 +186,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash \"$HOME/.claude/tokenline.sh\"",
+    "command": "bash ~/.claude/tokenline.sh",
     "refreshInterval": 1
   },
   "enabledPlugins": {

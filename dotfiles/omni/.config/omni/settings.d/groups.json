@@ -121,14 +121,6 @@
       ]
     },
     {
-      "name": "omni",
-      "tools": [
-        "ffmpeg",
-        "ttyd",
-        "vhs"
-      ]
-    },
-    {
       "name": "gaming",
       "tools": [
         "battle-net",
@@ -199,6 +191,14 @@
         "mlx",
         "flux-markdown",
         "tree-sitter"
+      ]
+    },
+    {
+      "name": "omni",
+      "tools": [
+        "ffmpeg",
+        "ttyd",
+        "vhs"
       ]
     },
     {
