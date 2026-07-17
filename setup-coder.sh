@@ -93,10 +93,11 @@ step "omni dotfiles"
 # symlinks with real files at runtime, and Claude Code rewrites
 # .claude/plugins/installed_plugins.json; all collide with the symlinks omni
 # wants to stow (--use-repo does not resolve a replaced-symlink conflict).
-# Drop them so dots sync links cleanly.
+# Drop them so dots sync links cleanly. Grok is no longer managed; remove its
+# legacy configuration so existing Coder workspaces converge with the profile.
 rm -f "$HOME/.codex/config.toml" "$HOME/.codex/mcp.json" "$HOME/.zshrc" \
   "$HOME/.claude/plugins/installed_plugins.json"
-rm -rf "$HOME/.config/opencode"
+rm -rf "$HOME/.config/opencode" "$HOME/.grok"
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 
 # tools sync may replace ~/.local/bin/node; re-point at the nvm default after stow.
@@ -167,8 +168,8 @@ if command -v claude >/dev/null 2>&1 && claude mcp get linear-server >/dev/null 
   if [[ -n "${LINEAR_API_KEY:-}" ]]; then
     claude mcp remove -s user linear-server >/dev/null 2>&1 || true
     if claude mcp add --transport http --scope user \
-        --header "Authorization: Bearer $LINEAR_API_KEY" \
-        linear-server https://mcp.linear.app/mcp; then
+        linear-server https://mcp.linear.app/mcp \
+        --header "Authorization: Bearer $LINEAR_API_KEY"; then
       ok "Linear MCP configured with LINEAR_API_KEY"
     else
       warn "Linear MCP API-key configuration failed"
@@ -226,9 +227,15 @@ fi
 # Needs both the binary (tools sync) and the stowed config (dots sync above).
 if command -v nvim >/dev/null 2>&1 || [ -x "$HOME/.local/bin/nvim" ]; then
   step "nvim plugins"
-  PATH="$HOME/.local/bin:$PATH" nvim --headless "+Lazy! restore" +qa >/dev/null 2>&1 \
-    || PATH="$HOME/.local/bin:$PATH" nvim --headless "+Lazy! sync" +qa >/dev/null 2>&1 \
-    || warn "nvim plugin sync failed; plugins will install on first launch"
+  if PATH="$HOME/.local/bin:$PATH" nvim --headless "+Lazy! restore" +qa >/dev/null 2>&1 \
+    || PATH="$HOME/.local/bin:$PATH" nvim --headless "+Lazy! sync" +qa >/dev/null 2>&1
+  then
+    step "nvim Mason tools"
+    PATH="$HOME/.local/bin:$PATH" nvim --headless "+MasonToolsInstallSync" +qa >/dev/null 2>&1 \
+      || warn "nvim Mason tool install failed; tools will install on first launch"
+  else
+    warn "nvim plugin sync failed; plugins will install on first launch"
+  fi
 fi
 
 activate_zsh_login_shell
