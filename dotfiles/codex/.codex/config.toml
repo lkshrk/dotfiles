@@ -1,6 +1,6 @@
-model_auto_compact_token_limit = 217_600
-model = "gpt-5.6-terra"
-model_reasoning_effort = "medium"
+model_auto_compact_token_limit = 840_000
+model_auto_compact_token_limit_scope = "body_after_prefix"
+model_reasoning_effort = "high"
 # Coder's SSH pre-connect hook refreshes auth.json in the persistent workspace
 # home, so credentials must stay file-backed.
 cli_auth_credentials_store = "file"
@@ -9,7 +9,10 @@ approval_policy = "never"
 sandbox_mode = "workspace-write"
 default_permissions = "signed"
 
-notify = ["/Users/lkshrk/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+notify = [
+  "/Users/lkshrk/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient",
+  "turn-ended",
+]
 
 [permissions.signed]
 extends = ":workspace"
@@ -17,9 +20,9 @@ extends = ":workspace"
 [permissions.signed.filesystem.":workspace_roots"]
 ".git/" = "write"
 
-  [permissions.signed.network]
-  enabled = true
-  dangerously_allow_all_unix_sockets = true
+[permissions.signed.network]
+enabled = true
+dangerously_allow_all_unix_sockets = true
 
 [agents]
 max_threads = 6
@@ -33,22 +36,22 @@ log_user_prompt = true
 endpoint = "https://otel.h-cloud.lan/v1/logs"
 protocol = "binary"
 
-  [otel.exporter.otlp-http.tls]
-  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+[otel.exporter.otlp-http.tls]
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [otel.trace_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/traces"
 protocol = "binary"
 
-  [otel.trace_exporter.otlp-http.tls]
-  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+[otel.trace_exporter.otlp-http.tls]
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [otel.metrics_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/metrics"
 protocol = "binary"
 
-  [otel.metrics_exporter.otlp-http.tls]
-  ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+[otel.metrics_exporter.otlp-http.tls]
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [projects."/Users/lkshrk"]
 trust_level = "trusted"
@@ -102,12 +105,12 @@ trust_level = "trusted"
 session_picker_view = "dense"
 
 [tui.keymap.editor]
-insert_newline = [ "shift-enter" ]
-kill_line_start = [ "ctrl-u" ]
+insert_newline = ["shift-enter"]
+kill_line_start = ["ctrl-u"]
 
-  [tui.model_availability_nux]
-  "gpt-5.5" = 4
-  "gpt-5.6-sol" = 4
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+"gpt-5.6-sol" = 4
 
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
@@ -159,7 +162,7 @@ approval_mode = "approve"
 
 [mcp_servers.xcodebuildmcp]
 command = "xcodebuildmcp"
-args = [ "mcp" ]
+args = ["mcp"]
 enabled = false
 
 [mcp_servers.linear]
@@ -209,6 +212,9 @@ enabled = false
 enabled = true
 
 [plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."ponytail@ponytail"]
 enabled = true
 
 [features]
