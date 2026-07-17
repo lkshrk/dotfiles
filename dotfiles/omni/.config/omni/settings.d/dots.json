@@ -280,17 +280,6 @@
           ]
         },
         {
-          "name": "grok",
-          "path": "~/.grok",
-          "ignore": [
-            "*",
-            "!/config.toml",
-            "!/skills/",
-            "!/commands/",
-            "!/hooks/"
-          ]
-        },
-        {
           "name": "cmux",
           "path": "~/.config/cmux"
         },

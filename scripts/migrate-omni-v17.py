@@ -108,7 +108,6 @@ TOOL_RECIPE_SPECS: dict[str, dict[str, Any]] = {
         env='UV_INSTALL_DIR="$HOME/.local/bin"',
         uninstall="rm -f $HOME/.local/bin/uv",
     ),
-    "grok": recipe_curl("https://x.ai/cli/install.sh", check_path="grok", uninstall="rm -rf $HOME/.grok/bin"),
     "eza": recipe_github("eza-community", "eza", "eza_{arch}-unknown-linux-gnu.tar.gz", bin_name="eza"),
     "docker": recipe_apt_repo(
         "https://download.docker.com/linux/ubuntu/gpg",

@@ -4,7 +4,6 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_MIN_VERSION="0.9.4"
 CODER_OMNI_HOST="${CODER_OMNI_HOST:-coder}"
 RUN_MACOS_DEFAULTS=0
 SKIP_ADMIN_WARMUP=1
@@ -28,36 +27,6 @@ omni_reads_config() {
     && omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1
 }
 
-omni_version() {
-  omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+(\.[0-9]+){1,2}$/) { print $i; exit } }'
-}
-
-version_at_least() {
-  awk -v current="$1" -v minimum="$2" 'BEGIN {
-    split(current, c, ".")
-    split(minimum, m, ".")
-    for (i = 1; i <= 3; i++) {
-      c[i] += 0; m[i] += 0
-      if (c[i] > m[i]) exit 0
-      if (c[i] < m[i]) exit 1
-    }
-    exit 0
-  }'
-}
-
-ensure_omni_version() {
-  local current
-  current="$(omni_version)"
-  if ! omni_reads_config || [[ -z "$current" ]] || ! version_at_least "$current" "$OMNI_MIN_VERSION"; then
-    step "omni upgrade"
-    bash "$REPO_DIR/scripts/install-omni-latest.sh"
-  fi
-  omni_reads_config || die "omni cannot read $OMNI_CONFIG_PATH after upgrade"
-  current="$(omni_version)"
-  version_at_least "$current" "$OMNI_MIN_VERSION" \
-    || die "omni $current is older than required $OMNI_MIN_VERSION"
-}
-
 [[ "$(uname -s)" == "Linux" ]] || die "setup-coder.sh is Linux-only"
 [[ -f "$OMNI_CONFIG_PATH" ]] || die "Omni config not found: $OMNI_CONFIG_PATH"
 
@@ -66,8 +35,8 @@ export c_red c_yel c_grn c_dim c_off
 
 source "$REPO_DIR/scripts/setup-coder-linux.sh"
 
-command -v omni >/dev/null 2>&1 || die "omni is not installed"
-ensure_omni_version
+step "omni install"
+bash "$REPO_DIR/scripts/install-omni-latest.sh"
 omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1 \
   || die "installed omni cannot read this repo's config"
 
@@ -190,24 +159,33 @@ if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
     || warn "codebase-memory-mcp install failed; omni MCP restore may skip it"
 fi
 
-export OMNI_AGENTS_REQUIRED=1 OMNI_MIN_VERSION
+export OMNI_AGENTS_REQUIRED=1
 bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 
-step "grok auth"
-_grok_auth="$HOME/.grok/auth.json"
-if [[ -n "${GROK_AUTH_JSON:-}" ]] && [[ ! -s "$_grok_auth" ]]; then
-  mkdir -p "$HOME/.grok"
-  printf '%s' "$GROK_AUTH_JSON" > "$_grok_auth"
-  chmod 600 "$_grok_auth"
-  ok "seeded grok auth from GROK_AUTH_JSON"
-elif [[ -n "${XAI_API_KEY:-}" ]]; then
-  ok "XAI_API_KEY available for grok"
-elif [[ -s "$_grok_auth" ]]; then
-  ok "grok auth already present"
+step "Linear MCP auth"
+if command -v claude >/dev/null 2>&1 && claude mcp get linear-server >/dev/null 2>&1; then
+  if [[ -n "${LINEAR_API_KEY:-}" ]]; then
+    claude mcp remove -s user linear-server >/dev/null 2>&1 || true
+    if claude mcp add --transport http --scope user \
+        --header "Authorization: Bearer $LINEAR_API_KEY" \
+        linear-server https://mcp.linear.app/mcp; then
+      ok "Linear MCP configured with LINEAR_API_KEY"
+    else
+      warn "Linear MCP API-key configuration failed"
+    fi
+  elif [[ -t 0 && -t 1 ]]; then
+    if claude mcp login linear-server --no-browser; then
+      ok "Linear MCP authenticated"
+    else
+      warn "Linear MCP OAuth did not complete; rerun: claude mcp login linear-server --no-browser"
+    fi
+  else
+    warn "Linear MCP needs OAuth; run in a Coder terminal: claude mcp login linear-server --no-browser"
+  fi
 else
-  warn "no grok auth; set GROK_AUTH_JSON, XAI_API_KEY, or run: grok login --device-auth"
+  warn "Claude Code or linear-server MCP missing; skipping Linear OAuth"
 fi
-unset _grok_auth
+unset LINEAR_API_KEY
 
 # Activate git hooks in the project repos the template clones. The git-clone
 # module runs in parallel with this bootstrap, so wait briefly for each clone.

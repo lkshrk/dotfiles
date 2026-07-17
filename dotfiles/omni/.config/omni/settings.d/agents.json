@@ -134,8 +134,7 @@
         "name": "openai-codex",
         "source": "openai/codex-plugin-cc",
         "agents": [
-          "claude-code",
-          "grok"
+          "claude-code"
         ]
       }
     ],
@@ -242,7 +241,6 @@
         "openai-curated",
         "academic-research-skills",
         "openai-bundled",
-        "xAI Official",
         "openai-codex"
       ]
     }

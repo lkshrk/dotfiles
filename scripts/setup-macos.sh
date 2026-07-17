@@ -55,18 +55,6 @@ install_bootstrap_tools() {
   brew install stow omni bun uv
   ok "stow, omni, bun, uv installed"
 
-  # Grok is synced later via omni tools, but ensure ~/.grok/bin exists on PATH
-  # for agents restore when the brew formula is unavailable.
-  if ! command -v grok >/dev/null 2>&1 && [[ ! -x "$HOME/.grok/bin/grok" ]]; then
-    step "grok (macOS)"
-    if curl -fsSL https://x.ai/cli/install.sh | bash; then
-      ok "grok installed: $(grok --version 2>/dev/null | head -n1 || printf 'found')"
-    else
-      warn "grok install failed; omni agents restore will skip grok plugins/MCP"
-    fi
-  else
-    ok "grok ready: $(grok --version 2>/dev/null | head -n1 || printf 'found')"
-  fi
 }
 
 # ─── sleep-on-lock ────────────────────────────────────────────────────────────

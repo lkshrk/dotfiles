@@ -161,6 +161,13 @@ enabled = false
 
 [mcp_servers.linear]
 url = "https://mcp.linear.app/mcp"
+bearer_token_env_var = "LINEAR_API_KEY"
+
+[mcp_servers.linear.tools.save_issue]
+approval_mode = "approve"
+
+[mcp_servers.linear.tools.save_comment]
+approval_mode = "approve"
 
 [mcp_servers.node_repl]
 args = []
@@ -331,8 +338,8 @@ trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7
 trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-16T20:40:22Z"
-last_revision = "b6f25a6feeca09e8ee0407c7d77be5b805f55d44"
+last_updated = "2026-07-17T06:46:06Z"
+last_revision = "eaa83de2d7975fd66eacaa1b7418eec04794a2d7"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
