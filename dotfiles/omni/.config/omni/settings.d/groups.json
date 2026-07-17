@@ -90,11 +90,11 @@
         "zed",
         "codex-app",
         "ghostty",
-        "chatgpt",
         "obsidian",
         "font-hack-nerd-font",
         "font-intel-one-mono",
-        "font-jetbrains-mono-nerd-font"
+        "font-jetbrains-mono-nerd-font",
+        "chatgpt-classic"
       ]
     },
     {

@@ -30,4 +30,4 @@ Example: `git status` → `rtk git status` (transparent, 0 tokens overhead)
 
 When running shell inside `ctx_execute`/`ctx_batch_execute`, prefix the command with `rtk` (e.g. `rtk go test ./...`). rtk compresses the output; context-mode sandboxes it — they stack, not conflict.
 
-Refer to CLAUDE.md for full command reference.
+Run `rtk --help` for full command reference.
