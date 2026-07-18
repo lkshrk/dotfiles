@@ -11,8 +11,10 @@
     {
       "name": "ai-plugins",
       "tools": [
+        "cargo",
         "ccundo",
         "context-mode",
+        "deepwiki-rs",
         "oh-my-codex",
         "openwolf",
         "rtk"

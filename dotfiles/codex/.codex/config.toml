@@ -166,6 +166,8 @@ enabled = true
 hooks = true
 js_repl = false
 
+[hooks.state]
+
 
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:56da0c4249dc7af048f42ae458fb83931926a8af41ec6fab5ae819ff3a8c83ae"
@@ -224,4 +226,10 @@ dock-icon-preference = "app-default"
 hide_rate_limit_model_nudge = true
 
 [projects."/Users/lkshrk/Dev/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/routivo"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/h-cloud"]
 trust_level = "trusted"

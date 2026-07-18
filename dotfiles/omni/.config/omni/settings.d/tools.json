@@ -145,6 +145,18 @@
       ],
       "git": "https://github.com/lunarmodules/busted"
     },
+    "cargo": {
+      "providers": [
+        {
+          "provider": "script",
+          "options": {
+            "check": "command -v cargo || test -x \"$HOME/.cargo/bin/cargo\"",
+            "install": "curl https://sh.rustup.rs -sSf | sh"
+          }
+        }
+      ],
+      "git": "https://github.com/rust-lang/cargo"
+    },
     "ccundo": {
       "providers": [
         {
@@ -269,6 +281,15 @@
         }
       ],
       "git": "https://github.com/lkshrk/d-streamy"
+    },
+    "deepwiki-rs": {
+      "providers": [
+        {
+          "provider": "cargo",
+          "package": "deepwiki-rs"
+        }
+      ],
+      "git": "https://github.com/sopaco/deepwiki-rs"
     },
     "direnv": {
       "providers": [
