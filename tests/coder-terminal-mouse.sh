@@ -13,8 +13,8 @@ fake_bin=$(mktemp -d)
 local_socket="coder-test-local-$$"
 coder_socket="coder-test-remote-$$"
 cleanup() {
-  tmux -L "$local_socket" kill-server 2>/dev/null || true
-  tmux -L "$coder_socket" kill-server 2>/dev/null || true
+  TMUX='' tmux -L "$local_socket" kill-server 2>/dev/null || true
+  TMUX='' tmux -L "$coder_socket" kill-server 2>/dev/null || true
   rm -rf "$fake_bin"
 }
 trap cleanup EXIT
@@ -60,23 +60,32 @@ resource_result=$(TMUX_RESOURCE_STAT="$fake_bin/stat" \
 bash --noprofile --norc -ic "source '$BASH_CONFIG'; trap -p WINCH" 2>/dev/null |
   grep -q _coder_clear_mouse_modes
 
-tmux -L "$local_socket" -f "$LOCAL_TMUX_CONFIG" new-session -d -s check
-tmux -L "$coder_socket" -f "$CODER_TMUX_CONFIG" new-session -d -s check
+TMUX='' tmux -L "$local_socket" -f "$LOCAL_TMUX_CONFIG" new-session -d -s check
+TMUX='' tmux -L "$coder_socket" -f "$CODER_TMUX_CONFIG" new-session -d -s check
 
-[[ "$(tmux -L "$local_socket" show-options -gv prefix)" == C-Space ]]
-[[ "$(tmux -L "$local_socket" show-options -gv prefix2)" == None ]]
-[[ "$(tmux -L "$coder_socket" show-options -gv prefix)" == C-b ]]
-[[ "$(tmux -L "$coder_socket" show-options -gv prefix2)" == None ]]
+[[ "$(TMUX='' tmux -L "$local_socket" show-options -gv prefix)" == C-Space ]]
+[[ "$(TMUX='' tmux -L "$local_socket" show-options -gv prefix2)" == None ]]
+[[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv prefix)" == C-b ]]
+[[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv prefix2)" == None ]]
+local_wheel_binding=$(TMUX='' tmux -L "$local_socket" list-keys |
+  grep -E '^bind-key +(-r +)?-T root +WheelUpPane ')
+[[ "$local_wheel_binding" == *'#{||:#{pane_in_mode},#{mouse_any_flag}}'* ]]
+[[ "$local_wheel_binding" != *alternate_on* ]]
 
-[[ "$(tmux -L "$local_socket" show-options -sv extended-keys)" == on ]]
-[[ "$(tmux -L "$local_socket" show-options -sv extended-keys-format)" == csi-u ]]
-[[ "$(tmux -L "$local_socket" show-options -gv mouse)" == on ]]
-[[ "$(tmux -L "$coder_socket" show-options -sv extended-keys)" == off ]]
-[[ "$(tmux -L "$coder_socket" show-options -gv mouse)" == off ]]
+[[ "$(TMUX='' tmux -L "$local_socket" show-options -sv extended-keys)" == on ]]
+[[ "$(TMUX='' tmux -L "$local_socket" show-options -sv extended-keys-format)" == csi-u ]]
+[[ "$(TMUX='' tmux -L "$local_socket" show-options -gv mouse)" == on ]]
+[[ "$(TMUX='' tmux -L "$coder_socket" show-options -sv extended-keys)" == off ]]
+[[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv mouse)" == off ]]
 
 for key in q h v x t r c k R C K P N; do
-  [[ "$(tmux -L "$local_socket" list-keys -T prefix "$key")" == \
-    "$(tmux -L "$coder_socket" list-keys -T prefix "$key")" ]]
+  local_binding=$(TMUX='' tmux -L "$local_socket" list-keys |
+    grep -E "^bind-key +(-r +)?-T prefix +$key " |
+    sed -E 's/[[:space:]]+/ /g')
+  coder_binding=$(TMUX='' tmux -L "$coder_socket" list-keys |
+    grep -E "^bind-key +(-r +)?-T prefix +$key " |
+    sed -E 's/[[:space:]]+/ /g')
+  [[ "$local_binding" == "$coder_binding" ]]
 done
 
 printf 'PASS: Coder shells and tmux profile behave as expected\n'
