@@ -69,9 +69,6 @@ kill_line_start = ["ctrl-u"]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 4
 
-[mcp_servers.context7]
-url = "https://mcp.context7.com/mcp"
-
 [mcp_servers.codebase-memory-mcp]
 command = "codebase-memory-mcp"
 
@@ -122,15 +119,11 @@ command = "xcodebuildmcp"
 args = ["mcp"]
 enabled = false
 
-[mcp_servers.linear]
-url = "https://mcp.linear.app/mcp"
-bearer_token_env_var = "LINEAR_API_KEY"
+[mcp_servers.litellm-tools]
+url = "https://api.ai.h-cloud.lan/mcp/"
 
-[mcp_servers.linear.tools.save_issue]
-approval_mode = "approve"
-
-[mcp_servers.linear.tools.save_comment]
-approval_mode = "approve"
+[mcp_servers.litellm-tools.env_http_headers]
+x-litellm-api-key = "LITELLM_API"
 
 [mcp_servers.shiplight]
 command = "bunx"
@@ -204,8 +197,8 @@ trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7
 trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-17T12:31:05Z"
-last_revision = "c13d6be3c59706834ecd19d48f21c49b32cbb466"
+last_updated = "2026-07-18T12:51:25Z"
+last_revision = "712ba0afc5f99ab0006694143cb982fe2be26b81"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 

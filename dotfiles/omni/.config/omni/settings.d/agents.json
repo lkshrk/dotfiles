@@ -31,17 +31,12 @@
     ],
     "mcp_servers": [
       {
-        "name": "linear",
+        "name": "litellm-tools",
         "transport": "http",
-        "url": "https://mcp.linear.app/mcp",
-        "agents": [
-          "codex"
-        ]
-      },
-      {
-        "name": "linear-server",
-        "transport": "http",
-        "url": "https://mcp.linear.app/mcp",
+        "url": "https://api.ai.h-cloud.lan/mcp/",
+        "headers": {
+          "x-litellm-api-key": "${LITELLM_API}"
+        },
         "agents": [
           "claude-code"
         ]
@@ -60,14 +55,6 @@
         "command": "codebase-memory-mcp",
         "agents": [
           "claude-code"
-        ]
-      },
-      {
-        "name": "context7",
-        "transport": "http",
-        "url": "https://mcp.context7.com/mcp",
-        "agents": [
-          "codex"
         ]
       },
       {
