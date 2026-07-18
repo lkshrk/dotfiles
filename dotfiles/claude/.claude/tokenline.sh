@@ -95,7 +95,12 @@ parse_and_prepare_paths() {
     (.context_window.current_usage.input_tokens // 0),
     (.context_window.current_usage.output_tokens // 0),
     (.context_window.current_usage.cache_creation_input_tokens // 0),
-    (.context_window.current_usage.cache_read_input_tokens // 0)' 2>/dev/null)
+    (.context_window.current_usage.cache_read_input_tokens // 0),
+    (.workspace.current_dir // .cwd // ""),
+    (.workspace.repo.name // ""),
+    (.workspace.git_worktree // .worktree.name // ""),
+    (.worktree.branch // ""),
+    (.columns // "")' 2>/dev/null)
 
   # Malformed or empty stdin: jq emits nothing, so the array is empty. Degrade to
   # a silent no-op render rather than leaking parse errors or rendering garbage —
@@ -115,6 +120,11 @@ parse_and_prepare_paths() {
   cur_output="${_f[10]}"
   cur_cwrite="${_f[11]}"
   cur_cread="${_f[12]}"
+  cwd="${_f[13]}"
+  repo_name="${_f[14]}"
+  git_worktree="${_f[15]}"
+  worktree_branch="${_f[16]}"
+  input_columns="${_f[17]}"
 
   # Computed: total input-only tokens used in the current context window
   tokens_used=$((cur_input + cur_cwrite + cur_cread))
@@ -146,6 +156,65 @@ parse_and_prepare_paths() {
 }
 
 # --- 2. Formatting Helpers ---
+compute_repo_info() {
+  repo_info=""
+  [ -n "$cwd" ] || return
+
+  local root branch ref
+  root=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" rev-parse --show-toplevel 2>/dev/null) || return
+  [ -n "$repo_name" ] || repo_name="${root##*/}"
+
+  branch="$worktree_branch"
+  [ -n "$branch" ] || branch=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null)
+  [ -n "$branch" ] || branch=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
+
+  ref="$branch"
+  if [ -n "$git_worktree" ] && [ "$git_worktree" != "$branch" ]; then
+    ref="${ref:+$ref/}$git_worktree"
+  fi
+
+  repo_info="$repo_name"
+  [ -n "$ref" ] && repo_info="$repo_info [$ref]"
+}
+
+visible_width() {
+  printf '%s' "$1" \
+    | sed $'s/\033\\[[0-9;]*m//g' \
+    | jq -Rs 'length'
+}
+
+status_columns() {
+  local columns="${TOKENLINE_COLUMNS:-$input_columns}"
+  if ! [[ "$columns" =~ ^[0-9]+$ ]] || [ "$columns" -le 0 ]; then
+    columns=$(stty size </dev/tty 2>/dev/null | awk '{print $2}')
+  fi
+  if ! [[ "$columns" =~ ^[0-9]+$ ]] || [ "$columns" -le 0 ]; then
+    columns=$(tput cols 2>/dev/null)
+  fi
+  [[ "$columns" =~ ^[0-9]+$ ]] && [ "$columns" -gt 0 ] && printf '%s' "$columns"
+}
+
+print_first_line() {
+  local left="$1" right="$2"
+  local columns left_width right_width gap
+
+  columns=$(status_columns)
+  if [ -z "$right" ] || [ -z "$columns" ]; then
+    printf '%s\n' "$left"
+    return
+  fi
+
+  left_width=$(visible_width "$left")
+  right_width=$(visible_width "$right")
+  gap=$((columns - left_width - right_width - 2))
+
+  if [ "$gap" -ge 2 ]; then
+    printf '%s%*s%s\n' "$left" "$gap" '' "$right"
+  else
+    printf '%s\n' "$left"
+  fi
+}
+
 fmt_k() {
   # Formats token counts nicely (e.g. 1500000 -> 1.5M, 25600 -> 25.6k).
   # Value is passed via -v (defaulted to 0) so a missing or non-numeric arg
@@ -455,7 +524,7 @@ render_statusline() {
   local line1="$display_header"
   [ -n "$ctx_info" ]   && line1="$line1 | $ctx_info"
   [ -n "$cache_info" ] && line1="$line1 | $cache_info"
-  printf "%s\n" "$line1"
+  print_first_line "$line1" "$repo_info"
 
   # Line 2: breakdown of cache / raw / saving (only shown when activity happens)
   [ -n "$last_info" ] && printf "%s\n" "$last_info"
@@ -473,6 +542,7 @@ render_statusline() {
 
 # --- Orchestrated Execution Flow ---
 parse_and_prepare_paths
+compute_repo_info
 compute_cache_timer
 compute_context_info
 compute_rate_limits

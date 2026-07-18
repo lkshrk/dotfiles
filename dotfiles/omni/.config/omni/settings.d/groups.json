@@ -79,7 +79,8 @@
         "wget",
         "yq",
         "omni",
-        "glow"
+        "glow",
+        "markdownlint-cli"
       ]
     },
     {
@@ -88,7 +89,6 @@
         "brave-browser",
         "iina",
         "zed",
-        "codex-app",
         "ghostty",
         "obsidian",
         "font-hack-nerd-font",
@@ -117,7 +117,10 @@
         "yaml-lint",
         "yamlfmt",
         "yamllint",
-        "git-delta"
+        "git-delta",
+        "actionlint",
+        "direnv",
+        "gitleaks"
       ]
     },
     {
@@ -190,7 +193,10 @@
         "rbw",
         "mlx",
         "flux-markdown",
-        "tree-sitter"
+        "tree-sitter",
+        "herdr",
+        "xcodegen",
+        "typewhisper"
       ]
     },
     {
@@ -218,7 +224,12 @@
         "skhd-zig",
         "vivaldi",
         "vlc",
-        "yabai"
+        "yabai",
+        "linear",
+        "bam",
+        "chatterino",
+        "cmux",
+        "d-streamy"
       ]
     },
     {
@@ -278,7 +289,11 @@
         "parsec",
         "certifi",
         "numpy",
-        "npm"
+        "npm",
+        "omp",
+        "android-commandlinetools",
+        "gradle",
+        "vips"
       ]
     }
   ]

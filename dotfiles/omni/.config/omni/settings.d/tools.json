@@ -9,6 +9,23 @@
       ],
       "git": "https://github.com/openai/codex"
     },
+    "actionlint": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "actionlint"
+        }
+      ],
+      "git": "https://github.com/rhysd/actionlint"
+    },
+    "android-commandlinetools": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "android-commandlinetools"
+        }
+      ]
+    },
     "argo": {
       "providers": [
         {
@@ -17,6 +34,15 @@
         }
       ],
       "git": "https://github.com/argoproj/argo-workflows"
+    },
+    "bam": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "bam"
+        }
+      ],
+      "git": "https://github.com/lkshrk/better-audio-mixer"
     },
     "bat": {
       "providers": [
@@ -143,6 +169,14 @@
         }
       ]
     },
+    "chatterino": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "chatterino"
+        }
+      ]
+    },
     "cilium-cli": {
       "providers": [
         {
@@ -187,6 +221,15 @@
         }
       ]
     },
+    "cmux": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "cmux"
+        }
+      ],
+      "git": "https://github.com/manaflow-ai/cmux"
+    },
     "coder": {
       "providers": [
         {
@@ -195,14 +238,6 @@
             "check": "command -v coder",
             "install": "curl -fsSL https://coder.h-cloud.io/install.sh | sudo sh"
           }
-        }
-      ]
-    },
-    "codex-app": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "codex-app"
         }
       ]
     },
@@ -225,6 +260,24 @@
           "package": "coreutils"
         }
       ]
+    },
+    "d-streamy": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "d-streamy"
+        }
+      ],
+      "git": "https://github.com/lkshrk/d-streamy"
+    },
+    "direnv": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "direnv"
+        }
+      ],
+      "git": "https://github.com/direnv/direnv"
     },
     "discord": {
       "providers": [
@@ -320,23 +373,6 @@
       ],
       "git": "https://github.com/sharkdp/fd"
     },
-    "flux": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "flux"
-        }
-      ],
-      "git": "https://github.com/influxdata/flux"
-    },
-    "flux-local": {
-      "providers": [
-        {
-          "provider": "uv",
-          "package": "flux-local"
-        }
-      ]
-    },
     "ffmpeg": {
       "providers": [
         {
@@ -362,6 +398,23 @@
         {
           "provider": "zypper",
           "package": "ffmpeg"
+        }
+      ]
+    },
+    "flux": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "flux"
+        }
+      ],
+      "git": "https://github.com/influxdata/flux"
+    },
+    "flux-local": {
+      "providers": [
+        {
+          "provider": "uv",
+          "package": "flux-local"
         }
       ]
     },
@@ -472,6 +525,15 @@
       ],
       "git": "https://github.com/newren/git-filter-repo"
     },
+    "gitleaks": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "gitleaks"
+        }
+      ],
+      "git": "https://github.com/gitleaks/gitleaks"
+    },
     "glow": {
       "providers": [
         {
@@ -528,7 +590,7 @@
           "provider": "script",
           "options": {
             "check": "command -v task || test -x \"$HOME/.local/bin/task\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && curl -fsSL https://taskfile.dev/install.sh | sh -s -- -d -b \"$HOME/.local/bin\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 curl -fsSL https://taskfile.dev/install.sh | sh -s -- -d -b \"$HOME/.local/bin\"",
             "uninstall": "rm -f \"$HOME/.local/bin/task\""
           }
         }
@@ -545,7 +607,7 @@
           "provider": "script",
           "options": {
             "check": "command -v golangci-lint || test -x \"$HOME/.local/bin/golangci-lint\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && curl -fsSL https://golangci-lint.run/install.sh | sh -s -- -b \"$HOME/.local/bin\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 curl -fsSL https://golangci-lint.run/install.sh | sh -s -- -b \"$HOME/.local/bin\"",
             "uninstall": "rm -f \"$HOME/.local/bin/golangci-lint\""
           }
         }
@@ -588,12 +650,20 @@
           "provider": "script",
           "options": {
             "check": "command -v gopls || test -x \"$HOME/.local/bin/gopls\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && GOBIN=\"$HOME/.local/bin\" go install golang.org/x/tools/gopls@latest",
+            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 GOBIN=\"$HOME/.local/bin\" go install golang.org/x/tools/gopls@latest",
             "uninstall": "rm -f \"$HOME/.local/bin/gopls\""
           }
         }
       ],
       "git": "https://github.com/golang/tools"
+    },
+    "gradle": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "gradle"
+        }
+      ]
     },
     "hammerspoon": {
       "providers": [
@@ -621,6 +691,15 @@
         }
       ],
       "git": "https://github.com/helmfile/helmfile"
+    },
+    "herdr": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "herdr"
+        }
+      ],
+      "git": "https://github.com/ogulcancelik/herdr"
     },
     "iina": {
       "providers": [
@@ -664,7 +743,7 @@
           "provider": "script",
           "options": {
             "check": "command -v just || test -x \"$HOME/.local/bin/just\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to \"$HOME/.local/bin\"",
+            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to \"$HOME/.local/bin\"",
             "uninstall": "rm -f \"$HOME/.local/bin/just\""
           }
         }
@@ -726,7 +805,7 @@
           "provider": "script",
           "options": {
             "check": "command -v lazydocker || test -x \"$HOME/.local/bin/lazydocker\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" && curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | DIR=\"$HOME/.local/bin\" bash",
+            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | DIR=\"$HOME/.local/bin\" bash",
             "uninstall": "rm -f \"$HOME/.local/bin/lazydocker\""
           }
         }
@@ -780,6 +859,14 @@
         }
       ]
     },
+    "linear": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "linear"
+        }
+      ]
+    },
     "linearmouse": {
       "providers": [
         {
@@ -822,6 +909,15 @@
         }
       ],
       "git": "https://github.com/metaspartan/mactop"
+    },
+    "markdownlint-cli": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "markdownlint-cli"
+        }
+      ],
+      "git": "https://github.com/igorshubovych/markdownlint-cli"
     },
     "mas": {
       "providers": [
@@ -930,7 +1026,7 @@
         {
           "provider": "script",
           "options": {
-            "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" && . \"$NVM_DIR/nvm.sh\" --no-use && nvm version default 2>/dev/null | grep -q '^v24'",
+            "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" \u0026\u0026 . \"$NVM_DIR/nvm.sh\" --no-use \u0026\u0026 nvm version default 2\u003e/dev/null | grep -q '^v24'",
             "install": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; PROFILE=/dev/null bash -c 'curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash'; . \"$NVM_DIR/nvm.sh\" --no-use; nvm install 24 --latest-npm; nvm alias default 24; nvm use --silent default",
             "uninstall": "rm -rf \"$HOME/.nvm\""
           }
@@ -969,7 +1065,7 @@
           "provider": "script",
           "options": {
             "check": "test -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
-            "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"; (cd $HOME/.oh-my-zsh && git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done",
+            "install": "[ -d \"$HOME/.oh-my-zsh\" ] || sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended; D=\"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins\"; [ -d \"$D/zsh-autosuggestions\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \"$D/zsh-autosuggestions\"; [ -d \"$D/zsh-syntax-highlighting\" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \"$D/zsh-syntax-highlighting\"; (cd $HOME/.oh-my-zsh \u0026\u0026 git pull --quiet); for p in zsh-autosuggestions zsh-syntax-highlighting; do git -C \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p\" pull --quiet; done",
             "uninstall": "rm -rf $HOME/.oh-my-zsh"
           }
         }
@@ -999,6 +1095,15 @@
         }
       ],
       "git": "https://github.com/lkshrk/omni"
+    },
+    "omp": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "omp"
+        }
+      ],
+      "git": "https://github.com/can1357/oh-my-pi"
     },
     "opentofu": {
       "providers": [
@@ -1335,6 +1440,15 @@
       ],
       "git": "https://github.com/tsl0922/ttyd"
     },
+    "typewhisper": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "typewhisper"
+        }
+      ],
+      "git": "https://github.com/TypeWhisper/typewhisper-mac"
+    },
     "uv": {
       "providers": [
         {
@@ -1381,6 +1495,15 @@
         }
       ],
       "git": "https://github.com/charmbracelet/vhs"
+    },
+    "vips": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "vips"
+        }
+      ],
+      "git": "https://github.com/libvips/libvips"
     },
     "vivaldi": {
       "providers": [
@@ -1439,6 +1562,15 @@
         }
       ],
       "git": "https://github.com/getsentry/XcodeBuildMCP"
+    },
+    "xcodegen": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "xcodegen"
+        }
+      ],
+      "git": "https://github.com/yonaskolb/XcodeGen"
     },
     "yabai": {
       "providers": [

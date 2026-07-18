@@ -49,6 +49,7 @@
       "core",
       "dev",
       "dev-tooling",
+      "go",
       "prereqs",
       "shell",
       "test-tooling"
@@ -83,7 +84,8 @@
       "libiscsi",
       "pkgconf",
       "npm",
-      "asyncpg"
+      "asyncpg",
+      "pnpm"
     ]
   },
   "settings": {

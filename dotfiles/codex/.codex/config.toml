@@ -51,6 +51,15 @@ ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [tui]
 session_picker_view = "dense"
+status_line = [
+	"model-with-reasoning",
+	"context-used",
+	"used-tokens",
+	"project-name",
+	"git-branch",
+	"five-hour-limit",
+	"weekly-limit",
+]
 
 [tui.keymap.editor]
 insert_newline = ["shift-enter"]
@@ -163,18 +172,6 @@ hooks = true
 js_repl = false
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:56da0c4249dc7af048f42ae458fb83931926a8af41ec6fab5ae819ff3a8c83ae"
 enabled = false
@@ -195,15 +192,6 @@ enabled = false
 
 [hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:stop:0:0"]
 trusted_hash = "sha256:9205c1763e40c0256ab334e2e96c037c1cdf5b8bfaddba31ed19d93d3388586a"
-
-
-
-
-
-
-
-
-
 
 
 [hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
@@ -239,3 +227,6 @@ dock-icon-preference = "app-default"
 
 [notice]
 hide_rate_limit_model_nudge = true
+
+[projects."/Users/lkshrk/Dev/dotfiles"]
+trust_level = "trusted"
