@@ -213,8 +213,6 @@ if [[ -e "$_codex_config" ]]; then
       "$_codex_config_target"
     warn "Codex OTEL CA missing; removed explicit ca-certificate entries"
   fi
-  # In-cluster the LAN ingress is a needless hairpin + self-signed TLS; the
-  # ClusterIP is plain HTTP and always resolvable.
   sed -i \
     -e 's|https://api\.ai\.h-cloud\.lan/mcp/|http://litellm-proxy.ai.svc.cluster.local:4000/mcp/|' \
     "$_codex_config_target"
@@ -246,9 +244,6 @@ fi
 export OMNI_AGENTS_REQUIRED=1
 bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 
-# The restore above registers Claude's litellm MCP into ~/.claude.json; rewrite
-# the gateway URL to the ClusterIP (in-cluster the LAN ingress is a needless
-# hairpin + self-signed TLS).
 _claude_config="$HOME/.claude.json"
 if [[ -f "$_claude_config" ]]; then
   step "litellm MCP in-cluster URL (claude)"
