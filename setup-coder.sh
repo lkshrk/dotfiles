@@ -213,6 +213,12 @@ if [[ -e "$_codex_config" ]]; then
       "$_codex_config_target"
     warn "Codex OTEL CA missing; removed explicit ca-certificate entries"
   fi
+  # In-cluster the LAN ingress is a needless hairpin + self-signed TLS; the
+  # ClusterIP is plain HTTP and always resolvable.
+  sed -i \
+    -e 's|https://api\.ai\.h-cloud\.lan/mcp/|http://litellm-proxy.ai.svc.cluster.local:4000/mcp/|' \
+    "$_codex_config_target"
+  ok "Codex litellm MCP -> in-cluster service"
   unset _codex_config_target _codex_otel_ca _ca
 else
   warn "Codex config not found after dots sync"
@@ -240,30 +246,18 @@ fi
 export OMNI_AGENTS_REQUIRED=1
 bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 
-step "Linear MCP auth"
-if command -v claude >/dev/null 2>&1 && claude mcp get linear-server >/dev/null 2>&1; then
-  if [[ -n "${LINEAR_API_KEY:-}" ]]; then
-    claude mcp remove -s user linear-server >/dev/null 2>&1 || true
-    if claude mcp add --transport http --scope user \
-        linear-server https://mcp.linear.app/mcp \
-        --header "Authorization: Bearer $LINEAR_API_KEY"; then
-      ok "Linear MCP configured with LINEAR_API_KEY"
-    else
-      warn "Linear MCP API-key configuration failed"
-    fi
-  elif [[ -t 0 && -t 1 ]]; then
-    if claude mcp login linear-server --no-browser; then
-      ok "Linear MCP authenticated"
-    else
-      warn "Linear MCP OAuth did not complete; rerun: claude mcp login linear-server --no-browser"
-    fi
-  else
-    warn "Linear MCP needs OAuth; run in a Coder terminal: claude mcp login linear-server --no-browser"
-  fi
-else
-  warn "Claude Code or linear-server MCP missing; skipping Linear OAuth"
+# The restore above registers Claude's litellm MCP into ~/.claude.json; rewrite
+# the gateway URL to the ClusterIP (in-cluster the LAN ingress is a needless
+# hairpin + self-signed TLS).
+_claude_config="$HOME/.claude.json"
+if [[ -f "$_claude_config" ]]; then
+  step "litellm MCP in-cluster URL (claude)"
+  sed -i \
+    -e 's|https://api\.ai\.h-cloud\.lan/mcp/|http://litellm-proxy.ai.svc.cluster.local:4000/mcp/|g' \
+    "$_claude_config"
+  ok "claude litellm MCP -> in-cluster service"
 fi
-unset LINEAR_API_KEY
+unset _claude_config
 
 # Activate git hooks in the project repos the template clones. The git-clone
 # module runs in parallel with this bootstrap, so wait briefly for each clone.

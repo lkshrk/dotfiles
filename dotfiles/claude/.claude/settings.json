@@ -203,10 +203,10 @@
     "claude-md-management@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
-    "caveman": {
+    "litellm": {
       "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
+        "source": "url",
+        "url": "https://api.ai.h-cloud.lan/claude-code/marketplace.json"
       }
     },
     "context-mode": {
