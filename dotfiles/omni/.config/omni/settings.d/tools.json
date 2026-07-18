@@ -14,6 +14,23 @@
         {
           "provider": "brew",
           "package": "actionlint"
+        },
+        {
+          "provider": "script",
+          "bin": "actionlint",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64"
+          },
+          "source": {
+            "type": "github",
+            "owner": "rhysd",
+            "repo": "actionlint"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "actionlint_{version}_linux_{arch}.tar.gz",
+            "tag_name": "v1.7.12"
+          }
         }
       ],
       "git": "https://github.com/rhysd/actionlint"
@@ -287,6 +304,14 @@
         {
           "provider": "cargo",
           "package": "deepwiki-rs"
+        },
+        {
+          "provider": "script",
+          "options": {
+            "check": "test -x \"$HOME/.cargo/bin/deepwiki-rs\"",
+            "install": "\"$HOME/.cargo/bin/cargo\" install deepwiki-rs",
+            "uninstall": "\"$HOME/.cargo/bin/cargo\" uninstall deepwiki-rs"
+          }
         }
       ],
       "git": "https://github.com/sopaco/deepwiki-rs"
@@ -296,6 +321,22 @@
         {
           "provider": "brew",
           "package": "direnv"
+        },
+        {
+          "provider": "script",
+          "bin": "direnv",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64"
+          },
+          "source": {
+            "type": "github",
+            "owner": "direnv",
+            "repo": "direnv"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "direnv.linux-{arch}"
+          }
         }
       ],
       "git": "https://github.com/direnv/direnv"
@@ -367,6 +408,9 @@
         {
           "provider": "script",
           "bin": "eza",
+          "options": {
+            "arch_map": "aarch64:aarch64,x86_64:x86_64,arm64:aarch64,amd64:x86_64"
+          },
           "source": {
             "type": "github",
             "owner": "eza-community",
@@ -551,6 +595,23 @@
         {
           "provider": "brew",
           "package": "gitleaks"
+        },
+        {
+          "provider": "script",
+          "bin": "gitleaks",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:x64,arm64:arm64,amd64:x64"
+          },
+          "source": {
+            "type": "github",
+            "owner": "gitleaks",
+            "repo": "gitleaks"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "gitleaks_{version}_linux_{arch}.tar.gz",
+            "tag_name": "v8.30.1"
+          }
         }
       ],
       "git": "https://github.com/gitleaks/gitleaks"
@@ -936,6 +997,10 @@
         {
           "provider": "brew",
           "package": "markdownlint-cli"
+        },
+        {
+          "provider": "bun",
+          "package": "markdownlint-cli"
         }
       ],
       "git": "https://github.com/igorshubovych/markdownlint-cli"
@@ -1141,7 +1206,8 @@
           "provider": "brew",
           "package": "openusage"
         }
-      ]
+      ],
+      "git": "https://github.com/robinebers/openusage"
     },
     "openwolf": {
       "providers": [

@@ -327,6 +327,11 @@
           "name": "cargo",
           "path": "~/.cargo",
           "ignored": true
+        },
+        {
+          "name": "openusage",
+          "path": "~/.config/openusage",
+          "ignored": true
         }
       ]
     }
