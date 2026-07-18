@@ -151,7 +151,7 @@
           "provider": "script",
           "options": {
             "check": "command -v cargo || test -x \"$HOME/.cargo/bin/cargo\"",
-            "install": "curl https://sh.rustup.rs -sSf | sh"
+            "install": "curl https://sh.rustup.rs -sSf | sh -s -- -y"
           }
         }
       ],
@@ -1135,6 +1135,14 @@
       ],
       "git": "https://github.com/opentofu/opentofu"
     },
+    "openusage": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "openusage"
+        }
+      ]
+    },
     "openwolf": {
       "providers": [
         {
@@ -1564,7 +1572,8 @@
         {
           "provider": "pip"
         }
-      ]
+      ],
+      "ignore": true
     },
     "witr": {
       "providers": [
