@@ -2,31 +2,10 @@
   "agents": {
     "packages": [
       {
-        "source": "JuliusBrussee/caveman"
-      },
-      {
-        "source": "mattpocock/skills"
-      },
-      {
-        "source": "vercel-labs/skills"
-      },
-      {
-        "source": "lkshrk/linear-ai"
-      },
-      {
         "source": "rjyo/moshi-skill"
       },
       {
-        "source": "lkshrk/useful-skills"
-      },
-      {
-        "source": "sopaco/deepwiki-rs"
-      },
-      {
         "source": "ShiplightAI/agent-skills-v2"
-      },
-      {
-        "source": "ShiplightAI/agent-skills"
       }
     ],
     "mcp_servers": [

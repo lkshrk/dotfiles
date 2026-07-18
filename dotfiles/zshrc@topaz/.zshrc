@@ -24,5 +24,3 @@ if [[ "$OSTYPE" == darwin* && -d "$HOME/.config/zsh/macos" ]]; then
 fi
 
 # zprof | head -30
-
-[[ -r "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"

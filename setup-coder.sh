@@ -232,13 +232,19 @@ if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
     aarch64|arm64)
       asset=codebase-memory-mcp-linux-arm64.tar.gz
       ;;
-    *)
+    x86_64|amd64)
       asset=codebase-memory-mcp-linux-amd64.tar.gz
       ;;
+    *)
+      asset=""
+      warn "codebase-memory-mcp has no Linux release for architecture: $arch"
+      ;;
   esac
-  curl -fsSL "https://github.com/DeusData/codebase-memory-mcp/releases/latest/download/$asset" \
-    | tar -xz -C "$HOME/.local/bin" codebase-memory-mcp \
-    || warn "codebase-memory-mcp install failed; omni MCP restore may skip it"
+  if [[ -n "$asset" ]]; then
+    curl -fsSL "https://github.com/DeusData/codebase-memory-mcp/releases/latest/download/$asset" \
+      | tar -xz -C "$HOME/.local/bin" codebase-memory-mcp \
+      || warn "codebase-memory-mcp install failed; omni MCP restore may skip it"
+  fi
 fi
 
 export OMNI_AGENTS_REQUIRED=1

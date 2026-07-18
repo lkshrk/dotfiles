@@ -28,6 +28,8 @@ install_apt_packages() {
     jq \
     build-essential \
     ca-certificates \
+    pkg-config \
+    libssl-dev \
     unzip \
     zsh
   ok "base apt packages installed"
