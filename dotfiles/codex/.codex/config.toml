@@ -200,6 +200,48 @@ trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7
 [hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:session_start:0:0"]
 trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
 
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:7edf638204001b0fdb0e0d1b513795e5e64a89e2b327a084f0edf1a288877c0c"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:0:0"]
+trusted_hash = "sha256:63e01e74b8b5125c7c0cebb705b28592d25ae24613a5a8af4c453e4d09608ec6"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:permission_request:1:0"]
+trusted_hash = "sha256:3b7947d7ce46afc8ec30b0ab433ca40143a7a71e1160ae8f7565d1ed642fc25b"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:28610159a66e6c025b019ca2ae4789ef6ae2174246a9912d5f621e27e5db93c2"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:0:0"]
+trusted_hash = "sha256:efd098f14671c8c1d5db29b82d42b397b063cf1464824f764f82793c9fb4bfc7"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:post_compact:0:0"]
+trusted_hash = "sha256:d72d3d3642f9542e7fc43a814963432282f642886aca7f764b25d18db2013a4a"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:ec4341530e4bab6d6c0dd0db61f481d3f370c02786ae247871a09a8a9083fd1c"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:1:0"]
+trusted_hash = "sha256:a2c53b588ce1acc282fd4719c4a4e7b07319720a7eef5d3be64b6d47cdd2888b"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:2:0"]
+trusted_hash = "sha256:ffd43ee8424b7041f25d71a90e1bc9a27b952bac570a16d3635f8cd858918b37"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:3:0"]
+trusted_hash = "sha256:d9e28c0e725dead06a06bc0efdf21d5fcf88f3c2232d049cd341552b6dec3140"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:2fbf0ce436afeb71cad950871c320f7ed9ec65ac7fc4987fe1277f9cd4da02b6"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:b69741e322a04f96b2ff31b639e044808b8daa585d193f2953a9b25fbf33e9fd"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:1:0"]
+trusted_hash = "sha256:09cf1a4e630ae88d4ddb16f74bed02f5c2d5ebfb48436fa5dff394229ef8d812"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:2:0"]
+trusted_hash = "sha256:068e805cc2052d0d4b1b514a87fa254339ee96101b7a10588c262406bf024bff"
+
 [marketplaces.context-mode]
 last_updated = "2026-07-18T12:51:25Z"
 last_revision = "712ba0afc5f99ab0006694143cb982fe2be26b81"
