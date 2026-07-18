@@ -20,22 +20,13 @@
         "rtk"
       ],
       "skills": [
-        "JuliusBrussee/caveman",
-        "mattpocock/skills",
-        "vercel-labs/skills",
-        "lkshrk/linear-ai",
         "rjyo/moshi-skill",
-        "lkshrk/useful-skills",
-        "sopaco/deepwiki-rs",
-        "ShiplightAI/agent-skills-v2",
-        "ShiplightAI/agent-skills"
+        "ShiplightAI/agent-skills-v2"
       ],
       "mcp_servers": [
-        "linear",
-        "linear-server",
+        "litellm-tools",
         "shiplight",
         "codebase-memory-mcp",
-        "context7",
         "context-mode"
       ],
       "plugins": [
