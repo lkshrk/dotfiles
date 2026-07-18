@@ -200,7 +200,8 @@
     "lua-lsp@claude-plugins-official": true,
     "caveman@caveman": true,
     "codex@openai-codex": true,
-    "claude-md-management@claude-plugins-official": true
+    "claude-md-management@claude-plugins-official": true,
+    "smart-docs@litellm": true
   },
   "extraKnownMarketplaces": {
     "litellm": {
