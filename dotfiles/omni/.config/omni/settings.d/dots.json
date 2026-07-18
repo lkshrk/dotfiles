@@ -160,6 +160,19 @@
       ]
     },
     {
+      "name": "gaming",
+      "dots": [
+        {
+          "name": "com.corsair",
+          "path": "~/.config/com.corsair"
+        },
+        {
+          "name": "linearmouse",
+          "path": "~/.config/linearmouse"
+        }
+      ]
+    },
+    {
       "name": "go",
       "dots": [
         {
@@ -176,29 +189,6 @@
           "name": "talos",
           "path": "~/.config/talos",
           "ignored": true
-        }
-      ]
-    },
-    {
-      "name": "prereqs",
-      "dots": [
-        {
-          "name": "uv",
-          "path": "~/.config/uv",
-          "ignored": true
-        }
-      ]
-    },
-    {
-      "name": "gaming",
-      "dots": [
-        {
-          "name": "com.corsair",
-          "path": "~/.config/com.corsair"
-        },
-        {
-          "name": "linearmouse",
-          "path": "~/.config/linearmouse"
         }
       ]
     },
@@ -226,6 +216,16 @@
         {
           "name": "mac-disk-reclaim",
           "path": "~/.config/mac-disk-reclaim",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "prereqs",
+      "dots": [
+        {
+          "name": "uv",
+          "path": "~/.config/uv",
           "ignored": true
         }
       ]

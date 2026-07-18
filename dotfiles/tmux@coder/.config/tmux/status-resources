@@ -1,0 +1,65 @@
+#!/bin/sh
+
+set -eu
+
+stat_file=${TMUX_RESOURCE_STAT:-/proc/stat}
+meminfo_file=${TMUX_RESOURCE_MEMINFO:-/proc/meminfo}
+disk_path=${TMUX_RESOURCE_DISK:-${HOME:-/}}
+runtime_dir=${XDG_RUNTIME_DIR:-/tmp}
+# ponytail: one sample per user; split per tmux server if concurrent status bars distort deltas.
+state_file=${TMUX_RESOURCE_STATE:-$runtime_dir/tmux-resource-$(id -u)}
+
+read -r _ user nice system idle iowait irq softirq steal _ < "$stat_file"
+idle_total=$((idle + iowait))
+total=$((user + nice + system + idle + iowait + irq + softirq + steal))
+cpu=0
+if [ -r "$state_file" ] && read -r previous_total previous_idle < "$state_file"; then
+  total_delta=$((total - previous_total))
+  idle_delta=$((idle_total - previous_idle))
+  [ "$total_delta" -gt 0 ] && cpu=$(((total_delta - idle_delta) * 100 / total_delta))
+fi
+umask 077
+printf '%s %s\n' "$total" "$idle_total" > "$state_file.tmp.$$"
+mv "$state_file.tmp.$$" "$state_file"
+
+memory=$(awk '
+  /^MemTotal:/ { total = $2 }
+  /^MemAvailable:/ { available = $2 }
+  END { if (total > 0) printf "%d", (total - available) * 100 / total }
+' "$meminfo_file")
+storage=$(df -P "$disk_path" | awk 'NR == 2 { gsub(/%/, "", $5); print $5 }')
+
+gauge() {
+  label=$1
+  value=$2
+  case $value in ''|*[!0-9]*) value=0 ;; esac
+  [ "$value" -gt 100 ] && value=100
+
+  if [ "$value" -ge 85 ]; then color='#f7768e'
+  elif [ "$value" -ge 65 ]; then color='#e0af68'
+  else color='#9ece6a'
+  fi
+
+  if [ "$value" -ge 88 ]; then bar='█'
+  elif [ "$value" -ge 75 ]; then bar='▇'
+  elif [ "$value" -ge 63 ]; then bar='▆'
+  elif [ "$value" -ge 50 ]; then bar='▅'
+  elif [ "$value" -ge 38 ]; then bar='▄'
+  elif [ "$value" -ge 25 ]; then bar='▃'
+  elif [ "$value" -ge 13 ]; then bar='▂'
+  else bar='▁'
+  fi
+
+  printf '#[fg=%s]%s%s %s%%' "$color" "$label" "$bar" "$value"
+}
+
+case $(( $(date +%s) / 2 % 4 )) in
+  0) pulse='◐' ;; 1) pulse='◓' ;; 2) pulse='◑' ;; *) pulse='◒' ;;
+esac
+
+printf '#[fg=#7aa2f7]%s ' "$pulse"
+gauge '' "$cpu"
+printf '#[fg=#565f89] │ '
+gauge '' "$memory"
+printf '#[fg=#565f89] │ '
+gauge '' "$storage"
