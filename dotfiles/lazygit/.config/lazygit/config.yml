@@ -1,1 +1,18 @@
-{}
+# ~/.config/lazygit/config.yml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
+
+gui:
+  showRandomTip: false
+  screenMode: half
+  sidePanelWidth: 0.25
+  portraitMode: never
+
+git:
+  pagers:
+    - pager: delta --dark --paging=never
+    - {}
+
+update:
+  method: never
+
+disableStartupPopups: true
