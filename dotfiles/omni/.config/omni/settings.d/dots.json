@@ -18,6 +18,46 @@
             "!/RTK.md",
             "!/rules/"
           ]
+        },
+        {
+          "name": "CLAUDE.md",
+          "path": "~/.config/CLAUDE.md",
+          "ignored": true
+        },
+        {
+          "name": "cagent",
+          "path": "~/.config/cagent",
+          "ignored": true
+        },
+        {
+          "name": "mimocode",
+          "path": "~/.config/mimocode",
+          "ignored": true
+        },
+        {
+          "name": "claude",
+          "path": "~/.claude",
+          "ignore": [
+            "*",
+            "!/settings.json",
+            "!/CLAUDE.md",
+            "!/agents/",
+            "!/hooks/openwolf-git-gate.sh",
+            "!/scripts/",
+            "!/.omc-config.json",
+            "!/keybindings.json",
+            "!/statusline-command.sh",
+            "!/tokenline.sh",
+            "!/RTK.md",
+            "!/plugins/installed_plugins.json",
+            "!/commands/",
+            "!/rules/"
+          ]
+        },
+        {
+          "name": "amp",
+          "path": "~/.config/amp",
+          "ignored": true
         }
       ]
     },
@@ -61,7 +101,168 @@
         {
           "name": "vim",
           "path": "~/.vim"
+        }
+      ]
+    },
+    {
+      "name": "desk",
+      "dots": [
+        {
+          "name": "ghostty",
+          "path": "~/.config/ghostty"
         },
+        {
+          "name": "zed",
+          "path": "~/.config/zed",
+          "ignore": [
+            "settings_backup.json",
+            "prompts/prompts-library-db.0.mdb",
+            "conversations"
+          ]
+        },
+        {
+          "name": "cmux",
+          "path": "~/.config/cmux"
+        }
+      ]
+    },
+    {
+      "name": "dev-tooling",
+      "dots": [
+        {
+          "name": "gh",
+          "path": "~/.config/gh"
+        },
+        {
+          "name": "lazygit",
+          "path": "~/.config/lazygit",
+          "ignore": [
+            "state.yml"
+          ]
+        },
+        {
+          "name": "git",
+          "path": "~/.config/git",
+          "hosts": {
+            "topaz": {
+              "package": "git@topaz"
+            }
+          },
+          "ignore": [
+            "hooks/pre-commit.old"
+          ]
+        },
+        {
+          "name": "containers",
+          "path": "~/.config/containers",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "go",
+      "dots": [
+        {
+          "name": "go-config",
+          "path": "~/.config/go",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "infra",
+      "dots": [
+        {
+          "name": "talos",
+          "path": "~/.config/talos",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "prereqs",
+      "dots": [
+        {
+          "name": "uv",
+          "path": "~/.config/uv",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "gaming",
+      "dots": [
+        {
+          "name": "com.corsair",
+          "path": "~/.config/com.corsair"
+        },
+        {
+          "name": "linearmouse",
+          "path": "~/.config/linearmouse"
+        }
+      ]
+    },
+    {
+      "name": "mac",
+      "dots": [
+        {
+          "name": "sleep-on-lock",
+          "path": "~/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
+        },
+        {
+          "name": "hammerspoon",
+          "path": "~/.hammerspoon"
+        },
+        {
+          "name": "karabiner",
+          "path": "~/.config/karabiner",
+          "ignored": true
+        },
+        {
+          "name": "abtop",
+          "path": "~/.config/abtop",
+          "ignored": true
+        },
+        {
+          "name": "mac-disk-reclaim",
+          "path": "~/.config/mac-disk-reclaim",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "priv",
+      "dots": [
+        {
+          "name": "yabai",
+          "path": "~/.config/yabai",
+          "ignore": [
+            "sleep-on-lock"
+          ]
+        },
+        {
+          "name": "skhd",
+          "path": "~/.config/skhd"
+        },
+        {
+          "name": "moshi",
+          "path": "~/.config/moshi",
+          "ignored": true
+        },
+        {
+          "name": "ssh",
+          "path": "~/.ssh/config"
+        },
+        {
+          "name": "gnupg",
+          "path": "~/.gnupg",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "shell",
+      "dots": [
         {
           "name": "zsh",
           "path": "~/.config/zsh",
@@ -95,102 +296,15 @@
         {
           "name": "env",
           "path": "~/.config/env"
-        }
-      ]
-    },
-    {
-      "name": "desk",
-      "dots": [
-        {
-          "name": "sleep-on-lock",
-          "path": "~/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
         },
         {
-          "name": "ghostty",
-          "path": "~/.config/ghostty"
+          "name": "zprofile",
+          "path": "~/.zprofile"
         },
         {
-          "name": "zed",
-          "path": "~/.config/zed",
-          "ignore": [
-            "settings_backup.json",
-            "prompts/prompts-library-db.0.mdb",
-            "conversations"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "dev-tooling",
-      "dots": [
-        {
-          "name": "gh",
-          "path": "~/.config/gh"
-        },
-        {
-          "name": "lazygit",
-          "path": "~/.config/lazygit",
-          "ignore": [
-            "state.yml"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "go",
-      "dots": [
-        {
-          "name": "go-config",
-          "path": "~/.config/go",
+          "name": "fish",
+          "path": "~/.config/fish",
           "ignored": true
-        }
-      ]
-    },
-    {
-      "name": "prereqs",
-      "dots": [
-        {
-          "name": "uv",
-          "path": "~/.config/uv",
-          "ignored": true
-        }
-      ]
-    },
-    {
-      "name": "gaming",
-      "dots": [
-        {
-          "name": "com.corsair",
-          "path": "~/.config/com.corsair"
-        },
-        {
-          "name": "linearmouse",
-          "path": "~/.config/linearmouse"
-        }
-      ]
-    },
-    {
-      "name": "mac",
-      "dots": [
-        {
-          "name": "hammerspoon",
-          "path": "~/.hammerspoon"
-        }
-      ]
-    },
-    {
-      "name": "priv",
-      "dots": [
-        {
-          "name": "yabai",
-          "path": "~/.config/yabai",
-          "ignore": [
-            "sleep-on-lock"
-          ]
-        },
-        {
-          "name": "skhd",
-          "path": "~/.config/skhd"
         }
       ]
     },
@@ -198,126 +312,20 @@
       "name": "topaz",
       "dots": [
         {
-          "name": "git",
-          "path": "~/.config/git",
-          "hosts": {
-            "topaz": {
-              "package": "git@topaz"
-            }
-          },
-          "ignore": [
-            "hooks/pre-commit.old"
-          ]
-        },
-        {
-          "name": "karabiner",
-          "path": "~/.config/karabiner",
-          "ignored": true
-        },
-        {
-          "name": "moshi",
-          "path": "~/.config/moshi",
-          "ignored": true
-        },
-        {
           "name": "taskless",
           "path": "~/.config/taskless"
-        },
-        {
-          "name": "talos",
-          "path": "~/.config/talos",
-          "ignored": true
-        },
-        {
-          "name": "CLAUDE.md",
-          "path": "~/.config/CLAUDE.md",
-          "ignored": true
-        },
-        {
-          "name": "cagent",
-          "path": "~/.config/cagent",
-          "ignored": true
-        },
-        {
-          "name": "containers",
-          "path": "~/.config/containers",
-          "ignored": true
         },
         {
           "name": "herdr",
           "path": "~/.config/herdr"
         },
         {
-          "name": "zprofile",
-          "path": "~/.zprofile"
-        },
-        {
-          "name": "ssh",
-          "path": "~/.ssh/config"
-        },
-        {
-          "name": "gnupg",
-          "path": "~/.gnupg",
-          "ignored": true
-        },
-        {
           "name": "profile",
           "path": "~/.profile"
         },
         {
-          "name": "abtop",
-          "path": "~/.config/abtop",
-          "ignored": true
-        },
-        {
           "name": "cargo",
           "path": "~/.cargo",
-          "ignored": true
-        },
-        {
-          "name": "fish",
-          "path": "~/.config/fish",
-          "ignored": true
-        },
-        {
-          "name": "mac-disk-reclaim",
-          "path": "~/.config/mac-disk-reclaim",
-          "ignored": true
-        },
-        {
-          "name": "mimocode",
-          "path": "~/.config/mimocode",
-          "ignored": true
-        },
-        {
-          "name": "claude",
-          "path": "~/.claude",
-          "ignore": [
-            "*",
-            "!/settings.json",
-            "!/CLAUDE.md",
-            "!/mcp.json",
-            "!/plugins",
-        "!/agents/",
-        "!/hooks/openwolf-git-gate.sh",
-        "!/scripts/",
-            "!/.omc-config.json",
-            "!/keybindings.json",
-            "!/statusline-command.sh",
-            "!/tokenline.sh",
-            "!/RTK.md",
-            "!/plugins/installed_plugins.json",
-            "!/commands/",
-            "!/rules/"
-          ]
-        },
-        {
-          "name": "cmux",
-          "path": "~/.config/cmux"
-        },
-        {
-          "name": "amp",
-          "path": "~/.config/amp",
           "ignored": true
         }
       ]
