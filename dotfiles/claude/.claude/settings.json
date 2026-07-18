@@ -5,8 +5,7 @@
     "ECC_GATEGUARD": "off",
     "ECC_DISABLED_HOOKS": "stop:desktop-notify",
     "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
-    "FORCE_PROMPT_CACHING_5M": "1",
-    "GIT_SSH_COMMAND": "ssh -o PermitLocalCommand=no"
+    "FORCE_PROMPT_CACHING_5M": "1"
   },
   "attribution": {
     "commit": "",
