@@ -1,6 +1,8 @@
 model_auto_compact_token_limit = 840_000
 model_auto_compact_token_limit_scope = "body_after_prefix"
 model_reasoning_effort = "high"
+model_reasoning_summary = "detailed"
+show_raw_agent_reasoning = true
 # Coder's SSH pre-connect hook refreshes auth.json in the persistent workspace
 # home, so credentials must stay file-backed.
 cli_auth_credentials_store = "file"
