@@ -86,6 +86,8 @@
           "path": "~/.config/omni",
           "ignore": [
             "*",
+            "!/agents.d/",
+            "!/tools.d/",
             "!/settings.json",
             "!/settings.d/"
           ]
