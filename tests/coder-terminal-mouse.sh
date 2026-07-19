@@ -115,6 +115,15 @@ local_wheel_binding=$(TMUX='' tmux -L "$local_socket" list-keys |
 [[ "$(TMUX='' tmux -L "$local_socket" show-options -gv mouse)" == on ]]
 [[ "$(TMUX='' tmux -L "$coder_socket" show-options -sv extended-keys)" == off ]]
 [[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv mouse)" == on ]] || exit 1
+coder_keys=$(TMUX='' tmux -L "$coder_socket" list-keys)
+for mouse_key in WheelUpPane WheelDownPane MouseDown1Pane MouseDrag1Pane; do
+  grep -Eq "^bind-key +(-r +)?-T root +$mouse_key " <<< "$coder_keys" || {
+    printf 'FAIL: coder tmux lost root %s binding\n' "$mouse_key" >&2
+    exit 1
+  }
+done
+grep -E "^bind-key +(-r +)?-T root +WheelUpPane " <<< "$coder_keys" |
+  grep -q 'mouse_any_flag' || exit 1
 [[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv status-right)" == *'status-resources #S'* ]] || exit 1
 
 for key in q h v x t r c k R C K P N; do
