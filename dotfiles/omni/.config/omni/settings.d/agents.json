@@ -21,6 +21,9 @@
       },
       {
         "source": "ShiplightAI/agent-skills"
+      },
+      {
+        "source": "sopaco/deepwiki-rs"
       }
     ],
     "mcp_servers": [
@@ -106,6 +109,13 @@
       {
         "name": "openai-codex",
         "source": "openai/codex-plugin-cc",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "litellm",
+        "source": "https://api.ai.h-cloud.lan/claude-code/marketplace.json",
         "agents": [
           "claude-code"
         ]
@@ -195,12 +205,18 @@
         "agents": [
           "claude-code"
         ]
+      },
+      {
+        "name": "smart-docs",
+        "marketplace": "litellm",
+        "agents": [
+          "claude-code"
+        ]
       }
     ],
     "ignore": {
       "skills": [
-        "academic-research-skills",
-        "rjyo/moshi-skill"
+        "academic-research-skills"
       ],
       "mcp_servers": [
         "xcodebuildmcp"
@@ -220,8 +236,7 @@
         "openai-primary-runtime",
         "openai-curated",
         "academic-research-skills",
-        "openai-bundled",
-        "openai-codex"
+        "openai-bundled"
       ]
     }
   }

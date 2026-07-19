@@ -26,7 +26,8 @@
         "rjyo/moshi-skill",
         "lkshrk/useful-skills",
         "ShiplightAI/agent-skills-v2",
-        "ShiplightAI/agent-skills"
+        "ShiplightAI/agent-skills",
+        "sopaco/deepwiki-rs"
       ],
       "mcp_servers": [
         "litellm-tools",
@@ -46,7 +47,8 @@
         "lua-lsp",
         "frontend-design",
         "codex",
-        "claude-md-management"
+        "claude-md-management",
+        "smart-docs"
       ],
       "marketplaces": [
         "context-mode",
@@ -55,7 +57,8 @@
         "claude-plugins-official",
         "ecc",
         "ponytail",
-        "openai-codex"
+        "openai-codex",
+        "litellm"
       ]
     },
     {
