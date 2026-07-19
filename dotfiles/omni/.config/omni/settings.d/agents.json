@@ -122,6 +122,13 @@
         "agents": [
           "claude-code"
         ]
+      },
+      {
+        "name": "i-have-adhd",
+        "source": "ayghri/i-have-adhd",
+        "agents": [
+          "claude-code"
+        ]
       }
     ],
     "plugins": [
