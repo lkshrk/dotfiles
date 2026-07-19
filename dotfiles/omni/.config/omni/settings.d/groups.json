@@ -48,7 +48,9 @@
         "frontend-design",
         "codex",
         "claude-md-management",
-        "smart-docs"
+        "smart-docs",
+        "harness",
+        "i-have-adhd"
       ],
       "marketplaces": [
         "context-mode",
@@ -58,7 +60,9 @@
         "ecc",
         "ponytail",
         "openai-codex",
-        "litellm"
+        "litellm",
+        "harness",
+        "i-have-adhd"
       ]
     },
     {

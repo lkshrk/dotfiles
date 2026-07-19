@@ -52,7 +52,6 @@ protocol = "binary"
 ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [tui]
-session_picker_view = "dense"
 status_line = [
 	"model-with-reasoning",
 	"context-used",
@@ -243,8 +242,8 @@ trusted_hash = "sha256:09cf1a4e630ae88d4ddb16f74bed02f5c2d5ebfb48436fa5dff394229
 trusted_hash = "sha256:068e805cc2052d0d4b1b514a87fa254339ee96101b7a10588c262406bf024bff"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-18T12:51:25Z"
-last_revision = "712ba0afc5f99ab0006694143cb982fe2be26b81"
+last_updated = "2026-07-19T09:58:58Z"
+last_revision = "fe2f53ba6987f743330d7fc5ab74d096830d3f64"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
