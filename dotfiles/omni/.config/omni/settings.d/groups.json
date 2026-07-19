@@ -20,8 +20,13 @@
         "rtk"
       ],
       "skills": [
+        "mattpocock/skills",
+        "vercel-labs/skills",
+        "lkshrk/linear-ai",
         "rjyo/moshi-skill",
-        "ShiplightAI/agent-skills-v2"
+        "lkshrk/useful-skills",
+        "ShiplightAI/agent-skills-v2",
+        "ShiplightAI/agent-skills"
       ],
       "mcp_servers": [
         "litellm-tools",
