@@ -125,7 +125,7 @@
       },
       {
         "name": "harness",
-        "source": "harness",
+        "source": "revfactory/harness",
         "agents": [
           "claude-code"
         ]
