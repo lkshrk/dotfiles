@@ -275,3 +275,6 @@ trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/h-cloud"]
 trust_level = "trusted"
+
+[projects."/Users/lkshrk"]
+trust_level = "trusted"

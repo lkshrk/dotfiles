@@ -35,6 +35,42 @@ install_apt_packages() {
   ok "base apt packages installed"
 }
 
+# ─── lan root CA into system trust ────────────────────────────────────────────
+#
+# The pod provisions a loose lan-ca.pem, but curl/git/apt read the merged
+# bundle; only update-ca-certificates gets it in there.
+
+install_lan_ca() {
+  step "lan root CA"
+  local target=/usr/local/share/ca-certificates/lan-ca.crt
+  local src=
+  local candidate
+  for candidate in \
+    "${OMNI_OTEL_CA_PATH:-}" \
+    /etc/ssl/certs/lan-ca.pem \
+    "$HOME/.local/share/certs/lan-ca.pem"
+  do
+    if [[ -n "$candidate" && -r "$candidate" ]]; then
+      src="$candidate"
+      break
+    fi
+  done
+
+  if [[ -z "$src" ]]; then
+    warn "lan CA not found; https to *.h-cloud.lan will fail until the pod provisions it"
+    return
+  fi
+
+  if [[ -r "$target" ]] && cmp -s "$src" "$target"; then
+    ok "lan CA already in system trust"
+    return
+  fi
+
+  sudo install -m 0644 "$src" "$target"
+  sudo update-ca-certificates >/dev/null
+  ok "lan CA installed into system trust (from $src)"
+}
+
 # ─── Login shell (Linux) ───────────────────────────────────────────────────────
 
 activate_zsh_login_shell() {
@@ -99,3 +135,4 @@ export_sync_path() {
 # ─── main (phase 1: only what omni cannot do for itself) ─────────────────────
 
 install_apt_packages
+install_lan_ca

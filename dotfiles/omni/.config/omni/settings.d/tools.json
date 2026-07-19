@@ -265,7 +265,7 @@
           "provider": "script",
           "options": {
             "check": "command -v coder",
-            "install": "curl -fsSL https://coder.h-cloud.io/install.sh | sudo sh"
+            "install": "curl -fsSL https://coder.h-cloud.io/install.sh | sh -s -- --prefix=\"$HOME/.local\""
           }
         }
       ]
