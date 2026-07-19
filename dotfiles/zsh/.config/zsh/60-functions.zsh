@@ -121,14 +121,16 @@ code() {
   [[ -n ${o_disk[2]} ]] && params+=(--parameter "disk_size=${o_disk[2]}")
   if [[ -n $o_help ]] || [[ -z $preset ]]; then
     cat >&2 <<'EOF'
-Usage: code [options] <preset> [template]
+Usage: code [options] <preset|template> [template]
 
-Create (if needed) and SSH into a Coder workspace from a template preset.
+Create (if needed) and SSH into a Coder workspace from a template or preset.
 
 Arguments:
-  preset          Preset name; also the workspace name unless --name is given.
+  preset|template Preset or template name (template match is case-insensitive
+                  and wins); also the workspace name unless --name is given.
   template        Template name. Defaults to $CODER_TEMPLATE, otherwise
-                  auto-detected by searching all templates for the preset.
+                  auto-detected: first template whose name matches the arg,
+                  then by searching all templates for the preset.
 
 Options:
   -n, --name NAME   Workspace name. Allows multiple workspaces from the same
@@ -156,16 +158,26 @@ EOF
   else
     if [[ -z $template ]]; then
       local t
-      for t in $(coder templates list -o json 2>/dev/null | jq -r '.[].Template.name'); do
-        if coder templates presets list "$t" -o json 2>/dev/null \
-             | jq -e --arg p "$preset" 'any(.[]; .TemplatePreset.Name == $p)' &>/dev/null; then
-          template=$t
-          break
-        fi
+      local -a tnames
+      tnames=($(coder templates list -o json 2>/dev/null | jq -r '.[].Template.name'))
+      # a template named like the arg wins over preset search: create from it directly
+      for t in $tnames; do
+        [[ ${t:l} == ${preset:l} ]] && { template=$t; preset=""; break; }
       done
-      [[ -n $template ]] || { echo "code: no template has preset '$preset'" >&2; return 1; }
+      if [[ -z $template ]]; then
+        for t in $tnames; do
+          if coder templates presets list "$t" -o json 2>/dev/null \
+               | jq -e --arg p "$preset" 'any(.[]; .TemplatePreset.Name == $p)' &>/dev/null; then
+            template=$t
+            break
+          fi
+        done
+      fi
+      [[ -n $template ]] || { echo "code: no template or preset matches '$preset'" >&2; return 1; }
     fi
-    if (( $#params )); then
+    if [[ -z $preset ]]; then
+      coder create "$name" -t "$template" "${params[@]}" --use-parameter-defaults -y || return
+    elif (( $#params )); then
       # coder silently ignores --parameter for preset-pinned values, so expand
       # the preset into explicit --parameter flags and merge overrides on top
       local -A pmap
