@@ -36,7 +36,6 @@ export EDITOR="${EDITOR:-nvim}"
 export GOPATH="${GOPATH:-$HOME/go}"
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
-export GIT_CONFIG_GLOBAL="${GIT_CONFIG_GLOBAL:-$HOME/.config/git/config}"
 
 env_next_os="${ENV_NEXT_OS:-${OSTYPE:-}}"
 case "$env_next_os" in

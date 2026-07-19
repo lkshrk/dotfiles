@@ -22,12 +22,14 @@ read -r SX SY SW SH < <(
 )
 
 # ── Spaces ────────────────────────────────────────────────────────────────────
-SP_MAIN=1
-SP_STACK=2
-SP_MOONLIGHT=3
-SP_REMOTE=4
-SP_COMMS=5
-SP_STREAM=6
+# Labels maintained by relabel-spaces.sh; numeric indices drift when extra
+# spaces exist, labels don't. Moonlight and League share the remote space.
+SP_MAIN=main
+SP_STACK=stack
+SP_MOONLIGHT=remote
+SP_REMOTE=remote
+SP_COMMS=comms
+SP_STREAM=stream
 
 # ── Portrait dimensions ──────────────────────────────────────────────────────
 S_THIRD_H=$(( SH / 3 ))
