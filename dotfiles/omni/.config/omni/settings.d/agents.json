@@ -24,6 +24,9 @@
       },
       {
         "source": "sopaco/deepwiki-rs"
+      },
+      {
+        "source": "JuliusBrussee/caveman"
       }
     ],
     "mcp_servers": [
@@ -122,7 +125,7 @@
       },
       {
         "name": "harness",
-        "source": "revfactory/harness",
+        "source": "harness",
         "agents": [
           "claude-code"
         ]
@@ -264,6 +267,7 @@
         "openai-primary-runtime",
         "openai-curated",
         "academic-research-skills",
+        "revfactory/harness",
         "openai-bundled"
       ]
     }
