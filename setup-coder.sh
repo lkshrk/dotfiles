@@ -4,9 +4,6 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-CODER_OMNI_HOST="${CODER_OMNI_HOST:-coder}"
-RUN_MACOS_DEFAULTS=0
-SKIP_ADMIN_WARMUP=1
 
 c_red=$'\033[31m'
 c_yel=$'\033[33m'
@@ -22,15 +19,10 @@ die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 
 export -f say step ok warn die
 
-omni_reads_config() {
-  command -v omni >/dev/null 2>&1 \
-    && omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1
-}
-
 [[ "$(uname -s)" == "Linux" ]] || die "setup-coder.sh is Linux-only"
 [[ -f "$OMNI_CONFIG_PATH" ]] || die "Omni config not found: $OMNI_CONFIG_PATH"
 
-export REPO_DIR OMNI_CONFIG_PATH RUN_MACOS_DEFAULTS SKIP_ADMIN_WARMUP
+export REPO_DIR OMNI_CONFIG_PATH
 export c_red c_yel c_grn c_dim c_off
 
 source "$REPO_DIR/scripts/setup-coder-linux.sh"
@@ -40,12 +32,7 @@ bash "$REPO_DIR/scripts/install-omni-latest.sh"
 omni --config "$OMNI_CONFIG_PATH" settings show --format json >/dev/null 2>&1 \
   || die "installed omni cannot read this repo's config"
 
-export OMNI_HOSTNAME="$CODER_OMNI_HOST"
-export DOTFILES_DIR="${DOTFILES_DIR:-$REPO_DIR}"
-
-mkdir -p "$HOME/.local/bin"
-ln -sf "$REPO_DIR/scripts/capture-coder-dotfiles" \
-  "$HOME/.local/bin/capture-coder-dotfiles"
+export OMNI_HOSTNAME="${CODER_OMNI_HOST:-coder}"
 
 step "omni coder profile"
 ok "using Omni host profile: $OMNI_HOSTNAME"
@@ -62,7 +49,6 @@ rm -f "$HOME/.zshrc"
 for _dot in zshenv zshrc zsh env; do
   omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo "$_dot"
 done
-unset _dot
 ok "shell ready: $(command -v zsh 2>/dev/null || printf 'zsh')"
 
 step "toolchain prerequisites"
@@ -88,7 +74,6 @@ if [[ -n "${CODER_OMNI_STACKS:-}" ]]; then
     step "omni stack: $_stack"
     omni --config "$OMNI_CONFIG_PATH" --yes tools sync "$_stack"
   done
-  unset _omni_stacks _stack
 fi
 
 step "omni dotfiles"
@@ -107,10 +92,7 @@ omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 # apply its externally-sandboxed workspace policy without mutating dotfiles.
 _claude_settings="$HOME/.claude/settings.json"
 if [[ -L "$_claude_settings" ]]; then
-  _claude_settings_template="$(readlink -f "$_claude_settings")"
-  rm "$_claude_settings"
-  cp "$_claude_settings_template" "$_claude_settings"
-  unset _claude_settings_template
+  cp --remove-destination "$(readlink -f "$_claude_settings")" "$_claude_settings"
 fi
 if [[ -f "$_claude_settings" ]]; then
   _claude_settings_tmp="$(mktemp)"
@@ -119,114 +101,52 @@ if [[ -f "$_claude_settings" ]]; then
     | .permissions.skipDangerousModePermissionPrompt = true' \
     "$_claude_settings" > "$_claude_settings_tmp"
   mv "$_claude_settings_tmp" "$_claude_settings"
-  unset _claude_settings_tmp
 fi
-unset _claude_settings
 
 # Codex persists runtime state (hook hashes, bundled marketplace paths) into
 # config.toml. Keep Coder's copy writable so that state never mutates the
 # stowed, portable template in the dotfiles checkout.
 _codex_config="$HOME/.codex/config.toml"
 if [[ -L "$_codex_config" ]]; then
-  _codex_config_template="$(readlink -f "$_codex_config")"
-  rm "$_codex_config"
-  cp "$_codex_config_template" "$_codex_config"
-  unset _codex_config_template
+  cp --remove-destination "$(readlink -f "$_codex_config")" "$_codex_config"
 fi
 
 if [[ -f "$_codex_config" ]]; then
-  _codex_config_tmp="$(mktemp)"
-  awk '
-    BEGIN {
-      saw_approval = 0
-      saw_default_permissions = 0
-      inserted = 0
-    }
-    function insert_coder_permissions() {
-      if (inserted) return
-      if (!saw_approval) print "approval_policy = \"never\""
-      if (!saw_default_permissions) print "default_permissions = \":danger-full-access\""
-      inserted = 1
-    }
-    /^\[/ {
-      insert_coder_permissions()
-      print
-      next
-    }
-    /^approval_policy[[:space:]]*=/ {
-      print "approval_policy = \"never\""
-      saw_approval = 1
-      next
-    }
-    /^default_permissions[[:space:]]*=/ {
-      print "default_permissions = \":danger-full-access\""
-      saw_default_permissions = 1
-      next
-    }
-    { print }
-    END {
-      insert_coder_permissions()
-    }
-  ' "$_codex_config" > "$_codex_config_tmp"
-  mv "$_codex_config_tmp" "$_codex_config"
-
-  # node_repl points at a Codex.app path that only exists on macOS.
-  _codex_config_tmp="$(mktemp)"
-  awk '
-    /^\[/ { drop = ($0 ~ /^\[mcp_servers\.node_repl[\].]/) }
-    !drop { print }
-  ' "$_codex_config" > "$_codex_config_tmp"
-  mv "$_codex_config_tmp" "$_codex_config"
-  unset _codex_config_tmp
+  sed -i -E \
+    -e 's|^approval_policy[[:space:]]*=.*|approval_policy = "never"|' \
+    -e 's|^default_permissions[[:space:]]*=.*|default_permissions = ":danger-full-access"|' \
+    "$_codex_config"
 fi
 
 # tools sync may replace ~/.local/bin/node; re-point at the nvm default after stow.
-if declare -F sync_nvm_local_bin_links >/dev/null 2>&1; then
-  step "nvm local bin links"
-  sync_nvm_local_bin_links
-  ok "node links: $(readlink -f "$HOME/.local/bin/node" 2>/dev/null || printf 'updated')"
-fi
+step "nvm local bin links"
+sync_nvm_local_bin_links
+ok "node links: $(readlink -f "$HOME/.local/bin/node" 2>/dev/null || printf 'updated')"
 
 step "codex telemetry"
 if [[ -e "$_codex_config" ]]; then
-  _codex_config_target="$(readlink -f "$_codex_config" 2>/dev/null || printf '%s' "$_codex_config")"
-  _codex_otel_ca=""
-  for _ca in \
-    "${OMNI_OTEL_CA_PATH:-}" \
-    /etc/ssl/certs/lan-ca.pem \
-    "$HOME/.local/share/certs/lan-ca.pem" \
-    /usr/local/share/ca-certificates/lan-ca.crt
-  do
-    if [[ -r "$_ca" ]]; then
-      _codex_otel_ca="$_ca"
-      break
-    fi
-  done
-  if [[ -n "$_codex_otel_ca" ]]; then
+  if [[ -r /usr/local/share/ca-certificates/lan-ca.crt ]]; then
     sed -i -E \
-      -e "s|^([[:space:]]*ca-certificate = ).*|\\1\"$_codex_otel_ca\"|" \
-      "$_codex_config_target"
-    ok "Codex OTEL uses $_codex_otel_ca"
+      -e 's|^([[:space:]]*ca-certificate = ).*|\1"/usr/local/share/ca-certificates/lan-ca.crt"|' \
+      "$_codex_config"
+    ok "Codex OTEL uses /usr/local/share/ca-certificates/lan-ca.crt"
   else
     sed -i \
       -e '/^[[:space:]]*ca-certificate = /d' \
-      "$_codex_config_target"
+      "$_codex_config"
     warn "Codex OTEL CA missing; removed explicit ca-certificate entries"
   fi
   sed -i \
     -e 's|https://api\.ai\.h-cloud\.lan/mcp/|http://litellm-proxy.ai.svc.cluster.local:4000/mcp/|' \
-    "$_codex_config_target"
+    "$_codex_config"
   ok "Codex litellm MCP -> in-cluster service"
-  unset _codex_config_target _codex_otel_ca _ca
 else
   warn "Codex config not found after dots sync"
 fi
-unset _codex_config
 
 # Omni MCP restore references this binary; the dotfiles copy is macOS-only.
 if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
   step "codebase-memory-mcp"
-  mkdir -p "$HOME/.local/bin"
   arch="$(uname -m)"
   case "$arch" in
     aarch64|arm64)
@@ -247,18 +167,15 @@ if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
   fi
 fi
 
-export OMNI_AGENTS_REQUIRED=1
 bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 
-_claude_config="$HOME/.claude.json"
-if [[ -f "$_claude_config" ]]; then
+if [[ -f "$HOME/.claude.json" ]]; then
   step "litellm MCP in-cluster URL (claude)"
   sed -i \
     -e 's|https://api\.ai\.h-cloud\.lan/mcp/|http://litellm-proxy.ai.svc.cluster.local:4000/mcp/|g' \
-    "$_claude_config"
+    "$HOME/.claude.json"
   ok "claude litellm MCP -> in-cluster service"
 fi
-unset _claude_config
 
 # Activate git hooks in the project repos the template clones. The git-clone
 # module runs in parallel with this bootstrap, so wait briefly for each clone.
@@ -289,7 +206,6 @@ if [[ -n "${CODER_REPO_DIRS:-}" ]]; then
         ok "no lefthook config in $_repo_path; nothing to do"
       fi
     done
-    unset _repo_dirs _repo _repo_path
   else
     warn "lefthook binary missing; skipping repo hook install"
   fi
