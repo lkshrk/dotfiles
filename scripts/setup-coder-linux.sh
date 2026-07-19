@@ -6,8 +6,6 @@
 
 set -euo pipefail
 
-[[ "$(uname -s)" == "Linux" ]] || { echo "setup-coder-linux.sh must run on Linux" >&2; return 1; }
-
 # omni lands binaries in ~/.local/bin; Coder agent shells often start without it.
 export PATH="$HOME/.local/bin:$PATH"
 

@@ -171,7 +171,7 @@ main() {
 
   install_lefthook
 
-  export OMNI_AGENTS_REQUIRED=1 OMNI_MIN_VERSION
+  export OMNI_MIN_VERSION
   bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 }
 

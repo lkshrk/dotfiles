@@ -4,7 +4,6 @@ set -euo pipefail
 
 REPO_DIR="${REPO_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_AGENTS_REQUIRED="${OMNI_AGENTS_REQUIRED:-0}"
 
 # 'command' would bypass the functions setup-coder.sh exports; call them directly.
 _bootstrap_say()  { if declare -F say  >/dev/null 2>&1; then say  "$@"; else printf '%s\n' "$@"; fi; }
@@ -18,11 +17,7 @@ export_agent_path() {
 }
 
 if ! command -v omni >/dev/null 2>&1; then
-  if [[ "$OMNI_AGENTS_REQUIRED" == "1" ]]; then
-    _bootstrap_die "omni is not installed"
-  fi
-  _bootstrap_warn "omni not found; skipping agent restore"
-  exit 0
+  _bootstrap_die "omni is not installed"
 fi
 
 export_agent_path
@@ -46,11 +41,7 @@ agents_restore_available() {
 }
 
 if ! agents_restore_available; then
-  if [[ "$OMNI_AGENTS_REQUIRED" == "1" ]]; then
-    _bootstrap_die "installed omni does not support agents restore; update omni and rerun setup"
-  fi
-  _bootstrap_warn "omni agents restore is unavailable; skipping"
-  exit 0
+  _bootstrap_die "installed omni does not support agents restore; update omni and rerun setup"
 fi
 
 restore_component() {
