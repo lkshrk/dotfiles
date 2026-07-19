@@ -51,7 +51,8 @@
             "!/RTK.md",
             "!/plugins/installed_plugins.json",
             "!/commands/",
-            "!/rules/"
+            "!/rules/",
+            "!/hooks/cbm-session-reminder"
           ]
         },
         {
@@ -331,6 +332,11 @@
         {
           "name": "openusage",
           "path": "~/.config/openusage",
+          "ignored": true
+        },
+        {
+          "name": "rustup",
+          "path": "~/.rustup",
           "ignored": true
         }
       ]
