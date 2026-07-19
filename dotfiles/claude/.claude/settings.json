@@ -203,7 +203,8 @@
     "codex@openai-codex": true,
     "claude-md-management@claude-plugins-official": true,
     "smart-docs@litellm": true,
-    "i-have-adhd@i-have-adhd": true
+    "i-have-adhd@i-have-adhd": true,
+    "harness@harness-marketplace": true
   },
   "extraKnownMarketplaces": {
     "litellm": {
