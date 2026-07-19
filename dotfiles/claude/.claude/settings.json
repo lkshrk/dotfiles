@@ -24,6 +24,7 @@
       "Edit(frontend/eslint.config.js)"
     ]
   },
+  "model": "claude-fable-5[1m]",
   "fallbackModel": [
     "claude-sonnet-5",
     "claude-haiku-4-5"
@@ -201,7 +202,8 @@
     "caveman@caveman": true,
     "codex@openai-codex": true,
     "claude-md-management@claude-plugins-official": true,
-    "smart-docs@litellm": true
+    "smart-docs@litellm": true,
+    "i-have-adhd@i-have-adhd": true
   },
   "extraKnownMarketplaces": {
     "litellm": {
@@ -233,6 +235,18 @@
         "source": "github",
         "repo": "openai/codex-plugin-cc"
       }
+    },
+    "harness-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "revfactory/harness"
+      }
+    },
+    "i-have-adhd": {
+      "source": {
+        "source": "github",
+        "repo": "ayghri/i-have-adhd"
+      }
     }
   },
   "effortLevel": "high",
@@ -242,6 +256,5 @@
   "theme": "dark-daltonized",
   "verbose": true,
   "preferredNotifChannel": "notifications_disabled",
-  "skipAutoPermissionPrompt": true,
-  "model": "claude-fable-5[1m]"
+  "skipAutoPermissionPrompt": true
 }
