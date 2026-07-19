@@ -34,10 +34,13 @@ zsh_result=$(CODER_WORKSPACE_NAME=test TMUX=test ZSH_CONFIG="$ZSH_CONFIG" zsh -f
 ' 2>/dev/null | tail -1)
 [[ "$zsh_result" == 1 ]]
 
-tmux_result=$(PATH="$fake_bin:$PATH" CODER_WORKSPACE_NAME=test ZSH_CONFIG="$ZSH_CONFIG" zsh -fic '
+tmux_result=$(PATH="$fake_bin:$PATH" CODER_WORKSPACE_NAME=test TMUX='' ZSH_CONFIG="$ZSH_CONFIG" zsh -fic '
   source "$ZSH_CONFIG"
 ' 2>/dev/null | tail -1)
-[[ "$tmux_result" == "new-session -A -s default" ]]
+[[ "$tmux_result" == "new-session -A -D -s default" ]] || {
+  printf 'FAIL: expected exclusive tmux attach, got: %s\n' "$tmux_result" >&2
+  exit 1
+}
 
 printf 'cpu 100 0 100 800 0 0 0 0 0 0\n' > "$fake_bin/stat"
 printf 'MemTotal: 1000 kB\nMemAvailable: 250 kB\n' > "$fake_bin/meminfo"

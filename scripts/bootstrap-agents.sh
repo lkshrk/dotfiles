@@ -27,6 +27,10 @@ fi
 
 export_agent_path
 
+if [[ -z "${NODE_EXTRA_CA_CERTS:-}" && -r "${OMNI_OTEL_CA_PATH:-}" ]]; then
+  export NODE_EXTRA_CA_CERTS="$OMNI_OTEL_CA_PATH"
+fi
+
 omni_cmd() {
   if [[ -f "$OMNI_CONFIG_PATH" ]]; then
     omni --config "$OMNI_CONFIG_PATH" --yes "$@"
