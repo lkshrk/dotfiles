@@ -52,7 +52,9 @@
             "!/plugins/installed_plugins.json",
             "!/commands/",
             "!/rules/",
-            "!/hooks/cbm-session-reminder"
+            "!/hooks/cbm-session-reminder",
+    "!/hooks/cbm-code-discovery-gate",
+    "!/hooks/cbm-subagent-reminder"
           ]
         },
         {
