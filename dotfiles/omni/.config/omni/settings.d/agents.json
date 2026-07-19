@@ -124,6 +124,13 @@
         ]
       },
       {
+        "name": "harness-marketplace",
+        "source": "revfactory/harness",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
         "name": "i-have-adhd",
         "source": "ayghri/i-have-adhd",
         "agents": [
@@ -219,6 +226,20 @@
       {
         "name": "smart-docs",
         "marketplace": "litellm",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "harness",
+        "marketplace": "harness-marketplace",
+        "agents": [
+          "claude-code"
+        ]
+      },
+      {
+        "name": "i-have-adhd",
+        "marketplace": "i-have-adhd",
         "agents": [
           "claude-code"
         ]
