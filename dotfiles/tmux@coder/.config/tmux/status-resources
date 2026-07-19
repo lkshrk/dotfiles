@@ -2,6 +2,8 @@
 
 set -eu
 
+[ "${1:-}" = default-1 ] || exit 0
+
 stat_file=${TMUX_RESOURCE_STAT:-/proc/stat}
 meminfo_file=${TMUX_RESOURCE_MEMINFO:-/proc/meminfo}
 disk_path=${TMUX_RESOURCE_DISK:-${HOME:-/}}

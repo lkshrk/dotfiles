@@ -18,7 +18,33 @@ cleanup() {
   rm -rf "$fake_bin"
 }
 trap cleanup EXIT
-printf '#!/usr/bin/env sh\nprintf "%%s\\n" "$*"\n' > "$fake_bin/tmux"
+cat > "$fake_bin/tmux" <<'EOF'
+#!/usr/bin/env sh
+target=
+previous=
+for argument do
+  [ "$previous" = -t ] && target=$argument
+  previous=$argument
+done
+target=${target#=}
+attached=
+for session in ${TMUX_TEST_SESSIONS:-}; do
+  case $session in
+    "$target="*) attached=${session#*=} ;;
+  esac
+done
+case $1 in
+  has-session)
+    [ -n "$attached" ]
+    ;;
+  display-message)
+    printf '%s\n' "$attached"
+    ;;
+  *)
+    printf '%s\n' "$*"
+    ;;
+esac
+EOF
 chmod +x "$fake_bin/tmux"
 
 zsh -n "$ZSH_CONFIG"
@@ -34,13 +60,21 @@ zsh_result=$(CODER_WORKSPACE_NAME=test TMUX=test ZSH_CONFIG="$ZSH_CONFIG" zsh -f
 ' 2>/dev/null | tail -1)
 [[ "$zsh_result" == 1 ]]
 
-tmux_result=$(PATH="$fake_bin:$PATH" CODER_WORKSPACE_NAME=test TMUX='' ZSH_CONFIG="$ZSH_CONFIG" zsh -fic '
-  source "$ZSH_CONFIG"
-' 2>/dev/null | tail -1)
-[[ "$tmux_result" == "new-session -A -D -s default" ]] || {
-  printf 'FAIL: expected exclusive tmux attach, got: %s\n' "$tmux_result" >&2
-  exit 1
+check_tmux_start() {
+  local sessions=$1 expected=$2 result
+  result=$(PATH="$fake_bin:$PATH" CODER_WORKSPACE_NAME=test TMUX='' \
+    TMUX_TEST_SESSIONS="$sessions" ZSH_CONFIG="$ZSH_CONFIG" zsh -fic \
+    'source "$ZSH_CONFIG"' 2>/dev/null | tail -1)
+  [[ "$result" == "$expected" ]] || {
+    printf 'FAIL: expected %s, got: %s\n' "$expected" "$result" >&2
+    exit 1
+  }
 }
+
+check_tmux_start '' 'new-session -s default-1'
+check_tmux_start 'default-1=0' 'attach-session -t =default-1'
+check_tmux_start 'default-1=1' 'new-session -s default-2'
+check_tmux_start 'default-1=1 default-2=0' 'attach-session -t =default-2'
 
 printf 'cpu 100 0 100 800 0 0 0 0 0 0\n' > "$fake_bin/stat"
 printf 'MemTotal: 1000 kB\nMemAvailable: 250 kB\n' > "$fake_bin/meminfo"
@@ -50,15 +84,16 @@ chmod +x "$fake_bin/df"
 TMUX_RESOURCE_STAT="$fake_bin/stat" \
 TMUX_RESOURCE_MEMINFO="$fake_bin/meminfo" \
 TMUX_RESOURCE_STATE="$fake_bin/state" \
-PATH="$fake_bin:$PATH" sh "$RESOURCE_STATUS" >/dev/null
+PATH="$fake_bin:$PATH" sh "$RESOURCE_STATUS" default-1 >/dev/null
 printf 'cpu 180 0 100 820 0 0 0 0 0 0\n' > "$fake_bin/stat"
 resource_result=$(TMUX_RESOURCE_STAT="$fake_bin/stat" \
   TMUX_RESOURCE_MEMINFO="$fake_bin/meminfo" \
   TMUX_RESOURCE_STATE="$fake_bin/state" \
-  PATH="$fake_bin:$PATH" sh "$RESOURCE_STATUS")
-[[ "$resource_result" == *'#[fg=#e0af68]▇ 80%'* ]]
-[[ "$resource_result" == *'#[fg=#e0af68]▇ 75%'* ]]
-[[ "$resource_result" == *'#[fg=#f7768e]█ 90%'* ]]
+  PATH="$fake_bin:$PATH" sh "$RESOURCE_STATUS" default-1)
+[[ "$resource_result" == *'#[fg=#e0af68]▇ 80%'* ]] || exit 1
+[[ "$resource_result" == *'#[fg=#e0af68]▇ 75%'* ]] || exit 1
+[[ "$resource_result" == *'#[fg=#f7768e]█ 90%'* ]] || exit 1
+[[ -z "$(sh "$RESOURCE_STATUS" default-2)" ]] || exit 1
 
 bash --noprofile --norc -ic "source '$BASH_CONFIG'; trap -p WINCH" 2>/dev/null |
   grep -q _coder_clear_mouse_modes
@@ -79,7 +114,8 @@ local_wheel_binding=$(TMUX='' tmux -L "$local_socket" list-keys |
 [[ "$(TMUX='' tmux -L "$local_socket" show-options -sv extended-keys-format)" == csi-u ]]
 [[ "$(TMUX='' tmux -L "$local_socket" show-options -gv mouse)" == on ]]
 [[ "$(TMUX='' tmux -L "$coder_socket" show-options -sv extended-keys)" == off ]]
-[[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv mouse)" == off ]]
+[[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv mouse)" == on ]] || exit 1
+[[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv status-right)" == *'status-resources #S'* ]] || exit 1
 
 for key in q h v x t r c k R C K P N; do
   local_binding=$(TMUX='' tmux -L "$local_socket" list-keys |
