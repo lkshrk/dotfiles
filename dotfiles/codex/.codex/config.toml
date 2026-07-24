@@ -161,6 +161,9 @@ enabled = true
 [plugins."ponytail@ponytail"]
 enabled = true
 
+[plugins."linear-ai@lkshrk"]
+enabled = true
+
 [features]
 hooks = true
 js_repl = false

@@ -32,10 +32,10 @@
     "context-mode@context-mode": [
       {
         "scope": "user",
-        "installPath": "/Users/lkshrk/.codex/plugins/cache/context-mode/context-mode/1.0.169",
+        "installPath": "/Users/lkshrk/.claude/plugins/cache/context-mode/context-mode/1.0.169",
         "version": "1.0.169",
         "installedAt": "2026-05-29T18:15:29.811Z",
-        "lastUpdated": "2026-07-16T21:30:36.823Z",
+        "lastUpdated": "2026-07-24T16:35:07.249Z",
         "gitCommitSha": "0120fb352a52c70e692632e07b4bbaa687dcca37"
       }
     ],
