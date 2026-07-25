@@ -78,22 +78,20 @@ fi
 
 step "omni dotfiles"
 # Coder's codex module writes real ~/.codex files at agent start, the
-# oh-my-zsh installer writes a real ~/.zshrc, opencode replaces its config
-# symlinks with real files at runtime, and Claude Code rewrites
-# .claude/plugins/installed_plugins.json; all collide with the symlinks omni
+# oh-my-zsh installer writes a real ~/.zshrc, and opencode replaces its config
+# symlinks with real files at runtime; all collide with the symlinks omni
 # wants to stow (--use-repo does not resolve a replaced-symlink conflict).
-# Drop them so dots sync links cleanly.
-rm -f "$HOME/.codex/config.toml" "$HOME/.codex/mcp.json" "$HOME/.zshrc" \
-  "$HOME/.claude/plugins/installed_plugins.json"
+# Drop them so dots sync links cleanly. Runtime-mutated files are handled by
+# volatile-dots.sh: moved aside pre-sync, then detached into real copies so
+# tool writes never dirty the checkout.
+rm -f "$HOME/.codex/mcp.json" "$HOME/.zshrc"
 rm -rf "$HOME/.config/opencode"
+bash "$REPO_DIR/scripts/volatile-dots.sh" prepare
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
+bash "$REPO_DIR/scripts/volatile-dots.sh" detach
 
-# Claude Code may update settings at runtime. Keep the Coder copy writable and
-# apply its externally-sandboxed workspace policy without mutating dotfiles.
+# Apply the externally-sandboxed workspace policy to the detached copy.
 _claude_settings="$HOME/.claude/settings.json"
-if [[ -L "$_claude_settings" ]]; then
-  cp --remove-destination "$(readlink -f "$_claude_settings")" "$_claude_settings"
-fi
 if [[ -f "$_claude_settings" ]]; then
   _claude_settings_tmp="$(mktemp)"
   jq '(.permissions //= {})
@@ -103,14 +101,7 @@ if [[ -f "$_claude_settings" ]]; then
   mv "$_claude_settings_tmp" "$_claude_settings"
 fi
 
-# Codex persists runtime state (hook hashes, bundled marketplace paths) into
-# config.toml. Keep Coder's copy writable so that state never mutates the
-# stowed, portable template in the dotfiles checkout.
 _codex_config="$HOME/.codex/config.toml"
-if [[ -L "$_codex_config" ]]; then
-  cp --remove-destination "$(readlink -f "$_codex_config")" "$_codex_config"
-fi
-
 if [[ -f "$_codex_config" ]]; then
   sed -i -E \
     -e 's|^approval_policy[[:space:]]*=.*|approval_policy = "never"|' \

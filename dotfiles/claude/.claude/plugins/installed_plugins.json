@@ -125,5 +125,8 @@
         "lastUpdated": "2026-07-17T10:26:21.505Z"
       }
     ]
+  },
+  "enabledPlugins": {
+    "context-mode@context-mode": true
   }
 }

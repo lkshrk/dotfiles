@@ -696,7 +696,6 @@ prefix_rule(pattern=["git", "merge-base", "--is-ancestor", "4ed4f41", "origin/ma
 prefix_rule(pattern=["/bin/zsh", "-lc", "pwd && git status --short && rg --files src .github tests package.json playwright.config.ts 2>/dev/null | sort | sed -n '1,140p'"], decision="allow")
 prefix_rule(pattern=["sed", "-n"], decision="allow")
 prefix_rule(pattern=["find", "/Users/lkshrk/.codex/plugins/cache/lkshrk/linear-ai/1.1.0"], decision="allow")
-prefix_rule(pattern=["bun", "run"], decision="allow")
 prefix_rule(pattern=["git", "-C", "/Users/lkshrk/Dev/linear-ai", "status"], decision="allow")
 prefix_rule(pattern=["git", "-C", "/Users/lkshrk/Dev/linear-ai", "push"], decision="allow")
 prefix_rule(pattern=["git", "diff", "--", ".github/workflows/ci.yml", "package.json", "src/lib/analytics.ts", "src/layouts/BaseLayout.astro", "tests/analytics.spec.ts"], decision="allow")

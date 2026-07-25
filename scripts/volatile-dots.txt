@@ -1,0 +1,7 @@
+# Repo-relative dotfiles their tools rewrite at runtime (plugin state, hook
+# trust hashes, session rules). Kept as real copies instead of stow symlinks
+# so runtime writes stay machine-local and never dirty the checkout.
+dotfiles/claude/.claude/plugins/installed_plugins.json
+dotfiles/claude/.claude/settings.json
+dotfiles/codex/.codex/config.toml
+dotfiles/codex/.codex/rules/default.rules
