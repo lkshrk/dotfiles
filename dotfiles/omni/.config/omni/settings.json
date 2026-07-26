@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v19.schema.json",
-  "version": 19,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v20.schema.json",
+  "version": 20,
   "$include": [
     "settings.d/agents.json",
     "settings.d/tools.json",
