@@ -1,3 +1,4 @@
+model_context_window = 1_000_000
 model_auto_compact_token_limit = 840_000
 model_auto_compact_token_limit_scope = "body_after_prefix"
 model_reasoning_effort = "high"
@@ -306,4 +307,13 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/gh-ops"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/pizzeria-riva"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/pfalz-herz"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/ISC"]
 trust_level = "trusted"

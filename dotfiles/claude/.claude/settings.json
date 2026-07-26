@@ -25,10 +25,7 @@
     ]
   },
   "model": "claude-fable-5[1m]",
-  "fallbackModel": [
-    "claude-sonnet-5",
-    "claude-haiku-4-5"
-  ],
+  "switchModelsOnFlag": false,
   "hooks": {
     "SessionStart": [
       {
