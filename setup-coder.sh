@@ -17,6 +17,14 @@ ok()   { say "${c_grn}OK${c_off} $*"; }
 warn() { say "${c_yel}!${c_off} $*"; }
 die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 
+rewrite_coder_project_paths() {
+  local config="$1"
+  sed -i.bak -E \
+    -e 's|^(\[projects\.")/Users/lkshrk/Dev(/[^"]*)?("\])$|\1'"$HOME"'\2\3|' \
+    "$config"
+  rm -f "${config}.bak"
+}
+
 export -f say step ok warn die
 
 [[ "$(uname -s)" == "Linux" ]] || die "setup-coder.sh is Linux-only"
@@ -107,6 +115,7 @@ if [[ -f "$_codex_config" ]]; then
     -e 's|^approval_policy[[:space:]]*=.*|approval_policy = "never"|' \
     -e 's|^default_permissions[[:space:]]*=.*|default_permissions = ":danger-full-access"|' \
     "$_codex_config"
+  rewrite_coder_project_paths "$_codex_config"
 fi
 
 # tools sync may replace ~/.local/bin/node; re-point at the nvm default after stow.

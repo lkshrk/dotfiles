@@ -88,6 +88,7 @@ ttllm/
 com.corsair/
 
 # local credentials/state
+dotfiles/codex/.codex/rules/default.local.rules
 dotfiles/git/.config/git/config.local
 dotfiles/gh/.config/gh/hosts.yml
 dotfiles/zed/.config/zed/conversations/

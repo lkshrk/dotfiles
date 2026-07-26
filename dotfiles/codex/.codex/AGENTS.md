@@ -282,18 +282,6 @@ Verification loop: define the claim and success criteria, run the smallest valid
 <execution_protocols>
 Mode selection: use `$deep-interview` for unclear intent/boundaries; `$ralplan` for consensus on architecture, tradeoffs, or tests; `$team` for approved multi-lane work; `$ralph` for persistent single-owner completion/verification loops; otherwise execute directly in solo mode. Switch modes only when evidence shows the current lane is mismatched or blocked.
 
-Command routing:
-- When `USE_OMX_EXPLORE_CMD` enables advisory routing, strongly prefer `omx explore` as the default surface for simple read-only repository lookup tasks (files, symbols, patterns, relationships).
-- For simple file/symbol lookups, use `omx explore` FIRST before attempting full code analysis.
-
-Use `omx explore --prompt ...` for simple read-only lookups through the shell-only, allowlisted, read-only path. Use `omx sparkshell` for noisy read-only shell commands, bounded verification, repo-wide listing/search, or explicit `omx sparkshell --tmux-pane` summaries. Treat sparkshell as explicit opt-in. When to use what: keep ambiguous, implementation-heavy, edit-heavy, diagnostics, tests, MCP/web, and complex shell work on the normal path; if `omx explore` or `omx sparkshell` is incomplete, retry narrower or gracefully fall back to the normal path.
-
-Git signing:
-- Commits and signature probes use SSH signing backed by rbw's SSH agent.
-- Codex global config selects the `signed` permissions profile, which extends the workspace sandbox, allows rbw Unix-socket access, and grants `.git/` write access for local commit object creation.
-- In agent/headless shells, use the real Git binary (`/usr/bin/git` or `command git`) for commit, tag, merge, push, fetch, and pull paths. Do not rely on interactive zsh git wrappers to unlock rbw; they cannot prompt headlessly.
-- If signing fails, verify `SSH_AUTH_SOCK` points at the rbw socket and `ssh-add -l` sees the key before changing Git config, keys, rbw settings, or blaming `rtk`.
-
 Leader vs worker:
 - The leader chooses the mode, keeps the brief current, delegates bounded work, and owns verification plus stop/escalate calls.
 - Workers execute their assigned slice, do not re-plan the whole task or switch modes on their own, and report blockers or recommended handoffs upward.

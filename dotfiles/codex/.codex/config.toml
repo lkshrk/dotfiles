@@ -1,30 +1,19 @@
 model_context_window = 1_000_000
 model_auto_compact_token_limit = 840_000
 model_auto_compact_token_limit_scope = "body_after_prefix"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 model_reasoning_summary = "detailed"
 show_raw_agent_reasoning = true
 # Coder's SSH pre-connect hook refreshes auth.json in the persistent workspace
 # home, so credentials must stay file-backed.
 cli_auth_credentials_store = "file"
-approvals_reviewer = "user"
-approval_policy = "never"
+approvals_reviewer = "auto_review"
+approval_policy = "on-request"
 sandbox_mode = "workspace-write"
-default_permissions = "signed"
 model = "gpt-5.6-sol"
 
-[permissions.signed]
-extends = ":workspace"
-
-[permissions.signed.filesystem.":workspace_roots"]
-".git/" = "write"
-
-[permissions.signed.network]
-enabled = true
-dangerously_allow_all_unix_sockets = true
-
 [agents]
-max_threads = 6
+max_concurrent_threads_per_session = 6
 max_depth = 2
 
 [otel]
@@ -130,10 +119,13 @@ x-litellm-api-key = "LITELLM_API"
 [mcp_servers.shiplight]
 command = "bunx"
 args = ["@shiplightai/mcp@latest"]
-startup_timeout_sec = 60
+startup_timeout_sec = 60.0
 
 [mcp_servers.shiplight.env]
 PWDEBUG = "console"
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
 
 [plugins."context-mode@context-mode"]
 enabled = true
@@ -167,7 +159,6 @@ enabled = true
 
 [features]
 hooks = true
-js_repl = false
 
 [hooks.state]
 
@@ -316,4 +307,10 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/ISC"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/ops-pilot"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/frontman"]
 trust_level = "trusted"
