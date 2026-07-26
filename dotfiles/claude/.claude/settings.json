@@ -179,6 +179,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/cbm-subagent-reminder"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/comment-rule-reminder"
           }
         ]
       }
