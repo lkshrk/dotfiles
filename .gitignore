@@ -96,10 +96,9 @@ dotfiles/zed/.config/zed/prompts/
 dotfiles/zed/.config/zed/themes/
 dotfiles/zed/.config/zed/settings_backup.json
 
-# claude runtime; keep tracked config, skills, agents, hooks, scripts, and plugin inventory
+# claude runtime; keep tracked config, agents, commands, hooks, rules, and scripts
 dotfiles/claude/.claude/*
 !dotfiles/claude/.claude/CLAUDE.md
-!dotfiles/claude/.claude/mcp.json
 !dotfiles/claude/.claude/keybindings.json
 !dotfiles/claude/.claude/.omc-config.json
 !dotfiles/claude/.claude/settings.json
@@ -114,10 +113,5 @@ dotfiles/claude/.claude/*
 !dotfiles/claude/.claude/agents/**
 !dotfiles/claude/.claude/hooks/
 !dotfiles/claude/.claude/hooks/**
-!dotfiles/claude/.claude/plugins/
-dotfiles/claude/.claude/plugins/*
-!dotfiles/claude/.claude/plugins/installed_plugins.json
 !dotfiles/claude/.claude/scripts/
 !dotfiles/claude/.claude/scripts/**
-!dotfiles/claude/.claude/skills/
-!dotfiles/claude/.claude/skills/**

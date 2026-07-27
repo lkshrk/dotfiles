@@ -221,8 +221,10 @@
           "provider": "script",
           "options": {
             "check_path": "claude",
+            "latest": "curl -fsSL https://downloads.claude.ai/claude-code-releases/latest",
             "uninstall": "rm -rf $HOME/.local/bin/claude $HOME/.local/share/claude",
-            "url": "https://claude.ai/install.sh"
+            "url": "https://claude.ai/install.sh",
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" claude --version | awk '{print $1}'"
           },
           "recipe": {
             "type": "curl_install_script"
@@ -746,7 +748,8 @@
           "options": {
             "check": "command -v gopls || test -x \"$HOME/.local/bin/gopls\"",
             "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 GOBIN=\"$HOME/.local/bin\" go install golang.org/x/tools/gopls@latest",
-            "uninstall": "rm -f \"$HOME/.local/bin/gopls\""
+            "uninstall": "rm -f \"$HOME/.local/bin/gopls\"",
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" gopls version | awk \"{sub(/^v/,\\\"\\\",\\$NF); print \\$NF}\""
           }
         }
       ],
@@ -1357,7 +1360,7 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "rtk-{arch}.tar.gz",
-            "installed_version": "0.43.0"
+            "installed_version": "0.44.0"
           }
         }
       ],

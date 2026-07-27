@@ -13,7 +13,6 @@
           "ignore": [
             "*",
             "!/config.toml",
-            "!/mcp.json",
             "!/AGENTS.md",
             "!/RTK.md",
             "!/rules/"
@@ -49,7 +48,6 @@
             "!/statusline-command.sh",
             "!/tokenline.sh",
             "!/RTK.md",
-            "!/plugins/installed_plugins.json",
             "!/commands/",
             "!/rules/",
             "!/hooks/cbm-session-reminder",
@@ -61,15 +59,6 @@
           "name": "amp",
           "path": "~/.config/amp",
           "ignored": true
-        }
-      ]
-    },
-    {
-      "name": "ai-plugins",
-      "dots": [
-        {
-          "name": "agents-skill-lock",
-          "path": "~/.agents/.skill-lock.json"
         }
       ]
     },

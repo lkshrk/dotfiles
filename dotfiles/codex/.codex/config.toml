@@ -25,21 +25,21 @@ endpoint = "https://otel.h-cloud.lan/v1/logs"
 protocol = "binary"
 
 [otel.exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
 
 [otel.trace_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/traces"
 protocol = "binary"
 
 [otel.trace_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
 
 [otel.metrics_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/metrics"
 protocol = "binary"
 
 [otel.metrics_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
 
 [tui]
 status_line = [
@@ -111,7 +111,7 @@ args = ["mcp"]
 enabled = false
 
 [mcp_servers.litellm-tools]
-url = "https://api.ai.h-cloud.lan/mcp/"
+url = "http://litellm-proxy.ai.svc.cluster.local:4000/mcp/"
 
 [mcp_servers.litellm-tools.env_http_headers]
 x-litellm-api-key = "LITELLM_API"
@@ -264,13 +264,13 @@ source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
 [marketplaces.lkshrk]
-last_updated = "2026-07-10T05:56:07Z"
+last_updated = "2026-07-19T19:10:42Z"
 last_revision = "eb55ff46087b75b3fcebaad182b9f02c1284fe17"
 source_type = "git"
 source = "https://github.com/lkshrk/agent-marketplace.git"
 
 [marketplaces.ponytail]
-last_updated = "2026-07-16T20:40:23Z"
+last_updated = "2026-07-19T19:10:43Z"
 last_revision = "16f29800fd2681bdf24f3eb4ccffe38be3baec6b"
 source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
@@ -313,4 +313,5 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/frontman"]
+[projects."/home/coder/omni"]
 trust_level = "trusted"

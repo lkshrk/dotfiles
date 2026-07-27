@@ -111,7 +111,7 @@ step "omni dotfiles"
 # Drop them so dots sync links cleanly. Runtime-mutated files are handled by
 # volatile-dots.sh: moved aside pre-sync, then detached into real copies so
 # tool writes never dirty the checkout.
-rm -f "$HOME/.codex/mcp.json" "$HOME/.zshrc"
+rm -f "$HOME/.zshrc"
 rm -rf "$HOME/.config/opencode"
 bash "$REPO_DIR/scripts/volatile-dots.sh" prepare
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
