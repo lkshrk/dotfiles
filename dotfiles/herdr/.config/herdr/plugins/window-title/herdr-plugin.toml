@@ -1,0 +1,24 @@
+id = "local.window-title"
+name = "Window Title"
+version = "0.1.0"
+min_herdr_version = "0.7.0"
+description = "Set the outer terminal title from the focused Git repository."
+platforms = ["macos", "linux"]
+
+[[actions]]
+id = "refresh"
+title = "Refresh terminal title"
+contexts = ["workspace", "tab", "pane"]
+command = ["sh", "set-title.sh"]
+
+[[events]]
+on = "workspace.focused"
+command = ["sh", "set-title.sh"]
+
+[[events]]
+on = "workspace.updated"
+command = ["sh", "set-title.sh"]
+
+[[events]]
+on = "pane.focused"
+command = ["sh", "set-title.sh"]

@@ -7,8 +7,8 @@ show_raw_agent_reasoning = true
 # Coder's SSH pre-connect hook refreshes auth.json in the persistent workspace
 # home, so credentials must stay file-backed.
 cli_auth_credentials_store = "file"
-approvals_reviewer = "auto_review"
-approval_policy = "on-request"
+approvals_reviewer = "user"
+approval_policy = "never"
 sandbox_mode = "workspace-write"
 model = "gpt-5.6-sol"
 
@@ -25,21 +25,21 @@ endpoint = "https://otel.h-cloud.lan/v1/logs"
 protocol = "binary"
 
 [otel.exporter.otlp-http.tls]
-ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [otel.trace_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/traces"
 protocol = "binary"
 
 [otel.trace_exporter.otlp-http.tls]
-ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [otel.metrics_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/metrics"
 protocol = "binary"
 
 [otel.metrics_exporter.otlp-http.tls]
-ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
+ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
 
 [tui]
 status_line = [
@@ -111,7 +111,7 @@ args = ["mcp"]
 enabled = false
 
 [mcp_servers.litellm-tools]
-url = "http://litellm-proxy.ai.svc.cluster.local:4000/mcp/"
+url = "https://api.ai.h-cloud.lan/mcp/"
 
 [mcp_servers.litellm-tools.env_http_headers]
 x-litellm-api-key = "LITELLM_API"
@@ -258,8 +258,8 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-26T06:52:11Z"
-last_revision = "ee3fdbb8b5ba1ad4ad78f571d413e1c3aa8fd0b1"
+last_updated = "2026-07-27T07:16:51Z"
+last_revision = "388ee7cfcdfe62c360bdb65a9843802081561af8"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -314,4 +314,7 @@ trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/frontman"]
 [projects."/home/coder/omni"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/linear-ai"]
 trust_level = "trusted"
