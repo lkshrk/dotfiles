@@ -309,7 +309,10 @@
         },
         {
           "name": "herdr",
-          "path": "~/.config/herdr"
+          "path": "~/.config/herdr",
+          "ignore": [
+            "plugins"
+          ]
         },
         {
           "name": "profile",
