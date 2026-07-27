@@ -17,8 +17,8 @@
       "provider_priority": [
         "bun",
         "uv",
-        "apt",
         "script",
+        "apt",
         "npm",
         "pnpm",
         "pip"

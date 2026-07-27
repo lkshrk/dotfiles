@@ -6,9 +6,10 @@
       "custom_name": null,
       "identity_cwd": "/Users/lkshrk",
       "public_pane_numbers": {
+        "10": 2,
         "9": 1
       },
-      "next_public_pane_number": 2,
+      "next_public_pane_number": 3,
       "public_tab_numbers": [
         1
       ],
@@ -17,15 +18,27 @@
         {
           "custom_name": null,
           "layout": {
-            "Pane": 9
+            "Split": {
+              "direction": "Horizontal",
+              "ratio": 0.5,
+              "first": {
+                "Pane": 9
+              },
+              "second": {
+                "Pane": 10
+              }
+            }
           },
           "panes": {
+            "10": {
+              "cwd": "/Users/lkshrk"
+            },
             "9": {
               "cwd": "/Users/lkshrk"
             }
           },
           "zoomed": false,
-          "focused": 9,
+          "focused": 10,
           "root_pane": 9
         }
       ],

@@ -5,6 +5,7 @@
       "tools": [
         "claude-code",
         "coder",
+        "herdr",
         "@openai/codex"
       ]
     },
@@ -195,7 +196,6 @@
         "mlx",
         "flux-markdown",
         "tree-sitter",
-        "herdr",
         "xcodegen",
         "typewhisper"
       ]
