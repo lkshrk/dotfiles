@@ -25,6 +25,25 @@ rewrite_coder_project_paths() {
   rm -f "${config}.bak"
 }
 
+install_coder_workspace_notes() {
+  local target
+  for target in "$HOME/.codex/AGENTS.md" "$HOME/.claude/CLAUDE.md"; do
+    [[ -f "$target" ]] || {
+      warn "workspace instructions not found: $target"
+      continue
+    }
+    cat >> "$target" <<'EOF'
+
+<!-- coder-workspace:start -->
+## Coder workspace
+
+- Docker is available through Docker-in-Docker (DinD).
+- Git SSH operations must preserve and use the existing `$GIT_SSH_COMMAND`. Do not unset, replace, or bypass it.
+<!-- coder-workspace:end -->
+EOF
+  done
+}
+
 export -f say step ok warn die
 
 [[ "$(uname -s)" == "Linux" ]] || die "setup-coder.sh is Linux-only"
@@ -97,6 +116,7 @@ rm -rf "$HOME/.config/opencode"
 bash "$REPO_DIR/scripts/volatile-dots.sh" prepare
 omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 bash "$REPO_DIR/scripts/volatile-dots.sh" detach
+install_coder_workspace_notes
 
 # Apply the externally-sandboxed workspace policy to the detached copy.
 _claude_settings="$HOME/.claude/settings.json"

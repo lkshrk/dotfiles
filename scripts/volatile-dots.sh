@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# scripts/volatile-dots.sh - keep runtime-mutated dotfiles as real copies.
-# Files in volatile-dots.txt are rewritten by their tools at runtime; as stow
+# scripts/volatile-dots.sh - keep workspace-mutated dotfiles as real copies.
+# Files in volatile-dots.txt are rewritten by setup or their tools; as stow
 # symlinks those writes would dirty the repo checkout.
 #
 # Usage:
