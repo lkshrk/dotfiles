@@ -47,18 +47,6 @@ call_lefthook()
     elif test -f "$dir/apps/swarm_ai/node_modules/lefthook/bin/index.js"
     then
       "$dir/apps/swarm_ai/node_modules/lefthook/bin/index.js" "$@"
-    elif test -f "$dir/apps/frontman_server/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook"
-    then
-      "$dir/apps/frontman_server/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook" "$@"
-    elif test -f "$dir/apps/frontman_server/node_modules/@evilmartians/lefthook/bin/lefthook-${osArch}-${cpuArch}/lefthook"
-    then
-      "$dir/apps/frontman_server/node_modules/@evilmartians/lefthook/bin/lefthook-${osArch}-${cpuArch}/lefthook" "$@"
-    elif test -f "$dir/apps/frontman_server/node_modules/@evilmartians/lefthook-installer/bin/lefthook"
-    then
-      "$dir/apps/frontman_server/node_modules/@evilmartians/lefthook-installer/bin/lefthook" "$@"
-    elif test -f "$dir/apps/frontman_server/node_modules/lefthook/bin/index.js"
-    then
-      "$dir/apps/frontman_server/node_modules/lefthook/bin/index.js" "$@"
     elif test -f "$dir/libs/client/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook"
     then
       "$dir/libs/client/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook" "$@"
@@ -71,6 +59,18 @@ call_lefthook()
     elif test -f "$dir/libs/client/node_modules/lefthook/bin/index.js"
     then
       "$dir/libs/client/node_modules/lefthook/bin/index.js" "$@"
+    elif test -f "$dir/apps/frontman_server/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook"
+    then
+      "$dir/apps/frontman_server/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook" "$@"
+    elif test -f "$dir/apps/frontman_server/node_modules/@evilmartians/lefthook/bin/lefthook-${osArch}-${cpuArch}/lefthook"
+    then
+      "$dir/apps/frontman_server/node_modules/@evilmartians/lefthook/bin/lefthook-${osArch}-${cpuArch}/lefthook" "$@"
+    elif test -f "$dir/apps/frontman_server/node_modules/@evilmartians/lefthook-installer/bin/lefthook"
+    then
+      "$dir/apps/frontman_server/node_modules/@evilmartians/lefthook-installer/bin/lefthook" "$@"
+    elif test -f "$dir/apps/frontman_server/node_modules/lefthook/bin/index.js"
+    then
+      "$dir/apps/frontman_server/node_modules/lefthook/bin/index.js" "$@"
     elif go tool lefthook -h >/dev/null 2>&1
     then
       go tool lefthook "$@"

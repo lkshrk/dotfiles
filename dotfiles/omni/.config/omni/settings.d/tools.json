@@ -795,6 +795,19 @@
         {
           "provider": "brew",
           "package": "herdr"
+        },
+        {
+          "provider": "script",
+          "options": {
+            "check_path": "herdr",
+            "latest": "curl -fsSL https://herdr.dev/latest.json | awk -F '\"' '/^[[:space:]]*\"version\"[[:space:]]*:/ && !found { print $4; found = 1 }'",
+            "uninstall": "rm -f \"$HOME/.local/bin/herdr\"",
+            "url": "https://herdr.dev/install.sh",
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" herdr --version | awk '{print $2}'"
+          },
+          "recipe": {
+            "type": "curl_install_script"
+          }
         }
       ],
       "git": "https://github.com/ogulcancelik/herdr"
