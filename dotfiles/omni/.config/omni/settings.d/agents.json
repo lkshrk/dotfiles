@@ -243,6 +243,13 @@
         "agents": [
           "claude-code"
         ]
+      },
+      {
+        "name": "linear-ai",
+        "marketplace": "lkshrk",
+        "agents": [
+          "codex"
+        ]
       }
     ],
     "ignore": {
@@ -250,7 +257,8 @@
         "academic-research-skills"
       ],
       "mcp_servers": [
-        "xcodebuildmcp"
+        "xcodebuildmcp",
+        "openaiDeveloperDocs"
       ],
       "plugins": [
         "swift-lsp",
