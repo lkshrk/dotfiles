@@ -40,6 +40,8 @@ Temporary Items
 /GEMINI.local.md
 .omc/
 .wolf/
+docs/superpowers/
+.agent_progress.md
 
 # zsh runtime
 dotfiles/zsh/.config/zsh/.zcompdump*
