@@ -122,9 +122,11 @@ CLAUDE.local.md
 .claude/settings.local.json
 .sisyphus/
 .omc/
+.omx/
 **/.wolf/
 .codebase-memory/
 GEMINI.local.md
+.agent-progress.md
 .aider.chat.history.md
 .aider.input.history
 .aider.tags.cache.v*
@@ -136,6 +138,8 @@ GEMINI.local.md
 .tabnine/
 .amp/
 .qodo/
+docs/superpowers
+.superpowers
 
 # Environment files
 .env
