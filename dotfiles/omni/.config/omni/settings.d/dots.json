@@ -332,6 +332,10 @@
           "name": "rustup",
           "path": "~/.rustup",
           "ignored": true
+        },
+        {
+          "name": "codex-default.local.rules",
+          "path": "~/.codex/rules/default.local.rules"
         }
       ]
     }
