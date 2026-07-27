@@ -1,0 +1,43 @@
+id = "moneycaringcoder.tether"
+name = "Tether for Herdr"
+version = "0.5.0"
+min_herdr_version = "0.7.3"
+description = "Keep local and remote terminal workloads running after their Herdr view closes."
+platforms = ["linux", "macos"]
+
+[[build]]
+command = ["cargo", "build", "--release", "--locked"]
+
+[[startup]]
+command = ["target/release/herdr-tether", "plugin", "restore-agent-view"]
+
+[[actions]]
+id = "open"
+title = "Tether: Open workloads"
+description = "Create, open, or restart local and remote workloads. Run Tether: Set up first."
+command = ["target/release/herdr-tether", "plugin", "open"]
+contexts = ["global", "workspace", "pane"]
+
+[[actions]]
+id = "setup"
+title = "Tether: Set up (start here)"
+description = "Create Tether's private files and safely add the prefix+t shortcut."
+command = ["target/release/herdr-tether", "plugin", "setup"]
+
+[[actions]]
+id = "rollback"
+title = "Tether: Remove prefix+t shortcut"
+description = "Restore the exact Herdr configuration saved by Tether setup."
+command = ["target/release/herdr-tether", "setup", "keybinding", "--rollback"]
+
+[[panes]]
+id = "picker"
+title = "Tether: Open workloads"
+placement = "overlay"
+command = ["sh", "-c", "exec \"${HERDR_PLUGIN_ROOT:?}/target/release/herdr-tether\" open"]
+
+[[panes]]
+id = "setup"
+title = "Tether: Set up"
+placement = "overlay"
+command = ["sh", "-c", "binary=\"${HERDR_PLUGIN_ROOT:?}/target/release/herdr-tether\"; \"$binary\" setup --yes && \"$binary\" setup keybinding; status=$?; if [ \"$status\" -eq 0 ]; then printf '\\nTether is ready. Press Enter to close setup, then press prefix+t to open it.\\n'; else printf '\\nTether setup did not finish. Read the error above. Press Enter to close.\\n'; fi; IFS= read -r _; exit \"$status\""]

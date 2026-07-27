@@ -1,0 +1,738 @@
+use std::{
+    collections::HashSet,
+    env, fs,
+    io::{self, Read},
+    path::{Path, PathBuf},
+};
+
+use anyhow::{Context, Result, bail};
+use serde::{Deserialize, Serialize};
+
+use crate::{
+    model::{HerdrAgentKind, Placement},
+    storage::{
+        atomic_write, atomic_write_preserving_parent, with_advisory_lock,
+        with_advisory_lock_preserving_parent,
+    },
+};
+
+const MAX_SERIALIZABLE_INTEGER: u64 = i64::MAX as u64;
+
+pub const TETHER_KEYBINDING: &str = r#"[[keys.command]]
+key = "prefix+t"
+type = "plugin_action"
+command = "moneycaringcoder.tether.open"
+description = "Tether: Open"
+"#;
+
+const TETHER_KEY: &str = "prefix+t";
+const TETHER_ACTION: &str = "moneycaringcoder.tether.open";
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum HerdrKeybindingInstall {
+    Installed { backup: PathBuf },
+    AlreadyInstalled,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HerdrKeybindingRollback {
+    Restored,
+}
+
+#[derive(Clone, Debug)]
+pub struct HerdrKeybindingStore {
+    path: PathBuf,
+}
+
+impl HerdrKeybindingStore {
+    pub fn new(path: PathBuf) -> Self {
+        Self { path }
+    }
+
+    pub fn path_from_env() -> Result<PathBuf> {
+        if let Some(path) = env::var_os("HERDR_CONFIG_PATH") {
+            return Ok(PathBuf::from(path));
+        }
+        if let Some(config_home) = env::var_os("XDG_CONFIG_HOME") {
+            return Ok(PathBuf::from(config_home).join("herdr/config.toml"));
+        }
+        let home = env::var_os("HOME")
+            .map(PathBuf::from)
+            .context("HOME is not set and XDG_CONFIG_HOME is unavailable")?;
+        Ok(home.join(".config/herdr/config.toml"))
+    }
+
+    pub fn backup_path_for(path: &Path) -> PathBuf {
+        let mut name = path.file_name().unwrap_or_default().to_os_string();
+        name.push(".tether-keybinding.bak");
+        path.with_file_name(name)
+    }
+
+    pub fn install(&self) -> Result<HerdrKeybindingInstall> {
+        with_advisory_lock_preserving_parent(&self.path, || self.install_unlocked())
+    }
+
+    pub fn rollback(&self) -> Result<HerdrKeybindingRollback> {
+        with_advisory_lock_preserving_parent(&self.path, || {
+            let backup = Self::backup_path_for(&self.path);
+            let bytes = fs::read(&backup).with_context(|| {
+                format!(
+                    "read Tether keybinding backup `{}`; no rollback was performed",
+                    backup.display()
+                )
+            })?;
+            let current = fs::read(&self.path).with_context(|| {
+                format!(
+                    "read current Herdr config `{}`; no rollback was performed",
+                    self.path.display()
+                )
+            })?;
+            let installed = append_keybinding(&bytes);
+            if current != installed && current != bytes {
+                bail!(
+                    "Herdr config changed after Tether installed the keybinding; rollback refused without overwriting those edits"
+                );
+            }
+            let permissions = fs::metadata(&backup)
+                .with_context(|| format!("read backup metadata `{}`", backup.display()))?
+                .permissions();
+            atomic_write_preserving_parent(&self.path, &bytes)
+                .with_context(|| format!("restore Herdr config from `{}`", backup.display()))?;
+            fs::set_permissions(&self.path, permissions)
+                .with_context(|| format!("restore permissions on `{}`", self.path.display()))?;
+            fs::remove_file(&backup)
+                .with_context(|| format!("consume restored backup `{}`", backup.display()))?;
+            Ok(HerdrKeybindingRollback::Restored)
+        })
+    }
+
+    fn install_unlocked(&self) -> Result<HerdrKeybindingInstall> {
+        let (source, permissions) = match fs::read(&self.path) {
+            Ok(source) => {
+                let permissions = fs::metadata(&self.path)
+                    .with_context(|| format!("read metadata for `{}`", self.path.display()))?
+                    .permissions();
+                (source, Some(permissions))
+            }
+            Err(error) if error.kind() == io::ErrorKind::NotFound => (Vec::new(), None),
+            Err(error) => {
+                return Err(error)
+                    .with_context(|| format!("read Herdr config `{}`", self.path.display()));
+            }
+        };
+        let text = std::str::from_utf8(&source)
+            .with_context(|| format!("Herdr config `{}` is not UTF-8", self.path.display()))?;
+        let document: toml::Value = if text.trim().is_empty() {
+            toml::Value::Table(toml::map::Map::new())
+        } else {
+            toml::from_str(text)
+                .with_context(|| format!("parse Herdr config `{}` as TOML", self.path.display()))?
+        };
+
+        let mut identical_binding = false;
+        if let Some(keys) = document.get("keys").and_then(toml::Value::as_table) {
+            if let Some(commands) = keys.get("command").and_then(toml::Value::as_array) {
+                for command in commands {
+                    if !command.get("key").is_some_and(value_contains_tether_key) {
+                        continue;
+                    }
+                    if !identical_binding
+                        && command.get("type").and_then(toml::Value::as_str)
+                            == Some("plugin_action")
+                        && command.get("command").and_then(toml::Value::as_str)
+                            == Some(TETHER_ACTION)
+                    {
+                        identical_binding = true;
+                        continue;
+                    }
+                    bail!(
+                        "Herdr key `prefix+t` is already bound; config was not changed and the existing command was not displayed"
+                    );
+                }
+            }
+            if keys.iter().any(|(name, value)| {
+                name != "command" && name != "prefix" && value_contains_tether_key(value)
+            }) {
+                bail!(
+                    "Herdr key `prefix+t` is already bound; config was not changed and the existing action was not displayed"
+                );
+            }
+        }
+        if identical_binding {
+            return Ok(HerdrKeybindingInstall::AlreadyInstalled);
+        }
+
+        let backup = Self::backup_path_for(&self.path);
+        if backup.exists() {
+            let backup_bytes = fs::read(&backup).with_context(|| {
+                format!("read existing keybinding backup `{}`", backup.display())
+            })?;
+            if backup_bytes == source {
+                fs::remove_file(&backup).with_context(|| {
+                    format!("remove consumed keybinding backup `{}`", backup.display())
+                })?;
+            } else {
+                bail!(
+                    "Tether keybinding backup `{}` already exists; config was not changed",
+                    backup.display()
+                );
+            }
+        }
+
+        let updated = append_keybinding(&source);
+        let updated_text =
+            std::str::from_utf8(&updated).context("Tether keybinding candidate was not UTF-8")?;
+        toml::from_str::<toml::Value>(updated_text).with_context(|| {
+            format!(
+                "Tether keybinding cannot be merged into Herdr config `{}`; config was not changed",
+                self.path.display()
+            )
+        })?;
+        atomic_write_preserving_parent(&backup, &source)
+            .with_context(|| format!("create keybinding backup `{}`", backup.display()))?;
+        if let Some(permissions) = permissions.as_ref() {
+            fs::set_permissions(&backup, permissions.clone())
+                .with_context(|| format!("preserve permissions on `{}`", backup.display()))?;
+        }
+
+        atomic_write_preserving_parent(&self.path, &updated).with_context(|| {
+            format!(
+                "install Tether keybinding; original remains at `{}`",
+                backup.display()
+            )
+        })?;
+        if let Some(permissions) = permissions {
+            fs::set_permissions(&self.path, permissions)
+                .with_context(|| format!("preserve permissions on `{}`", self.path.display()))?;
+        }
+        Ok(HerdrKeybindingInstall::Installed { backup })
+    }
+}
+
+fn append_keybinding(source: &[u8]) -> Vec<u8> {
+    let mut updated = Vec::with_capacity(source.len() + TETHER_KEYBINDING.len() + 2);
+    updated.extend_from_slice(source);
+    if !source.is_empty() && !source.ends_with(b"\n") {
+        updated.push(b'\n');
+    }
+    if !source.is_empty() {
+        updated.push(b'\n');
+    }
+    updated.extend_from_slice(TETHER_KEYBINDING.as_bytes());
+    updated
+}
+
+fn value_contains_tether_key(value: &toml::Value) -> bool {
+    match value {
+        toml::Value::String(key) => key == TETHER_KEY,
+        toml::Value::Array(keys) => keys.iter().any(value_contains_tether_key),
+        _ => false,
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct CommandPreset {
+    pub name: String,
+    pub command: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub herdr_agent: Option<HerdrAgentKind>,
+}
+
+impl CommandPreset {
+    pub const MAX_COMMAND_BYTES: usize = 256 * 1024;
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct HostConfig {
+    pub name: String,
+    pub target: String,
+    pub roots: Vec<String>,
+    pub presets: Vec<CommandPreset>,
+}
+
+impl HostConfig {
+    pub const MAX_ROOTS: usize = 1_024;
+    pub const MAX_PRESETS: usize = 256;
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct UiDefaults {
+    pub placement: Placement,
+}
+
+impl Default for UiDefaults {
+    fn default() -> Self {
+        Self {
+            placement: Placement::SplitRight,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct DiscoveryDefaults {
+    pub local_roots: Vec<String>,
+    pub max_depth: usize,
+    pub max_entries: usize,
+    pub max_results: usize,
+    pub timeout_seconds: u64,
+    pub workers: usize,
+}
+
+impl DiscoveryDefaults {
+    pub const MAX_LOCAL_ROOTS: usize = 1_024;
+}
+
+impl Default for DiscoveryDefaults {
+    fn default() -> Self {
+        Self {
+            local_roots: Vec::new(),
+            max_depth: 4,
+            max_entries: 4096,
+            max_results: 64,
+            timeout_seconds: 3,
+            workers: 4,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct RetentionDefaults {
+    pub closed_days: u64,
+}
+
+impl Default for RetentionDefaults {
+    fn default() -> Self {
+        Self { closed_days: 30 }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Config {
+    pub version: u32,
+    pub hosts: Vec<HostConfig>,
+    pub ui: UiDefaults,
+    pub discovery: DiscoveryDefaults,
+    pub retention: RetentionDefaults,
+}
+
+impl Config {
+    pub const CURRENT_VERSION: u32 = 3;
+    pub const MAX_HOSTS: usize = 256;
+    pub const MAX_STRING_BYTES: usize = 16 * 1024;
+    pub fn add_host(&mut self, host: HostConfig) -> Result<()> {
+        if self.hosts.iter().any(|existing| existing.name == host.name) {
+            bail!("host `{}` already exists", host.name);
+        }
+
+        self.hosts.push(host);
+        if let Err(error) = self.validate() {
+            self.hosts.pop();
+            return Err(error);
+        }
+        Ok(())
+    }
+
+    /// Appends discovered SSH aliases after configured hosts without allowing
+    /// aliases to shadow a configured host name.
+    pub(crate) fn append_alias_hosts(&mut self, aliases: &[String]) {
+        for alias in aliases {
+            if !self.hosts.iter().any(|host| host.name == *alias) {
+                self.hosts.push(HostConfig {
+                    name: alias.clone(),
+                    target: alias.clone(),
+                    roots: Vec::new(),
+                    presets: Vec::new(),
+                });
+            }
+        }
+    }
+
+    pub fn remove_host(&mut self, name: &str) -> bool {
+        let Some(index) = self.hosts.iter().position(|host| host.name == name) else {
+            return false;
+        };
+        self.hosts.remove(index);
+        true
+    }
+
+    pub fn validate(&self) -> Result<()> {
+        if self.version != Self::CURRENT_VERSION {
+            bail!(
+                "unsupported config version {}; expected {}",
+                self.version,
+                Self::CURRENT_VERSION
+            );
+        }
+        if self.hosts.len() > Self::MAX_HOSTS {
+            bail!(
+                "config hosts may contain at most {} entries",
+                Self::MAX_HOSTS
+            );
+        }
+        if self.discovery.local_roots.len() > DiscoveryDefaults::MAX_LOCAL_ROOTS {
+            bail!(
+                "discovery local roots may contain at most {} entries",
+                DiscoveryDefaults::MAX_LOCAL_ROOTS
+            );
+        }
+
+        for (root_index, root) in self.discovery.local_roots.iter().enumerate() {
+            require_nonempty(root, &format!("discovery local root at index {root_index}"))?;
+            require_max_bytes(root, Self::MAX_STRING_BYTES, "discovery local root")?;
+        }
+        require_positive_usize(self.discovery.max_depth, "discovery max_depth")?;
+        require_positive_usize(self.discovery.max_entries, "discovery max_entries")?;
+        require_positive_usize(self.discovery.max_results, "discovery max_results")?;
+        require_positive_u64(self.discovery.timeout_seconds, "discovery timeout_seconds")?;
+        if self.discovery.timeout_seconds > 3600 {
+            bail!("discovery timeout_seconds must be at most 3600");
+        }
+        require_positive_usize(self.discovery.workers, "discovery workers")?;
+        require_positive_u64(self.retention.closed_days, "retention closed_days")?;
+
+        let mut host_names = HashSet::with_capacity(self.hosts.len());
+        for (host_index, host) in self.hosts.iter().enumerate() {
+            let location = format!("host at index {host_index}");
+            if host.roots.len() > HostConfig::MAX_ROOTS {
+                bail!(
+                    "host roots may contain at most {} entries",
+                    HostConfig::MAX_ROOTS
+                );
+            }
+            if host.presets.len() > HostConfig::MAX_PRESETS {
+                bail!(
+                    "host presets may contain at most {} entries",
+                    HostConfig::MAX_PRESETS
+                );
+            }
+            require_nonempty(&host.name, &format!("{location} name"))?;
+            require_max_bytes(&host.name, Self::MAX_STRING_BYTES, "name")?;
+            if host.name.eq_ignore_ascii_case("local") {
+                bail!("host name `{}` is reserved", host.name);
+            }
+            if !host_names.insert(host.name.as_str()) {
+                bail!("duplicate host name `{}`", host.name);
+            }
+            require_nonempty(&host.target, &format!("host `{}` target", host.name))?;
+            require_max_bytes(&host.target, Self::MAX_STRING_BYTES, "target")?;
+            crate::sshcfg::validate_ssh_target(&host.target)
+                .with_context(|| format!("invalid target for host `{}`", host.name))?;
+
+            for (root_index, root) in host.roots.iter().enumerate() {
+                require_nonempty(
+                    root,
+                    &format!("root at index {root_index} for host `{}`", host.name),
+                )?;
+                require_max_bytes(root, Self::MAX_STRING_BYTES, "root")?;
+            }
+
+            let mut preset_names = HashSet::with_capacity(host.presets.len());
+            for (preset_index, preset) in host.presets.iter().enumerate() {
+                require_nonempty(
+                    &preset.name,
+                    &format!(
+                        "preset at index {preset_index} for host `{}` name",
+                        host.name
+                    ),
+                )?;
+                require_max_bytes(&preset.name, Self::MAX_STRING_BYTES, "preset name")?;
+                if !preset_names.insert(preset.name.as_str()) {
+                    bail!(
+                        "duplicate preset name `{}` for host `{}`",
+                        preset.name,
+                        host.name
+                    );
+                }
+                require_nonempty(
+                    &preset.command,
+                    &format!("preset `{}` for host `{}` command", preset.name, host.name),
+                )?;
+                require_max_bytes(
+                    &preset.command,
+                    CommandPreset::MAX_COMMAND_BYTES,
+                    "preset command",
+                )?;
+            }
+        }
+        Ok(())
+    }
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            version: Self::CURRENT_VERSION,
+            hosts: Vec::new(),
+            ui: UiDefaults::default(),
+            discovery: DiscoveryDefaults::default(),
+            retention: RetentionDefaults::default(),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct ConfigStore {
+    path: PathBuf,
+}
+
+impl ConfigStore {
+    pub fn new(path: PathBuf) -> Self {
+        Self { path }
+    }
+
+    pub const MAX_PERSISTED_BYTES: usize = 8 * 1024 * 1024;
+    pub const MAX_INPUT_BYTES: usize = Self::MAX_PERSISTED_BYTES;
+
+    pub fn update<T>(&self, operation: impl FnOnce(&mut Config) -> Result<T>) -> Result<T> {
+        with_advisory_lock(&self.path, || {
+            let mut config = self.load_unlocked()?;
+            let result = operation(&mut config)?;
+            self.save_unlocked(&config)?;
+            Ok(result)
+        })
+    }
+
+    pub fn load(&self) -> Result<Config> {
+        with_advisory_lock(&self.path, || self.load_unlocked())
+    }
+
+    /// Loads and validates config while migrating legacy schemas only in memory.
+    pub fn load_read_only(&self) -> Result<Config> {
+        with_advisory_lock(&self.path, || self.load_unlocked_with_migration(false))
+    }
+
+    pub fn save(&self, config: &Config) -> Result<()> {
+        with_advisory_lock(&self.path, || self.save_unlocked(config))
+    }
+
+    fn load_unlocked(&self) -> Result<Config> {
+        self.load_unlocked_with_migration(true)
+    }
+
+    fn load_unlocked_with_migration(&self, persist_migration: bool) -> Result<Config> {
+        let source = match read_config_file(&self.path, Self::MAX_INPUT_BYTES) {
+            Ok(source) => source,
+            Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(Config::default()),
+            Err(error) if error.kind() == io::ErrorKind::InvalidData => return Err(error.into()),
+            Err(error) => {
+                return Err(error)
+                    .with_context(|| format!("read config `{}`", self.path.display()));
+            }
+        };
+
+        let document: toml::Value = toml::from_str(&source)
+            .with_context(|| format!("parse config `{}` as TOML", self.path.display()))?;
+        let version = document
+            .get("version")
+            .and_then(toml::Value::as_integer)
+            .ok_or_else(|| {
+                anyhow::anyhow!(
+                    "config `{}` must contain an integer `version`",
+                    self.path.display()
+                )
+            })?;
+
+        let (config, migrated) = match version {
+            3 => {
+                let config: Config = toml::from_str(&source).with_context(|| {
+                    format!("decode config version 3 from `{}`", self.path.display())
+                })?;
+                (config, false)
+            }
+            2 => {
+                let legacy: ConfigV2 = toml::from_str(&source).with_context(|| {
+                    format!("decode config version 2 from `{}`", self.path.display())
+                })?;
+                (legacy.migrate(), true)
+            }
+            1 => {
+                let legacy: ConfigV1 = toml::from_str(&source).with_context(|| {
+                    format!("decode config version 1 from `{}`", self.path.display())
+                })?;
+                (legacy.migrate(), true)
+            }
+            0 => {
+                let legacy: ConfigV0 = toml::from_str(&source).with_context(|| {
+                    format!("decode config version 0 from `{}`", self.path.display())
+                })?;
+                (legacy.migrate().migrate(), true)
+            }
+            other => bail!(
+                "unsupported config version {other} in `{}`; supported versions are 0, 1, and {}",
+                self.path.display(),
+                Config::CURRENT_VERSION
+            ),
+        };
+        config.validate()?;
+        if migrated && persist_migration {
+            self.save_unlocked(&config)
+                .with_context(|| format!("rewrite migrated config `{}`", self.path.display()))?;
+        }
+        Ok(config)
+    }
+
+    fn save_unlocked(&self, config: &Config) -> Result<()> {
+        config.validate()?;
+        let serialized = toml::to_string_pretty(config).context("serialize config as TOML")?;
+        require_serialized_config_size(&serialized)?;
+        atomic_write(&self.path, serialized.as_bytes())
+            .with_context(|| format!("save config `{}`", self.path.display()))
+    }
+}
+
+fn require_serialized_config_size(serialized: &str) -> Result<()> {
+    if serialized.len() > ConfigStore::MAX_PERSISTED_BYTES {
+        bail!(
+            "serialized config may contain at most {} bytes",
+            ConfigStore::MAX_PERSISTED_BYTES
+        );
+    }
+    Ok(())
+}
+
+fn read_config_file(path: &Path, max_bytes: usize) -> io::Result<String> {
+    let file = fs::File::open(path)?;
+    let size = file.metadata()?.len();
+    if size > max_bytes as u64 {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("config input may contain at most {max_bytes} bytes"),
+        ));
+    }
+    let mut source = String::with_capacity(size as usize);
+    file.take(max_bytes as u64 + 1)
+        .read_to_string(&mut source)?;
+    if source.len() > max_bytes {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("config input may contain at most {max_bytes} bytes"),
+        ));
+    }
+    Ok(source)
+}
+
+fn require_max_bytes(value: &str, max_bytes: usize, field: &str) -> Result<()> {
+    if value.len() > max_bytes {
+        bail!("{field} may contain at most {max_bytes} bytes");
+    }
+    Ok(())
+}
+
+fn require_nonempty(value: &str, field: &str) -> Result<()> {
+    if value.contains('\0') {
+        bail!("{field} must not contain NUL");
+    }
+    if value.trim().is_empty() {
+        bail!("{field} must not be empty");
+    }
+    Ok(())
+}
+
+fn require_positive_usize(value: usize, field: &str) -> Result<()> {
+    if value == 0 {
+        bail!("{field} must be greater than zero");
+    }
+    if (value as u128) > (MAX_SERIALIZABLE_INTEGER as u128) {
+        bail!("{field} exceeds the maximum TOML integer");
+    }
+    Ok(())
+}
+
+fn require_positive_u64(value: u64, field: &str) -> Result<()> {
+    if value == 0 {
+        bail!("{field} must be greater than zero");
+    }
+    if value > MAX_SERIALIZABLE_INTEGER {
+        bail!("{field} exceeds the maximum TOML integer");
+    }
+    Ok(())
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ConfigV2 {
+    #[allow(dead_code)]
+    version: u32,
+    #[serde(default)]
+    hosts: Vec<HostConfig>,
+    ui: UiDefaults,
+    discovery: DiscoveryDefaults,
+    retention: RetentionDefaults,
+}
+
+impl ConfigV2 {
+    fn migrate(self) -> Config {
+        Config {
+            version: Config::CURRENT_VERSION,
+            hosts: self.hosts,
+            ui: self.ui,
+            discovery: self.discovery,
+            retention: self.retention,
+        }
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ConfigV1 {
+    #[allow(dead_code)]
+    version: u32,
+    #[serde(default)]
+    hosts: Vec<HostConfig>,
+    ui: UiDefaults,
+}
+
+impl ConfigV1 {
+    fn migrate(self) -> Config {
+        Config {
+            version: Config::CURRENT_VERSION,
+            hosts: self.hosts,
+            ui: self.ui,
+            discovery: DiscoveryDefaults::default(),
+            retention: RetentionDefaults::default(),
+        }
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ConfigV0 {
+    #[allow(dead_code)]
+    version: u32,
+    #[serde(default)]
+    hosts: Vec<HostConfigV0>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct HostConfigV0 {
+    name: String,
+    target: String,
+    #[serde(default)]
+    roots: Vec<String>,
+}
+
+impl ConfigV0 {
+    fn migrate(self) -> ConfigV1 {
+        ConfigV1 {
+            version: 1,
+            hosts: self
+                .hosts
+                .into_iter()
+                .map(|host| HostConfig {
+                    name: host.name,
+                    target: host.target,
+                    roots: host.roots,
+                    presets: Vec::new(),
+                })
+                .collect(),
+            ui: UiDefaults::default(),
+        }
+    }
+}
