@@ -103,7 +103,7 @@ TMUX='' tmux -L "$coder_socket" -f "$CODER_TMUX_CONFIG" new-session -d -s check
 
 [[ "$(TMUX='' tmux -L "$local_socket" show-options -gv prefix)" == C-Space ]]
 [[ "$(TMUX='' tmux -L "$local_socket" show-options -gv prefix2)" == None ]]
-[[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv prefix)" == C-b ]]
+[[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv prefix)" == C-S-b ]]
 [[ "$(TMUX='' tmux -L "$coder_socket" show-options -gv prefix2)" == None ]]
 local_wheel_binding=$(TMUX='' tmux -L "$local_socket" list-keys |
   grep -E '^bind-key +(-r +)?-T root +WheelUpPane ')
