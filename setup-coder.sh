@@ -17,12 +17,17 @@ ok()   { say "${c_grn}OK${c_off} $*"; }
 warn() { say "${c_yel}!${c_off} $*"; }
 die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 
-rewrite_coder_project_paths() {
-  local config="$1"
-  sed -i.bak -E \
-    -e 's|^(\[projects\.")/Users/lkshrk/Dev(/[^"]*)?("\])$|\1'"$HOME"'\2\3|' \
-    "$config"
-  rm -f "${config}.bak"
+run_optional() {
+  local label="$1"
+  shift
+  local status
+  if "$@"; then
+    return 0
+  else
+    status=$?
+  fi
+  warn "$label failed (exit $status); continuing setup"
+  return 0
 }
 
 install_coder_workspace_notes() {
@@ -71,19 +76,19 @@ ok "using Omni host profile: $OMNI_HOSTNAME"
 step "shell (zsh + oh-my-zsh)"
 # oh-my-zsh writes a real ~/.zshrc; drop it before install and again before stow.
 rm -f "$HOME/.zshrc"
-omni --config "$OMNI_CONFIG_PATH" --yes tools sync shell
+run_optional "shell tool sync" omni --config "$OMNI_CONFIG_PATH" --yes tools sync shell
 rm -f "$HOME/.zshrc"
 for _dot in zshenv zshrc zsh env; do
-  omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo "$_dot"
+  run_optional "shell dotfiles: $_dot" omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo "$_dot"
 done
 ok "shell ready: $(command -v zsh 2>/dev/null || printf 'zsh')"
 
 step "toolchain prerequisites"
-omni --config "$OMNI_CONFIG_PATH" --yes tools sync prereqs
+run_optional "toolchain prerequisites" omni --config "$OMNI_CONFIG_PATH" --yes tools sync prereqs
 export_sync_path
 
 step "omni tools"
-omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
+run_optional "omni tools" omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
 
 # Ubuntu packages bat as `batcat`; keep the cross-platform command name.
 if ! command -v bat >/dev/null 2>&1 && command -v batcat >/dev/null 2>&1; then
@@ -99,7 +104,7 @@ if [[ -n "${CODER_OMNI_STACKS:-}" ]]; then
     _stack="${_stack//[[:space:]]/}"
     [[ -n "$_stack" ]] || continue
     step "omni stack: $_stack"
-    omni --config "$OMNI_CONFIG_PATH" --yes tools sync "$_stack"
+    run_optional "omni stack: $_stack" omni --config "$OMNI_CONFIG_PATH" --yes tools sync "$_stack"
   done
 fi
 
@@ -114,7 +119,7 @@ step "omni dotfiles"
 rm -f "$HOME/.zshrc"
 rm -rf "$HOME/.config/opencode"
 bash "$REPO_DIR/scripts/volatile-dots.sh" prepare
-omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
+run_optional "omni dotfiles" omni --config "$OMNI_CONFIG_PATH" --yes dots sync --use-repo
 bash "$REPO_DIR/scripts/volatile-dots.sh" detach
 install_coder_workspace_notes
 
@@ -135,7 +140,6 @@ if [[ -f "$_codex_config" ]]; then
     -e 's|^approval_policy[[:space:]]*=.*|approval_policy = "never"|' \
     -e 's|^default_permissions[[:space:]]*=.*|default_permissions = ":danger-full-access"|' \
     "$_codex_config"
-  rewrite_coder_project_paths "$_codex_config"
 fi
 
 # tools sync may replace ~/.local/bin/node; re-point at the nvm default after stow.
@@ -187,7 +191,7 @@ if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
   fi
 fi
 
-bash "$REPO_DIR/scripts/bootstrap-agents.sh"
+run_optional "agent bootstrap" bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 
 if [[ -f "$HOME/.claude.json" ]]; then
   step "litellm MCP in-cluster URL (claude)"

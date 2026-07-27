@@ -12,6 +12,9 @@ config="$repo_dir/dotfiles/codex/.codex/config.toml"
 if grep -q '^\[mcp_servers\.node_repl' "$config"; then
   exit 1
 fi
+if grep -q '^\[projects\.' "$config"; then
+  exit 1
+fi
 
 bash -n \
   "$repo_dir/setup-coder.sh" \

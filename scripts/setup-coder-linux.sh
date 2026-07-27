@@ -18,7 +18,10 @@ install_apt_packages() {
     return
   }
 
-  sudo apt-get update -qq
+  sudo apt-get update -qq || {
+    warn "apt package index update failed; continuing setup"
+    return 0
+  }
   sudo apt-get install -y --no-install-recommends \
     curl \
     git \
@@ -29,7 +32,10 @@ install_apt_packages() {
     pkg-config \
     libssl-dev \
     unzip \
-    zsh
+    zsh || {
+      warn "base apt package install failed; continuing setup"
+      return 0
+    }
   ok "base apt packages installed"
 }
 
@@ -64,8 +70,14 @@ install_lan_ca() {
     return
   fi
 
-  sudo install -m 0644 "$src" "$target"
-  sudo update-ca-certificates >/dev/null
+  sudo install -m 0644 "$src" "$target" || {
+    warn "lan CA copy failed; continuing setup"
+    return 0
+  }
+  sudo update-ca-certificates >/dev/null || {
+    warn "lan CA trust update failed; continuing setup"
+    return 0
+  }
   ok "lan CA installed into system trust (from $src)"
 }
 

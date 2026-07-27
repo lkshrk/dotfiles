@@ -9,12 +9,38 @@ show_raw_agent_reasoning = true
 cli_auth_credentials_store = "file"
 approvals_reviewer = "user"
 approval_policy = "never"
-sandbox_mode = "workspace-write"
+default_permissions = "project-tools-docker"
 model = "gpt-5.6-sol"
 
 [agents]
 max_concurrent_threads_per_session = 6
 max_depth = 2
+
+[permissions.project-tools-docker]
+description = "Full project development with build tools, public/local networking, and Docker."
+
+[permissions.project-tools-docker.filesystem]
+":minimal" = "read"
+":tmpdir" = "write"
+":slash_tmp" = "write"
+"~/.docker" = "write"
+"~/.cache" = "write"
+"~/Library/Caches" = "write"
+"~/go/pkg/mod" = "write"
+
+[permissions.project-tools-docker.filesystem.":workspace_roots"]
+"." = "write"
+
+[permissions.project-tools-docker.network]
+enabled = true
+allow_local_binding = true
+dangerously_allow_all_unix_sockets = true
+
+[permissions.project-tools-docker.network.domains]
+"*" = "allow"
+"localhost" = "allow"
+"127.0.0.1" = "allow"
+"::1" = "allow"
 
 [otel]
 environment = "dev"
@@ -281,40 +307,3 @@ dock-icon-preference = "app-default"
 
 [notice]
 hide_rate_limit_model_nudge = true
-
-[projects."/Users/lkshrk/Dev/dotfiles"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/routivo"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/h-cloud"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/omni"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/gh-ops"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/pizzeria-riva"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/pfalz-herz"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/ISC"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/ops-pilot"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/frontman"]
-[projects."/home/coder/omni"]
-trust_level = "trusted"
-
-[projects."/Users/lkshrk/Dev/linear-ai"]
-trust_level = "trusted"

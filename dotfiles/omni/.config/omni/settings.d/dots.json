@@ -16,7 +16,8 @@
             "!/AGENTS.md",
             "!/RTK.md",
             "!/rules/",
-            "/rules/default.local.rules"
+            "/rules/default.local.rules",
+            "rules"
           ]
         },
         {
@@ -333,15 +334,6 @@
           "name": "rustup",
           "path": "~/.rustup",
           "ignored": true
-        },
-        {
-          "name": "codex-default.local.rules",
-          "path": "~/.codex/rules/default.local.rules",
-          "hosts": {
-            "topaz": {
-              "package": "codex-default.local.rules@topaz"
-            }
-          }
         }
       ]
     }
