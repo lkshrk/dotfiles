@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-# SubagentStart hook: enforce the no-useless-comments rule in every subagent,
-# since orchestrators forget to copy it into briefs.
-cat << 'REMINDER'
-{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Code comments: write almost NONE. Hard limit: one short line; NEVER multi-line comment paragraphs. A comment must state a non-obvious WHY (hidden constraint, invariant, bug workaround) a future reader needs — never justify or narrate your change ('what matters here is...', 'which the checks above establish', 'so this correctly handles...'); that is reviewer-talk and is banned even when phrased as a why. Also never: restating code, banner/section comments, step narration, TODO/notes-to-self, ticket/PR references. Default: no comment."}}
-REMINDER
