@@ -2,25 +2,13 @@
   "agents": {
     "packages": [
       {
-        "source": "mattpocock/skills"
-      },
-      {
-        "source": "vercel-labs/skills"
-      },
-      {
         "source": "lkshrk/linear-ai"
-      },
-      {
-        "source": "rjyo/moshi-skill"
       },
       {
         "source": "lkshrk/useful-skills"
       },
       {
         "source": "ShiplightAI/agent-skills-v2"
-      },
-      {
-        "source": "ShiplightAI/agent-skills"
       },
       {
         "source": "sopaco/deepwiki-rs"
@@ -154,13 +142,6 @@
         ]
       },
       {
-        "name": "ecc",
-        "marketplace": "ecc",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
         "name": "context-mode",
         "marketplace": "context-mode",
         "agents": [
@@ -190,20 +171,6 @@
       },
       {
         "name": "code-simplifier",
-        "marketplace": "claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "lua-lsp",
-        "marketplace": "claude-plugins-official",
-        "agents": [
-          "claude-code"
-        ]
-      },
-      {
-        "name": "frontend-design",
         "marketplace": "claude-plugins-official",
         "agents": [
           "claude-code"

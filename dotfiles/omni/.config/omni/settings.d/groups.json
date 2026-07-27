@@ -20,13 +20,9 @@
         "rtk"
       ],
       "skills": [
-        "mattpocock/skills",
-        "vercel-labs/skills",
         "lkshrk/linear-ai",
-        "rjyo/moshi-skill",
         "lkshrk/useful-skills",
         "ShiplightAI/agent-skills-v2",
-        "ShiplightAI/agent-skills",
         "sopaco/deepwiki-rs"
       ],
       "mcp_servers": [
@@ -38,14 +34,11 @@
       "plugins": [
         "superpowers",
         "github",
-        "ecc",
         "context-mode",
         "ponytail",
         "caveman",
         "gopls-lsp",
         "code-simplifier",
-        "lua-lsp",
-        "frontend-design",
         "codex",
         "claude-md-management",
         "smart-docs",
