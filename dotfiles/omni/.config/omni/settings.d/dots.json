@@ -15,9 +15,7 @@
             "!/config.toml",
             "!/AGENTS.md",
             "!/RTK.md",
-            "!/rules/",
-            "/rules/default.local.rules",
-            "rules"
+            "/rules/default.local.rules"
           ]
         },
         {
@@ -43,7 +41,6 @@
             "!/settings.json",
             "!/CLAUDE.md",
             "!/agents/",
-            "!/hooks/openwolf-git-gate.sh",
             "!/scripts/",
             "!/.omc-config.json",
             "!/keybindings.json",
@@ -51,10 +48,7 @@
             "!/tokenline.sh",
             "!/RTK.md",
             "!/commands/",
-            "!/rules/",
-            "!/hooks/cbm-session-reminder",
-            "!/hooks/cbm-code-discovery-gate",
-            "!/hooks/cbm-subagent-reminder"
+            "!/rules/"
           ]
         },
         {

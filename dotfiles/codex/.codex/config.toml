@@ -1,7 +1,7 @@
 model_context_window = 1_000_000
 model_auto_compact_token_limit = 840_000
 model_auto_compact_token_limit_scope = "body_after_prefix"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "medium"
 model_reasoning_summary = "detailed"
 show_raw_agent_reasoning = true
 # Coder's SSH pre-connect hook refreshes auth.json in the persistent workspace
@@ -287,8 +287,8 @@ trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce54
 trusted_hash = "sha256:e26c910e93bf7f5be7fda6fd6155483e1636eb1cdd5bb84dbcd5271cce36f5a1"
 
 [marketplaces.context-mode]
-last_updated = "2026-07-31T18:28:01Z"
-last_revision = "066f0bf8e80cd618c5a0c3de5dfe9fe3004561df"
+last_updated = "2026-08-01T13:56:31Z"
+last_revision = "c46367264fb316b17533e39fcd7044f38a100570"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -324,4 +324,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/talos-rpi5"]
 trust_level = "trusted"
