@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# bootstrap-agents.sh — Restore agent skills, MCP servers, and plugins via omni.
+# bootstrap-agents.sh — Sync agent skills, MCP servers, and plugins via omni.
 set -euo pipefail
 
 REPO_DIR="${REPO_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
@@ -34,31 +34,31 @@ omni_cmd() {
   fi
 }
 
-agents_restore_available() {
-  omni_cmd agents skills restore --help >/dev/null 2>&1 \
-    && omni_cmd agents mcp restore --help >/dev/null 2>&1 \
-    && omni_cmd agents plugins restore --help >/dev/null 2>&1
+agents_sync_available() {
+  omni_cmd agents skills sync --help >/dev/null 2>&1 \
+    && omni_cmd agents mcp sync --help >/dev/null 2>&1 \
+    && omni_cmd agents plugins sync --help >/dev/null 2>&1
 }
 
-if ! agents_restore_available; then
-  _bootstrap_die "installed omni does not support agents restore; update omni and rerun setup"
+if ! agents_sync_available; then
+  _bootstrap_die "installed omni does not support agents sync; update omni and rerun setup"
 fi
 
-restore_component() {
+sync_component() {
   local label="$1"
   shift
   _bootstrap_step "omni agents $label"
-  if omni_cmd "$@" restore; then
-    _bootstrap_ok "agent $label restore complete"
+  if omni_cmd "$@" sync; then
+    _bootstrap_ok "agent $label sync complete"
   else
-    _bootstrap_warn "agent $label restore had errors"
+    _bootstrap_warn "agent $label sync had errors"
   fi
 }
 
 _bootstrap_step "omni agents"
-# Plugin marketplace snapshots must be present before MCP restore. The latter
+# Plugin marketplace snapshots must be present before MCP sync. The latter
 # runs Codex's plugin-shadow check, which otherwise reads stale snapshots from
 # a previous workspace start and emits a spurious missing-manifest warning.
-restore_component plugins agents plugins
-restore_component skills agents skills
-restore_component mcp agents mcp
+sync_component plugins agents plugins
+sync_component skills agents skills
+sync_component mcp agents mcp

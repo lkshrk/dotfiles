@@ -7,8 +7,8 @@ show_raw_agent_reasoning = true
 # Coder's SSH pre-connect hook refreshes auth.json in the persistent workspace
 # home, so credentials must stay file-backed.
 cli_auth_credentials_store = "file"
-approvals_reviewer = "user"
-approval_policy = "never"
+approvals_reviewer = "auto_review"
+approval_policy = "on-request"
 default_permissions = "project-tools-docker"
 model = "gpt-5.6-sol"
 
@@ -283,9 +283,12 @@ trusted_hash = "sha256:e3c6082ddaf7a0607c9f4171792907b085d08ed0bac7501960db98d59
 [hooks.state."/Users/lkshrk/Dev/omni/.codex/hooks.json:stop:0:0"]
 trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce540b3cbe0"
 
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:4:0"]
+trusted_hash = "sha256:e26c910e93bf7f5be7fda6fd6155483e1636eb1cdd5bb84dbcd5271cce36f5a1"
+
 [marketplaces.context-mode]
-last_updated = "2026-07-27T07:16:51Z"
-last_revision = "388ee7cfcdfe62c360bdb65a9843802081561af8"
+last_updated = "2026-07-31T18:28:01Z"
+last_revision = "066f0bf8e80cd618c5a0c3de5dfe9fe3004561df"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -307,3 +310,18 @@ dock-icon-preference = "app-default"
 
 [notice]
 hide_rate_limit_model_nudge = true
+
+[projects."/Users/lkshrk/Dev/herdr-tether"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/frontman"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/h-cloud"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/ops-pilot"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/dotfiles"]
+trust_level = "trusted"

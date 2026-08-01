@@ -19,7 +19,7 @@ The setup flow:
 5. Compiles `~/.local/bin/sleep-on-lock` from the tracked Swift source.
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
 7. Refreshes the yabai sudoers entry.
-8. Installs lefthook hooks and restores agent skills, MCP servers, and plugins via `omni agents … restore`.
+8. Installs lefthook hooks and syncs agent skills, MCP servers, and plugins via `omni agents … sync`.
 
 Admin-required package actions are handled by normal macOS authentication. Setup warms the sudo session with `sudo -v` when running in an interactive terminal.
 

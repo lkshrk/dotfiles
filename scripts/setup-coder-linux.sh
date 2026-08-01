@@ -29,6 +29,7 @@ install_apt_packages() {
     jq \
     build-essential \
     ca-certificates \
+    ncurses-bin \
     pkg-config \
     libssl-dev \
     unzip \
@@ -79,6 +80,37 @@ install_lan_ca() {
     return 0
   }
   ok "lan CA installed into system trust (from $src)"
+}
+
+# ─── Ghostty terminfo ────────────────────────────────────────────────────────
+
+install_ghostty_terminfo() {
+  step "Ghostty terminfo"
+  if infocmp -x xterm-ghostty >/dev/null 2>&1; then
+    ok "Ghostty terminfo already installed"
+    return 0
+  fi
+
+  local source="$REPO_DIR/assets/terminfo/xterm-ghostty.terminfo"
+  [[ -r "$source" ]] || {
+    warn "Ghostty terminfo source missing; continuing setup"
+    return 0
+  }
+  command -v tic >/dev/null 2>&1 || {
+    warn "tic not found; continuing setup"
+    return 0
+  }
+
+  mkdir -p "$HOME/.terminfo"
+  tic -x -o "$HOME/.terminfo" "$source" >/dev/null 2>&1 || {
+    warn "Ghostty terminfo install failed; continuing setup"
+    return 0
+  }
+  TERMINFO="$HOME/.terminfo" infocmp -x xterm-ghostty >/dev/null 2>&1 || {
+    warn "Ghostty terminfo verification failed; continuing setup"
+    return 0
+  }
+  ok "Ghostty terminfo installed"
 }
 
 # ─── Login shell (Linux) ───────────────────────────────────────────────────────
@@ -146,3 +178,4 @@ export_sync_path() {
 
 install_apt_packages
 install_lan_ca
+install_ghostty_terminfo

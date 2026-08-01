@@ -29,7 +29,7 @@ printf "EDITOR=%s\n" "${EDITOR:-}"
 printf "GIT_CONFIG_GLOBAL=%s\n" "${GIT_CONFIG_GLOBAL:-}"
 printf "NVM_DIR=%s\n" "${NVM_DIR:-}"
 printf "PNPM_HOME=%s\n" "${PNPM_HOME:-}"
-[ -z "${PNPM_HOME:-}" ] || exit 1
+[ "${PNPM_HOME:-}" = "$HOME/Library/pnpm" ] || exit 1
 printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"
 printf "SSH_AUTH_SOCK=%s\n" "${SSH_AUTH_SOCK:-}"
 printf "PATH=%s\n" "$PATH"
@@ -37,7 +37,8 @@ case ":$PATH:" in
   *":$HOME/Library/pnpm:"*) exit 1 ;;
 esac
 case ":$PATH:" in
-  *":$HOME/Library/pnpm/bin:"*) exit 1 ;;
+  *":$PNPM_HOME/bin:"*) ;;
+  *) exit 1 ;;
 esac
 case ":$PATH:" in
   *":$HOME/.local/share/pnpm:"*) exit 1 ;;

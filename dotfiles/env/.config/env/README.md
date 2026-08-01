@@ -36,9 +36,10 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
   CLIs work after Homebrew Node is unlinked.
 - Interactive zsh auto-switches `.nvmrc` through the lightweight resolver and
   only loads full NVM when the fast installed-version path cannot resolve.
-- No Corepack wrapper. Install `pnpm` as a normal global package in each NVM
-  Node version that needs it.
-- No `PNPM_HOME`; `pnpm` resolves from the active NVM Node bin directory.
+- No Corepack wrapper. NVM's `default-packages` installs `pnpm@11` into each
+  new Node version.
+- `pnpm` resolves from the active NVM Node bin directory; `PNPM_HOME/bin`
+  holds pnpm-installed global commands.
 - `NVM_DIR` is metadata only; loading nvm stays out of base env.
 - Homebrew environment policy is macOS-specific. `os/darwin.sh` resolves and
   exports `HOMEBREW_PREFIX`; zsh lazy tool modules consume that variable

@@ -3,6 +3,9 @@
 export HOMEBREW_NO_ENV_HINTS="${HOMEBREW_NO_ENV_HINTS:-1}"
 export HOMEBREW_REQUIRE_TAP_TRUST="${HOMEBREW_REQUIRE_TAP_TRUST:-1}"
 
+export PNPM_HOME="${PNPM_HOME:-$HOME/Library/pnpm}"
+env_next_path_prepend "$PNPM_HOME/bin"
+
 # rbw's SSH agent socket lives under the stable Darwin user temp root; the
 # resolver in lib/rbw-sock.sh handles the nested-TMPDIR fixup.
 env_next_darwin_sock="$(env_next_rbw_sock_darwin)"

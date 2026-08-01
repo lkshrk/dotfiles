@@ -1,0 +1,14 @@
+[hosts.omni]
+target = "omni.coder"
+remote_bin = "env HERDR_SOCKET_PATH=/tmp/herdr.sock herdr"
+always_control = true
+
+[hosts.civora]
+target = "civora.coder"
+remote_bin = "env HERDR_SOCKET_PATH=/tmp/herdr.sock herdr"
+always_control = true
+
+[hosts.routivo]
+target = "routivo.coder"
+remote_bin = "env HERDR_SOCKET_PATH=/tmp/herdr.sock herdr"
+always_control = true

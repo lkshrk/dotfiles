@@ -1,7 +1,7 @@
 # POSIX-safe env entrypoint.
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
-ENV_NEXT_PROFILE_CURRENT_VERSION=5
+ENV_NEXT_PROFILE_CURRENT_VERSION=6
 case "${CODER_OMNI_HOST:-${HOSTNAME:-}}" in
   coder|coder-*) export OMNI_HOSTNAME="${CODER_OMNI_HOST:-coder}" ;;
 esac
@@ -68,10 +68,10 @@ env_next_nvm_bin=
 if command -v env_next_nvm_resolve_bin >/dev/null 2>&1; then
   env_next_nvm_bin=$(env_next_nvm_resolve_bin default 2>/dev/null || true)
 fi
-[ -z "$env_next_nvm_bin" ] || env_next_path_prepend "$env_next_nvm_bin"
 
 env_next_path_prepend "$HOME/.cargo/bin"
 env_next_path_prepend "$BUN_INSTALL/bin"
+[ -z "$env_next_nvm_bin" ] || env_next_path_prepend "$env_next_nvm_bin"
 env_next_path_append "$GOPATH/bin"
 env_next_path_prepend "$HOME/.local/bin"
 env_next_path_prepend "$HOME/.mimocode/bin"

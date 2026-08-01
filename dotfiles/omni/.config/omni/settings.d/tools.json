@@ -830,6 +830,22 @@
       ],
       "git": "https://github.com/ogulcancelik/herdr"
     },
+    "herdr-tether": {
+      "providers": [
+        {
+          "provider": "script",
+          "bin": "herdr-tether",
+          "options": {
+            "check": "test -x \"$HOME/.cargo/bin/herdr-tether\"",
+            "install": "\"$HOME/.cargo/bin/cargo\" install --git https://github.com/moneycaringcoder/herdr-tether --tag v0.5.0 --locked herdr-tether && PATH=\"$HOME/.cargo/bin:$PATH\" herdr-tether setup --yes",
+            "uninstall": "\"$HOME/.cargo/bin/cargo\" uninstall herdr-tether",
+            "version": "PATH=\"$HOME/.cargo/bin:$PATH\" herdr-tether --version | awk '{print $2}'"
+          }
+        }
+      ],
+      "description": "Standalone CLI for managing local and remote Tether workloads.",
+      "git": "https://github.com/moneycaringcoder/herdr-tether"
+    },
     "iina": {
       "providers": [
         {
@@ -1333,11 +1349,7 @@
     "pnpm": {
       "providers": [
         {
-          "provider": "bun",
-          "package": "pnpm"
-        },
-        {
-          "provider": "brew",
+          "provider": "npm",
           "package": "pnpm"
         }
       ]

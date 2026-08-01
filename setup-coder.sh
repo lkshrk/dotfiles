@@ -168,7 +168,7 @@ else
   warn "Codex config not found after dots sync"
 fi
 
-# Omni MCP restore references this binary; the dotfiles copy is macOS-only.
+# Omni MCP sync references this binary; the dotfiles copy is macOS-only.
 if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
   step "codebase-memory-mcp"
   arch="$(uname -m)"
@@ -187,7 +187,7 @@ if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
   if [[ -n "$asset" ]]; then
     curl -fsSL "https://github.com/DeusData/codebase-memory-mcp/releases/latest/download/$asset" \
       | tar -xz -C "$HOME/.local/bin" codebase-memory-mcp \
-      || warn "codebase-memory-mcp install failed; omni MCP restore may skip it"
+      || warn "codebase-memory-mcp install failed; omni MCP sync may skip it"
   fi
 fi
 

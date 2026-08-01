@@ -292,6 +292,14 @@
           "path": "~/.config/env"
         },
         {
+          "name": "nvm",
+          "path": "~/.nvm",
+          "ignore": [
+            "*",
+            "!/default-packages"
+          ]
+        },
+        {
           "name": "zprofile",
           "path": "~/.zprofile"
         },
@@ -313,7 +321,11 @@
           "name": "herdr",
           "path": "~/.config/herdr",
           "ignore": [
-            "plugins"
+            "plugins",
+            ".config.toml.lock",
+            ".plugins.lock",
+            "release-notes.json",
+            "session.json"
           ]
         },
         {
@@ -334,6 +346,20 @@
           "name": "rustup",
           "path": "~/.rustup",
           "ignored": true
+        },
+        {
+          "name": "herdr-tether",
+          "path": "~/.config/herdr-tether",
+          "ignored": true
+        },
+        {
+          "name": "herdr-mirror",
+          "path": "~/.config/herdr-mirror",
+          "hosts": {
+            "topaz": {
+              "package": "herdr-mirror@topaz"
+            }
+          }
         }
       ]
     }

@@ -382,8 +382,13 @@ gii() {
   local template="$HOME/.config/zsh/templates/default.gitignore"
   [[ -r "$template" ]] || { echo "gii: template not found: $template" >&2; return 1; }
   if [[ -e .gitignore && "${1:-}" != "--force" ]]; then
-    echo "gii: .gitignore exists; use gii --force to overwrite" >&2
-    return 1
+    local merged
+    merged=$(mktemp .gitignore.XXXXXX) || return 1
+    cp -p .gitignore "$merged" &&
+      awk '!seen[$0]++' .gitignore "$template" > "$merged" &&
+      mv "$merged" .gitignore ||
+      { rm -f "$merged"; return 1; }
+    return
   fi
   cp "$template" .gitignore
 }

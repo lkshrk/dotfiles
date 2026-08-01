@@ -29,6 +29,46 @@ previous_workspace = "prefix+shift+p"
 next_workspace = "prefix+shift+n"
 goto = "prefix+g"
 
+[[keys.command]]
+key = "prefix+shift+m"
+type = "plugin_action"
+command = "mirror.start"       # start / resume the daemon
+
+[[keys.command]]
+key = "prefix+shift+s"
+type = "plugin_action"
+command = "mirror.pause"       # freeze syncing; start again to resume
+
+[[keys.command]]
+key = "prefix+shift+b"         # "bring back" (shift+r is native reload_config)
+type = "plugin_action"
+command = "mirror.restore"     # un-close mirrors you closed locally
+
+[[keys.command]]
+key = "prefix+alt+d"           # destructive: closes ALL mirrors + clears state
+type = "plugin_action"
+command = "mirror.teardown"    # stop mirroring everything (start to resume)
+
+[[keys.command]]
+key = "prefix+alt+n"           # native new_workspace = prefix+shift+n
+type = "plugin_action"
+command = "mirror.remote-new-workspace"
+
+[[keys.command]]
+key = "prefix+alt+c"           # native new_tab = prefix+c
+type = "plugin_action"
+command = "mirror.remote-new-tab"
+
+[[keys.command]]
+key = "prefix+alt+v"           # native split_vertical = prefix+v
+type = "plugin_action"
+command = "mirror.remote-split-right"
+
+[[keys.command]]
+key = "prefix+alt+minus"       # native split_horizontal = prefix+minus
+type = "plugin_action"
+command = "mirror.remote-split-down"
+
 [ui.toast]
 delivery = "system"
 
@@ -39,8 +79,5 @@ new_cwd = "follow"
 [theme]
 name = "tokyo-night"
 
-[[keys.command]]
-key = "prefix+t"
-type = "plugin_action"
-command = "moneycaringcoder.tether.open"
-description = "Tether: Open"
+[ui]
+agent_panel_sort = "spaces"

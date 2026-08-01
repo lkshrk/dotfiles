@@ -66,12 +66,17 @@ run_profile_probe() {
       [ "${BUN_INSTALL:-}" = "$HOME/.bun" ] || fail "BUN_INSTALL"
       [ "${GOPATH:-}" = "$HOME/go" ] || fail "GOPATH"
       [ "${GIT_CONFIG_GLOBAL:-}" = "$HOME/.config/git/config" ] || fail "GIT_CONFIG_GLOBAL"
-      [ "${PNPM_HOME:-}" = "" ] || fail "PNPM_HOME still set"
+      [ "${PNPM_HOME:-}" = "$HOME/.local/share/pnpm" ] || fail "PNPM_HOME=$PNPM_HOME"
       [ "${SSH_AUTH_SOCK:-}" = "$EXPECTED_SSH_AUTH_SOCK" ] || fail "SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
 
       case ":$PATH:" in
         *":$HOME/.local/bin:"*) ;;
         *) fail "missing HOME .local/bin" ;;
+      esac
+
+      case ":$PATH:" in
+        *":$PNPM_HOME/bin:"*) ;;
+        *) fail "missing PNPM_HOME bin" ;;
       esac
 
       case ":$PATH:" in
