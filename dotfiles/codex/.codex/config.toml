@@ -287,8 +287,8 @@ trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce54
 trusted_hash = "sha256:e26c910e93bf7f5be7fda6fd6155483e1636eb1cdd5bb84dbcd5271cce36f5a1"
 
 [marketplaces.context-mode]
-last_updated = "2026-08-01T19:22:25Z"
-last_revision = "b7fc2368b5c4ad669d5da8ed616b656a808e228e"
+last_updated = "2026-08-02T08:06:58Z"
+last_revision = "e27c14331179507978fcc8fb75a2318ae647bf4a"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
@@ -327,4 +327,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/talos-rpi5"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/omni"]
 trust_level = "trusted"

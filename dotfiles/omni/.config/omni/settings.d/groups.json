@@ -282,6 +282,7 @@
       "name": "hermes",
       "special": "host",
       "tools": [
+        "camofox-browser",
         "hermes"
       ]
     },

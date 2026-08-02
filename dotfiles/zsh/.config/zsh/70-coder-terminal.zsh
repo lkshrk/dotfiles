@@ -21,7 +21,7 @@ if [[ -n ${CODER_WORKSPACE_NAME:-} ]]; then
       _coder_tmux_session="default-$_coder_tmux_slot"
       if ! tmux has-session -t "=$_coder_tmux_session" 2>/dev/null; then
         exec tmux new-session -s "$_coder_tmux_session"
-      elif [[ $(tmux display-message -p -t "=$_coder_tmux_session" '#{session_attached}') == 0 ]]; then
+      elif [[ $(tmux display-message -p -t "=$_coder_tmux_session:" '#{session_attached}') == 0 ]]; then
         exec tmux attach-session -t "=$_coder_tmux_session"
       fi
       (( ++_coder_tmux_slot ))

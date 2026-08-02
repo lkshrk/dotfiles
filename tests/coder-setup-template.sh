@@ -22,7 +22,6 @@ bash -n \
   "$repo_dir/setup-hermes.sh" \
   "$repo_dir/scripts/setup-workspace-linux.sh" \
   "$repo_dir/scripts/setup-coder-linux.sh" \
-  "$repo_dir/scripts/bootstrap-agents.sh" \
   "$repo_dir/scripts/volatile-dots.sh" \
   "$repo_dir/scripts/dots-sync-back.sh"
 

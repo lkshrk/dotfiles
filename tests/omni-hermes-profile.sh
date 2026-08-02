@@ -13,7 +13,7 @@ jq -e '
 ' "$settings" >/dev/null
 
 jq -e '
-  any(.groups[]; .name == "hermes" and .special == "host" and .tools == ["hermes"]) and
+  any(.groups[]; .name == "hermes" and .special == "host" and .tools == ["camofox-browser", "hermes"]) and
   any(.groups[]; .name == "ai" and
     (.tools | index("claude-code") != null and index("coder") != null and index("@openai/codex") != null))
 ' "$groups" >/dev/null

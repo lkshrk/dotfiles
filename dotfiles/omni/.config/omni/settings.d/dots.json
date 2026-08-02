@@ -48,7 +48,8 @@
             "!/tokenline.sh",
             "!/RTK.md",
             "!/commands/",
-            "!/rules/"
+            "!/rules/",
+            "!/hooks/openwolf-git-gate.sh"
           ]
         },
         {

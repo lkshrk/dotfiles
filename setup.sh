@@ -106,6 +106,9 @@ ensure_omni_bootstrap() {
 
 omni_bootstrap() {
   step "omni bootstrap"
+  if [[ -z "${NODE_EXTRA_CA_CERTS:-}" && -r "${OMNI_OTEL_CA_PATH:-}" ]]; then
+    export NODE_EXTRA_CA_CERTS="$OMNI_OTEL_CA_PATH"
+  fi
   # Codex may replace the managed symlink with a real config before bootstrap.
   # Keep the local copy, then let Omni install the tracked version.
   local codex_config="$HOME/.codex/config.toml"
@@ -116,7 +119,7 @@ omni_bootstrap() {
   omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
 
   step "omni tools"
-  omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
+  omni --config "$OMNI_CONFIG_PATH" --yes tools sync
 }
 
 # ─── Shared: generated shell completions ─────────────────────────────────────
@@ -170,9 +173,6 @@ main() {
   install_zsh_completions
 
   install_lefthook
-
-  export OMNI_MIN_VERSION
-  bash "$REPO_DIR/scripts/bootstrap-agents.sh"
 }
 
 main "$@"

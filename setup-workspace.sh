@@ -49,6 +49,9 @@ setup_workspace_prepare() {
 
   source "$REPO_DIR/scripts/setup-workspace-linux.sh"
   workspace_after_linux
+  if [[ -z "${NODE_EXTRA_CA_CERTS:-}" && -r "${OMNI_OTEL_CA_PATH:-}" ]]; then
+    export NODE_EXTRA_CA_CERTS="$OMNI_OTEL_CA_PATH"
+  fi
   install_ghostty_terminfo
 
   step "omni install"
@@ -73,13 +76,15 @@ setup_workspace_sync_shell() {
   ok "shell ready: $(command -v zsh 2>/dev/null || printf 'zsh')"
 }
 
-setup_workspace_sync_tools() {
+setup_workspace_sync_prereqs() {
   step "toolchain prerequisites"
   run_optional "toolchain prerequisites" omni --config "$OMNI_CONFIG_PATH" --yes tools sync prereqs
   export_sync_path
+}
 
+setup_workspace_sync_tools() {
   step "omni tools"
-  run_optional "omni tools" omni --config "$OMNI_CONFIG_PATH" --yes tools sync --all
+  run_optional "omni tools" omni --config "$OMNI_CONFIG_PATH" --yes tools sync
 
   if ! command -v bat >/dev/null 2>&1 && command -v batcat >/dev/null 2>&1; then
     mkdir -p "$HOME/.local/bin"
@@ -93,6 +98,7 @@ setup_workspace_sync_tools() {
     for stack in "${stacks[@]}"; do
       stack="${stack//[[:space:]]/}"
       [[ -n "$stack" ]] || continue
+      [[ "$OMNI_HOSTNAME" == coder && "$stack" == infra ]] && continue
       step "omni stack: $stack"
       run_optional "omni stack: $stack" omni --config "$OMNI_CONFIG_PATH" --yes tools sync "$stack"
     done
@@ -129,8 +135,9 @@ setup_workspace_finish() {
 setup_workspace_main() {
   setup_workspace_prepare "$1"
   setup_workspace_sync_shell
-  setup_workspace_sync_tools
+  setup_workspace_sync_prereqs
   setup_workspace_sync_dots
+  setup_workspace_sync_tools
   setup_workspace_finish
 }
 

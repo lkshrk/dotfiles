@@ -126,8 +126,6 @@ workspace_after_dots() {
     fi
   fi
 
-  run_optional "agent bootstrap" bash "$REPO_DIR/scripts/bootstrap-agents.sh"
-
   if [[ -f "$HOME/.claude.json" ]]; then
     step "litellm MCP in-cluster URL (claude)"
     sed -i \

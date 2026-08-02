@@ -27,6 +27,12 @@ for argument do
   previous=$argument
 done
 target=${target#=}
+if [ "$1" = display-message ]; then
+  case $target in
+    *:) target=${target%:} ;;
+    *) exit 1 ;;
+  esac
+fi
 attached=
 for session in ${TMUX_TEST_SESSIONS:-}; do
   case $session in

@@ -1,6 +1,5 @@
 # Repo-relative dotfiles modified by workspace setup or their tools. Kept as
 # real copies instead of stow symlinks so local writes never dirty the checkout.
-dotfiles/claude/.claude/plugins/installed_plugins.json
 dotfiles/claude/.claude/settings.json
 dotfiles/claude/.claude/CLAUDE.md
 dotfiles/codex/.codex/config.toml
