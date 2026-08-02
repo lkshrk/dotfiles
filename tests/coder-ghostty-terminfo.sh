@@ -3,7 +3,7 @@
 set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-linux_setup="$repo_dir/scripts/setup-coder-linux.sh"
+linux_setup="$repo_dir/scripts/setup-workspace-linux.sh"
 terminfo_source="$repo_dir/assets/terminfo/xterm-ghostty.terminfo"
 test_dir="$(mktemp -d)"
 trap 'rm -rf "$test_dir"' EXIT
@@ -28,8 +28,7 @@ EOF
 
 chmod +x "$test_dir/bin/infocmp" "$test_dir/bin/tic"
 
-# shellcheck source=/dev/null
-source <(sed -n '/^install_ghostty_terminfo()/,/^}/p' "$linux_setup")
+eval "$(sed -n '/^install_ghostty_terminfo()/,/^}/p' "$linux_setup")"
 step() { :; }
 ok() { :; }
 warn() { :; }
@@ -45,4 +44,4 @@ TIC_CAPTURE="$test_dir/tic-args" \
 grep -Fq -- "-x -o $test_dir/home/.terminfo $terminfo_source" "$test_dir/tic-args"
 TERMINFO="$test_dir/home/.terminfo" "$real_infocmp" -x xterm-ghostty >/dev/null
 
-printf 'PASS: Coder installs Ghostty terminfo into the user database\n'
+printf 'PASS: Linux workspaces install Ghostty terminfo into the user database\n'

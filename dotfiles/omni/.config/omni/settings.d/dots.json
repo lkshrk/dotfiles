@@ -83,6 +83,9 @@
           "hosts": {
             "coder": {
               "package": "tmux@coder"
+            },
+            "hermes": {
+              "package": "tmux@hermes"
             }
           }
         },
@@ -269,6 +272,9 @@
           "hosts": {
             "coder": {
               "package": "bashrc@coder"
+            },
+            "hermes": {
+              "package": "bashrc@hermes"
             }
           }
         },

@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v20.schema.json",
-  "version": 20,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v22.schema.json",
+  "version": 22,
   "$include": [
     "settings.d/agents.json",
     "settings.d/tools.json",
@@ -9,6 +9,22 @@
   ],
   "host_settings": {
     "coder": {
+      "dots_repo": "~/dotfiles",
+      "dots_disabled": false,
+      "disabled_providers": [
+        "brew"
+      ],
+      "provider_priority": [
+        "bun",
+        "uv",
+        "script",
+        "apt",
+        "npm",
+        "pnpm",
+        "pip"
+      ]
+    },
+    "hermes": {
       "dots_repo": "~/dotfiles",
       "dots_disabled": false,
       "disabled_providers": [
@@ -50,9 +66,22 @@
       "dev",
       "dev-tooling",
       "go",
+      "infra",
       "prereqs",
       "shell",
       "test-tooling"
+    ],
+    "hermes": [
+      "core",
+      "dev",
+      "dev-tooling",
+      "go",
+      "infra",
+      "prereqs",
+      "python",
+      "shell",
+      "test-tooling",
+      "ts"
     ],
     "topaz": [
       "ai",

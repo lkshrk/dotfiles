@@ -279,6 +279,13 @@
       ]
     },
     {
+      "name": "hermes",
+      "special": "host",
+      "tools": [
+        "hermes"
+      ]
+    },
+    {
       "name": "topaz",
       "special": "host",
       "tools": [
@@ -291,10 +298,10 @@
         "certifi",
         "numpy",
         "npm",
-        "omp",
         "android-commandlinetools",
         "gradle",
-        "vips"
+        "vips",
+        "yt-dlp"
       ]
     }
   ]

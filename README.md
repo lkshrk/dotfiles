@@ -35,17 +35,18 @@ After setup, run:
 claude doctor
 ```
 
-## Coder
+## Linux workspaces
 
-Coder/Linux workspaces use a separate Omni host profile instead of the macOS setup path:
+Linux workspaces share `setup-workspace.sh` and use a host-specific entry point:
 
 ```sh
 git clone <repo> ~/dotfiles
 cd ~/dotfiles
-./setup-coder.sh
+./setup-coder.sh   # Coder workspace
+./setup-hermes.sh  # Hermes workspace
 ```
 
-`setup-coder.sh` selects `OMNI_HOSTNAME=coder`, installs the minimal Linux prerequisites for Omni, then lets Omni sync the `coder` host's tools and dotfiles.
+Both install the shared Linux prerequisites and sync their Omni host profile. Coder additionally configures Codex, Claude Code, agent plugins, and workspace-template integrations; Hermes does not.
 
 ## Omni
 
@@ -88,11 +89,14 @@ dottrack PATH [args...]   # omni dots add --adopt PATH [args...]
 ## Layout
 
 ```text
-setup.sh                  # primary bootstrap script
-setup-coder.sh            # Coder/Linux bootstrap through Omni host profile
+setup.sh                  # macOS bootstrap
+setup-workspace.sh        # shared Linux/Omni bootstrap
+setup-coder.sh            # Coder-specific wrapper
+setup-hermes.sh           # Hermes-specific wrapper
 scripts/
   macos-defaults.sh       # optional macOS defaults
-  setup-coder-linux.sh    # minimal Linux prerequisites for Coder
+  setup-workspace-linux.sh # shared Linux prerequisites
+  setup-coder-linux.sh    # Coder LAN certificate setup
 dotfiles/
   omni/                   # tracked Omni config
   yabai/                  # yabai config + sleep-on-lock Swift source

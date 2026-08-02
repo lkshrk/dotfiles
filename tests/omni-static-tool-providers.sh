@@ -8,7 +8,9 @@ tools="$repo_dir/dotfiles/omni/.config/omni/settings.d/tools.json"
 
 jq -e '
   .host_settings.coder.provider_priority as $providers
-  | ($providers | index("script")) < ($providers | index("apt"))
+  | ($providers | index("script")) as $script
+  | ($providers | index("apt")) as $apt
+  | $script != null and $apt != null and $script < $apt
 ' "$settings" >/dev/null
 
 jq -e '
@@ -16,11 +18,11 @@ jq -e '
   | select(
       .provider == "script"
       and .bin == "ffmpeg"
-      and .source == {"type":"github","owner":"BtbN","repo":"FFmpeg-Builds"}
-      and .recipe.type == "github_release_asset"
-      and .recipe.asset_pattern == "ffmpeg-master-latest-linux{arch}-gpl.tar.xz"
-      and .recipe.binary_path == "bin/ffmpeg"
-      and .recipe.tag_name == "latest"
+      and ((.options.install // "") | contains("BtbN/FFmpeg-Builds"))
+      and ((.options.install // "") | contains("checksums.sha256"))
+      and ((.options.install // "") | contains("autobuild-"))
+      and .options.version? != null
+      and .options.latest? != null
     )
 ' "$tools" >/dev/null
 
@@ -32,7 +34,8 @@ jq -e '
       and .source == {"type":"github","owner":"tsl0922","repo":"ttyd"}
       and .recipe.type == "github_release_asset"
       and .recipe.asset_pattern == "ttyd.{arch}"
-      and .recipe.tag_name == "1.7.7"
+      and .recipe.checksum_asset_pattern == "SHA256SUMS"
+      and .recipe.tag_name? == null
     )
 ' "$tools" >/dev/null
 

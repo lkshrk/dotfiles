@@ -5,7 +5,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_MIN_VERSION="0.8.8"
+OMNI_MIN_VERSION="0.9.28"
 RUN_MACOS_DEFAULTS=0
 
 usage() {
@@ -19,7 +19,7 @@ Options:
   --macos-defaults      Run scripts/macos-defaults.sh after Omni bootstrap.
   -h, --help            Show this help.
 
-Coder/Linux workspaces use ./setup-coder.sh.
+Linux workspaces use ./setup-coder.sh or ./setup-hermes.sh.
 USAGE
 }
 
@@ -48,7 +48,7 @@ die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 export -f say step ok warn die
 
 omni_version() {
-  omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+(\.[0-9]+){1,2}$/) { print $i; exit } }'
+  omni --version 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^v?[0-9]+(\.[0-9]+){1,2}$/) { sub(/^v/, "", $i); print $i; exit } }'
 }
 
 version_at_least() {
@@ -76,7 +76,7 @@ ensure_omni_version() {
 # ─── OS guard ─────────────────────────────────────────────────────────────────
 
 OS="$(uname -s)"
-[[ "$OS" == "Darwin" ]] || die "setup.sh is macOS-only; use ./setup-coder.sh for Coder/Linux workspaces"
+[[ "$OS" == "Darwin" ]] || die "setup.sh is macOS-only; use ./setup-coder.sh or ./setup-hermes.sh for Linux workspaces"
 
 # ─── Shared: warm admin session ───────────────────────────────────────────────
 

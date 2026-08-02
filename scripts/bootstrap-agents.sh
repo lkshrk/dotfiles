@@ -5,7 +5,7 @@ set -euo pipefail
 REPO_DIR="${REPO_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
 
-# 'command' would bypass the functions setup-coder.sh exports; call them directly.
+# 'command' would bypass the functions setup-workspace.sh exports; call them directly.
 _bootstrap_say()  { if declare -F say  >/dev/null 2>&1; then say  "$@"; else printf '%s\n' "$@"; fi; }
 _bootstrap_step() { if declare -F step >/dev/null 2>&1; then step "$@"; else printf '==> %s\n' "$*"; fi; }
 _bootstrap_ok()   { if declare -F ok   >/dev/null 2>&1; then ok   "$@"; else _bootstrap_say "OK $*"; fi; }

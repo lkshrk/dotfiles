@@ -4,7 +4,7 @@ set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=/dev/null
-source <(sed -n '/^install_coder_workspace_notes()/,/^}/p' "$repo_dir/setup-coder.sh")
+source "$repo_dir/setup-coder.sh"
 
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
