@@ -412,7 +412,7 @@
             "key_url": "https://download.docker.com/linux/ubuntu/gpg",
             "packages": "docker-ce-cli docker-buildx-plugin docker-compose-plugin",
             "signed_by": "/etc/apt/keyrings/docker.asc",
-            "sources_format": "Types: deb\nURIs: https://download.docker.com/linux/ubuntu\nSuites: {suite}\nComponents: stable\nArchitectures: $(dpkg --print-architecture)\nSigned-By: /etc/apt/keyrings/docker.asc"
+            "sources_format": "Types: deb\nURIs: https://download.docker.com/linux/ubuntu\nSuites: {suite}\nComponents: stable\nArchitectures: {arch}\nSigned-By: /etc/apt/keyrings/docker.asc"
           },
           "recipe": {
             "type": "apt_repo"
