@@ -5,7 +5,7 @@
   ]
 
 # App shortcuts
-alt + ctrl + cmd - b : ~/.config/yabai/focus-app.sh 'Vivaldi'
+alt + ctrl + cmd - b : FOCUS_APP_PATTERN='^(Helium|Vivaldi)$' ~/.config/yabai/focus-app.sh 'Helium'
 alt + ctrl + cmd - c : ~/.config/yabai/focus-app.sh 'Chatterino'
 alt + ctrl + cmd - d : ~/.config/yabai/focus-app.sh 'Discord'
 alt + ctrl + cmd - e : ~/.config/yabai/focus-editor.sh
@@ -15,7 +15,7 @@ alt + ctrl + cmd - k : ~/.config/yabai/focus-app.sh 'Linear'
 alt + ctrl + cmd - n : ~/.config/yabai/focus-app.sh 'Obsidian'
 alt + ctrl + cmd - o : ~/.config/yabai/focus-app.sh 'OBS'
 alt + ctrl + cmd - v : ~/.config/yabai/focus-app.sh 'Brave Browser'
-alt + ctrl + cmd - s : ~/.config/yabai/focus-app.sh 'Signal'
+alt + ctrl + cmd - s : FOCUS_APP_PATTERN='^(Signal|Messages|Telegram)$' FOCUS_APP_NO_OPEN=1 ~/.config/yabai/focus-app.sh 'Signal'
 alt + ctrl + cmd - t : ~/.config/yabai/focus-app.sh 'Ghostty' '\.nvim\.' '\.nvim\.' '\.nvim\.'
 alt + ctrl + cmd - a : ~/.config/yabai/focus-app.sh 'ChatGPT Classic'
 alt + ctrl + cmd - return : ~/.config/yabai/finder-here.sh

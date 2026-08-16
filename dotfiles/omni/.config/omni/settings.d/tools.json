@@ -1568,6 +1568,15 @@
         }
       ]
     },
+    "pyright": {
+      "providers": [
+        {
+          "provider": "npm",
+          "package": "pyright"
+        }
+      ],
+      "git": "https://github.com/Microsoft/pyright"
+    },
     "python@3.14": {
       "providers": [
         {
@@ -1578,9 +1587,9 @@
           "provider": "script",
           "bin": "python3.14",
           "options": {
-            "check": "uv_bin=$(command -v uv 2>/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; test -x \"$uv_bin\" && \"$uv_bin\" python find 3.14 >/dev/null 2>&1",
-            "install": "set -eu; uv_bin=$(command -v uv 2>/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; test -x \"$uv_bin\"; \"$uv_bin\" python install 3.14",
-            "version": "uv_bin=$(command -v uv 2>/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; python_bin=$(\"$uv_bin\" python find 3.14 2>/dev/null) && \"$python_bin\" --version 2>&1 | awk '{print $2}'"
+            "check": "uv_bin=$(command -v uv 2\u003e/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; test -x \"$uv_bin\" \u0026\u0026 \"$uv_bin\" python find 3.14 \u003e/dev/null 2\u003e\u00261",
+            "install": "set -eu; uv_bin=$(command -v uv 2\u003e/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; test -x \"$uv_bin\"; \"$uv_bin\" python install 3.14",
+            "version": "uv_bin=$(command -v uv 2\u003e/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; python_bin=$(\"$uv_bin\" python find 3.14 2\u003e/dev/null) \u0026\u0026 \"$python_bin\" --version 2\u003e\u00261 | awk '{print $2}'"
           }
         }
       ]

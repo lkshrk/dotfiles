@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<map name="Backup">
-		<value name="Version">5.47.101</value>
+		<value name="Version">5.49.34</value>
 	</map>
 	<map name="CommonSettings">
 		<value name="IntegrationsClientsAccessExplicitDecisionPerformed">Stream Deck</value>
 	</map>
 	<map name="DataCollectionSettings">
-		<value name="configuration_loaded_date">2026-07-19T18:49:39.968</value>
+		<value name="configuration_loaded_date">2026-08-15T13:02:01.847</value>
 		<value name="dataConsent">false</value>
 		<map name="hwProfilesHashes">
 			<map name="{32486e58-a900-497e-bc14-280517bd1d15}">
@@ -67,7 +67,7 @@
 	</map>
 	<value name="Language">en</value>
 	<value name="LastDataCollectionConsentAppVersion">5.43.73</value>
-	<value name="LastLoadedAppVersion">5.47.101</value>
+	<value name="LastLoadedAppVersion">5.49.34</value>
 	<map name="LightingLibraryStorage">
 		<value name="version">401</value>
 	</map>
@@ -86,12 +86,12 @@
 		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-sensors-UserProps">true</value>
 	</map>
 	<map name="SwUpdate">
-		<value name="LastCheckDate">2026-07-28</value>
+		<value name="LastCheckDate">2026-08-25</value>
 	</map>
 	<map name="Update">
-		<value name="PrevUpdateTime">2026-07-19T16:49:39.754Z</value>
-		<value name="UpdateCount">52</value>
-		<value name="UpdateEndTime">2026-07-19T16:49:39.796Z</value>
+		<value name="PrevUpdateTime">2026-08-15T11:02:00.859Z</value>
+		<value name="UpdateCount">60</value>
+		<value name="UpdateEndTime">2026-08-15T11:02:00.877Z</value>
 	</map>
 	<value name="defaultProfile">{6cd71b5b-3931-40b3-b349-10604b36d69e}</value>
 </config>

@@ -1,10 +1,204 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_SYNTAX_HIGHLIGHT": "false",
+    "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
+    "ECC_DISABLED_HOOKS": "stop:desktop-notify",
+    "ECC_GATEGUARD": "off",
+    "FORCE_PROMPT_CACHING_5M": "1"
+  },
   "attribution": {
     "commit": "",
     "pr": ""
   },
-  "autoUpdatesChannel": "latest",
-  "effortLevel": "high",
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "mcp__plugin_context-mode_context-mode",
+      "mcp__plugin_context-mode_context-mode__*",
+      "mcp__linear-server",
+      "mcp__linear-server__*",
+      "Edit(frontend/eslint.config.js)"
+    ]
+  },
+  "model": "claude-fable-5[1m]",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" || true",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/openwolf-git-gate.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" || true",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" || true",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-code-discovery-gate",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/context-mode-cache-heal.mjs"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" || true",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-session-reminder"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/lkshrk/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cbm-subagent-reminder"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/comment-rule-reminder"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/tokenline.sh",
+    "refreshInterval": 1
+  },
   "enabledPlugins": {
     "academic-research-skills@academic-research-skills": true,
     "caveman@caveman": true,
@@ -18,45 +212,38 @@
     "i-have-adhd@i-have-adhd": true,
     "smart-docs@litellm": true,
     "superpowers@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
-  },
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_SYNTAX_HIGHLIGHT": "false",
-    "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
-    "ECC_DISABLED_HOOKS": "stop:desktop-notify",
-    "ECC_GATEGUARD": "off",
-    "FORCE_PROMPT_CACHING_5M": "1"
+    "swift-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "academic-research-skills": {
       "source": {
-        "repo": "Imbad0202/academic-research-skills",
-        "source": "github"
+        "source": "github",
+        "repo": "Imbad0202/academic-research-skills"
       }
     },
     "context-mode": {
       "source": {
-        "repo": "mksglu/context-mode",
-        "source": "github"
+        "source": "github",
+        "repo": "mksglu/context-mode"
       }
     },
     "ecc": {
       "source": {
-        "repo": "affaan-m/everything-claude-code",
-        "source": "github"
+        "source": "github",
+        "repo": "affaan-m/everything-claude-code"
       }
     },
     "harness-marketplace": {
       "source": {
-        "repo": "revfactory/harness",
-        "source": "github"
+        "source": "github",
+        "repo": "revfactory/harness"
       }
     },
     "i-have-adhd": {
       "source": {
-        "repo": "ayghri/i-have-adhd",
-        "source": "github"
+        "source": "github",
+        "repo": "ayghri/i-have-adhd"
       }
     },
     "litellm": {
@@ -67,204 +254,18 @@
     },
     "openai-codex": {
       "source": {
-        "repo": "openai/codex-plugin-cc",
-        "source": "github"
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
       }
     }
   },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" || true",
-            "timeout": 5,
-            "type": "command"
-          }
-        ],
-        "matcher": "Read"
-      },
-      {
-        "hooks": [
-          {
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" || true",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "Write|Edit|MultiEdit"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "rtk hook claude",
-            "timeout": 5,
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      },
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/openwolf-git-gate.sh",
-            "timeout": 5,
-            "type": "command"
-          }
-        ],
-        "matcher": "Write|Edit|MultiEdit"
-      },
-      {
-        "hooks": [
-          {
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" || true",
-            "timeout": 5,
-            "type": "command"
-          }
-        ],
-        "matcher": "Read"
-      },
-      {
-        "hooks": [
-          {
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" || true",
-            "timeout": 5,
-            "type": "command"
-          }
-        ],
-        "matcher": "Write|Edit|MultiEdit"
-      },
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/cbm-code-discovery-gate",
-            "timeout": 5,
-            "type": "command"
-          }
-        ],
-        "matcher": "Grep|Glob"
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/context-mode-cache-heal.mjs",
-            "type": "command"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" || true",
-            "timeout": 5,
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      },
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/cbm-session-reminder",
-            "type": "command"
-          }
-        ],
-        "matcher": "startup"
-      },
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/cbm-session-reminder",
-            "type": "command"
-          }
-        ],
-        "matcher": "resume"
-      },
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/cbm-session-reminder",
-            "type": "command"
-          }
-        ],
-        "matcher": "clear"
-      },
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/cbm-session-reminder",
-            "type": "command"
-          }
-        ],
-        "matcher": "compact"
-      },
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/lkshrk/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" || true",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      }
-    ],
-    "SubagentStart": [
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/cbm-subagent-reminder",
-            "type": "command"
-          },
-          {
-            "command": "~/.claude/hooks/comment-rule-reminder",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ]
-  },
-  "includeCoAuthoredBy": false,
-  "model": "claude-fable-5[1m]",
-  "permissions": {
-    "allow": [
-      "Bash(git:*)",
-      "Bash(git push:*)",
-      "Bash(git fetch:*)",
-      "mcp__plugin_context-mode_context-mode",
-      "mcp__plugin_context-mode_context-mode__*",
-      "mcp__linear-server",
-      "mcp__linear-server__*",
-      "Edit(frontend/eslint.config.js)"
-    ]
-  },
-  "preferredNotifChannel": "notifications_disabled",
-  "skipAutoPermissionPrompt": true,
-  "skipWorkflowUsageWarning": true,
-  "statusLine": {
-    "command": "bash ~/.claude/tokenline.sh",
-    "refreshInterval": 1,
-    "type": "command"
-  },
-  "switchModelsOnFlag": false,
-  "theme": "dark-daltonized",
+  "effortLevel": "high",
+  "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
-  "verbose": true
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark-daltonized",
+  "verbose": true,
+  "preferredNotifChannel": "notifications_disabled",
+  "switchModelsOnFlag": false,
+  "skipAutoPermissionPrompt": true
 }

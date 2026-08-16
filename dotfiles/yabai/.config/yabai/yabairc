@@ -36,10 +36,15 @@ yabai -m signal --add \
   event=window_focused \
   action="${CONFIG_DIR}/track-focus.sh"
 
-# New windows: follow sibling app space, or space 1 if first window
+# First app windows use auto-layout; later windows keep macOS placement
 yabai -m signal --add \
   event=window_created \
   action="${CONFIG_DIR}/window-created.sh"
+
+# PiP titles may arrive after window_created; place again once identified
+yabai -m signal --add \
+  event=window_title_changed \
+  action="${CONFIG_DIR}/place-pip.sh"
 
 # Re-detect displays and fix space count/labels when monitors change
 yabai -m signal --add \

@@ -1,7 +1,16 @@
 # POSIX-safe env entrypoint.
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
-ENV_NEXT_PROFILE_CURRENT_VERSION=6
+ENV_NEXT_PROFILE_CURRENT_VERSION=7
+ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
+
+# Functions are cheap to reload and may have been added after the guarded env
+# setup ran in this shell.
+# shellcheck source=functions/fclaude
+if [ -r "$ENV_DIR/functions/fclaude" ]; then
+  . "$ENV_DIR/functions/fclaude"
+fi
+
 case "${CODER_OMNI_HOST:-${HOSTNAME:-}}" in
   coder|coder-*) export OMNI_HOSTNAME="${CODER_OMNI_HOST:-coder}" ;;
 esac
@@ -12,8 +21,6 @@ fi
 # Exported so child shells (agent subshell storms) inherit the guard and skip
 # the full re-run; PROFILE_VERSION forces a reload when this file is bumped.
 export ENV_NEXT_PROFILE_LOADED=1
-
-ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 
 # shellcheck source=lib/path.sh
 if [ -r "$ENV_DIR/lib/path.sh" ]; then

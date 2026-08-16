@@ -3,6 +3,8 @@ set -euo pipefail
 
 APP_NAME="${1:-}"
 EXCLUDE_TITLE="${2:-}"
+APP_PATTERN="${FOCUS_APP_PATTERN:-}"
+NO_OPEN="${FOCUS_APP_NO_OPEN:-}"
 
 if [ -z "$APP_NAME" ]; then
   echo "usage: $0 <App Name> [exclude-title-regex]" >&2
@@ -40,11 +42,15 @@ WINDOW_IDS="$(
   yabai -m query --windows \
     | jq -r \
       --arg app "$APP_NAME" \
+      --arg app_pattern "$APP_PATTERN" \
       --arg exclude "$EXCLUDE_TITLE" \
       --argjson hist "$FOCUS_HISTORY" \
       --argjson preferred "$PREFERRED_DISPLAY_INDEX" \
       --argjson stack "${STACK_SPACE_INDEX:-0}" '
-        map(select(.app == $app and ($exclude == "" or (.title | test($exclude) | not))))
+        map(select(
+          (.app == $app or ($app_pattern != "" and (.app | test($app_pattern))))
+          and ($exclude == "" or (.title | test($exclude) | not))
+        ))
         | sort_by(
             -($hist[(.id | tostring)] // 0),
             (if .display == $preferred then 0 else 1 end),
@@ -57,7 +63,7 @@ WINDOW_IDS="$(
 )"
 
 if [ -z "$WINDOW_IDS" ]; then
-  open -a "$APP_NAME"
+  [ -n "$NO_OPEN" ] || open -a "$APP_NAME"
   exit 0
 fi
 

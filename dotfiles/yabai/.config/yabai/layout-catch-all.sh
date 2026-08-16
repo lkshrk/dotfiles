@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SPACE_MAIN=1
+SPACE_STACK=stack
 
 yabai -m query --windows \
   | jq -r '
@@ -27,5 +27,5 @@ yabai -m query --windows \
     ' \
   | while read -r wid; do
       [ -n "$wid" ] || continue
-      yabai -m window "$wid" --space "$SPACE_MAIN"
+      yabai -m window "$wid" --space "$SPACE_STACK"
     done

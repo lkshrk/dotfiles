@@ -42,6 +42,8 @@ alias gs='git status'
 alias gd='git diff'
 alias gu='git fetch && git pull'
 
+alias lg='lazygit'
+
 # kubernetes
 alias k='kubectl '
 alias ke='kubectl edit '

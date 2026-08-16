@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SPACE_MAIN=1
 SPACE_STACK=2
 SPACE_REMOTE=4
 

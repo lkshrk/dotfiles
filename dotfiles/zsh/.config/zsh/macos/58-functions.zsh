@@ -54,6 +54,40 @@ brew() {
   return $rc
 }
 
+_secure_input_pid() {
+  ioreg -l -d 1 -k IOConsoleUsers 2>/dev/null \
+    | sed -n 's/.*"kCGSSessionSecureInputPID"=\([0-9]*\).*/\1/p' | head -1
+}
+
+# A macOS update invalidates the event tap of a running skhd without killing it,
+# so restarting the services is the fix far more often than the logout below.
+fix-hotkeys() {
+  emulate -L zsh
+
+  local svc
+  for svc in skhd yabai; do
+    if command -v "$svc" >/dev/null 2>&1; then
+      print "fix-hotkeys: restarting $svc"
+      "$svc" --restart-service 2>&1 | sed "s/^/  /"
+    fi
+  done
+
+  local pid; pid=$(_secure_input_pid)
+  if [[ -n "$pid" && "$pid" != 0 ]]; then
+    local app; app=$(ps -o comm= -p "$pid" 2>/dev/null)
+    print -u2 ""
+    print -u2 "\033[33m! Secure Input is held by pid $pid (${app:-unknown}).\033[0m"
+    print -u2 "\033[33m  Hotkeys stay dead until it releases. Quit that app; if it won't release,\033[0m"
+    print -u2 "\033[33m  fix-secure-input logs out of the GUI session as a last resort.\033[0m"
+    return 1
+  fi
+
+  print ""
+  print "fix-hotkeys: services restarted, no Secure Input holder."
+  print "Still dead? Bisect: skhd -k \"<binding>\" (config), skhd --observe (keyboard)."
+}
+alias fix-skhd='fix-hotkeys'
+
 fix-secure-input() {
   emulate -L zsh
 
@@ -67,7 +101,6 @@ fix-secure-input() {
 
   osascript -e 'tell application "System Events" to log out'
 }
-alias fix-skhd='fix-secure-input'
 
 swap-keys() {
   hidutil property --set '{
