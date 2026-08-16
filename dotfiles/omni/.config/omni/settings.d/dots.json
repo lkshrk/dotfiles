@@ -91,6 +91,19 @@
           }
         },
         {
+          "name": "hermes-config",
+          "path": "~/.hermes",
+          "ignore": [
+            "*",
+            "!/config.yaml"
+          ],
+          "hosts": {
+            "hermes": {
+              "package": "hermes@hermes"
+            }
+          }
+        },
+        {
           "name": "vim",
           "path": "~/.vim"
         }
