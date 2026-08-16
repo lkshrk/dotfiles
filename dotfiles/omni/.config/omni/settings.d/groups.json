@@ -108,13 +108,10 @@
     {
       "name": "dev-tooling",
       "tools": [
-        "docker",
         "gh",
         "git-filter-repo",
         "imagemagick",
-        "lazydocker",
         "lazygit",
-        "skopeo",
         "yaml-language-server",
         "yaml-lint",
         "yamlfmt",
@@ -123,6 +120,14 @@
         "actionlint",
         "direnv",
         "gitleaks"
+      ]
+    },
+    {
+      "name": "containers",
+      "tools": [
+        "docker",
+        "lazydocker",
+        "skopeo"
       ]
     },
     {

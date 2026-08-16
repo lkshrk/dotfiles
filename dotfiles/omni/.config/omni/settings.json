@@ -62,6 +62,7 @@
     "coder": [
       "ai",
       "ai-plugins",
+      "containers",
       "core",
       "dev",
       "dev-tooling",
@@ -86,6 +87,7 @@
     "topaz": [
       "ai",
       "ai-plugins",
+      "containers",
       "core",
       "desk",
       "dev",
