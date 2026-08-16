@@ -3,7 +3,7 @@ providers:
     api: http://litellm-proxy.ai.svc.cluster.local:4000
     api_key: ${HERMES_CUSTOM_API_AI_H_CLOUD_LAN_API_KEY}
     transport: anthropic_messages
-    default_model: claude-sonnet-5
+    default_model: claude-opus-5
     models:
       - claude-fable-5
       - claude-opus-5
@@ -20,9 +20,9 @@ model:
   base_url: http://litellm-proxy.ai.svc.cluster.local:4000
   database:
     journal_mode: wal
-fallback:
-  model: claude-sonnet-5
-  provider: litellm-anthropic
+fallback_providers:
+  - provider: custom:litellm-anthropic
+    model: claude-opus-5
 image_gen:
   provider: openrouter
   use_gateway: false
