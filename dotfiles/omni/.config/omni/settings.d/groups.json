@@ -284,7 +284,8 @@
       "special": "host",
       "tools": [
         "camofox-browser",
-        "hermes"
+        "hermes",
+        "rbw"
       ]
     },
     {

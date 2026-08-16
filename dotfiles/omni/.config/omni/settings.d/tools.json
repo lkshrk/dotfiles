@@ -1599,6 +1599,17 @@
         {
           "provider": "brew",
           "package": "rbw"
+        },
+        {
+          "provider": "script",
+          "bin": "rbw",
+          "options": {
+            "check": "command -v rbw",
+            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; ver=$(curl -fsSL --proto-redir '=https' https://git.tozt.net/rbw/releases/deb/ | grep -oE 'rbw_[0-9.]+_amd64\\.deb\"' | sed -E 's/_amd64\\.deb\"//; s/^rbw_//' | sort -V | tail -1); curl -fsSL --proto-redir '=https' \"https://git.tozt.net/rbw/releases/deb/rbw_${ver}_amd64.deb\" -o \"$tmp/rbw.deb\"; sudo apt-get install -y \"$tmp/rbw.deb\"",
+            "latest": "curl -fsSL --proto-redir '=https' https://git.tozt.net/rbw/releases/deb/ | grep -oE 'rbw_[0-9.]+_amd64\\.deb\"' | sed -E 's/_amd64\\.deb\"//; s/^rbw_//' | sort -V | tail -1",
+            "uninstall": "sudo apt-get remove -y rbw",
+            "version": "rbw --version | awk '{print $2}'"
+          }
         }
       ],
       "git": "https://github.com/doy/rbw"
