@@ -1209,6 +1209,7 @@
       ]
     },
     "lua-language-server": {
+      "_note": "brew-only, no Linux provider yet - will fail to install on hermes/coder Linux hosts. Needs a script/github_release_asset recipe (LuaLS/lua-language-server releases) once the exact asset filename is confirmed - GitHub API was rate-limited when this was investigated. See lkshrk/dotfiles session notes.",
       "providers": [
         {
           "provider": "brew",
@@ -1567,6 +1568,24 @@
           "package": "pnpm"
         }
       ]
+    },
+    "typescript-language-server": {
+      "providers": [
+        {
+          "provider": "bun",
+          "package": "typescript-language-server"
+        }
+      ],
+      "git": "https://github.com/typescript-language-server/typescript-language-server"
+    },
+    "typescript": {
+      "providers": [
+        {
+          "provider": "bun",
+          "package": "typescript"
+        }
+      ],
+      "git": "https://github.com/microsoft/TypeScript"
     },
     "pyright": {
       "providers": [

@@ -78,6 +78,7 @@
       "dev-tooling",
       "go",
       "infra",
+      "lua",
       "prereqs",
       "python",
       "shell",

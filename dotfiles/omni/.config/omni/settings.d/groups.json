@@ -265,7 +265,9 @@
       "name": "ts",
       "tools": [
         "pm2",
-        "pnpm"
+        "pnpm",
+        "typescript",
+        "typescript-language-server"
       ]
     },
     {
