@@ -8,6 +8,22 @@
     "settings.d/dots.json"
   ],
   "host_settings": {
+    "auto-code": {
+      "dots_repo": "~/dotfiles",
+      "dots_disabled": false,
+      "disabled_providers": [
+        "brew"
+      ],
+      "provider_priority": [
+        "bun",
+        "uv",
+        "script",
+        "apt",
+        "npm",
+        "pnpm",
+        "pip"
+      ]
+    },
     "coder": {
       "dots_repo": "~/dotfiles",
       "dots_disabled": false,
@@ -59,6 +75,20 @@
     }
   },
   "hosts": {
+    "auto-code": [
+      "ai",
+      "ai-plugins",
+      "core",
+      "dev",
+      "dev-tooling",
+      "go",
+      "infra",
+      "prereqs",
+      "python",
+      "shell",
+      "test-tooling",
+      "ts"
+    ],
     "coder": [
       "ai",
       "ai-plugins",
