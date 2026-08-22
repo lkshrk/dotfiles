@@ -5,6 +5,7 @@ set -euo pipefail
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 settings="$repo_dir/dotfiles/omni/.config/omni/settings.json"
 tools="$repo_dir/dotfiles/omni/.config/omni/settings.d/tools.json"
+groups="$repo_dir/dotfiles/omni/.config/omni/settings.d/groups.json"
 
 jq -e '
   .host_settings.coder.provider_priority as $providers
@@ -43,6 +44,15 @@ jq -e '
   .tools.pipx.providers[]
   | select(.provider == "apt" and .package == "pipx")
 ' "$tools" >/dev/null
+
+jq -e '
+  .tools.rbw.providers[]
+  | select(.provider == "cargo" and .package == "rbw@1.15.0")
+' "$tools" >/dev/null
+
+jq -e '
+  any(.groups[]; .name == "secrets" and (.tools | index("rbw")) != null)
+' "$groups" >/dev/null
 
 jq -e '
   .tools["python@3.14"].providers[]
