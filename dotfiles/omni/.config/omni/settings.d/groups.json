@@ -279,6 +279,11 @@
       ]
     },
     {
+      "name": "auto-code",
+      "special": "host",
+      "tools": []
+    },
+    {
       "name": "coder",
       "special": "host",
       "tools": [

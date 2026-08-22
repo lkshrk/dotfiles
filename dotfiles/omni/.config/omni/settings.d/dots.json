@@ -312,6 +312,15 @@
       ]
     },
     {
+      "name": "auto-code",
+      "dots": [
+        {
+          "name": "ssh",
+          "path": "~/.ssh/config"
+        }
+      ]
+    },
+    {
       "name": "topaz",
       "dots": [
         {
