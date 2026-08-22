@@ -13,6 +13,8 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 - `machine/<name>.sh`: machine-specific env and PATH facts.
 - `bin/rbw-env`: shell-neutral secret injection wrapper for agents, zsh
   wrappers, and one-off commands.
+- `bin/rbw-ssh-pubkeys`: writes fingerprint-named public-key selectors for
+  rbw's native SSH agent to `~/.ssh/rbw`.
 - `secrets/*.envmap`: rbw item to environment variable mappings by consumer.
 - `tests/smoke.sh`: shell-mode checks before migration.
 - `tests/linux-smoke.sh`: clean Linux env checks with fake HOME/NVM and
