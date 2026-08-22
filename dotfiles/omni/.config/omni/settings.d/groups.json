@@ -106,6 +106,12 @@
       ]
     },
     {
+      "name": "secrets",
+      "tools": [
+        "rbw"
+      ]
+    },
+    {
       "name": "dev-tooling",
       "tools": [
         "docker",
