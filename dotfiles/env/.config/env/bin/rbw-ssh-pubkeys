@@ -1,0 +1,57 @@
+#!/bin/sh
+set -eu
+
+ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}"
+output_dir=${RBW_SSH_PUBKEY_DIR:-$HOME/.ssh/rbw}
+
+# shellcheck source=lib/rbw-sock.sh
+. "$ENV_DIR/lib/rbw-sock.sh"
+
+for command_name in rbw ssh-add ssh-keygen; do
+  command -v "$command_name" >/dev/null 2>&1 || {
+    printf 'rbw-ssh-pubkeys: required command not found: %s\n' "$command_name" >&2
+    exit 1
+  }
+done
+
+rbw unlock >/dev/null
+
+if [ -n "${RBW_SSH_AUTH_SOCK:-}" ]; then
+  rbw_sock=$RBW_SSH_AUTH_SOCK
+else
+  case "$(uname -s)" in
+    Darwin) rbw_sock=$(env_next_rbw_sock_darwin) ;;
+    Linux) rbw_sock=$(env_next_rbw_sock_linux) ;;
+    *)
+      printf 'rbw-ssh-pubkeys: unsupported OS\n' >&2
+      exit 1
+      ;;
+  esac
+fi
+
+install -d -m 0700 "$output_dir"
+keys_file=$(mktemp "${TMPDIR:-/tmp}/rbw-ssh-pubkeys.XXXXXX")
+trap 'rm -f "$keys_file"' EXIT HUP INT TERM
+
+SSH_AUTH_SOCK=$rbw_sock ssh-add -L > "$keys_file"
+[ -s "$keys_file" ] || {
+  printf 'rbw-ssh-pubkeys: rbw agent returned no keys\n' >&2
+  exit 1
+}
+
+count=0
+while IFS= read -r public_key || [ -n "$public_key" ]; do
+  fingerprint=$(
+    printf '%s\n' "$public_key" \
+      | ssh-keygen -lf - \
+      | awk '{print $2}' \
+      | sed 's/^SHA256://' \
+      | tr '/+' '_-' \
+      | tr -d '='
+  )
+  printf '%s\n' "$public_key" > "$output_dir/rbw-$fingerprint.pub"
+  chmod 0644 "$output_dir/rbw-$fingerprint.pub"
+  count=$((count + 1))
+done < "$keys_file"
+
+printf 'rbw-ssh-pubkeys: wrote %s key(s) to %s\n' "$count" "$output_dir"

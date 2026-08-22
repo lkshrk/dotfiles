@@ -197,3 +197,33 @@ fi
 
 printf "\n## rbw-env missing rbw best effort\n"
 RBW_ENV_STRICT=0 PATH="$empty_path" "$ENV_DIR/bin/rbw-env" claude -- /bin/sh -c 'printf "missing-rbw-best-effort=ran\n"'
+
+printf "\n## rbw SSH public selectors\n"
+ssh-keygen -q -t ed25519 -N '' -f "$tmpdir/test-key"
+cat > "$tmpdir/rbw" <<'EOF'
+#!/bin/sh
+[ "$1" = unlock ]
+EOF
+cat > "$tmpdir/ssh-add" <<'EOF'
+#!/bin/sh
+[ "$1" = -L ] || exit 2
+[ "$SSH_AUTH_SOCK" = "$RBW_SSH_AUTH_SOCK" ] || exit 3
+cat "$RBW_TEST_PUBLIC_KEY"
+EOF
+chmod +x "$tmpdir/rbw" "$tmpdir/ssh-add"
+expected_fingerprint=$(
+  ssh-keygen -lf "$tmpdir/test-key.pub" \
+    | awk '{print $2}' \
+    | sed 's/^SHA256://' \
+    | tr '/+' '_-' \
+    | tr -d '='
+)
+RBW_SSH_AUTH_SOCK="$tmpdir/rbw.sock" \
+RBW_SSH_PUBKEY_DIR="$tmpdir/public-keys" \
+RBW_TEST_PUBLIC_KEY="$tmpdir/test-key.pub" \
+PATH="$tmpdir:/usr/bin:/bin" \
+  "$ENV_DIR/bin/rbw-ssh-pubkeys"
+generated_key="$tmpdir/public-keys/rbw-$expected_fingerprint.pub"
+test -f "$generated_key"
+cmp "$tmpdir/test-key.pub" "$generated_key"
+test "$(stat -f %Lp "$generated_key" 2>/dev/null || stat -c %a "$generated_key")" = 644
