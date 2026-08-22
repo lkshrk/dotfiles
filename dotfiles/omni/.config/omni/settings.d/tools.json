@@ -1599,6 +1599,10 @@
         {
           "provider": "brew",
           "package": "rbw"
+        },
+        {
+          "provider": "cargo",
+          "package": "rbw@1.15.0"
         }
       ],
       "git": "https://github.com/doy/rbw"
