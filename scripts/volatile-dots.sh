@@ -34,7 +34,10 @@ while IFS= read -r entry; do
       fi
       ;;
     detach)
-      if [[ -L "$target" ]]; then
+      if [[ -e "$target.pre-sync" ]]; then
+        rm -f "$target"
+        mv -f "$target.pre-sync" "$target"
+      elif [[ -L "$target" ]]; then
         src="$(readlink -f "$target")"
         rm -f "$target"
         cp -p "$src" "$target"
