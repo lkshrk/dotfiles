@@ -123,4 +123,9 @@ run_profile() {
 run_profile coder
 run_profile hermes
 
+DEVBOX_VARIANT=x bash -c "source '$repo_dir/setup-workspace.sh'; setup_workspace_sync_tools" || {
+  printf 'FAIL: setup_workspace_sync_tools did not exit 0 under DEVBOX_VARIANT\n' >&2
+  exit 1
+}
+
 printf 'PASS: workspace setup keeps Hermes free of Coder agent setup\n'

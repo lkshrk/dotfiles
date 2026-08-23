@@ -65,6 +65,7 @@ setup_workspace_prepare() {
 }
 
 setup_workspace_sync_shell() {
+  [ -n "${DEVBOX_VARIANT:-}" ] && return 0
   step "shell (zsh + oh-my-zsh)"
   rm -f "$HOME/.zshrc"
   run_optional "shell tool sync" omni --config "$OMNI_CONFIG_PATH" --yes tools sync shell
@@ -77,12 +78,14 @@ setup_workspace_sync_shell() {
 }
 
 setup_workspace_sync_prereqs() {
+  [ -n "${DEVBOX_VARIANT:-}" ] && return 0
   step "toolchain prerequisites"
   run_optional "toolchain prerequisites" omni --config "$OMNI_CONFIG_PATH" --yes tools sync prereqs
   export_sync_path
 }
 
 setup_workspace_sync_tools() {
+  [ -n "${DEVBOX_VARIANT:-}" ] && return 0
   step "omni tools"
   run_optional "omni tools" omni --config "$OMNI_CONFIG_PATH" --yes tools sync
 

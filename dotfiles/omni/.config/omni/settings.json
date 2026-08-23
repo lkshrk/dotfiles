@@ -56,6 +56,22 @@
         "pip"
       ]
     },
+    "devbox": {
+      "dots_repo": "~/dotfiles",
+      "dots_disabled": false,
+      "disabled_providers": [
+        "brew"
+      ],
+      "provider_priority": [
+        "bun",
+        "uv",
+        "script",
+        "apt",
+        "npm",
+        "pnpm",
+        "pip"
+      ]
+    },
     "topaz": {
       "dots_repo": "~/Dev/dotfiles",
       "dots_disabled": false,
@@ -134,6 +150,21 @@
       "test-tooling",
       "ts",
       "utils"
+    ],
+    "devbox": [
+      "ai",
+      "ai-plugins",
+      "core",
+      "dev",
+      "dev-tooling",
+      "go",
+      "infra",
+      "lua",
+      "prereqs",
+      "python",
+      "shell",
+      "test-tooling",
+      "ts"
     ]
   },
   "ignore": {
