@@ -20,7 +20,7 @@
           "bin": "actionlint",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" actionlint -version 2\u003e/dev/null | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+' | head -1"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" actionlint -version 2>/dev/null | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+' | head -1"
           },
           "source": {
             "type": "github",
@@ -55,10 +55,10 @@
           "bin": "argo",
           "options": {
             "check": "command -v argo || test -x \"$HOME/.local/bin/argo\"",
-            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" \u003e\u00262; exit 1 ;; esac; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/argoproj/argo-workflows/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; asset=argo-linux-$arch.gz; base=https://github.com/argoproj/argo-workflows/releases/download/$tag; curl -fsSL --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; curl -fsSL --proto-redir '=https' \"$base/argo-workflows-cli-checksums.txt\" -o \"$tmp/checksums\"; (cd \"$tmp\" \u0026\u0026 grep -F \"  $asset\" checksums | sha256sum -c -); gzip -dc \"$tmp/$asset\" \u003e \"$tmp/argo\"; mkdir -p \"$HOME/.local/bin\"; staged=$(mktemp \"$HOME/.local/bin/.argo.XXXXXX\"); install -m 0755 \"$tmp/argo\" \"$staged\"; mv -f \"$staged\" \"$HOME/.local/bin/argo\"",
+            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" >&2; exit 1 ;; esac; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/argoproj/argo-workflows/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; asset=argo-linux-$arch.gz; base=https://github.com/argoproj/argo-workflows/releases/download/$tag; curl -fsSL --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; curl -fsSL --proto-redir '=https' \"$base/argo-workflows-cli-checksums.txt\" -o \"$tmp/checksums\"; (cd \"$tmp\" && grep -F \"  $asset\" checksums | sha256sum -c -); gzip -dc \"$tmp/$asset\" > \"$tmp/argo\"; mkdir -p \"$HOME/.local/bin\"; staged=$(mktemp \"$HOME/.local/bin/.argo.XXXXXX\"); install -m 0755 \"$tmp/argo\" \"$staged\"; mv -f \"$staged\" \"$HOME/.local/bin/argo\"",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/argoproj/argo-workflows/releases/latest); tag=${release#*releases/tag/}; tag=${tag##*/}; printf '%s\\n' \"${tag#v}\"",
             "uninstall": "rm -f \"$HOME/.local/bin/argo\"",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" argo version --short 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" argo version --short 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           }
         }
       ],
@@ -314,7 +314,7 @@
             "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://coder.h-cloud.io/install.sh -o \"$tmp/install.sh\"; sh \"$tmp/install.sh\" --prefix=\"$HOME/.local\"",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/coder/coder/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
             "uninstall": "rm -f \"$HOME/.local/bin/coder\"",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" coder version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" coder version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           }
         }
       ]
@@ -499,8 +499,8 @@
           "provider": "script",
           "bin": "ffmpeg",
           "options": {
-            "check": "test -x \"$HOME/.local/bin/ffmpeg\" \u0026\u0026 test -f \"$HOME/.local/share/omni/versions/ffmpeg\"",
-            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" \u003e\u00262; exit 1 ;; esac; refs=$(git ls-remote --tags --refs https://github.com/BtbN/FFmpeg-Builds.git 'refs/tags/autobuild-*') || exit; tag=$(printf '%s\\n' \"$refs\" | awk -F/ '{print $3}' | grep -E '^autobuild-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}$' | sort | tail -1); test -n \"$tag\"; version=$(printf '%s\\n' \"$tag\" | sed -E 's/^autobuild-([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})$/\\1.\\2.\\3.\\4\\5/'); tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; base=https://github.com/BtbN/FFmpeg-Builds/releases/download/$tag; curl -fsSL --proto-redir '=https' \"$base/checksums.sha256\" -o \"$tmp/checksums\"; asset=$(awk '{print $2}' \"$tmp/checksums\" | grep -E \"^ffmpeg-N-[^-]+-g[0-9a-f]+-linux${arch}-gpl\\.tar\\.xz$\" | head -1); test -n \"$asset\"; curl -fsSL --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; (cd \"$tmp\" \u0026\u0026 grep -F \"  $asset\" checksums | sha256sum -c -); tar -xJf \"$tmp/$asset\" -C \"$tmp\"; found=$(find \"$tmp\" -type f -path '*/bin/ffmpeg' | head -1); test -n \"$found\"; mkdir -p \"$HOME/.local/bin\" \"$HOME/.local/share/omni/versions\"; staged=$(mktemp \"$HOME/.local/bin/.ffmpeg.XXXXXX\"); install -m 0755 \"$found\" \"$staged\"; mv -f \"$staged\" \"$HOME/.local/bin/ffmpeg\"; staged_version=$(mktemp \"$HOME/.local/share/omni/versions/.ffmpeg.XXXXXX\"); printf '%s\\n' \"$version\" \u003e\"$staged_version\"; mv -f \"$staged_version\" \"$HOME/.local/share/omni/versions/ffmpeg\"",
+            "check": "test -x \"$HOME/.local/bin/ffmpeg\" && test -f \"$HOME/.local/share/omni/versions/ffmpeg\"",
+            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" >&2; exit 1 ;; esac; refs=$(git ls-remote --tags --refs https://github.com/BtbN/FFmpeg-Builds.git 'refs/tags/autobuild-*') || exit; tag=$(printf '%s\\n' \"$refs\" | awk -F/ '{print $3}' | grep -E '^autobuild-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}$' | sort | tail -1); test -n \"$tag\"; version=$(printf '%s\\n' \"$tag\" | sed -E 's/^autobuild-([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})$/\\1.\\2.\\3.\\4\\5/'); tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; base=https://github.com/BtbN/FFmpeg-Builds/releases/download/$tag; curl -fsSL --proto-redir '=https' \"$base/checksums.sha256\" -o \"$tmp/checksums\"; asset=$(awk '{print $2}' \"$tmp/checksums\" | grep -E \"^ffmpeg-N-[^-]+-g[0-9a-f]+-linux${arch}-gpl\\.tar\\.xz$\" | head -1); test -n \"$asset\"; curl -fsSL --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; (cd \"$tmp\" && grep -F \"  $asset\" checksums | sha256sum -c -); tar -xJf \"$tmp/$asset\" -C \"$tmp\"; found=$(find \"$tmp\" -type f -path '*/bin/ffmpeg' | head -1); test -n \"$found\"; mkdir -p \"$HOME/.local/bin\" \"$HOME/.local/share/omni/versions\"; staged=$(mktemp \"$HOME/.local/bin/.ffmpeg.XXXXXX\"); install -m 0755 \"$found\" \"$staged\"; mv -f \"$staged\" \"$HOME/.local/bin/ffmpeg\"; staged_version=$(mktemp \"$HOME/.local/share/omni/versions/.ffmpeg.XXXXXX\"); printf '%s\\n' \"$version\" >\"$staged_version\"; mv -f \"$staged_version\" \"$HOME/.local/share/omni/versions/ffmpeg\"",
             "latest": "refs=$(git ls-remote --tags --refs https://github.com/BtbN/FFmpeg-Builds.git 'refs/tags/autobuild-*') || exit; printf '%s\\n' \"$refs\" | awk -F/ '{print $3}' | grep -E '^autobuild-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}$' | sort | tail -1 | sed -E 's/^autobuild-([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})$/\\1.\\2.\\3.\\4\\5/'",
             "uninstall": "rm -f \"$HOME/.local/bin/ffmpeg\" \"$HOME/.local/share/omni/versions/ffmpeg\"",
             "version": "cat \"$HOME/.local/share/omni/versions/ffmpeg\""
@@ -539,7 +539,7 @@
           "bin": "flux",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" flux --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" flux --version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -681,7 +681,7 @@
           "bin": "gitleaks",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:x64,arm64:arm64,amd64:x64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" gitleaks version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" gitleaks version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -708,7 +708,7 @@
           "bin": "glow",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" glow --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" glow --version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -782,7 +782,7 @@
             "install": "set -eu; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/golangci/golangci-lint/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' \"https://raw.githubusercontent.com/golangci/golangci-lint/$tag/install.sh\" -o \"$tmp/install.sh\"; mkdir -p \"$HOME/.local/bin\"; sh \"$tmp/install.sh\" -b \"$HOME/.local/bin\" \"$tag\"",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/golangci/golangci-lint/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
             "uninstall": "rm -f \"$HOME/.local/bin/golangci-lint\"",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" golangci-lint --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" golangci-lint --version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           }
         }
       ],
@@ -824,7 +824,7 @@
           "provider": "script",
           "options": {
             "check": "command -v gopls || test -x \"$HOME/.local/bin/gopls\"",
-            "install": "mkdir -p \"$HOME/.local/bin\" \u0026\u0026 GOBIN=\"$HOME/.local/bin\" go install golang.org/x/tools/gopls@latest",
+            "install": "mkdir -p \"$HOME/.local/bin\" && GOBIN=\"$HOME/.local/bin\" go install golang.org/x/tools/gopls@latest",
             "latest": "curl -fsSL --proto-redir '=https' https://proxy.golang.org/golang.org/x/tools/gopls/@latest | jq -er '.Version | ltrimstr(\"v\")'",
             "uninstall": "rm -f \"$HOME/.local/bin/gopls\"",
             "version": "PATH=\"$HOME/.local/bin:$PATH\" gopls version | awk \"{sub(/^v/,\\\"\\\",\\$NF); print \\$NF}\""
@@ -861,10 +861,10 @@
           "bin": "helm",
           "options": {
             "check": "command -v helm || test -x \"$HOME/.local/bin/helm\"",
-            "install": "set -eu; command -v openssl \u003e/dev/null || { echo \"helm installation requires openssl\" \u003e\u00262; exit 1; }; tag=$(git ls-remote --tags --refs https://github.com/helm/helm.git 'refs/tags/v4.*' | awk -F/ '{print $3}' | grep -E '^v4\\.[0-9]+\\.[0-9]+$' | sort -V | tail -1); test -n \"$tag\"; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' \"https://raw.githubusercontent.com/helm/helm/$tag/scripts/get-helm-4\" -o \"$tmp/install.sh\"; mkdir -p \"$HOME/.local/bin\"; export HELM_INSTALL_DIR=\"$HOME/.local/bin\" USE_SUDO=false DESIRED_VERSION=\"$tag\"; bash \"$tmp/install.sh\"",
+            "install": "set -eu; command -v openssl >/dev/null || { echo \"helm installation requires openssl\" >&2; exit 1; }; tag=$(git ls-remote --tags --refs https://github.com/helm/helm.git 'refs/tags/v4.*' | awk -F/ '{print $3}' | grep -E '^v4\\.[0-9]+\\.[0-9]+$' | sort -V | tail -1); test -n \"$tag\"; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' \"https://raw.githubusercontent.com/helm/helm/$tag/scripts/get-helm-4\" -o \"$tmp/install.sh\"; mkdir -p \"$HOME/.local/bin\"; export HELM_INSTALL_DIR=\"$HOME/.local/bin\" USE_SUDO=false DESIRED_VERSION=\"$tag\"; bash \"$tmp/install.sh\"",
             "latest": "refs=$(git ls-remote --tags --refs https://github.com/helm/helm.git 'refs/tags/v4.*') || exit; printf '%s\\n' \"$refs\" | awk -F/ '{print $3}' | grep -E '^v4\\.[0-9]+\\.[0-9]+$' | sort -V | tail -1 | sed 's/^v//'",
             "uninstall": "rm -f \"$HOME/.local/bin/helm\"",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" helm version --short 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" helm version --short 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           }
         }
       ],
@@ -881,7 +881,7 @@
           "bin": "helmfile",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" helmfile version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" helmfile version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -909,7 +909,7 @@
           "options": {
             "check": "command -v herdr || test -x \"$HOME/.local/bin/herdr\"",
             "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://herdr.dev/install.sh -o \"$tmp/install.sh\"; bash \"$tmp/install.sh\"",
-            "latest": "curl -fsSL https://herdr.dev/latest.json | awk -F '\"' '/^[[:space:]]*\"version\"[[:space:]]*:/ \u0026\u0026 !found { print $4; found = 1 }'",
+            "latest": "curl -fsSL https://herdr.dev/latest.json | awk -F '\"' '/^[[:space:]]*\"version\"[[:space:]]*:/ && !found { print $4; found = 1 }'",
             "uninstall": "rm -f \"$HOME/.local/bin/herdr\"",
             "url": "https://herdr.dev/install.sh",
             "version": "PATH=\"$HOME/.local/bin:$PATH\" herdr --version | awk '{print $2}'"
@@ -946,7 +946,7 @@
             "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://hermes-agent.nousresearch.com/install.sh -o \"$tmp/install.sh\"; bash \"$tmp/install.sh\" --non-interactive",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/NousResearch/hermes-agent/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
             "upgrade": "PATH=\"$HOME/.local/bin:$PATH\" hermes update",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" hermes --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+(\\.[0-9]+){2,3}' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" hermes --version 2>/dev/null | grep -Eo 'v?[0-9]+(\\.[0-9]+){2,3}' | head -1 | sed 's/^v//'"
           }
         }
       ],
@@ -1014,10 +1014,10 @@
           "bin": "kubectl-krew",
           "options": {
             "check": "test -x \"$HOME/.krew/bin/kubectl-krew\"",
-            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" \u003e\u00262; exit 1 ;; esac; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/kubernetes-sigs/krew/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; asset=krew-linux_$arch.tar.gz; base=https://github.com/kubernetes-sigs/krew/releases/download/$tag; curl -fsSL --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; curl -fsSL --proto-redir '=https' \"$base/$asset.sha256\" -o \"$tmp/$asset.sha256\"; (cd \"$tmp\" \u0026\u0026 printf '%s  %s\\n' \"$(cat \"$asset.sha256\")\" \"$asset\" | sha256sum -c -); tar -xzf \"$tmp/$asset\" -C \"$tmp\"; \"$tmp/krew-linux_$arch\" install krew",
+            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" >&2; exit 1 ;; esac; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/kubernetes-sigs/krew/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; asset=krew-linux_$arch.tar.gz; base=https://github.com/kubernetes-sigs/krew/releases/download/$tag; curl -fsSL --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; curl -fsSL --proto-redir '=https' \"$base/$asset.sha256\" -o \"$tmp/$asset.sha256\"; (cd \"$tmp\" && printf '%s  %s\\n' \"$(cat \"$asset.sha256\")\" \"$asset\" | sha256sum -c -); tar -xzf \"$tmp/$asset\" -C \"$tmp\"; \"$tmp/krew-linux_$arch\" install krew",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/kubernetes-sigs/krew/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
             "upgrade": "\"$HOME/.krew/bin/kubectl-krew\" upgrade krew",
-            "version": "\"$HOME/.krew/bin/kubectl-krew\" version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | tail -1 | sed 's/^v//'"
+            "version": "\"$HOME/.krew/bin/kubectl-krew\" version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | tail -1 | sed 's/^v//'"
           }
         }
       ],
@@ -1034,7 +1034,7 @@
           "bin": "kubectl-cnpg",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" kubectl-cnpg version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" kubectl-cnpg version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -1061,7 +1061,7 @@
           "bin": "kubectx",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" kubectx --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" kubectx --version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -1088,7 +1088,7 @@
           "bin": "kubectl",
           "options": {
             "check": "command -v kubectl || test -x \"$HOME/.local/bin/kubectl\"",
-            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" \u003e\u00262; exit 1 ;; esac; tag=$(curl -fsSL --proto-redir '=https' https://dl.k8s.io/release/stable-1.36.txt); tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; base=https://dl.k8s.io/release/$tag/bin/linux/$arch; curl -fsSL --proto-redir '=https' \"$base/kubectl\" -o \"$tmp/kubectl\"; curl -fsSL --proto-redir '=https' \"$base/kubectl.sha256\" -o \"$tmp/kubectl.sha256\"; (cd \"$tmp\" \u0026\u0026 printf '%s  kubectl\\n' \"$(cat kubectl.sha256)\" | sha256sum -c -); mkdir -p \"$HOME/.local/bin\"; staged=$(mktemp \"$HOME/.local/bin/.kubectl.XXXXXX\"); install -m 0755 \"$tmp/kubectl\" \"$staged\"; mv -f \"$staged\" \"$HOME/.local/bin/kubectl\"",
+            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" >&2; exit 1 ;; esac; tag=$(curl -fsSL --proto-redir '=https' https://dl.k8s.io/release/stable-1.36.txt); tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; base=https://dl.k8s.io/release/$tag/bin/linux/$arch; curl -fsSL --proto-redir '=https' \"$base/kubectl\" -o \"$tmp/kubectl\"; curl -fsSL --proto-redir '=https' \"$base/kubectl.sha256\" -o \"$tmp/kubectl.sha256\"; (cd \"$tmp\" && printf '%s  kubectl\\n' \"$(cat kubectl.sha256)\" | sha256sum -c -); mkdir -p \"$HOME/.local/bin\"; staged=$(mktemp \"$HOME/.local/bin/.kubectl.XXXXXX\"); install -m 0755 \"$tmp/kubectl\" \"$staged\"; mv -f \"$staged\" \"$HOME/.local/bin/kubectl\"",
             "latest": "curl -fsSL --proto-redir '=https' https://dl.k8s.io/release/stable-1.36.txt | sed 's/^v//'",
             "uninstall": "rm -f \"$HOME/.local/bin/kubectl\"",
             "version": "PATH=\"$HOME/.local/bin:$PATH\" kubectl version --client=true --output=json | jq -er '.clientVersion.gitVersion | ltrimstr(\"v\")'"
@@ -1108,10 +1108,10 @@
           "bin": "kustomize",
           "options": {
             "check": "command -v kustomize || test -x \"$HOME/.local/bin/kustomize\"",
-            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" \u003e\u00262; exit 1 ;; esac; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/kubernetes-sigs/kustomize/releases/latest); tag=${release#*releases/tag/}; version=${tag#kustomize/v}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; asset=kustomize_v${version}_linux_$arch.tar.gz; base=https://github.com/kubernetes-sigs/kustomize/releases/download/$tag; curl -fsSL --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; curl -fsSL --proto-redir '=https' \"$base/checksums.txt\" -o \"$tmp/checksums\"; (cd \"$tmp\" \u0026\u0026 grep -F \"  $asset\" checksums | sha256sum -c -); tar -xzf \"$tmp/$asset\" -C \"$tmp\" kustomize; mkdir -p \"$HOME/.local/bin\"; staged=$(mktemp \"$HOME/.local/bin/.kustomize.XXXXXX\"); install -m 0755 \"$tmp/kustomize\" \"$staged\"; mv -f \"$staged\" \"$HOME/.local/bin/kustomize\"",
+            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture: $(uname -m)\" >&2; exit 1 ;; esac; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/kubernetes-sigs/kustomize/releases/latest); tag=${release#*releases/tag/}; version=${tag#kustomize/v}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; asset=kustomize_v${version}_linux_$arch.tar.gz; base=https://github.com/kubernetes-sigs/kustomize/releases/download/$tag; curl -fsSL --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; curl -fsSL --proto-redir '=https' \"$base/checksums.txt\" -o \"$tmp/checksums\"; (cd \"$tmp\" && grep -F \"  $asset\" checksums | sha256sum -c -); tar -xzf \"$tmp/$asset\" -C \"$tmp\" kustomize; mkdir -p \"$HOME/.local/bin\"; staged=$(mktemp \"$HOME/.local/bin/.kustomize.XXXXXX\"); install -m 0755 \"$tmp/kustomize\" \"$staged\"; mv -f \"$staged\" \"$HOME/.local/bin/kustomize\"",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/kubernetes-sigs/kustomize/releases/latest); tag=${release#*releases/tag/}; tag=${tag##*/}; printf '%s\\n' \"${tag#v}\"",
             "uninstall": "rm -f \"$HOME/.local/bin/kustomize\"",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" kustomize version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" kustomize version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           }
         }
       ],
@@ -1155,7 +1155,7 @@
           "bin": "lazygit",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" lazygit --version 2\u003e/dev/null | awk -F', ' '{for (i=1; i\u003c=NF; i++) if ($i ~ /^version=/) {sub(/^version=/, \"\", $i); print $i; exit}}'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" lazygit --version 2>/dev/null | awk -F', ' '{for (i=1; i<=NF; i++) if ($i ~ /^version=/) {sub(/^version=/, \"\", $i); print $i; exit}}'"
           },
           "source": {
             "type": "github",
@@ -1379,7 +1379,7 @@
         {
           "provider": "script",
           "options": {
-            "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" \u0026\u0026 . \"$NVM_DIR/nvm.sh\" --no-use \u0026\u0026 nvm version default 2\u003e/dev/null | grep -q '^v24'",
+            "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" && . \"$NVM_DIR/nvm.sh\" --no-use && nvm version default 2>/dev/null | grep -q '^v24'",
             "install": "set -eu; export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/nvm-sh/nvm/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' \"https://raw.githubusercontent.com/nvm-sh/nvm/$tag/install.sh\" -o \"$tmp/install.sh\"; PROFILE=/dev/null bash \"$tmp/install.sh\"; . \"$NVM_DIR/nvm.sh\" --no-use; nvm install 24 --latest-npm; nvm alias default 24; nvm use --silent default",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/nvm-sh/nvm/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
             "version": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; . \"$NVM_DIR/nvm.sh\" --no-use; nvm --version"
@@ -1461,7 +1461,7 @@
           "bin": "tofu",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" tofu version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" tofu version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -1587,9 +1587,9 @@
           "provider": "script",
           "bin": "python3.14",
           "options": {
-            "check": "uv_bin=$(command -v uv 2\u003e/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; test -x \"$uv_bin\" \u0026\u0026 \"$uv_bin\" python find 3.14 \u003e/dev/null 2\u003e\u00261",
-            "install": "set -eu; uv_bin=$(command -v uv 2\u003e/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; test -x \"$uv_bin\"; \"$uv_bin\" python install 3.14",
-            "version": "uv_bin=$(command -v uv 2\u003e/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; python_bin=$(\"$uv_bin\" python find 3.14 2\u003e/dev/null) \u0026\u0026 \"$python_bin\" --version 2\u003e\u00261 | awk '{print $2}'"
+            "check": "uv_bin=$(command -v uv 2>/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; test -x \"$uv_bin\" && \"$uv_bin\" python find 3.14 >/dev/null 2>&1",
+            "install": "set -eu; uv_bin=$(command -v uv 2>/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; test -x \"$uv_bin\"; \"$uv_bin\" python install 3.14",
+            "version": "uv_bin=$(command -v uv 2>/dev/null || true); [ -n \"$uv_bin\" ] || uv_bin=\"$HOME/.local/bin/uv\"; python_bin=$(\"$uv_bin\" python find 3.14 2>/dev/null) && \"$python_bin\" --version 2>&1 | awk '{print $2}'"
           }
         }
       ]
@@ -1684,7 +1684,7 @@
           "bin": "sops",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" sops --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" sops --version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -1766,7 +1766,7 @@
           "bin": "talosctl",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" talosctl version --client 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" talosctl version --client 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -1860,7 +1860,7 @@
           "bin": "ttyd",
           "options": {
             "arch_map": "aarch64:aarch64,x86_64:x86_64,arm64:aarch64,amd64:x86_64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" ttyd --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" ttyd --version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -1937,7 +1937,7 @@
           "bin": "vhs",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" vhs --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" vhs --version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
@@ -1989,9 +1989,9 @@
           "bin": "watch",
           "options": {
             "check": "command -v watch",
-            "install": "set -eu; if [ \"$(id -u)\" -eq 0 ]; then sudo_cmd=; elif command -v sudo \u003e/dev/null; then sudo_cmd=sudo; else echo \"installing watch requires root or sudo\" \u003e\u00262; exit 1; fi; if command -v apt-get \u003e/dev/null; then $sudo_cmd apt-get update; $sudo_cmd apt-get install -y procps; elif command -v apk \u003e/dev/null; then $sudo_cmd apk add --upgrade procps; elif command -v dnf \u003e/dev/null; then $sudo_cmd dnf install -y procps-ng; elif command -v pacman \u003e/dev/null; then $sudo_cmd pacman -S --needed --noconfirm procps-ng; elif command -v zypper \u003e/dev/null; then $sudo_cmd zypper --non-interactive install procps; else echo \"unsupported Linux package manager for watch\" \u003e\u00262; exit 1; fi",
-            "latest": "set -eu; if command -v apt-cache \u003e/dev/null; then raw=$(apt-cache policy procps | awk '/Candidate:/ {print $2; exit}'); elif command -v apk \u003e/dev/null; then raw=$(apk policy procps | grep -Eo '[0-9]+\\.[0-9]+(\\.[0-9]+)?' | head -1); elif command -v dnf \u003e/dev/null; then raw=$(dnf --quiet info procps-ng | awk -F ': +' '/^Version/ {version=$2} END {print version}'); elif command -v pacman \u003e/dev/null; then raw=$(pacman -Si procps-ng | awk -F ': +' '/^Version/ {print $2; exit}'); elif command -v zypper \u003e/dev/null; then raw=$(zypper --non-interactive info procps | awk -F ': +' '/^Version/ {print $2; exit}'); else echo \"unsupported Linux package manager for watch\" \u003e\u00262; exit 1; fi; printf '%s\\n' \"$raw\" | grep -Eo '[0-9]+\\.[0-9]+(\\.[0-9]+)?' | head -1",
-            "version": "watch --version 2\u003e/dev/null | grep -Eo '[0-9]+\\.[0-9]+(\\.[0-9]+)?' | head -1"
+            "install": "set -eu; if [ \"$(id -u)\" -eq 0 ]; then sudo_cmd=; elif command -v sudo >/dev/null; then sudo_cmd=sudo; else echo \"installing watch requires root or sudo\" >&2; exit 1; fi; if command -v apt-get >/dev/null; then $sudo_cmd apt-get update; $sudo_cmd apt-get install -y procps; elif command -v apk >/dev/null; then $sudo_cmd apk add --upgrade procps; elif command -v dnf >/dev/null; then $sudo_cmd dnf install -y procps-ng; elif command -v pacman >/dev/null; then $sudo_cmd pacman -S --needed --noconfirm procps-ng; elif command -v zypper >/dev/null; then $sudo_cmd zypper --non-interactive install procps; else echo \"unsupported Linux package manager for watch\" >&2; exit 1; fi",
+            "latest": "set -eu; if command -v apt-cache >/dev/null; then raw=$(apt-cache policy procps | awk '/Candidate:/ {print $2; exit}'); elif command -v apk >/dev/null; then raw=$(apk policy procps | grep -Eo '[0-9]+\\.[0-9]+(\\.[0-9]+)?' | head -1); elif command -v dnf >/dev/null; then raw=$(dnf --quiet info procps-ng | awk -F ': +' '/^Version/ {version=$2} END {print version}'); elif command -v pacman >/dev/null; then raw=$(pacman -Si procps-ng | awk -F ': +' '/^Version/ {print $2; exit}'); elif command -v zypper >/dev/null; then raw=$(zypper --non-interactive info procps | awk -F ': +' '/^Version/ {print $2; exit}'); else echo \"unsupported Linux package manager for watch\" >&2; exit 1; fi; printf '%s\\n' \"$raw\" | grep -Eo '[0-9]+\\.[0-9]+(\\.[0-9]+)?' | head -1",
+            "version": "watch --version 2>/dev/null | grep -Eo '[0-9]+\\.[0-9]+(\\.[0-9]+)?' | head -1"
           }
         }
       ]
@@ -2076,7 +2076,7 @@
           "bin": "yamlfmt",
           "options": {
             "arch_map": "aarch64:arm64,x86_64:x86_64,arm64:arm64,amd64:x86_64",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" yamlfmt --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" yamlfmt --version 2>/dev/null | grep -Eo 'v?[0-9]+\\.[0-9]+\\.[0-9]+' | head -1 | sed 's/^v//'"
           },
           "source": {
             "type": "github",
