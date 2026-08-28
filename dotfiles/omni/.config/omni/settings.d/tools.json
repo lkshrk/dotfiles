@@ -44,6 +44,14 @@
         }
       ]
     },
+    "apm-cli": {
+      "providers": [
+        {
+          "provider": "uv",
+          "package": "apm-cli"
+        }
+      ]
+    },
     "argo": {
       "providers": [
         {
@@ -101,6 +109,13 @@
         }
       ],
       "git": "https://github.com/sharkdp/bat"
+    },
+    "bats": {
+      "providers": [
+        {
+          "provider": "apt"
+        }
+      ]
     },
     "bats-core": {
       "providers": [
@@ -327,6 +342,14 @@
         }
       ]
     },
+    "corepack": {
+      "providers": [
+        {
+          "provider": "bun",
+          "package": "corepack"
+        }
+      ]
+    },
     "coreutils": {
       "providers": [
         {
@@ -488,6 +511,13 @@
         }
       ],
       "git": "https://github.com/sharkdp/fd"
+    },
+    "fd-find": {
+      "providers": [
+        {
+          "provider": "apt"
+        }
+      ]
     },
     "ffmpeg": {
       "providers": [
@@ -1449,6 +1479,21 @@
         }
       ],
       "git": "https://github.com/lkshrk/omni"
+    },
+    "omniroute": {
+      "providers": [
+        {
+          "provider": "bun",
+          "package": "omniroute"
+        }
+      ]
+    },
+    "openssl": {
+      "providers": [
+        {
+          "provider": "apt"
+        }
+      ]
     },
     "opentofu": {
       "providers": [

@@ -20,45 +20,6 @@
         "openwolf",
         "rtk",
         "herdr-tether"
-      ],
-      "skills": [
-        "lkshrk/linear-ai",
-        "lkshrk/useful-skills",
-        "ShiplightAI/agent-skills-v2",
-        "sopaco/deepwiki-rs"
-      ],
-      "mcp_servers": [
-        "litellm-tools",
-        "shiplight",
-        "codebase-memory-mcp",
-        "context-mode"
-      ],
-      "plugins": [
-        "superpowers",
-        "github",
-        "context-mode",
-        "ponytail",
-        "caveman",
-        "gopls-lsp",
-        "code-simplifier",
-        "codex",
-        "claude-md-management",
-        "smart-docs",
-        "harness",
-        "i-have-adhd",
-        "linear-ai"
-      ],
-      "marketplaces": [
-        "context-mode",
-        "lkshrk",
-        "caveman",
-        "claude-plugins-official",
-        "ecc",
-        "ponytail",
-        "openai-codex",
-        "litellm",
-        "i-have-adhd",
-        "harness-marketplace"
       ]
     },
     {
@@ -287,7 +248,13 @@
       "name": "coder",
       "special": "host",
       "tools": [
-        "bubblewrap"
+        "bubblewrap",
+        "corepack",
+        "omniroute",
+        "bats",
+        "fd-find",
+        "openssl",
+        "apm-cli"
       ]
     },
     {

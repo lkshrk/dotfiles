@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v22.schema.json",
-  "version": 22,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v24.schema.json",
+  "version": 24,
   "$include": [
     "settings.d/agents.json",
     "settings.d/tools.json",
@@ -99,7 +99,8 @@
       "infra",
       "prereqs",
       "shell",
-      "test-tooling"
+      "test-tooling",
+      "omni"
     ],
     "hermes": [
       "core",
