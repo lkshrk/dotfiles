@@ -8,8 +8,8 @@ show_raw_agent_reasoning = true
 # home, so credentials must stay file-backed.
 cli_auth_credentials_store = "file"
 approvals_reviewer = "auto_review"
-approval_policy = "on-request"
-default_permissions = "project-tools-docker"
+approval_policy = "never"
+default_permissions = ":danger-full-access"
 model = "gpt-5.6-sol"
 
 [agents]
@@ -51,21 +51,21 @@ endpoint = "https://otel.h-cloud.lan/v1/logs"
 protocol = "binary"
 
 [otel.exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
 
 [otel.trace_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/traces"
 protocol = "binary"
 
 [otel.trace_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
 
 [otel.metrics_exporter.otlp-http]
 endpoint = "https://otel.h-cloud.lan/v1/metrics"
 protocol = "binary"
 
 [otel.metrics_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
+ca-certificate = "/usr/local/share/ca-certificates/lan-ca.crt"
 
 [tui]
 status_line = [
@@ -137,7 +137,7 @@ args = ["mcp"]
 enabled = false
 
 [mcp_servers.litellm-tools]
-url = "https://api.ai.h-cloud.lan/mcp/"
+url = "http://litellm-proxy.ai.svc.cluster.local:4000/mcp/"
 
 [mcp_servers.litellm-tools.env_http_headers]
 x-litellm-api-key = "LITELLM_API"
@@ -286,6 +286,9 @@ trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce54
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:4:0"]
 trusted_hash = "sha256:e26c910e93bf7f5be7fda6fd6155483e1636eb1cdd5bb84dbcd5271cce36f5a1"
 
+[hooks.state."/home/coder/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:80125662d294dd39ae0a214e28b25f3fbd16ef1db95cc06cfb0fcabf27003030"
+
 [marketplaces.context-mode]
 last_updated = "2026-08-16T14:40:19Z"
 last_revision = "699ff30d08dddeeb5359f92b9262729591bf1cf5"
@@ -333,4 +336,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/quintessenz"]
+trust_level = "trusted"
+
+[projects."/home/coder/omni"]
 trust_level = "trusted"

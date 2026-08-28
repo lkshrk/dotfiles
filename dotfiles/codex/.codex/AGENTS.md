@@ -374,3 +374,10 @@ ALWAYS prefer MCP graph tools over grep/glob/file-search for code discovery.
 - Who calls it: `trace_path(function_name="OrderHandler", direction="inbound")`
 - Read source: `get_code_snippet(qualified_name="pkg/orders.OrderHandler")`
 <!-- codebase-memory-mcp:end -->
+
+<!-- coder-workspace:start -->
+## Coder workspace
+
+- Docker is available through Docker-in-Docker (DinD).
+- Git SSH operations must preserve and use the existing `$GIT_SSH_COMMAND`. Do not unset, replace, or bypass it.
+<!-- coder-workspace:end -->

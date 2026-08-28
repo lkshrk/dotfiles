@@ -22,7 +22,9 @@
       "mcp__linear-server",
       "mcp__linear-server__*",
       "Edit(frontend/eslint.config.js)"
-    ]
+    ],
+    "defaultMode": "bypassPermissions",
+    "skipDangerousModePermissionPrompt": true
   },
   "model": "claude-fable-5[1m]",
   "hooks": {
