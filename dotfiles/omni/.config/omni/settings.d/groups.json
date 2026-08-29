@@ -23,6 +23,17 @@
       ]
     },
     {
+      "name": "devbox-ai-plugins",
+      "tools": [
+        "cargo",
+        "ccundo",
+        "context-mode",
+        "oh-my-codex",
+        "openwolf",
+        "rtk"
+      ]
+    },
+    {
       "name": "core",
       "tools": [
         "bat",
