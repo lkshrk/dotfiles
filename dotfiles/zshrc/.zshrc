@@ -21,4 +21,3 @@ if [[ "$OSTYPE" == darwin* && -d "$HOME/.config/zsh/macos" ]]; then
 fi
 
 # zprof | head -30
-export PATH="$PATH:/home/coder/.local/bin"

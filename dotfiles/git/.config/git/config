@@ -9,11 +9,3 @@
 	format = ssh
 [commit]
 	gpgsign = true
-[user]
-	signingkey = /home/coder/.ssh/git-commit-signing/coder
-[credential "https://github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential
-[credential "https://gist.github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential

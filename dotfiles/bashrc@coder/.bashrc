@@ -11,4 +11,3 @@ esac
 
 : "${ENV_DIR:=${ENV_NEXT_DIR:-$HOME/.config/env}}"
 [ -r "$ENV_DIR/profile.sh" ] && . "$ENV_DIR/profile.sh"
-export PATH="$PATH:/home/coder/.local/bin"
