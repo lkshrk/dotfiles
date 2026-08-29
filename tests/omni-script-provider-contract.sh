@@ -10,8 +10,8 @@ grep -Fq 'OMNI_MIN_VERSION="0.9.28"' "$repo_dir/setup.sh"
 grep -Fq 'if ($i ~ /^v?[0-9]+' "$repo_dir/setup.sh"
 
 jq -e '
-  .version == 22
-  and (.["$schema"] | endswith("/omni.settings.v22.schema.json"))
+  .version == 24
+  and (.["$schema"] | endswith("/omni.settings.v24.schema.json"))
 ' "$settings" >/dev/null
 
 jq -e '

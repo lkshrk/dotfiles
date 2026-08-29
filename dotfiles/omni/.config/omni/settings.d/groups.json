@@ -23,6 +23,17 @@
       ]
     },
     {
+      "name": "devbox-ai-plugins",
+      "tools": [
+        "cargo",
+        "ccundo",
+        "context-mode",
+        "oh-my-codex",
+        "openwolf",
+        "rtk"
+      ]
+    },
+    {
       "name": "core",
       "tools": [
         "bat",
@@ -266,6 +277,11 @@
       ]
     },
     {
+      "name": "devbox",
+      "special": "host",
+      "tools": []
+    },
+    {
       "name": "topaz",
       "special": "host",
       "tools": [
@@ -282,6 +298,21 @@
         "gradle",
         "vips",
         "yt-dlp"
+      ]
+    },
+    {
+      "name": "agent-hermes",
+      "special": "host",
+      "tools": [
+        "camofox-browser",
+        "hermes"
+      ]
+    },
+    {
+      "name": "agent-pilot",
+      "special": "host",
+      "tools": [
+        "pilot"
       ]
     }
   ]

@@ -123,4 +123,31 @@ run_profile() {
 run_profile coder
 run_profile hermes
 
+assert_devbox_guard_skips_omni() {
+  local func="$1"
+  local home="$test_dir/devbox-guard-$func-home"
+  local capture="$test_dir/devbox-guard-$func-omni-args"
+  local ca_capture="$test_dir/devbox-guard-$func-node-ca"
+  mkdir -p "$home"
+
+  DEVBOX_VARIANT=x \
+  HOME="$home" \
+  PATH="$test_dir/bin:$PATH" \
+  OMNI_ARGS_CAPTURE="$capture" \
+  OMNI_CA_CAPTURE="$ca_capture" \
+    bash -c "source '$repo_dir/setup-workspace.sh'; $func" || {
+      printf 'FAIL: %s did not exit 0 under DEVBOX_VARIANT\n' "$func" >&2
+      exit 1
+    }
+
+  if [[ -e "$capture" ]]; then
+    printf 'FAIL: %s invoked the omni stub under DEVBOX_VARIANT\n' "$func" >&2
+    exit 1
+  fi
+}
+
+assert_devbox_guard_skips_omni setup_workspace_sync_shell
+assert_devbox_guard_skips_omni setup_workspace_sync_prereqs
+assert_devbox_guard_skips_omni setup_workspace_sync_tools
+
 printf 'PASS: workspace setup keeps Hermes free of Coder agent setup\n'
