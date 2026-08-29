@@ -187,6 +187,10 @@
         {
           "provider": "brew",
           "package": "busted"
+        },
+        {
+          "provider": "apt",
+          "package": "lua-busted"
         }
       ],
       "git": "https://github.com/lunarmodules/busted"
@@ -432,10 +436,10 @@
         {
           "provider": "script",
           "options": {
-            "key_url": "https://download.docker.com/linux/ubuntu/gpg",
+            "key_url": "https://download.docker.com/linux/debian/gpg",
             "packages": "docker-ce-cli docker-buildx-plugin docker-compose-plugin",
             "signed_by": "/etc/apt/keyrings/docker.asc",
-            "sources_format": "Types: deb\nURIs: https://download.docker.com/linux/ubuntu\nSuites: {suite}\nComponents: stable\nArchitectures: {arch}\nSigned-By: /etc/apt/keyrings/docker.asc"
+            "sources_format": "deb [arch={arch} signed-by={signed_by}] https://download.docker.com/linux/debian {suite} stable"
           },
           "recipe": {
             "type": "apt_repo"
@@ -1243,6 +1247,22 @@
         {
           "provider": "brew",
           "package": "lua-language-server"
+        },
+        {
+          "provider": "script",
+          "bin": "lua-language-server",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:x64,arm64:arm64,amd64:x64"
+          },
+          "source": {
+            "type": "github",
+            "owner": "LuaLS",
+            "repo": "lua-language-server"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "lua-language-server-{version}-linux-{arch}.tar.gz"
+          }
         }
       ],
       "git": "https://github.com/LuaLS/lua-language-server"
@@ -1252,6 +1272,10 @@
         {
           "provider": "brew",
           "package": "luacheck"
+        },
+        {
+          "provider": "apt",
+          "package": "lua-check"
         }
       ],
       "git": "https://github.com/lunarmodules/luacheck"
@@ -1260,6 +1284,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "luarocks"
+        },
+        {
+          "provider": "apt",
           "package": "luarocks"
         }
       ]
@@ -1794,6 +1822,22 @@
         {
           "provider": "brew",
           "package": "stylua"
+        },
+        {
+          "provider": "script",
+          "bin": "stylua",
+          "options": {
+            "arch_map": "aarch64:aarch64,x86_64:x86_64,arm64:aarch64,amd64:x86_64"
+          },
+          "source": {
+            "type": "github",
+            "owner": "JohnnyMorganz",
+            "repo": "StyLua"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "stylua-linux-{arch}.zip"
+          }
         }
       ],
       "git": "https://github.com/JohnnyMorganz/StyLua"

@@ -19,6 +19,18 @@ groups_json="$(dirname "$cfg")/settings.d/groups.json"
 
 tools_json="$(dirname "$cfg")/settings.d/tools.json"
 jq -e '.tools.pilot.providers[0].provider == "script"' "$tools_json" >/dev/null || { echo "pilot tool missing"; exit 1; }
+jq -e '
+  .tools.docker.providers[] | select(.provider == "script")
+  | .options.sources_format == "deb [arch={arch} signed-by={signed_by}] https://download.docker.com/linux/debian {suite} stable"
+' "$tools_json" >/dev/null || { echo "docker apt source wrong"; exit 1; }
+jq -e '
+  ["busted", "lua-language-server", "luacheck", "luarocks", "stylua"]
+  | all(.[]; . as $tool | any($tools[0].tools[$tool].providers[]; .provider != "brew"))
+' --slurpfile tools "$tools_json" "$tools_json" >/dev/null || { echo "lua Linux providers missing"; exit 1; }
+jq -e '
+  ["deepwiki-rs", "herdr-tether"]
+  | all(.[]; . as $tool | all($groups[0].groups[] | select(.name == "ai-plugins").tools[]; . != $tool))
+' --slurpfile groups "$groups_json" "$groups_json" >/dev/null || { echo "devbox cargo tools not excluded"; exit 1; }
 
 OMNI_HOSTNAME=devbox omni --config "$cfg" settings show >/dev/null
 
