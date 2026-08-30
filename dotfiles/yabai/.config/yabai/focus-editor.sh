@@ -18,7 +18,6 @@ ZENTTY_IDS="$(yabai -m query --windows | jq -r 'map(select(.app == "Zentty")) | 
 ALL_IDS="$(printf '%s\n' $NVIM_IDS $ZED_IDS $CMUX_IDS $ZENTTY_IDS | awk 'NF && !seen[$0]++')"
 
 if [ -z "$ALL_IDS" ]; then
-  open -na "Ghostty" --args -e nvim
   exit 0
 fi
 
