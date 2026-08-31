@@ -286,20 +286,92 @@ trusted_hash = "sha256:24c20307ec005ba7e0d893e4cb24e98040881c0683a1c8a0b180cce54
 [hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:4:0"]
 trusted_hash = "sha256:e26c910e93bf7f5be7fda6fd6155483e1636eb1cdd5bb84dbcd5271cce36f5a1"
 
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:1:0"]
+trusted_hash = "sha256:700c40a62f7552200250f680683b563f26de4230cde5e4185392c0e4181111ad"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:2:0"]
+trusted_hash = "sha256:fc869bc1479fc4e32cc8e4dd8b42435a6684f1d02821396ab0eeffad6b9494b3"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:3:0"]
+trusted_hash = "sha256:8837b07d4e556d1776d0a5bb7861711e966a9afa97d66404b1f8490a109c902a"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:4:0"]
+trusted_hash = "sha256:d555a40e4c4fe339aca5a9de698231cfbfcb830bfeac988f71a1fddc0bf87dc5"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:5:0"]
+trusted_hash = "sha256:40d1dcbe033bc853054114d9988af20a940fc625991f931be734b833066c3612"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:6:0"]
+trusted_hash = "sha256:4c05c92ba2e539ecb728c16a306af528006cb5c878a83d5841ed03ee1e81a9d7"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:7:0"]
+trusted_hash = "sha256:f2f90e9688075be6d6e9ec9620ea6d1d9e66839638e3402a9c4ae9d593e90a40"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:8:0"]
+trusted_hash = "sha256:b8194e061329928e051e317314c11dc274aff171a58c43c7fad5a8663e74d3c7"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_tool_use:9:0"]
+trusted_hash = "sha256:4f1d244437c36b3a0b9cc232477e45c2735032911efc023da9afdc28f3e48562"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:post_tool_use:1:0"]
+trusted_hash = "sha256:ab1902f409b508d3aed68a1ea1e316e5d43d0216467ac6052f39c48c29a31b60"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:pre_compact:1:0"]
+trusted_hash = "sha256:fc0fffde524a5c75a0dd5509cb4f82a03b31aa8629b59be05dde1b0a17949f45"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:5:0"]
+trusted_hash = "sha256:f14f820a4bb04f568faf482695f08471d7ed733a25fd94181693a7be4f06a637"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:6:0"]
+trusted_hash = "sha256:f946d07a3ed7227cc5277bf4fc3fc8375b64791eeced5c57abf545bb24dcaa64"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:7:0"]
+trusted_hash = "sha256:186da121f3b3b1cafd1135eb4f0e21a4943152d933227e83a80165329c9b32b4"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:8:0"]
+trusted_hash = "sha256:b0604c97e27e739aba7950a594f8d4a556835f48cfb52d4b8f8c8faa9480e081"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:9:0"]
+trusted_hash = "sha256:4493ac5164a5b6515b11d0aacf979df18be01a3dbec7fe9c00d2c2f14d00c192"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_start:10:0"]
+trusted_hash = "sha256:b49f8f1c1c15fcbb3873841159a32c5ae92b14ed690492ad6393d32ed7782f65"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:session_end:0:0"]
+trusted_hash = "sha256:0d7db6e1db27d38c5160a4e8c9ef41112f4fa03cf051e0d5ba5f69a923469a50"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:1:0"]
+trusted_hash = "sha256:7af43b2493e5de9edc522a8400c7e8e5312abf97af72161febf90bcc5052d683"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:2:0"]
+trusted_hash = "sha256:830edc6ee62eb369a6c0939d2e2ae526a862d4550ead46b280f330723f267e6f"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:user_prompt_submit:3:0"]
+trusted_hash = "sha256:29ba1a1d85eb80c49000704dbd0088c901bc21b031f6385fd1005919c2d745d2"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:subagent_start:0:0"]
+trusted_hash = "sha256:d242238b1b23c42a1bcc57c84ab565cf85249bb7f51385d26b3134ead72bc74a"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:3:0"]
+trusted_hash = "sha256:c73aa3e076285bc9b08da6b9b612702388bc4d8d5a01220b14ba4f3010f46dc6"
+
+[hooks.state."/Users/lkshrk/.codex/hooks.json:stop:4:0"]
+trusted_hash = "sha256:862dab9fbb64bfbda156457bdfb6a52656d2a1680f29f4fc121b2318c064dfb2"
+
 [marketplaces.context-mode]
-last_updated = "2026-08-16T14:40:19Z"
-last_revision = "699ff30d08dddeeb5359f92b9262729591bf1cf5"
+last_updated = "2026-08-28T21:06:36Z"
+last_revision = "6b2741f9a538c71ed89c050c99751eb22da6b02c"
 source_type = "git"
 source = "https://github.com/mksglu/context-mode.git"
 
 [marketplaces.lkshrk]
-last_updated = "2026-07-19T19:10:42Z"
+last_updated = "2026-07-27T12:58:06Z"
 last_revision = "eb55ff46087b75b3fcebaad182b9f02c1284fe17"
 source_type = "git"
 source = "https://github.com/lkshrk/agent-marketplace.git"
 
 [marketplaces.ponytail]
-last_updated = "2026-08-14T18:14:20Z"
+last_updated = "2026-08-28T21:06:38Z"
 last_revision = "2ed6c52c9d7e5e56942508591085fd45dea277d3"
 source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
@@ -333,4 +405,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/quintessenz"]
+trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/auto-code-env"]
 trust_level = "trusted"

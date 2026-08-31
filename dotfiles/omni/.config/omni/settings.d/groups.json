@@ -67,12 +67,6 @@
       ]
     },
     {
-      "name": "secrets",
-      "tools": [
-        "rbw"
-      ]
-    },
-    {
       "name": "dev-tooling",
       "tools": [
         "docker",
@@ -211,6 +205,12 @@
       ]
     },
     {
+      "name": "secrets",
+      "tools": [
+        "rbw"
+      ]
+    },
+    {
       "name": "shell",
       "tools": [
         "zsh",
@@ -241,8 +241,7 @@
     },
     {
       "name": "auto-code",
-      "special": "host",
-      "tools": []
+      "special": "host"
     },
     {
       "name": "coder",
