@@ -48,8 +48,7 @@
             "!/tokenline.sh",
             "!/RTK.md",
             "!/commands/",
-            "!/rules/",
-            "!/hooks/openwolf-git-gate.sh"
+            "!/rules/"
           ]
         },
         {
@@ -76,6 +75,25 @@
             "*",
             "!/settings.json",
             "!/settings.d/"
+          ]
+        },
+        {
+          "name": "omni-apm",
+          "path": "~/.config/omni",
+          "hosts": {
+            "coder": {
+              "package": "omni-apm@coder"
+            },
+            "hermes": {
+              "package": "omni-apm@hermes"
+            },
+            "topaz": {
+              "package": "omni-apm@topaz"
+            }
+          },
+          "ignore": [
+            "*",
+            "!/apm.yml"
           ]
         },
         {

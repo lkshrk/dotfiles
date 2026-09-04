@@ -2210,6 +2210,29 @@
         }
       ],
       "git": "https://github.com/facebook/zstd"
+    },
+    "codebase-memory-mcp": {
+      "providers": [
+        {
+          "provider": "script",
+          "bin": "codebase-memory-mcp",
+          "options": {
+            "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
+            "version": "PATH=\"$HOME/.local/bin:$PATH\" codebase-memory-mcp --version 2>/dev/null | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+' | head -1"
+          },
+          "source": {
+            "type": "github",
+            "owner": "DeusData",
+            "repo": "codebase-memory-mcp"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "codebase-memory-mcp-{os}-{arch}.tar.gz",
+            "checksum_asset_pattern": "checksums.txt"
+          }
+        }
+      ],
+      "git": "https://github.com/DeusData/codebase-memory-mcp"
     }
   }
 }

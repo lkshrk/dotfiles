@@ -2,7 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v24.schema.json",
   "version": 24,
   "$include": [
-    "settings.d/agents.json",
     "settings.d/tools.json",
     "settings.d/groups.json",
     "settings.d/dots.json"

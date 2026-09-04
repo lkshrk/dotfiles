@@ -88,16 +88,6 @@
             "timeout": 5
           }
         ]
-      },
-      {
-        "matcher": "Grep|Glob",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-code-discovery-gate",
-            "timeout": 5
-          }
-        ]
       }
     ],
     "SessionStart": [
@@ -116,42 +106,6 @@
             "type": "command",
             "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" || true",
             "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "startup",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "resume",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "clear",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
           }
         ]
       },
@@ -177,87 +131,12 @@
           }
         ]
       }
-    ],
-    "SubagentStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-subagent-reminder"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/comment-rule-reminder"
-          }
-        ]
-      }
     ]
   },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/tokenline.sh",
     "refreshInterval": 1
-  },
-  "enabledPlugins": {
-    "academic-research-skills@academic-research-skills": true,
-    "caveman@caveman": true,
-    "claude-md-management@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "codex@openai-codex": true,
-    "context-mode@context-mode": true,
-    "github@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true,
-    "harness@harness-marketplace": true,
-    "i-have-adhd@i-have-adhd": true,
-    "smart-docs@litellm": true,
-    "superpowers@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true
-  },
-  "extraKnownMarketplaces": {
-    "academic-research-skills": {
-      "source": {
-        "source": "github",
-        "repo": "Imbad0202/academic-research-skills"
-      }
-    },
-    "context-mode": {
-      "source": {
-        "source": "github",
-        "repo": "mksglu/context-mode"
-      }
-    },
-    "ecc": {
-      "source": {
-        "source": "github",
-        "repo": "affaan-m/everything-claude-code"
-      }
-    },
-    "harness-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "revfactory/harness"
-      }
-    },
-    "i-have-adhd": {
-      "source": {
-        "source": "github",
-        "repo": "ayghri/i-have-adhd"
-      }
-    },
-    "litellm": {
-      "source": {
-        "source": "url",
-        "url": "https://api.ai.h-cloud.lan/claude-code/marketplace.json"
-      }
-    },
-    "openai-codex": {
-      "source": {
-        "source": "github",
-        "repo": "openai/codex-plugin-cc"
-      }
-    }
   },
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",

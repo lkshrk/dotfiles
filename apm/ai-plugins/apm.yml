@@ -1,0 +1,87 @@
+name: ai-plugins
+version: 1.0.0
+description: Shared Omni agent dependencies (plugins, MCP servers, LSP) for every apm-managed host.
+dependencies:
+  apm:
+  - git: DietrichGebert/ponytail
+    targets:
+    - codex
+  - git: JuliusBrussee/caveman
+    targets:
+    - claude
+  - git: ShiplightAI/agent-skills-v2
+    path: shiplight
+  - git: anthropics/claude-plugins-official
+    path: external_plugins/github
+    targets:
+    - claude
+  - git: anthropics/claude-plugins-official
+    path: plugins/claude-md-management
+    targets:
+    - claude
+  - git: anthropics/claude-plugins-official
+    path: plugins/code-simplifier
+    targets:
+    - claude
+  - git: ayghri/i-have-adhd
+    targets:
+    - claude
+  - git: lkshrk/linear-ai
+    ref: v1.6.1
+  - git: lkshrk/useful-skills
+  - git: mksglu/context-mode
+    targets:
+    - claude
+    - codex
+  - git: obra/superpowers
+    ref: b36e0829c6d0140e93cfef2ca599b1b07d4a7797
+    targets:
+    - claude
+  - git: openai/codex-plugin-cc
+    path: plugins/codex
+    targets:
+    - claude
+  - git: revfactory/harness
+    targets:
+    - claude
+  - git: sopaco/deepwiki-rs
+    path: skills/smart-docs
+    targets:
+    - claude
+  lsp:
+  - name: gopls
+    command: gopls
+    extensionToLanguage:
+      .go: go
+  - name: pyright
+    command: pyright-langserver
+    args:
+    - --stdio
+    extensionToLanguage:
+      .py: python
+      .pyi: python
+  - name: sourcekit-lsp
+    command: sourcekit-lsp
+    extensionToLanguage:
+      .swift: swift
+  mcp:
+  - name: codebase-memory-mcp
+    registry: false
+    transport: stdio
+    command: codebase-memory-mcp
+  - name: litellm-tools
+    registry: false
+    transport: http
+    url: https://api.ai.h-cloud.lan/mcp/
+    headers:
+      x-litellm-api-key: ${env:LITELLM_API}
+  - name: openaiDeveloperDocs
+    registry: false
+    transport: http
+    url: https://developers.openai.com/mcp
+  - name: shiplight
+    registry: false
+    transport: stdio
+    command: bunx
+    args:
+    - '@shiplightai/mcp@latest'
