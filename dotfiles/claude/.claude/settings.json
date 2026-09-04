@@ -24,7 +24,7 @@
       "Edit(frontend/eslint.config.js)"
     ]
   },
-  "model": "claude-fable-5[1m]",
+  "model": "fable[1m]",
   "hooks": {
     "PostToolUse": [
       {
