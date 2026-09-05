@@ -344,7 +344,9 @@
     "command": "bash ~/.claude/tokenline.sh",
     "refreshInterval": 1
   },
-  "enabledPlugins": {},
+  "enabledPlugins": {
+    "context-mode@context-mode": true
+  },
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",

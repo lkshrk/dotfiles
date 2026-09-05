@@ -10,7 +10,7 @@ cli_auth_credentials_store = "file"
 approvals_reviewer = "auto_review"
 approval_policy = "on-request"
 default_permissions = "project-tools-docker"
-model = "gpt-5.6-sol"
+model = "gpt-6-astra"
 
 [agents]
 max_concurrent_threads_per_session = 6
