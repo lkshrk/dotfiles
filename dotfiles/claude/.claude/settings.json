@@ -46,6 +46,15 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Bash|Read|Write|Edit|NotebookEdit|Glob|Grep|TodoWrite|TaskCreate|TaskUpdate|EnterPlanMode|ExitPlanMode|Skill|Agent|AskUserQuestion|EnterWorktree|mcp__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/posttooluse.mjs\""
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -88,6 +97,87 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_context-mode_context-mode__ctx_execute",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_context-mode_context-mode__ctx_execute_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
+          }
+        ]
       }
     ],
     "SessionStart": [
@@ -114,8 +204,60 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/Users/lkshrk/.claude/hooks/herdr-agent-state.sh' session",
+            "command": "bash '$HOME/.claude/hooks/herdr-agent-state.sh' session",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Checking i-have-adhd always-on flag...",
+            "command": "node -e \"(async()=>{const root=process.env.CLAUDE_PLUGIN_ROOT||process.env.PLUGIN_ROOT;if(root)await import(require('node:url').pathToFileURL(require('node:path').join(root,'hooks','always-on.mjs')).href)})().catch(()=>{})\"",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Loading caveman mode...",
+            "command": "node \"$HOME/.claude/hooks/caveman/src/hooks/caveman-activate.js\"",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/sessionstart.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "async": false,
+            "command": "\"$HOME/.claude/hooks/superpowers/hooks/run-hook.cmd\" session-start"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/codex/scripts/session-lifecycle-hook.mjs\" SessionStart",
+            "timeout": 5
           }
         ]
       }
@@ -130,6 +272,70 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/stop.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/codex/scripts/stop-review-gate-hook.mjs\"",
+            "timeout": 900
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Tracking caveman mode...",
+            "command": "node \"$HOME/.claude/hooks/caveman/src/hooks/caveman-mode-tracker.js\"",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/userpromptsubmit.mjs\""
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/precompact.mjs\""
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/codex/scripts/session-lifecycle-hook.mjs\" SessionEnd",
+            "timeout": 5
+          }
+        ]
       }
     ]
   },
@@ -138,6 +344,7 @@
     "command": "bash ~/.claude/tokenline.sh",
     "refreshInterval": 1
   },
+  "enabledPlugins": {},
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
