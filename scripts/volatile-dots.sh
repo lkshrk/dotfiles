@@ -24,8 +24,19 @@ mode="${1:-}"
   exit 2
 }
 
+shift
+
 while IFS= read -r entry; do
   [[ -n "$entry" && "$entry" != \#* ]] || continue
+  if [[ $# -gt 0 ]]; then
+    package="${entry#dotfiles/}"
+    package="${package%%/*}"
+    selected=0
+    for requested in "$@"; do
+      [[ "$package" != "$requested" ]] || selected=1
+    done
+    [[ "$selected" == 1 ]] || continue
+  fi
   target="$(home_path "$entry")"
   case "$mode" in
     prepare)

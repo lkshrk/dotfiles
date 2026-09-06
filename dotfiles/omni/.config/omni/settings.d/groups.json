@@ -134,6 +134,7 @@
     {
       "name": "lua",
       "tools": [
+        "lua",
         "busted",
         "lua-language-server",
         "luacheck",

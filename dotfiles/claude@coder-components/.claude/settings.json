@@ -1,0 +1,7 @@
+{
+  "model": "fable[1m]",
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "skipDangerousModePermissionPrompt": true
+  }
+}

@@ -187,6 +187,10 @@
         {
           "provider": "brew",
           "package": "busted"
+        },
+        {
+          "provider": "apt",
+          "package": "lua-busted"
         }
       ],
       "git": "https://github.com/lunarmodules/busted"
@@ -1294,6 +1298,16 @@
         {
           "provider": "brew",
           "package": "lua-language-server"
+        },
+        {
+          "provider": "script",
+          "bin": "lua-language-server",
+          "options": {
+            "check": "test -x \"$HOME/.local/share/lua-language-server/bin/lua-language-server\" && test -f \"$HOME/.local/share/lua-language-server/main.lua\" && test -x \"$HOME/.local/bin/lua-language-server\"",
+            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=x64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture\" >&2; exit 1 ;; esac; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/LuaLS/lua-language-server/releases/latest); tag=${release#*releases/tag/}; version=${tag#v}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' \"https://github.com/LuaLS/lua-language-server/releases/download/$tag/lua-language-server-$version-linux-$arch.tar.gz\" -o \"$tmp/luals.tar.gz\"; mkdir -p \"$HOME/.local/share/lua-language-server\" \"$HOME/.local/bin\"; tar -xzf \"$tmp/luals.tar.gz\" -C \"$HOME/.local/share/lua-language-server\"; test -f \"$HOME/.local/share/lua-language-server/main.lua\"; ln -sf \"$HOME/.local/share/lua-language-server/bin/lua-language-server\" \"$HOME/.local/bin/lua-language-server\"",
+            "version": "\"$HOME/.local/bin/lua-language-server\" --version",
+            "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/LuaLS/lua-language-server/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\""
+          }
         }
       ],
       "git": "https://github.com/LuaLS/lua-language-server"
@@ -1303,6 +1317,10 @@
         {
           "provider": "brew",
           "package": "luacheck"
+        },
+        {
+          "provider": "apt",
+          "package": "lua-check"
         }
       ],
       "git": "https://github.com/lunarmodules/luacheck"
@@ -1311,6 +1329,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "luarocks"
+        },
+        {
+          "provider": "apt",
           "package": "luarocks"
         }
       ]
@@ -1837,6 +1859,22 @@
         {
           "provider": "brew",
           "package": "stylua"
+        },
+        {
+          "provider": "script",
+          "bin": "stylua",
+          "options": {
+            "arch_map": "aarch64:aarch64,arm64:aarch64,x86_64:x86_64,amd64:x86_64"
+          },
+          "source": {
+            "type": "github",
+            "owner": "JohnnyMorganz",
+            "repo": "StyLua"
+          },
+          "recipe": {
+            "type": "github_release_asset",
+            "asset_pattern": "stylua-linux-{arch}.zip"
+          }
         }
       ],
       "git": "https://github.com/JohnnyMorganz/StyLua"
@@ -2269,6 +2307,83 @@
         }
       ],
       "git": "https://github.com/facebook/zstd"
+    },
+    "git": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "git"
+        }
+      ]
+    },
+    "curl": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "curl"
+        }
+      ]
+    },
+    "ca-certificates": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "ca-certificates"
+        }
+      ]
+    },
+    "build-essential": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "build-essential"
+        }
+      ]
+    },
+    "pkg-config": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "pkg-config"
+        }
+      ]
+    },
+    "libssl-dev": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "libssl-dev"
+        }
+      ]
+    },
+    "unzip": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "unzip"
+        }
+      ]
+    },
+    "xz-utils": {
+      "providers": [
+        {
+          "provider": "apt",
+          "package": "xz-utils"
+        }
+      ]
+    },
+    "lua": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "lua"
+        },
+        {
+          "provider": "apt",
+          "package": "lua5.4",
+          "bin": "lua"
+        }
+      ]
     }
   }
 }
