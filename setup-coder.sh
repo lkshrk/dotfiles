@@ -7,21 +7,48 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$REPO_DIR/setup-workspace.sh"
 
 install_coder_workspace_notes() {
-  local target
-  for target in "$HOME/.codex/AGENTS.md" "$HOME/.claude/CLAUDE.md"; do
+  local target temporary docker_note
+  local -a targets=("$@")
+  if [[ ${#targets[@]} == 0 ]]; then
+    targets=("$HOME/.codex/AGENTS.md" "$HOME/.claude/CLAUDE.md")
+  fi
+  case "${CODER_ENABLE_DIND:-0}" in
+    1) docker_note='- Docker is available through Docker-in-Docker (DinD).' ;;
+    0) docker_note='- Docker-in-Docker (DinD) is not enabled. Do not assume a Docker daemon is available.' ;;
+    *) warn "CODER_ENABLE_DIND must be 0 or 1"; return 1 ;;
+  esac
+  for target in "${targets[@]}"; do
     [[ -f "$target" ]] || {
       warn "workspace instructions not found: $target"
       continue
     }
-    cat >> "$target" <<'EOF'
-
-<!-- coder-workspace:start -->
-## Coder workspace
-
-- Docker is available through Docker-in-Docker (DinD).
-- Git SSH operations must preserve and use the existing `$GIT_SSH_COMMAND`. Do not unset, replace, or bypass it.
-<!-- coder-workspace:end -->
-EOF
+    temporary="$(mktemp "$(dirname "$target")/.coder-notes.XXXXXX")"
+    if ! awk -v docker="$docker_note" '
+      function block() {
+        print "<!-- coder-workspace:start -->"
+        print "## Coder workspace\n"
+        print docker
+        print "- Git SSH operations must preserve and use the existing `$GIT_SSH_COMMAND`. Do not unset, replace, or bypass it."
+        print "<!-- coder-workspace:end -->"
+      }
+      /^<!-- coder-workspace:start -->$/ {
+        if (!found++) block()
+        inside = 1
+        next
+      }
+      /^<!-- coder-workspace:end -->$/ { inside = 0; next }
+      !inside { print }
+      END {
+        if (inside) exit 1
+        if (!found) { print ""; block() }
+      }
+    ' "$target" > "$temporary"; then
+      rm -f "$temporary"
+      warn "unterminated Coder workspace notes: $target"
+      return 1
+    fi
+    chmod --reference="$target" "$temporary"
+    mv -f "$temporary" "$target"
   done
 }
 
@@ -48,6 +75,7 @@ sync_nvm_local_bin_links() {
   for bin in node npm npx corepack; do
     [[ -x "$nvm_node_bin/$bin" ]] && ln -sf "$nvm_node_bin/$bin" "$HOME/.local/bin/$bin"
   done
+  return 0
 }
 
 workspace_after_linux() {
@@ -55,7 +83,6 @@ workspace_after_linux() {
 }
 
 workspace_before_dots() {
-  rm -rf "$HOME/.config/opencode"
   bash "$REPO_DIR/scripts/volatile-dots.sh" prepare
 }
 
@@ -99,39 +126,13 @@ workspace_after_dots() {
         "$codex_config"
       warn "Codex OTEL CA missing; removed explicit ca-certificate entries"
     fi
-    sed -i \
-      -e 's|https://api\.ai\.h-cloud\.lan/mcp/|http://litellm-proxy.ai.svc.cluster.local:4000/mcp/|' \
-      "$codex_config"
-    ok "Codex litellm MCP -> in-cluster service"
   else
     warn "Codex config not found after dots sync"
   fi
 
-  if [[ ! -x "$HOME/.local/bin/codebase-memory-mcp" ]]; then
-    step "codebase-memory-mcp"
-    local arch asset
-    arch="$(uname -m)"
-    case "$arch" in
-      aarch64|arm64) asset=codebase-memory-mcp-linux-arm64.tar.gz ;;
-      x86_64|amd64) asset=codebase-memory-mcp-linux-amd64.tar.gz ;;
-      *)
-        asset=""
-        warn "codebase-memory-mcp has no Linux release for architecture: $arch"
-        ;;
-    esac
-    if [[ -n "$asset" ]]; then
-      curl -fsSL "https://github.com/DeusData/codebase-memory-mcp/releases/latest/download/$asset" \
-        | tar -xz -C "$HOME/.local/bin" codebase-memory-mcp \
-        || warn "codebase-memory-mcp install failed; omni MCP sync may skip it"
-    fi
-  fi
-
-  if [[ -f "$HOME/.claude.json" ]]; then
-    step "litellm MCP in-cluster URL (claude)"
-    sed -i \
-      -e 's|https://api\.ai\.h-cloud\.lan/mcp/|http://litellm-proxy.ai.svc.cluster.local:4000/mcp/|g' \
-      "$HOME/.claude.json"
-    ok "claude litellm MCP -> in-cluster service"
+  if [[ -n "${CODER_MCP_URL:-}" ]]; then
+    python3 "$REPO_DIR/scripts/coder-client-config.py"
+    ok "applied explicit CODER_MCP_URL"
   fi
 }
 

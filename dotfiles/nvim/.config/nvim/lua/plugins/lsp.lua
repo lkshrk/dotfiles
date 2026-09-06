@@ -162,21 +162,43 @@ return {
         bashls = {},
       }
 
+      local composable = vim.env.CODER_ENVIRONMENT_MODE == 'composable'
+      local function setup_server(server_name)
+        local server = servers[server_name] or {}
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+        require('lspconfig')[server_name].setup(server)
+      end
+
       require('mason-tool-installer').setup {
-        ensure_installed = { 'stylua', 'markdownlint' },
+        ensure_installed = composable and {} or { 'stylua', 'markdownlint' },
+        run_on_start = not composable,
       }
 
       require('mason-lspconfig').setup {
-        ensure_installed = vim.tbl_keys(servers),
-        automatic_installation = true,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
+        ensure_installed = composable and {} or vim.tbl_keys(servers),
+        automatic_installation = not composable,
+        automatic_enable = not composable,
+        handlers = composable and {} or { setup_server },
       }
+
+      if composable then
+        local external_servers = {
+          lua_ls = 'lua-language-server',
+          yamlls = 'yaml-language-server',
+          jsonls = 'vscode-json-language-server',
+          taplo = 'taplo',
+          pyright = 'pyright-langserver',
+          ts_ls = 'typescript-language-server',
+          bashls = 'bash-language-server',
+          gopls = 'gopls',
+          rust_analyzer = 'rust-analyzer',
+        }
+        for server_name, executable in pairs(external_servers) do
+          if vim.fn.executable(executable) == 1 then
+            setup_server(server_name)
+          end
+        end
+      end
     end,
   },
 }
