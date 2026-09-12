@@ -127,7 +127,8 @@
         "talosctl",
         "opentofu",
         "minijinja-cli",
-        "watch"
+        "watch",
+        "flate"
       ]
     },
     {
@@ -202,7 +203,8 @@
         "pipx",
         "python@3.14",
         "wheel",
-        "pyright"
+        "pyright",
+        "poetry"
       ]
     },
     {

@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v24.schema.json",
-  "version": 24,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v25.schema.json",
+  "version": 25,
   "$include": [
     "settings.d/tools.json",
     "settings.d/groups.json",
@@ -144,7 +144,8 @@
       "pkgconf",
       "npm",
       "asyncpg",
-      "pnpm"
+      "pnpm",
+      "telegram"
     ]
   },
   "settings": {

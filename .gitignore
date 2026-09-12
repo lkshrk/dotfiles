@@ -98,21 +98,16 @@ dotfiles/zed/.config/zed/prompts/
 dotfiles/zed/.config/zed/themes/
 dotfiles/zed/.config/zed/settings_backup.json
 
-# claude runtime; keep tracked config, agents, commands, hooks, rules, and scripts
+# claude runtime; keep tracked config, hooks, rules, and scripts (agents/commands/skills are apm-owned)
 dotfiles/claude/.claude/*
 !dotfiles/claude/.claude/CLAUDE.md
 !dotfiles/claude/.claude/keybindings.json
-!dotfiles/claude/.claude/.omc-config.json
 !dotfiles/claude/.claude/settings.json
 !dotfiles/claude/.claude/statusline-command.sh
 !dotfiles/claude/.claude/tokenline.sh
 !dotfiles/claude/.claude/RTK.md
 !dotfiles/claude/.claude/rules/
 !dotfiles/claude/.claude/rules/**
-!dotfiles/claude/.claude/commands/
-!dotfiles/claude/.claude/commands/**
-!dotfiles/claude/.claude/agents/
-!dotfiles/claude/.claude/agents/**
 !dotfiles/claude/.claude/hooks/
 !dotfiles/claude/.claude/hooks/**
 !dotfiles/claude/.claude/scripts/

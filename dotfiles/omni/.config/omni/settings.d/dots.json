@@ -40,14 +40,11 @@
             "*",
             "!/settings.json",
             "!/CLAUDE.md",
-            "!/agents/",
             "!/scripts/",
-            "!/.omc-config.json",
             "!/keybindings.json",
             "!/statusline-command.sh",
             "!/tokenline.sh",
             "!/RTK.md",
-            "!/commands/",
             "!/rules/"
           ]
         },
