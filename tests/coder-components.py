@@ -50,7 +50,7 @@ class ComponentsTest(unittest.TestCase):
 
     def test_every_stack_readiness_and_linux_provider(self):
         expected = {
-            "go": {"go", "gopls"}, "python": {"uv", "node"}, "ts": {"node", "pnpm"},
+            "go": {"go", "gopls"}, "python": {"uv", "node"}, "ts": {"node", "pnpm", "tsc", "typescript-language-server"},
             "lua": {"lua", "luarocks"}, "rust": {"rustc", "cargo"},
             "k8s": {"kubectl", "helm", "kustomize"}, "gitops": {"flux", "helmfile"},
             "argo": {"argo"}, "talos": {"talosctl"}, "cilium": {"cilium"},
@@ -67,6 +67,24 @@ class ComponentsTest(unittest.TestCase):
                 self.assertNotIn("ignore", config)
                 for name, tool in config["tools"].items():
                     self.assertTrue(any(p["provider"] in {"script", "apt", "npm", "bun", "cargo", "uv"} for p in tool["providers"]), name)
+
+    def test_ts_uses_native_catalog_and_requires_compiler_and_server(self):
+        catalog = json.loads((REPO / "dotfiles/omni/.config/omni/settings.d/tools.json").read_text())["tools"]
+        for stacks in ["ts", "go,python,ts"]:
+            config = resolved(CODER_OMNI_STACKS=stacks)
+            for name in ["typescript", "typescript-language-server"]:
+                self.assertIn(name, config["tools"])
+                self.assertEqual(config["tools"][name], catalog[name])
+                self.assertEqual(catalog[name]["providers"], [{"provider": "npm", "package": name}])
+            self.assertTrue({"tsc", "typescript-language-server"} <= set(components.required_commands(config, "npm")))
+            self.assertNotIn("typescript", components.required_commands(config))
+
+    def test_unselected_ts_does_not_install_or_require_ts_tools(self):
+        for stacks in ["", *[s for s in components.STACK_TOOLS if s != "ts"]]:
+            for clients in ["", "codex", "claude"]:
+                config = resolved(CODER_OMNI_STACKS=stacks, CODER_AGENT_CLIENTS=clients)
+                self.assertFalse({"typescript", "typescript-language-server"} & config["tools"].keys())
+                self.assertFalse({"tsc", "typescript-language-server"} & set(components.required_commands(config)))
 
     def test_pairs_deduplicate_and_preserve_dependencies(self):
         for first, second in itertools.combinations(components.STACK_TOOLS, 2):
@@ -135,7 +153,7 @@ class ComponentsTest(unittest.TestCase):
 
     def test_required_npm_commands_only_follow_selection(self):
         self.assertEqual(components.required_commands(resolved(), "npm"), [])
-        self.assertEqual(components.required_commands(resolved(CODER_OMNI_STACKS="ts"), "npm"), ["pnpm"])
+        self.assertEqual(components.required_commands(resolved(CODER_OMNI_STACKS="ts"), "npm"), ["pnpm", "tsc", "typescript-language-server"])
         self.assertEqual(components.required_commands(resolved(CODER_OMNI_STACKS="python"), "npm"), ["pyright"])
         self.assertEqual(components.required_commands(resolved(CODER_AGENT_CLIENTS="codex"), "npm"), [])
 
@@ -225,13 +243,13 @@ class ClientFilesTest(unittest.TestCase):
             for rc in [".bashrc", ".profile", ".zshrc"]:
                 (home / rc).write_text("exit 91\n")
             config = home / "settings.json"
-            config.write_text(json.dumps(resolved(CODER_OMNI_STACKS="python,ts")))
+            config.write_text(json.dumps(resolved(CODER_OMNI_STACKS="python")))
             env = dict(os.environ, HOME=str(home), NVM_BIN=str(node_bin), NPM_CONFIG_PREFIX=str(prefix), PATH=str(node_bin) + ":" + os.environ["PATH"])
             args = ["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_node_commands "$2"; coder_components_link_npm_commands "$3"', "test", str(REPO), str(node_bin), str(config)]
             for _ in range(2):
                 subprocess.run(args, env=env, text=True, capture_output=True, check=True)
             clean = {"HOME": str(home), "PATH": ":".join(str(home / p) for p in [".local/bin", ".bun/bin", ".cargo/bin", ".krew/bin", ".local/share/pnpm"]) + ":/bin"}
-            for name in ["pnpm", "pyright"]:
+            for name in ["pyright"]:
                 result = subprocess.run([name, "--version"], env=clean, text=True, capture_output=True, check=True)
                 self.assertEqual(result.stdout.strip(), name + " executable")
                 self.assertEqual((home / ".local/bin" / name).resolve(), (prefix / "bin" / name).resolve())
@@ -251,6 +269,43 @@ class ClientFilesTest(unittest.TestCase):
             result = subprocess.run(args, env=env, text=True, capture_output=True)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("required npm executable missing", result.stderr)
+
+    @unittest.skipUnless(os.environ.get("CODER_TEST_REAL_NPM") == "1", "set CODER_TEST_REAL_NPM=1 for real npm integration")
+    def test_real_ts_npm_readiness_on_stable_path(self):
+        with tempfile.TemporaryDirectory(dir=REPO) as directory:
+            home = Path(directory)
+            prefix = home / "npm-prefix"
+            env = dict(os.environ, HOME=str(home), NPM_CONFIG_PREFIX=str(prefix),
+                       NPM_CONFIG_CACHE=str(home / "npm-cache"), NODE_COMPILE_CACHE=str(home / "node-cache"))
+            config = home / "settings.json"
+            selected = resolved(CODER_OMNI_STACKS="ts")
+            config.write_text(json.dumps(selected))
+            packages = [provider["package"] for tool in selected["tools"].values()
+                        for provider in tool["providers"] if provider["provider"] == "npm"]
+            subprocess.run(["npm", "install", "--global", "--ignore-scripts", "--registry=https://registry.npmjs.org", *packages],
+                           env=env, check=True, capture_output=True, text=True)
+            node_bin = home / "node-bin"
+            node_bin.mkdir()
+            (node_bin / "node").symlink_to(shutil.which("node"))
+            (node_bin / "npm").symlink_to(shutil.which("npm"))
+            args = ["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_node_commands "$2"; coder_components_link_npm_commands "$3"',
+                    "test", str(REPO), str(node_bin), str(config)]
+            for _ in range(2):
+                subprocess.run(args, env=env, check=True, capture_output=True, text=True)
+            clean = {"HOME": str(home), "PATH": str(home / ".local/bin") + ":/bin"}
+            for name in ["pnpm", "tsc", "typescript-language-server"]:
+                subprocess.run(["/bin/bash", "--noprofile", "--norc", "-c", '"$1" --version', "test", name], env=clean, check=True, capture_output=True, text=True)
+                self.assertEqual((home / ".local/bin" / name).resolve(), (prefix / "bin" / name).resolve())
+            source = home / "acceptance.ts"
+            source.write_text("const value: string = 'ready';\n")
+            subprocess.run(["tsc", "--noEmit", str(source)], env=clean, check=True, capture_output=True, text=True)
+            for name in ["tsc", "typescript-language-server"]:
+                executable = prefix / "bin" / name
+                executable.chmod(0o644)
+                result = subprocess.run(args, env=env, capture_output=True, text=True)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("required npm executable missing:", result.stderr)
+                executable.chmod(0o755)
 
     def test_composable_node_link_conflicts_preserve_user_files(self):
         for kind in ["file", "directory", "symlink", "dangling"]:

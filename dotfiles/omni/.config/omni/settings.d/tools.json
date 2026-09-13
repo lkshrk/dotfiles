@@ -2038,6 +2038,22 @@
       ],
       "git": "https://github.com/tsl0922/ttyd"
     },
+    "typescript": {
+      "providers": [
+        {
+          "provider": "npm",
+          "package": "typescript"
+        }
+      ]
+    },
+    "typescript-language-server": {
+      "providers": [
+        {
+          "provider": "npm",
+          "package": "typescript-language-server"
+        }
+      ]
+    },
     "typewhisper": {
       "providers": [
         {
