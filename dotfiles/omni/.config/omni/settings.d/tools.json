@@ -2074,7 +2074,7 @@
           "bin": "uv",
           "options": {
             "check": "command -v uv || test -x \"$HOME/.local/bin/uv\"",
-            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://astral.sh/uv/install.sh -o \"$tmp/install.sh\"; UV_INSTALL_DIR=\"$HOME/.local/bin\" UV_NO_MODIFY_PATH=1 sh \"$tmp/install.sh\"",
+            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --connect-timeout 10 --max-time 120 --proto-redir '=https' https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh -o \"$tmp/install.sh\"; UV_INSTALL_DIR=\"$HOME/.local/bin\" UV_NO_MODIFY_PATH=1 UV_INSTALLER_GITHUB_BASE_URL=https://github.com sh \"$tmp/install.sh\"",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/astral-sh/uv/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
             "uninstall": "rm -f \"$HOME/.local/bin/uv\" \"$HOME/.local/bin/uvx\"",
             "upgrade": "PATH=\"$HOME/.local/bin:$PATH\" uv self update",
