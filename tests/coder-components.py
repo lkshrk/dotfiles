@@ -280,7 +280,7 @@ class ClientFilesTest(unittest.TestCase):
                 else:
                     self.assertEqual(target.readlink(), original if kind == "symlink" else home / "missing")
 
-    def test_composable_node_upgrade_requires_operator_resolution(self):
+    def test_composable_node_upgrade_tracks_managed_links(self):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
             bins = [home / ".nvm/versions/node" / version / "bin" for version in ["v24.0.0", "v24.1.0"]]
@@ -292,12 +292,36 @@ class ClientFilesTest(unittest.TestCase):
             subprocess.run(args + [str(bins[0])], env=env, capture_output=True, check=True)
             target = home / ".local/bin/node"
             result = subprocess.run(args + [str(bins[1])], env=env, capture_output=True, text=True)
-            self.assertNotEqual(result.returncode, 0)
-            self.assertIn("refusing to replace", result.stderr)
-            self.assertEqual(target.readlink(), bins[0] / "node")
-            target.unlink()
-            subprocess.run(args + [str(bins[1])], env=env, capture_output=True, check=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(target.readlink(), bins[1] / "node")
+            (bins[1] / "node").unlink()
+            result = subprocess.run(args + [str(bins[0])], env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(target.readlink(), bins[0] / "node")
+
+    def test_managed_receipt_does_not_override_user_replacement(self):
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            args = ["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_local_bin "$2" pyright', "test", str(REPO)]
+            env = dict(os.environ, HOME=str(home))
+            subprocess.run(args + [str(home / "old-runtime/pyright")], env=env, capture_output=True, check=True)
+            target = home / ".local/bin/pyright"
+            target.unlink()
+            target.symlink_to(home / "user-runtime/pyright")
+            result = subprocess.run(args + [str(home / "new-runtime/pyright")], env=env, capture_output=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(target.readlink(), home / "user-runtime/pyright")
+
+    def test_unrecorded_runtime_link_is_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            target = home / ".local/bin/node"
+            target.parent.mkdir(parents=True)
+            original = home / ".nvm/versions/node/v24.0.0/bin/node"
+            target.symlink_to(original)
+            result = subprocess.run(["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_local_bin "$HOME/.nvm/versions/node/v24.1.0/bin/node" node', "test", str(REPO)], env=dict(os.environ, HOME=str(home)), capture_output=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(target.readlink(), original)
 
     def test_legacy_before_dots_preserves_opencode(self):
         with tempfile.TemporaryDirectory() as directory:
