@@ -18,13 +18,24 @@ coder_components_omni_compatible() {
 }
 
 coder_components_link_local_bin() {
-  local source="$1" target="$HOME/.local/bin/$2"
-  mkdir -p "$HOME/.local/bin"
+  local source="$1" target="$HOME/.local/bin/$2" state="$HOME/.local/state/coder-components/links" previous
+  [[ "$2" =~ ^[a-zA-Z0-9][a-zA-Z0-9._+-]*$ ]] || die "invalid executable name: $2"
+  [[ ! -L "$state" && ! -L "${state%/*}" ]] || die "refusing symlinked link receipt directory: $state"
+  mkdir -p "$HOME/.local/bin" "$state"
+  [[ ! -L "$state/$2" ]] || die "refusing symlinked link receipt: $state/$2"
   if [[ -L "$target" && "$(readlink "$target")" == "$source" ]]; then
     return 0
   fi
-  [[ ! -e "$target" && ! -L "$target" ]] || die "refusing to replace existing executable path: $target (wanted $source)"
-  ln -sT "$source" "$target"
+  if [[ -e "$target" || -L "$target" ]]; then
+    [[ -L "$target" && -f "$state/$2" ]] || die "refusing to replace existing executable path: $target (wanted $source)"
+    previous="$(cat "$state/$2")"
+    [[ "$(readlink "$target")" == "$previous" ]] || die "refusing to replace modified executable path: $target"
+    ln -sfnT "$source" "$target"
+  else
+    ln -sT "$source" "$target"
+  fi
+  printf '%s\n' "$source" > "$state/$2"
+
 }
 
 coder_components_link_node_commands() {

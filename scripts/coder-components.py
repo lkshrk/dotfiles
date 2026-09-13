@@ -191,6 +191,7 @@ def main():
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--required-commands", type=Path)
     parser.add_argument("--required-provider")
+    parser.add_argument("--contract", action="store_true")
     args = parser.parse_args()
     if args.required_commands:
         print("\n".join(required_commands(json.loads(args.required_commands.read_text()), args.required_provider)))
@@ -199,6 +200,9 @@ def main():
         config = resolve(args.repo.resolve(), os.environ)
     except (ValueError, OSError, KeyError) as exc:
         parser.error(str(exc))
+    if args.contract:
+        config = {"version": 1, "selection": contract(os.environ),
+                  "required_commands": required_commands(config), "configuration": config}
     json.dump(config, sys.stdout, indent=2)
     print()
 
