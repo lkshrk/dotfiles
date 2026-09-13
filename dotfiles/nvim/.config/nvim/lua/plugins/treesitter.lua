@@ -15,6 +15,7 @@ return {
       'c',
       'diff',
       'html',
+      'html_tags',
       'javascript',
       'json',
       'lua',
