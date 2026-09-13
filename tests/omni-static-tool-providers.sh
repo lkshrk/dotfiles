@@ -8,7 +8,7 @@ tools="$repo_dir/dotfiles/omni/.config/omni/settings.d/tools.json"
 groups="$repo_dir/dotfiles/omni/.config/omni/settings.d/groups.json"
 
 jq -e '
-  .host_settings.coder.provider_priority as $providers
+  .host_settings."coder-components".provider_priority as $providers
   | ($providers | index("script")) as $script
   | ($providers | index("apt")) as $apt
   | $script != null and $apt != null and $script < $apt

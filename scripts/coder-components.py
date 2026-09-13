@@ -13,7 +13,7 @@ HOST = "coder-components"
 STACK_TOOLS = {
     "go": ["go", "go-task", "golangci-lint", "gomplate", "gopls"],
     "python": ["uv", "python@3.14", "pyright"],
-    "ts": ["nvm", "pnpm"],
+    "ts": ["nvm", "pnpm", "typescript", "typescript-language-server"],
     "lua": ["lua", "luarocks", "busted", "lua-language-server", "luacheck", "stylua"],
     "rust": ["cargo"],
     "k8s": ["kubernetes-cli", "helm", "kustomize", "krew", "kubectx"],
@@ -144,8 +144,8 @@ def resolve(repo, env):
     resolved_dots = []
     for name in CORE_DOTS:
         dot = copy.deepcopy(dots[name])
-        if "coder" in dot.get("hosts", {}):
-            dot["hosts"] = {HOST: dot["hosts"]["coder"]}
+        if HOST in dot.get("hosts", {}):
+            dot["hosts"] = {HOST: dot["hosts"][HOST]}
         else:
             dot.pop("hosts", None)
         resolved_dots.append(dot)
@@ -155,7 +155,7 @@ def resolve(repo, env):
     missing = set(names) - tools.keys()
     if missing:
         raise ValueError("missing Omni tool definitions: " + ", ".join(sorted(missing)))
-    host_settings = copy.deepcopy(settings["host_settings"]["coder"])
+    host_settings = copy.deepcopy(settings["host_settings"][HOST])
     host_settings["dots_repo"] = str(repo)
     return {
         "$schema": settings["$schema"],
@@ -173,7 +173,7 @@ def required_commands(config, provider=None):
         "nvm": ["node", "npm"], "cargo": ["rustc", "cargo"],
         "python@3.14": [], "ca-certificates": [], "libssl-dev": [],
         "build-essential": ["make", "cc", "c++"], "xz-utils": ["xz"],
-        "go-task": ["task"], "kubernetes-cli": ["kubectl"],
+        "typescript": ["tsc"], "go-task": ["task"], "kubernetes-cli": ["kubectl"],
         "cilium-cli": ["cilium"], "opentofu": ["tofu"],
         "bats-core": ["bats"], "claude-code": ["claude"],
         "@openai/codex": ["codex"], "oh-my-codex": ["omx"],

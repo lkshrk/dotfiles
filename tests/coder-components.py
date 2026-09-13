@@ -48,9 +48,45 @@ class ComponentsTest(unittest.TestCase):
         self.assertFalse(config["settings"]["dots_git"]["auto_commit"])
         self.assertEqual(config["host_settings"]["coder-components"]["dots_repo"], str(REPO))
 
+    def test_legacy_entrypoints_and_host_profiles_are_absent(self):
+        for name in ["setup-coder.sh", "setup-hermes.sh", "setup-workspace.sh",
+                     "scripts/setup-coder-linux.sh", "scripts/setup-workspace-linux.sh"]:
+            self.assertFalse((REPO / name).exists(), name)
+        settings = json.loads((REPO / "dotfiles/omni/.config/omni/settings.json").read_text())
+        legacy = {"coder", "hermes", "auto-code"}
+        self.assertFalse(legacy & settings["hosts"].keys())
+        self.assertFalse(legacy & settings["host_settings"].keys())
+        self.assertIn("topaz", settings["hosts"])
+        for filename in ["groups.json", "dots.json"]:
+            data = json.loads((REPO / "dotfiles/omni/.config/omni/settings.d" / filename).read_text())
+            self.assertFalse(legacy & {group["name"] for group in data["groups"]})
+            for group in data["groups"]:
+                for dot in group.get("dots", []):
+                    self.assertFalse(legacy & dot.get("hosts", {}).keys())
+        config = resolved(CODER_OMNI_STACKS="containers")
+        self.assertIn("docker", config["tools"])
+        tmux = next(dot for group in config["groups"] for dot in group.get("dots", []) if dot["name"] == "tmux")
+        self.assertEqual(tmux["hosts"]["coder-components"]["package"], "tmux@coder")
+
+    def test_source_and_print_config_do_not_mutate_home(self):
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            for client, filename in [("claude", "CLAUDE.md"), ("codex", "AGENTS.md"), ("openhands", "settings.json")]:
+                path = home / ("." + client) / filename
+                path.parent.mkdir()
+                path.write_text("preserve existing " + client)
+            before = {str(path.relative_to(home)): path.read_bytes() for path in home.rglob("*") if path.is_file()}
+            env = {k: v for k, v in os.environ.items() if not k.startswith(("CODER_", "OMNI_"))}
+            env["HOME"] = str(home)
+            result = subprocess.run(["bash", "-c", 'source "$1/setup-coder-components.sh"; install_coder_workspace_notes; coder_components_main --print-config', "test", str(REPO)], env=env, capture_output=True, text=True, check=True)
+            self.assertEqual(json.loads(result.stdout), resolved())
+            after = {str(path.relative_to(home)): path.read_bytes() for path in home.rglob("*") if path.is_file()}
+            self.assertEqual(after, before)
+            self.assertEqual({path.name for path in home.iterdir()}, {".claude", ".codex", ".openhands"})
+
     def test_every_stack_readiness_and_linux_provider(self):
         expected = {
-            "go": {"go", "gopls"}, "python": {"uv", "node"}, "ts": {"node", "pnpm"},
+            "go": {"go", "gopls"}, "python": {"uv", "node"}, "ts": {"node", "pnpm", "tsc", "typescript-language-server"},
             "lua": {"lua", "luarocks"}, "rust": {"rustc", "cargo"},
             "k8s": {"kubectl", "helm", "kustomize"}, "gitops": {"flux", "helmfile"},
             "argo": {"argo"}, "talos": {"talosctl"}, "cilium": {"cilium"},
@@ -67,6 +103,29 @@ class ComponentsTest(unittest.TestCase):
                 self.assertNotIn("ignore", config)
                 for name, tool in config["tools"].items():
                     self.assertTrue(any(p["provider"] in {"script", "apt", "npm", "bun", "cargo", "uv"} for p in tool["providers"]), name)
+
+    def test_shared_ts_group_supplies_native_editor_tools(self):
+        groups = json.loads((REPO / "dotfiles/omni/.config/omni/settings.d/groups.json").read_text())["groups"]
+        tools = next(group["tools"] for group in groups if group["name"] == "ts")
+        self.assertTrue({"typescript", "typescript-language-server"} <= set(tools))
+
+    def test_ts_uses_native_catalog_and_requires_compiler_and_server(self):
+        catalog = json.loads((REPO / "dotfiles/omni/.config/omni/settings.d/tools.json").read_text())["tools"]
+        for stacks in ["ts", "go,python,ts"]:
+            config = resolved(CODER_OMNI_STACKS=stacks)
+            for name in ["typescript", "typescript-language-server"]:
+                self.assertIn(name, config["tools"])
+                self.assertEqual(config["tools"][name], catalog[name])
+                self.assertEqual(catalog[name]["providers"], [{"provider": "npm", "package": name}])
+            self.assertTrue({"tsc", "typescript-language-server"} <= set(components.required_commands(config, "npm")))
+            self.assertNotIn("typescript", components.required_commands(config))
+
+    def test_unselected_ts_does_not_install_or_require_ts_tools(self):
+        for stacks in ["", *[s for s in components.STACK_TOOLS if s != "ts"]]:
+            for clients in ["", "codex", "claude"]:
+                config = resolved(CODER_OMNI_STACKS=stacks, CODER_AGENT_CLIENTS=clients)
+                self.assertFalse({"typescript", "typescript-language-server"} & config["tools"].keys())
+                self.assertFalse({"tsc", "typescript-language-server"} & set(components.required_commands(config)))
 
     def test_pairs_deduplicate_and_preserve_dependencies(self):
         for first, second in itertools.combinations(components.STACK_TOOLS, 2):
@@ -135,7 +194,7 @@ class ComponentsTest(unittest.TestCase):
 
     def test_required_npm_commands_only_follow_selection(self):
         self.assertEqual(components.required_commands(resolved(), "npm"), [])
-        self.assertEqual(components.required_commands(resolved(CODER_OMNI_STACKS="ts"), "npm"), ["pnpm"])
+        self.assertEqual(components.required_commands(resolved(CODER_OMNI_STACKS="ts"), "npm"), ["pnpm", "tsc", "typescript-language-server"])
         self.assertEqual(components.required_commands(resolved(CODER_OMNI_STACKS="python"), "npm"), ["pyright"])
         self.assertEqual(components.required_commands(resolved(CODER_AGENT_CLIENTS="codex"), "npm"), [])
 
@@ -167,7 +226,7 @@ class ClientFilesTest(unittest.TestCase):
             source.write_text(original)
             target = home / "notes.md"
             target.symlink_to(source)
-            args = ["bash", "-c", 'source "$1/setup-coder.sh"; install_coder_workspace_notes "$2"', "test", str(REPO), str(target)]
+            args = ["bash", "-c", 'source "$1/setup-coder-components.sh"; install_coder_workspace_notes "$2"', "test", str(REPO), str(target)]
             env = dict(os.environ, HOME=str(home), CODER_ENABLE_DIND="0")
             subprocess.run(args, env=env, check=True, capture_output=True)
             result = target.read_text()
@@ -188,11 +247,11 @@ class ClientFilesTest(unittest.TestCase):
             node_bin = home / "node-bin"
             node_bin.mkdir()
             (node_bin / "node").symlink_to(shutil.which("python3"))
-            subprocess.run(["bash", "-c", 'source "$1/setup-coder.sh"; sync_nvm_local_bin_links "$2"', "test", str(REPO), str(node_bin)], env=dict(os.environ, HOME=str(home)), check=True)
+            subprocess.run(["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_node_commands "$2"', "test", str(REPO), str(node_bin)], env=dict(os.environ, HOME=str(home)), check=True)
             self.assertEqual((home / ".local/bin/node").resolve(), (node_bin / "node").resolve())
             self.assertFalse((home / ".local/bin/corepack").exists())
 
-    def test_legacy_node_links_retarget_on_upgrade(self):
+    def test_node_links_retarget_on_upgrade(self):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
             env = dict(os.environ, HOME=str(home))
@@ -201,7 +260,7 @@ class ClientFilesTest(unittest.TestCase):
                 node_bin.mkdir(parents=True)
                 for name in ["node", "npm", "npx", "corepack"]:
                     (node_bin / name).symlink_to(shutil.which("python3"))
-                subprocess.run(["bash", "-c", 'source "$1/setup-coder.sh"; sync_nvm_local_bin_links "$2"', "test", str(REPO), str(node_bin)], env=env, text=True, capture_output=True, check=True)
+                subprocess.run(["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_node_commands "$2"', "test", str(REPO), str(node_bin)], env=env, text=True, capture_output=True, check=True)
                 for name in ["node", "npm", "npx", "corepack"]:
                     self.assertEqual((home / ".local/bin" / name).readlink(), node_bin / name)
 
@@ -225,13 +284,13 @@ class ClientFilesTest(unittest.TestCase):
             for rc in [".bashrc", ".profile", ".zshrc"]:
                 (home / rc).write_text("exit 91\n")
             config = home / "settings.json"
-            config.write_text(json.dumps(resolved(CODER_OMNI_STACKS="python,ts")))
+            config.write_text(json.dumps(resolved(CODER_OMNI_STACKS="python")))
             env = dict(os.environ, HOME=str(home), NVM_BIN=str(node_bin), NPM_CONFIG_PREFIX=str(prefix), PATH=str(node_bin) + ":" + os.environ["PATH"])
             args = ["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_node_commands "$2"; coder_components_link_npm_commands "$3"', "test", str(REPO), str(node_bin), str(config)]
             for _ in range(2):
                 subprocess.run(args, env=env, text=True, capture_output=True, check=True)
             clean = {"HOME": str(home), "PATH": ":".join(str(home / p) for p in [".local/bin", ".bun/bin", ".cargo/bin", ".krew/bin", ".local/share/pnpm"]) + ":/bin"}
-            for name in ["pnpm", "pyright"]:
+            for name in ["pyright"]:
                 result = subprocess.run([name, "--version"], env=clean, text=True, capture_output=True, check=True)
                 self.assertEqual(result.stdout.strip(), name + " executable")
                 self.assertEqual((home / ".local/bin" / name).resolve(), (prefix / "bin" / name).resolve())
@@ -251,6 +310,43 @@ class ClientFilesTest(unittest.TestCase):
             result = subprocess.run(args, env=env, text=True, capture_output=True)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("required npm executable missing", result.stderr)
+
+    @unittest.skipUnless(os.environ.get("CODER_TEST_REAL_NPM") == "1", "set CODER_TEST_REAL_NPM=1 for real npm integration")
+    def test_real_ts_npm_readiness_on_stable_path(self):
+        with tempfile.TemporaryDirectory(dir=REPO) as directory:
+            home = Path(directory)
+            prefix = home / "npm-prefix"
+            env = dict(os.environ, HOME=str(home), NPM_CONFIG_PREFIX=str(prefix),
+                       NPM_CONFIG_CACHE=str(home / "npm-cache"), NODE_COMPILE_CACHE=str(home / "node-cache"))
+            config = home / "settings.json"
+            selected = resolved(CODER_OMNI_STACKS="ts")
+            config.write_text(json.dumps(selected))
+            packages = [provider["package"] for tool in selected["tools"].values()
+                        for provider in tool["providers"] if provider["provider"] == "npm"]
+            subprocess.run(["npm", "install", "--global", "--ignore-scripts", "--registry=https://registry.npmjs.org", *packages],
+                           env=env, check=True, capture_output=True, text=True)
+            node_bin = home / "node-bin"
+            node_bin.mkdir()
+            (node_bin / "node").symlink_to(shutil.which("node"))
+            (node_bin / "npm").symlink_to(shutil.which("npm"))
+            args = ["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_node_commands "$2"; coder_components_link_npm_commands "$3"',
+                    "test", str(REPO), str(node_bin), str(config)]
+            for _ in range(2):
+                subprocess.run(args, env=env, check=True, capture_output=True, text=True)
+            clean = {"HOME": str(home), "PATH": str(home / ".local/bin") + ":/bin"}
+            for name in ["pnpm", "tsc", "typescript-language-server"]:
+                subprocess.run(["/bin/bash", "--noprofile", "--norc", "-c", '"$1" --version', "test", name], env=clean, check=True, capture_output=True, text=True)
+                self.assertEqual((home / ".local/bin" / name).resolve(), (prefix / "bin" / name).resolve())
+            source = home / "acceptance.ts"
+            source.write_text("const value: string = 'ready';\n")
+            subprocess.run(["tsc", "--noEmit", str(source)], env=clean, check=True, capture_output=True, text=True)
+            for name in ["tsc", "typescript-language-server"]:
+                executable = prefix / "bin" / name
+                executable.chmod(0o644)
+                result = subprocess.run(args, env=env, capture_output=True, text=True)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("required npm executable missing:", result.stderr)
+                executable.chmod(0o755)
 
     def test_composable_node_link_conflicts_preserve_user_files(self):
         for kind in ["file", "directory", "symlink", "dangling"]:
@@ -323,13 +419,13 @@ class ClientFilesTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(target.readlink(), original)
 
-    def test_legacy_before_dots_preserves_opencode(self):
+    def test_selected_client_prepare_preserves_opencode(self):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
             target = home / ".config/opencode/config.json"
             target.parent.mkdir(parents=True)
             target.write_text("keep me")
-            subprocess.run(["bash", "-c", 'source "$1/setup-coder.sh"; workspace_before_dots', "test", str(REPO)], env=dict(os.environ, HOME=str(home)), check=True)
+            subprocess.run(["bash", "-c", 'bash "$1/scripts/volatile-dots.sh" prepare claude', "test", str(REPO)], env=dict(os.environ, HOME=str(home)), check=True)
             self.assertEqual(target.read_text(), "keep me")
 
     def test_mcp_opt_in_preserves_other_servers_and_source(self):
@@ -423,7 +519,7 @@ class NativeOmniTest(unittest.TestCase):
 
 
 class CoreTest(unittest.TestCase):
-    def test_core_providers_and_mason_policy(self):
+    def test_core_providers_and_native_lsp_policy(self):
         config = resolved()
         self.assertFalse({"cargo", "bun", "nvm"} & config["tools"].keys())
         self.assertTrue({"nvim", "fd", "fdfind", "bat", "batcat", "rg", "lefthook", "lazygit", "tree-sitter", "cc", "make", "delta"} <= set(components.required_commands(config)))
@@ -433,11 +529,13 @@ class CoreTest(unittest.TestCase):
             for command in options["providers"][0].get("options", {}).values():
                 subprocess.run(["bash", "-n"], input=command, text=True, check=True)
         text = (REPO / "dotfiles/nvim/.config/nvim/lua/plugins/lsp.lua").read_text()
-        self.assertIn("vim.env.CODER_ENVIRONMENT_MODE == 'composable'", text)
-        self.assertIn("ensure_installed = composable and {} or vim.tbl_keys(servers)", text)
-        self.assertIn("run_on_start = not composable", text)
-        self.assertIn("automatic_installation = not composable", text)
-        self.assertIn("handlers = composable and {} or { setup_server }", text)
+        self.assertNotIn("client_supports_method", text)
+        self.assertNotIn("nvim-0.11", text)
+        self.assertNotIn("mason", text)
+        self.assertNotIn("CODER_ENVIRONMENT_MODE", text)
+        self.assertNotIn("require('lspconfig')", text)
+        self.assertIn("vim.lsp.config(server_name, server)", text)
+        self.assertIn("vim.lsp.enable(server_name)", text)
         self.assertIn("vim.fn.executable(executable) == 1", text)
         self.assertIn("gopls = 'gopls'", text)
         self.assertIn("pyright = 'pyright-langserver'", text)

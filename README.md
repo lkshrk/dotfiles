@@ -37,16 +37,17 @@ claude doctor
 
 ## Linux workspaces
 
-Linux workspaces share `setup-workspace.sh` and use a host-specific entry point:
+Coder workspaces use only the composable entrypoint, with explicit tool stacks and agent clients:
 
 ```sh
 git clone <repo> ~/dotfiles
 cd ~/dotfiles
-./setup-coder.sh   # Coder workspace
-./setup-hermes.sh  # Hermes workspace
+CODER_OMNI_STACKS=go,containers CODER_AGENT_CLIENTS=claude,codex ./setup-coder-components.sh
 ```
 
-Both install the shared Linux prerequisites and sync their Omni host profile. Coder additionally configures Codex, Claude Code, agent plugins, and workspace-template integrations; Hermes does not.
+Use `--print-config` to inspect the resolved Omni configuration without installing anything. With no selections, setup installs the core terminal/editor tools and personal Zsh, Neovim, tmux and LazyGit configuration. Language stacks and agent clients are opt-in. Required component failures stop setup; local configuration conflicts are preserved.
+
+The Linux image must provide Python 3, curl, tar, git and jq, with apt and root or passwordless sudo available for missing component packages. The parent Coder template owns Docker daemon provisioning and system CA trust. `CODER_ENABLE_DIND` describes that daemon; the `containers` stack selects Docker tooling. `OMNI_OTEL_CA_PATH` supplies Node's additional CA when explicitly configured. No OpenHands settings, APM skills, agent hooks, marketplace plugins or MCP registrations are implicitly installed. `CODER_MCP_URL` is an explicit override for selected clients only.
 
 ## Omni
 
@@ -90,13 +91,10 @@ dottrack PATH [args...]   # omni dots add --adopt PATH [args...]
 
 ```text
 setup.sh                  # macOS bootstrap
-setup-workspace.sh        # shared Linux/Omni bootstrap
-setup-coder.sh            # Coder-specific wrapper
-setup-hermes.sh           # Hermes-specific wrapper
+setup-coder-components.sh # composable Coder bootstrap
 scripts/
+  coder-bootstrap.sh      # side-effect-free logging, notes and terminfo helpers
   macos-defaults.sh       # optional macOS defaults
-  setup-workspace-linux.sh # shared Linux prerequisites
-  setup-coder-linux.sh    # Coder LAN certificate setup
 dotfiles/
   omni/                   # tracked Omni config
   yabai/                  # yabai config + sleep-on-lock Swift source

@@ -3,7 +3,7 @@
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$REPO_DIR/setup-coder.sh"
+source "$REPO_DIR/scripts/coder-bootstrap.sh"
 source "$REPO_DIR/scripts/install-omni-latest.sh"
 
 coder_components_omni_compatible() {
@@ -153,6 +153,7 @@ coder_components_main() (
   if command -v fdfind >/dev/null; then
     coder_components_link_local_bin "$(command -v fdfind)" fd
   fi
+  install_ghostty_terminfo
   coder_components_link_npm_commands "$config"
   coder_components_link_lsp_commands "$config"
   while IFS= read -r client; do

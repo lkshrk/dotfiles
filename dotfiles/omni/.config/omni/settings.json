@@ -7,54 +7,6 @@
     "settings.d/dots.json"
   ],
   "host_settings": {
-    "auto-code": {
-      "dots_repo": "~/dotfiles",
-      "dots_disabled": false,
-      "disabled_providers": [
-        "brew"
-      ],
-      "provider_priority": [
-        "bun",
-        "uv",
-        "script",
-        "apt",
-        "npm",
-        "pnpm",
-        "pip"
-      ]
-    },
-    "coder": {
-      "dots_repo": "~/dotfiles",
-      "dots_disabled": false,
-      "disabled_providers": [
-        "brew"
-      ],
-      "provider_priority": [
-        "bun",
-        "uv",
-        "script",
-        "apt",
-        "npm",
-        "pnpm",
-        "pip"
-      ]
-    },
-    "hermes": {
-      "dots_repo": "~/dotfiles",
-      "dots_disabled": false,
-      "disabled_providers": [
-        "brew"
-      ],
-      "provider_priority": [
-        "bun",
-        "uv",
-        "script",
-        "apt",
-        "npm",
-        "pnpm",
-        "pip"
-      ]
-    },
     "topaz": {
       "dots_repo": "~/Dev/dotfiles",
       "dots_disabled": false,
@@ -71,48 +23,25 @@
         "npm",
         "pip"
       ]
+    },
+    "coder-components": {
+      "dots_repo": "~/dotfiles",
+      "dots_disabled": false,
+      "disabled_providers": [
+        "brew"
+      ],
+      "provider_priority": [
+        "bun",
+        "uv",
+        "script",
+        "apt",
+        "npm",
+        "pnpm",
+        "pip"
+      ]
     }
   },
   "hosts": {
-    "auto-code": [
-      "ai",
-      "ai-plugins",
-      "core",
-      "dev",
-      "dev-tooling",
-      "go",
-      "infra",
-      "prereqs",
-      "python",
-      "shell",
-      "test-tooling",
-      "ts"
-    ],
-    "coder": [
-      "ai",
-      "ai-plugins",
-      "core",
-      "dev",
-      "dev-tooling",
-      "go",
-      "infra",
-      "prereqs",
-      "shell",
-      "test-tooling",
-      "omni"
-    ],
-    "hermes": [
-      "core",
-      "dev",
-      "dev-tooling",
-      "go",
-      "infra",
-      "prereqs",
-      "python",
-      "shell",
-      "test-tooling",
-      "ts"
-    ],
     "topaz": [
       "ai",
       "ai-plugins",

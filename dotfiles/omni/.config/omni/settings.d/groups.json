@@ -231,7 +231,9 @@
       "name": "ts",
       "tools": [
         "pm2",
-        "pnpm"
+        "pnpm",
+        "typescript",
+        "typescript-language-server"
       ]
     },
     {
@@ -241,31 +243,6 @@
         "bcrypt",
         "sshpass",
         "witr"
-      ]
-    },
-    {
-      "name": "auto-code",
-      "special": "host"
-    },
-    {
-      "name": "coder",
-      "special": "host",
-      "tools": [
-        "bubblewrap",
-        "corepack",
-        "omniroute",
-        "bats",
-        "fd-find",
-        "openssl",
-        "apm-cli"
-      ]
-    },
-    {
-      "name": "hermes",
-      "special": "host",
-      "tools": [
-        "camofox-browser",
-        "hermes"
       ]
     },
     {
