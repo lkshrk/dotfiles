@@ -3,7 +3,7 @@
 set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-linux_setup="$repo_dir/scripts/setup-workspace-linux.sh"
+linux_setup="$repo_dir/scripts/coder-bootstrap.sh"
 terminfo_source="$repo_dir/assets/terminfo/xterm-ghostty.terminfo"
 test_dir="$(mktemp -d)"
 trap 'rm -rf "$test_dir"' EXIT
@@ -28,7 +28,7 @@ EOF
 
 chmod +x "$test_dir/bin/infocmp" "$test_dir/bin/tic"
 
-eval "$(sed -n '/^install_ghostty_terminfo()/,/^}/p' "$linux_setup")"
+source "$linux_setup"
 step() { :; }
 ok() { :; }
 warn() { :; }

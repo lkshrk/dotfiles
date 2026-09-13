@@ -6,12 +6,12 @@ repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 settings="$repo_dir/dotfiles/omni/.config/omni/settings.json"
 tools="$repo_dir/dotfiles/omni/.config/omni/settings.d/tools.json"
 
-grep -Fq 'OMNI_MIN_VERSION="0.9.28"' "$repo_dir/setup.sh"
+grep -Fq 'OMNI_MIN_VERSION="0.10.16"' "$repo_dir/setup.sh"
 grep -Fq 'if ($i ~ /^v?[0-9]+' "$repo_dir/setup.sh"
 
 jq -e '
-  .version == 22
-  and (.["$schema"] | endswith("/omni.settings.v22.schema.json"))
+  .version == 25
+  and (.["$schema"] | endswith("/omni.settings.v25.schema.json"))
 ' "$settings" >/dev/null
 
 jq -e '
@@ -53,7 +53,7 @@ jq -e '
       . as $name
       | all($scripts[] | select(.logical_name == $name); .options.uninstall? == null))
   and all($scripts[] | select(.recipe.type? == "github_release_asset");
-      if .recipe.tag_name? == null then .recipe.installed_version? == null else true end)
+      (.recipe.installed_version? == null or (.recipe.installed_version | type == "string")))
   and all($scripts[];
       ((.options.install // "") | test("curl[^;|]*\\|[[:space:]]*(sh|bash)") | not))
   and all($scripts[];

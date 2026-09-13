@@ -13,13 +13,8 @@ if grep -q '^\[mcp_servers\.node_repl' "$config"; then
   exit 1
 fi
 
-bash -n \
-  "$repo_dir/setup-workspace.sh" \
-  "$repo_dir/setup-coder.sh" \
-  "$repo_dir/setup-hermes.sh" \
-  "$repo_dir/scripts/setup-workspace-linux.sh" \
-  "$repo_dir/scripts/setup-coder-linux.sh" \
-  "$repo_dir/scripts/volatile-dots.sh" \
-  "$repo_dir/scripts/dots-sync-back.sh"
+for script in setup.sh setup-coder-components.sh scripts/coder-bootstrap.sh scripts/volatile-dots.sh scripts/dots-sync-back.sh; do
+  bash -n "$repo_dir/$script"
+done
 
-printf 'PASS: Coder Codex template supports direct substitutions\n'
+printf 'PASS: Coder templates and composable bootstrap syntax validated\n'

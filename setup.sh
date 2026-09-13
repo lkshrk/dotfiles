@@ -5,7 +5,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_MIN_VERSION="0.9.28"
+OMNI_MIN_VERSION="0.10.16"
 RUN_MACOS_DEFAULTS=0
 
 usage() {
@@ -19,7 +19,7 @@ Options:
   --macos-defaults      Run scripts/macos-defaults.sh after Omni bootstrap.
   -h, --help            Show this help.
 
-Linux workspaces use ./setup-coder.sh or ./setup-hermes.sh.
+Linux workspaces use ./setup-coder-components.sh.
 USAGE
 }
 
@@ -76,7 +76,7 @@ ensure_omni_version() {
 # ─── OS guard ─────────────────────────────────────────────────────────────────
 
 OS="$(uname -s)"
-[[ "$OS" == "Darwin" ]] || die "setup.sh is macOS-only; use ./setup-coder.sh or ./setup-hermes.sh for Linux workspaces"
+[[ "$OS" == "Darwin" ]] || die "setup.sh is macOS-only; use ./setup-coder-components.sh for Linux workspaces"
 
 # ─── Shared: warm admin session ───────────────────────────────────────────────
 
