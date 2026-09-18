@@ -24,6 +24,12 @@ coder_components_link_local_bin() {
   mkdir -p "$HOME/.local/bin" "$state"
   [[ ! -L "$state/$2" ]] || die "refusing symlinked link receipt: $state/$2"
   if [[ -L "$target" && "$(readlink "$target")" == "$source" ]]; then
+    # Already correct, but write/refresh the receipt even on this fast
+    # path: without it, a link that reached the right target by any
+    # means other than this function (a prior run before receipts
+    # existed, or an external actor) can never be retargeted later --
+    # the ownership check below would see no receipt and die().
+    printf '%s\n' "$source" > "$state/$2"
     return 0
   fi
   if [[ -e "$target" || -L "$target" ]]; then

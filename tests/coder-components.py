@@ -419,6 +419,31 @@ class ClientFilesTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(target.readlink(), original)
 
+    def test_link_already_matching_target_is_receipted_for_future_retarget(self):
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            args = ["bash", "-c", 'source "$1/setup-coder-components.sh"; coder_components_link_local_bin "$2" tool', "test", str(REPO)]
+            env = dict(os.environ, HOME=str(home))
+            target = home / ".local/bin/tool"
+            target.parent.mkdir(parents=True)
+            first_source = home / "runtime-a/tool"
+            # Simulate a link that already points exactly where the function
+            # would want it, but was never created through the function
+            # itself (e.g. a run predating receipts, or any external actor).
+            target.symlink_to(first_source)
+            self.assertFalse((home / ".local/state/coder-components/links/tool").exists())
+            result = subprocess.run(args + [str(first_source)], env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(target.readlink(), first_source)
+            self.assertTrue((home / ".local/state/coder-components/links/tool").exists())
+            # A later legitimate retarget (e.g. a runtime upgrade) must not
+            # be refused merely because the prior identical-target state was
+            # never itself produced by this function.
+            second_source = home / "runtime-b/tool"
+            result = subprocess.run(args + [str(second_source)], env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(target.readlink(), second_source)
+
     def test_selected_client_prepare_preserves_opencode(self):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
