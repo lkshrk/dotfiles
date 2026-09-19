@@ -112,3 +112,5 @@ dotfiles/claude/.claude/*
 !dotfiles/claude/.claude/hooks/**
 !dotfiles/claude/.claude/scripts/
 !dotfiles/claude/.claude/scripts/**
+__pycache__/
+*.pyc
