@@ -173,7 +173,7 @@
           "provider": "script",
           "options": {
             "check": "test -x \"$HOME/.bun/bin/bun\"",
-            "install": "set -eu; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/oven-sh/bun/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://bun.sh/install -o \"$tmp/install.sh\"; bash \"$tmp/install.sh\" \"$tag\"",
+            "install": "set -eu; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/oven-sh/bun/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://bun.sh/install -o \"$tmp/install.sh\"; BUN_INSTALL_NO_MODIFY_PATH=1 bash \"$tmp/install.sh\" \"$tag\"",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/oven-sh/bun/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#bun-v}\"",
             "upgrade": "\"$HOME/.bun/bin/bun\" upgrade",
             "version": "\"$HOME/.bun/bin/bun\" --version"
