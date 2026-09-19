@@ -52,9 +52,36 @@ def choices(value, allowed, name):
     return result
 
 
-def contract(env):
-    stacks = choices(env.get("CODER_OMNI_STACKS", ""), set(STACK_TOOLS) | set(ALIASES), "CODER_OMNI_STACKS")
-    stacks = list(dict.fromkeys(s for item in stacks for s in ALIASES.get(item, [item])))
+CATALOG_KEYS = ("STACK_TOOLS", "ALIASES", "BASE", "CORE_DOTS", "RUNTIMES")
+
+
+def load_catalog(path):
+    """Load an externally supplied stack/tool catalog, or the embedded default.
+
+    ``path`` is None for the default (current) behaviour: the module-level
+    STACK_TOOLS/ALIASES/BASE/CORE_DOTS/RUNTIMES constants defined above.  A
+    caller (e.g. auto-code-env, which owns the canonical catalog) may instead
+    pass a JSON file overriding some or all of these keys, so ownership of
+    "which tools does stack X need" can move without breaking this resolver.
+    """
+    catalog = {
+        "STACK_TOOLS": STACK_TOOLS, "ALIASES": ALIASES, "BASE": BASE,
+        "CORE_DOTS": CORE_DOTS, "RUNTIMES": RUNTIMES,
+    }
+    if path is None:
+        return catalog
+    data = json.loads(Path(path).read_text())
+    unknown = set(data) - set(CATALOG_KEYS)
+    if unknown:
+        raise ValueError("unknown catalog keys: " + ", ".join(sorted(unknown)))
+    catalog.update(data)
+    return catalog
+
+
+def contract(env, catalog=None):
+    catalog = catalog or load_catalog(None)
+    stacks = choices(env.get("CODER_OMNI_STACKS", ""), set(catalog["STACK_TOOLS"]) | set(catalog["ALIASES"]), "CODER_OMNI_STACKS")
+    stacks = list(dict.fromkeys(s for item in stacks for s in catalog["ALIASES"].get(item, [item])))
     clients = choices(env.get("CODER_AGENT_CLIENTS", ""), {"claude", "codex"}, "CODER_AGENT_CLIENTS")
     result = {"stacks": stacks, "clients": clients}
     for name, default, allowed in [
@@ -108,14 +135,15 @@ def linux_core_providers(repo):
     }
 
 
-def resolve(repo, env):
-    selection = contract(env)
+def resolve(repo, env, catalog=None):
+    catalog = catalog or load_catalog(None)
+    selection = contract(env, catalog)
     root = repo / "dotfiles/omni/.config/omni"
     settings = json.loads((root / "settings.json").read_text())
     tools = json.loads((root / "settings.d/tools.json").read_text())["tools"]
     source_groups = json.loads((root / "settings.d/groups.json").read_text())["groups"]
     dots = {dot["name"]: dot for group in json.loads((root / "settings.d/dots.json").read_text())["groups"] for dot in group.get("dots", [])}
-    selected = list(dict.fromkeys(t for s in selection["stacks"] for t in STACK_TOOLS[s]))
+    selected = list(dict.fromkeys(t for s in selection["stacks"] for t in catalog["STACK_TOOLS"][s]))
     if "claude" in selection["clients"]:
         selected.append("claude-code")
     if "codex" in selection["clients"]:
@@ -128,12 +156,12 @@ def resolve(repo, env):
         selected.extend(["bun", "nvm"])
     if "pyright" in selected:
         selected.append("nvm")
-    selected = [t for t in dict.fromkeys(selected) if t not in BASE]
-    groups = [{"name": "component-base", "tools": BASE}]
-    for runtime in RUNTIMES:
+    selected = [t for t in dict.fromkeys(selected) if t not in catalog["BASE"]]
+    groups = [{"name": "component-base", "tools": catalog["BASE"]}]
+    for runtime in catalog["RUNTIMES"]:
         if runtime in selected:
             groups.append({"name": "runtime-" + runtime, "tools": [runtime]})
-    groups.append({"name": "component-tools", "tools": [t for t in selected if t not in RUNTIMES]})
+    groups.append({"name": "component-tools", "tools": [t for t in selected if t not in catalog["RUNTIMES"]]})
     client_dots = []
     for client in selection["clients"]:
         dot = {"name": client, "path": dots[client]["path"], "hosts": {HOST: {"package": client + "@coder-components"}}}
@@ -142,7 +170,7 @@ def resolve(repo, env):
         client_dots.append(dot)
     groups.append({"name": "component-clients", "dots": client_dots})
     resolved_dots = []
-    for name in CORE_DOTS:
+    for name in catalog["CORE_DOTS"]:
         dot = copy.deepcopy(dots[name])
         if HOST in dot.get("hosts", {}):
             dot["hosts"] = {HOST: dot["hosts"][HOST]}
@@ -192,16 +220,21 @@ def main():
     parser.add_argument("--required-commands", type=Path)
     parser.add_argument("--required-provider")
     parser.add_argument("--contract", action="store_true")
+    parser.add_argument("--catalog", type=Path, default=None,
+                         help="Optional JSON file overriding STACK_TOOLS/ALIASES/BASE/CORE_DOTS/RUNTIMES "
+                              "(falls back to CODER_CATALOG_PATH env var, then the embedded catalog).")
     args = parser.parse_args()
     if args.required_commands:
         print("\n".join(required_commands(json.loads(args.required_commands.read_text()), args.required_provider)))
         return
+    catalog_path = args.catalog or (Path(os.environ["CODER_CATALOG_PATH"]) if os.environ.get("CODER_CATALOG_PATH") else None)
     try:
-        config = resolve(args.repo.resolve(), os.environ)
+        catalog = load_catalog(catalog_path)
+        config = resolve(args.repo.resolve(), os.environ, catalog)
     except (ValueError, OSError, KeyError) as exc:
         parser.error(str(exc))
     if args.contract:
-        config = {"version": 1, "selection": contract(os.environ),
+        config = {"version": 1, "selection": contract(os.environ, catalog),
                   "required_commands": required_commands(config), "configuration": config}
     json.dump(config, sys.stdout, indent=2)
     print()

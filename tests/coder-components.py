@@ -39,6 +39,28 @@ def dot_names(config):
 
 
 class ComponentsTest(unittest.TestCase):
+    def test_catalog_override_replaces_stack_tools_and_defaults_are_unaffected(self):
+        override = {"STACK_TOOLS": {"go": ["go"]}}
+        catalog = components.load_catalog(None)
+        catalog.update(override)
+        config = components.resolve(REPO, {"CODER_OMNI_STACKS": "go"}, catalog)
+        tools = {t for g in config["groups"] for t in g.get("tools", [])}
+        self.assertIn("go", tools)
+        self.assertNotIn("gopls", tools)
+        # Omitting the override entirely must reproduce today's exact behaviour.
+        self.assertEqual(resolved(CODER_OMNI_STACKS="go"), components.resolve(REPO, {"CODER_OMNI_STACKS": "go"}, None))
+
+    def test_catalog_file_round_trip_and_rejects_unknown_keys(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "catalog.json"
+            path.write_text(json.dumps({"BASE": ["git"]}))
+            catalog = components.load_catalog(path)
+            self.assertEqual(catalog["BASE"], ["git"])
+            self.assertEqual(catalog["STACK_TOOLS"], components.STACK_TOOLS)
+            path.write_text(json.dumps({"NOT_A_REAL_KEY": []}))
+            with self.assertRaisesRegex(ValueError, "unknown catalog keys"):
+                components.load_catalog(path)
+
     def test_empty_is_minimal_and_isolated(self):
         config = resolved()
         self.assertEqual(set(config["tools"]), set(components.BASE))
