@@ -13,7 +13,7 @@ if grep -q '^\[mcp_servers\.node_repl' "$config"; then
   exit 1
 fi
 
-for script in setup.sh setup-coder-components.sh scripts/coder-bootstrap.sh scripts/volatile-dots.sh scripts/dots-sync-back.sh; do
+for script in setup.sh setup-coder-dots.sh scripts/coder-bootstrap.sh scripts/volatile-dots.sh scripts/dots-sync-back.sh; do
   bash -n "$repo_dir/$script"
 done
 

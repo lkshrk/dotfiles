@@ -37,17 +37,17 @@ claude doctor
 
 ## Linux workspaces
 
-Coder workspaces use only the composable entrypoint, with explicit tool stacks and agent clients:
+This repository only ever provisions personal configuration for Coder workspaces: the core terminal/editor dotfiles (Zsh, Neovim, tmux, LazyGit, ...) plus, for each selected agent client, that client's own settings. It has no opinion on which language stacks or tool packages a workspace installs -- that's `lkshrk/auto-code-env`'s `install-stacks.py`, which runs first and owns the Coder-specific tool catalog. This repo's own Omni tool provider catalog (`settings.d/tools.json`, the same one macOS's `setup.sh` uses) is merged into that installer's config natively via Omni's `$include`, not called from here.
 
 ```sh
 git clone <repo> ~/dotfiles
 cd ~/dotfiles
-CODER_OMNI_STACKS=go,containers CODER_AGENT_CLIENTS=claude,codex ./setup-coder-components.sh
+CODER_AGENT_CLIENTS=claude,codex ./setup-coder-dots.sh
 ```
 
-Use `--print-config` to inspect the resolved Omni configuration without installing anything. With no selections, setup installs the core terminal/editor tools and personal Zsh, Neovim, tmux and LazyGit configuration. Language stacks and agent clients are opt-in. Required component failures stop setup; local configuration conflicts are preserved.
+Use `--print-config` to inspect the resolved Omni configuration without syncing anything. With no client selected, setup only syncs the core personal configuration. Agent clients are opt-in. Required dots failures stop setup; local configuration conflicts are preserved.
 
-The Linux image must provide Python 3, curl, tar, git and jq, with apt and root or passwordless sudo available for missing component packages. The parent Coder template owns Docker daemon provisioning and system CA trust. `CODER_ENABLE_DIND` describes that daemon; the `containers` stack selects Docker tooling. `OMNI_OTEL_CA_PATH` supplies Node's additional CA when explicitly configured. No OpenHands settings, APM skills, agent hooks, marketplace plugins or MCP registrations are implicitly installed. `CODER_MCP_URL` is an explicit override for selected clients only.
+This script expects `omni`, `jq`, `git` and `python3` already on `PATH` (auto-code-env's installer guarantees `omni` before calling this). No OpenHands settings, APM skills, agent hooks, marketplace plugins or MCP registrations are implicitly installed. `CODER_MCP_URL` is an explicit override for selected clients only.
 
 ## Omni
 
@@ -91,7 +91,7 @@ dottrack PATH [args...]   # omni dots add --adopt PATH [args...]
 
 ```text
 setup.sh                  # macOS bootstrap
-setup-coder-components.sh # composable Coder bootstrap
+setup-coder-dots.sh       # Coder workspace personal-dots sync
 scripts/
   coder-bootstrap.sh      # side-effect-free logging, notes and terminfo helpers
   macos-defaults.sh       # optional macOS defaults
