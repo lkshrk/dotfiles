@@ -69,7 +69,7 @@ fi
 
 CURRENT_WINDOW_ID="$(
   yabai -m query --windows --window 2>/dev/null | jq -r '.id // empty'
-)"
+)" || CURRENT_WINDOW_ID=""
 
 NEXT_WINDOW_ID="$(
   printf '%s\n' "$WINDOW_IDS" \
