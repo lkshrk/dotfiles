@@ -32,7 +32,6 @@ dependencies:
   - git: lkshrk/useful-skills
   - git: mksglu/context-mode
     targets:
-    - claude
     - codex
   - git: obra/superpowers
     ref: b36e0829c6d0140e93cfef2ca599b1b07d4a7797

@@ -24,7 +24,7 @@
       "Edit(frontend/eslint.config.js)"
     ]
   },
-  "model": "fable[1m]",
+  "model": "claude-fable-5-1[1m]",
   "hooks": {
     "PostToolUse": [
       {
@@ -44,15 +44,6 @@
             "type": "command",
             "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" || true",
             "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "Bash|Read|Write|Edit|NotebookEdit|Glob|Grep|TodoWrite|TaskCreate|TaskUpdate|EnterPlanMode|ExitPlanMode|Skill|Agent|AskUserQuestion|EnterWorktree|mcp__",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/posttooluse.mjs\""
           }
         ]
       }
@@ -95,87 +86,6 @@
             "type": "command",
             "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" || true",
             "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "WebFetch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "Grep",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "Agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__plugin_context-mode_context-mode__ctx_execute",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__plugin_context-mode_context-mode__ctx_execute_file",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/pretooluse.mjs\""
           }
         ]
       }
@@ -232,15 +142,6 @@
         ]
       },
       {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/sessionstart.mjs\""
-          }
-        ]
-      },
-      {
         "matcher": "startup|clear|compact",
         "hooks": [
           {
@@ -278,15 +179,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/stop.mjs\""
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
             "command": "node \"$HOME/.claude/hooks/codex/scripts/stop-review-gate-hook.mjs\"",
             "timeout": 900
           }
@@ -302,26 +194,6 @@
             "statusMessage": "Tracking caveman mode...",
             "command": "node \"$HOME/.claude/hooks/caveman/src/hooks/caveman-mode-tracker.js\"",
             "timeout": 30
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/userpromptsubmit.mjs\""
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/context-mode/hooks/precompact.mjs\""
           }
         ]
       }
@@ -355,5 +227,13 @@
   "verbose": true,
   "preferredNotifChannel": "notifications_disabled",
   "switchModelsOnFlag": false,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "extraKnownMarketplaces": {
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/context-mode"
+      }
+    }
+  }
 }
