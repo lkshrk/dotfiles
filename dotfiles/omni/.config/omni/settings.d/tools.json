@@ -342,7 +342,7 @@
             "type": "github_release_asset",
             "asset_pattern": "codebase-memory-mcp-{os}-{arch}.tar.gz",
             "checksum_asset_pattern": "checksums.txt",
-            "installed_version": "0.10.8"
+            "installed_version": "0.11.0"
           }
         }
       ],
