@@ -50,10 +50,21 @@ dependencies:
     targets:
     - claude
   lsp:
+  - name: bash-language-server
+    command: bash-language-server
+    args:
+    - start
+    extensionToLanguage:
+      .sh: shellscript
+      .bash: shellscript
   - name: gopls
     command: gopls
     extensionToLanguage:
       .go: go
+  - name: lua-language-server
+    command: lua-language-server
+    extensionToLanguage:
+      .lua: lua
   - name: pyright
     command: pyright-langserver
     args:
@@ -61,10 +72,28 @@ dependencies:
     extensionToLanguage:
       .py: python
       .pyi: python
+  - name: rust-analyzer
+    command: rust-analyzer
+    extensionToLanguage:
+      .rs: rust
   - name: sourcekit-lsp
     command: sourcekit-lsp
     extensionToLanguage:
       .swift: swift
+  - name: terraform-ls
+    command: terraform-ls
+    args:
+    - serve
+    extensionToLanguage:
+      .tf: terraform
+      .tfvars: terraform-vars
+  - name: yaml-language-server
+    command: yaml-language-server
+    args:
+    - --stdio
+    extensionToLanguage:
+      .yaml: yaml
+      .yml: yaml
   mcp:
   - name: codebase-memory-mcp
     registry: false
