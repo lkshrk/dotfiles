@@ -210,7 +210,7 @@
           "provider": "script",
           "options": {
             "check": "command -v cargo || test -x \"$HOME/.cargo/bin/cargo\"",
-            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://sh.rustup.rs -o \"$tmp/rustup-init.sh\"; sh \"$tmp/rustup-init.sh\" -y",
+            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://sh.rustup.rs -o \"$tmp/rustup-init.sh\"; sh \"$tmp/rustup-init.sh\" -y --no-modify-path",
             "latest": "curl -fsSL --proto-redir '=https' https://static.rust-lang.org/dist/channel-rust-stable.toml | grep -Eo 'cargo-[0-9]+\\.[0-9]+\\.[0-9]+-' | head -1 | sed 's/^cargo-//; s/-$//'",
             "upgrade": "PATH=\"$HOME/.cargo/bin:$PATH\" rustup update stable",
             "version": "PATH=\"$HOME/.cargo/bin:$PATH\" cargo --version | awk '{print $2}'"
