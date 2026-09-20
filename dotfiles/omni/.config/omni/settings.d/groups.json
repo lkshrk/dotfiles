@@ -78,6 +78,9 @@
         "lazygit",
         "skopeo",
         "yaml-language-server",
+        "bash-language-server",
+        "shellcheck",
+        "rust-analyzer",
         "yaml-lint",
         "yamlfmt",
         "yamllint",
@@ -126,6 +129,7 @@
         "sops",
         "talosctl",
         "opentofu",
+        "terraform-ls",
         "minijinja-cli",
         "watch",
         "flate"

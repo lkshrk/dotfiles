@@ -2212,8 +2212,13 @@
         {
           "provider": "bun",
           "package": "yaml-language-server"
+        },
+        {
+          "provider": "npm",
+          "package": "yaml-language-server"
         }
-      ]
+      ],
+      "git": "https://github.com/redhat-developer/yaml-language-server"
     },
     "yaml-lint": {
       "providers": [
@@ -2400,6 +2405,73 @@
           "bin": "lua"
         }
       ]
+    },
+    "rust-analyzer": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "rust-analyzer"
+        },
+        {
+          "provider": "script",
+          "bin": "rust-analyzer",
+          "options": {
+            "check": "PATH=\"$HOME/.cargo/bin:$PATH\" rustup component list --installed 2>/dev/null | grep -q '^rust-analyzer' && test -x \"$HOME/.cargo/bin/rust-analyzer\"",
+            "install": "PATH=\"$HOME/.cargo/bin:$PATH\" rustup component add rust-analyzer",
+            "uninstall": "PATH=\"$HOME/.cargo/bin:$PATH\" rustup component remove rust-analyzer",
+            "upgrade": "PATH=\"$HOME/.cargo/bin:$PATH\" rustup update stable",
+            "version": "PATH=\"$HOME/.cargo/bin:$PATH\" rust-analyzer --version 2>/dev/null | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+' | head -1",
+            "latest": "curl -fsSL --proto-redir '=https' https://static.rust-lang.org/dist/channel-rust-stable.toml | grep -A1 '^\\[pkg.rustc\\]' | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+' | head -1"
+          }
+        }
+      ],
+      "git": "https://github.com/rust-lang/rust-analyzer"
+    },
+    "terraform-ls": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "hashicorp/tap/terraform-ls"
+        },
+        {
+          "provider": "script",
+          "bin": "terraform-ls",
+          "options": {
+            "check": "test -x \"$HOME/.local/bin/terraform-ls\"",
+            "install": "set -eu; case \"$(uname -m)\" in x86_64|amd64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo \"unsupported architecture\" >&2; exit 1 ;; esac; version=$(curl -fsSL --proto-redir '=https' https://api.releases.hashicorp.com/v1/releases/terraform-ls/latest | jq -er .version); tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; base=\"https://releases.hashicorp.com/terraform-ls/$version\"; asset=\"terraform-ls_${version}_linux_$arch.zip\"; curl -fsSL --proto '=https' --proto-redir '=https' \"$base/$asset\" -o \"$tmp/$asset\"; curl -fsSL --proto '=https' --proto-redir '=https' \"$base/terraform-ls_${version}_SHA256SUMS\" -o \"$tmp/SHA256SUMS\"; (cd \"$tmp\" && grep \" $asset\\$\" SHA256SUMS | sha256sum -c -); unzip -qo \"$tmp/$asset\" -d \"$tmp\"; install -Dm 755 \"$tmp/terraform-ls\" \"$HOME/.local/bin/terraform-ls\"",
+            "uninstall": "rm -f \"$HOME/.local/bin/terraform-ls\"",
+            "version": "\"$HOME/.local/bin/terraform-ls\" version 2>/dev/null | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+' | head -1",
+            "latest": "curl -fsSL --proto-redir '=https' https://api.releases.hashicorp.com/v1/releases/terraform-ls/latest | jq -er .version"
+          }
+        }
+      ],
+      "git": "https://github.com/hashicorp/terraform-ls"
+    },
+    "bash-language-server": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "bash-language-server"
+        },
+        {
+          "provider": "npm",
+          "package": "bash-language-server"
+        }
+      ],
+      "git": "https://github.com/bash-lsp/bash-language-server"
+    },
+    "shellcheck": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "shellcheck"
+        },
+        {
+          "provider": "apt",
+          "package": "shellcheck"
+        }
+      ],
+      "git": "https://github.com/koalaman/shellcheck"
     }
   }
 }
