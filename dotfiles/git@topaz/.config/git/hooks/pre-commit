@@ -8,6 +8,22 @@ if [ "$LEFTHOOK" = "0" ]; then
   exit 0
 fi
 
+# Global core.hooksPath: skip bare repos (lefthook exits 128 there) and repos without a lefthook config.
+if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" != "true" ]; then
+  exit 0
+fi
+lefthook_root="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+lefthook_config=""
+for lefthook_candidate in lefthook.yml lefthook.yaml lefthook.toml lefthook.json .lefthook.yml .lefthook.yaml .lefthook.toml .lefthook.json .config/lefthook.yml .config/lefthook.yaml .config/lefthook.toml .config/lefthook.json; do
+  if [ -e "$lefthook_root/$lefthook_candidate" ]; then
+    lefthook_config=1
+    break
+  fi
+done
+if [ -z "$lefthook_config" ]; then
+  exit 0
+fi
+
 call_lefthook()
 {
   if test -n "$LEFTHOOK_BIN"
