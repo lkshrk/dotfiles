@@ -157,6 +157,9 @@ url = "https://developers.openai.com/mcp"
 [mcp_servers.context-mode]
 command = "node"
 args = ["/Users/lkshrk/.apm/apm_modules/mksglu/context-mode/start.mjs"]
+id = ""
+
+[mcp_servers.context-mode.env]
 
 [plugins."superpowers@openai-curated"]
 enabled = true
