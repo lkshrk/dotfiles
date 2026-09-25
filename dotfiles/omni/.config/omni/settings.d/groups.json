@@ -87,7 +87,8 @@
         "git-delta",
         "actionlint",
         "direnv",
-        "gitleaks"
+        "gitleaks",
+        "devcontainer"
       ]
     },
     {
@@ -159,13 +160,13 @@
         "the-unarchiver",
         "xcodebuildmcp",
         "zstd",
-        "hammerspoon",
         "rbw",
         "mlx",
         "flux-markdown",
         "tree-sitter",
         "xcodegen",
-        "typewhisper"
+        "typewhisper",
+        "hammerspoon"
       ]
     },
     {
@@ -181,7 +182,8 @@
       "tools": [
         "bun",
         "nvm",
-        "uv"
+        "uv",
+        "apm"
       ]
     },
     {
@@ -209,7 +211,8 @@
         "python@3.14",
         "wheel",
         "pyright",
-        "poetry"
+        "poetry",
+        "basedpyright"
       ]
     },
     {
@@ -247,6 +250,46 @@
         "bcrypt",
         "sshpass",
         "witr"
+      ]
+    },
+    {
+      "name": "apm3ljhmvg7xgcf",
+      "special": "host",
+      "tools": [
+        "opencode",
+        "awscli",
+        "azure-cli",
+        "fzf",
+        "gum",
+        "icu4c@76",
+        "jd",
+        "karakeep",
+        "kubeconform",
+        "maven",
+        "minio-mc",
+        "mkcert",
+        "nss",
+        "openjdk@21",
+        "openshift-cli",
+        "pinentry-mac",
+        "sblim-sfcc",
+        "tldr",
+        "wakeonlan",
+        "youtube-dl",
+        "alt-tab",
+        "betterdisplay",
+        "bruno",
+        "copilot-cli",
+        "dbeaver-community",
+        "git-credential-manager",
+        "helium",
+        "lightworks",
+        "oracle-jdk",
+        "postman",
+        "rectangle",
+        "sqlcl",
+        "telegram",
+        "visual-studio-code"
       ]
     },
     {

@@ -62,7 +62,8 @@
           "name": "nvim",
           "path": "~/.config/nvim",
           "ignore": [
-            ".gitignore"
+            ".gitignore",
+            "/lua/plugins/plantuml.lua"
           ]
         },
         {
@@ -152,11 +153,6 @@
           "ignore": [
             "hooks/pre-commit.old"
           ]
-        },
-        {
-          "name": "gitconfig",
-          "path": "~/.gitconfig",
-          "ignored": true
         },
         {
           "name": "containers",
@@ -313,6 +309,35 @@
         {
           "name": "fish",
           "path": "~/.config/fish",
+          "ignored": true
+        }
+      ]
+    },
+    {
+      "name": "apm3ljhmvg7xgcf",
+      "dots": [
+        {
+          "name": "homebrew",
+          "path": "~/.config/homebrew",
+          "ignored": true
+        },
+        {
+          "name": "aws",
+          "path": "~/.aws",
+          "ignored": true
+        },
+        {
+          "name": "nvim-plantuml.lua",
+          "path": "~/.config/nvim/lua/plugins/plantuml.lua",
+          "hosts": {
+            "apm3ljhmvg7xgcf": {
+              "package": "nvim-plantuml.lua@apm3ljhmvg7xgcf"
+            }
+          }
+        },
+        {
+          "name": "gitconfig",
+          "path": "~/.gitconfig",
           "ignored": true
         }
       ]
