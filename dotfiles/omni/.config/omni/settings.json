@@ -532,10 +532,6 @@
       "special": "host",
       "dots": [
         {
-          "name": "config",
-          "path": "~/.config/config"
-        },
-        {
           "name": "gitconfig",
           "path": "~/.gitconfig",
           "hosts": {
