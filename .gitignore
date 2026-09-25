@@ -116,3 +116,6 @@ dotfiles/claude/.claude/*
 !dotfiles/claude/.claude/hooks/**
 !dotfiles/claude/.claude/scripts/
 !dotfiles/claude/.claude/scripts/**
+
+# host-local git identity (work creds must never be pushed)
+dotfiles/git@apm3ljhmvg7xgcf/.config/git/config.local
