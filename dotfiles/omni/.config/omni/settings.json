@@ -104,7 +104,8 @@
           "name": "nvim",
           "path": "~/.config/nvim",
           "ignore": [
-            ".gitignore"
+            ".gitignore",
+            "/lua/plugins/plantuml.lua"
           ]
         },
         {
@@ -591,7 +592,12 @@
         },
         {
           "name": "nvim-plantuml.lua",
-          "path": "~/.config/nvim/lua/plugins/plantuml.lua"
+          "path": "~/.config/nvim/lua/plugins/plantuml.lua",
+          "hosts": {
+            "apm3ljhmvg7xgcf": {
+              "package": "nvim-plantuml.lua@apm3ljhmvg7xgcf"
+            }
+          }
         }
       ]
     },
