@@ -592,6 +592,11 @@
               "package": "nvim-plantuml.lua@apm3ljhmvg7xgcf"
             }
           }
+        },
+        {
+          "name": "gitconfig",
+          "path": "~/.gitconfig",
+          "ignored": true
         }
       ]
     },

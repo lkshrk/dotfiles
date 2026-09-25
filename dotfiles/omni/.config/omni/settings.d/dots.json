@@ -154,6 +154,11 @@
           ]
         },
         {
+          "name": "gitconfig",
+          "path": "~/.gitconfig",
+          "ignored": true
+        },
+        {
           "name": "containers",
           "path": "~/.config/containers",
           "ignored": true
