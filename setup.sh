@@ -157,6 +157,13 @@ install_lefthook() {
 main() {
   say "${c_dim}platform: macos${c_off}"
 
+  if [[ -z "${OMNI_HOSTNAME:-}" ]]; then
+    OMNI_HOSTNAME="$(hostname -s 2>/dev/null || hostname 2>/dev/null || printf unknown)"
+    OMNI_HOSTNAME="${OMNI_HOSTNAME%%.*}"
+    OMNI_HOSTNAME="$(printf '%s' "$OMNI_HOSTNAME" | tr '[:upper:]' '[:lower:]')"
+    export OMNI_HOSTNAME
+  fi
+
   warm_admin_session
 
   local platform_script="$REPO_DIR/scripts/setup-macos.sh"

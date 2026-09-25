@@ -66,6 +66,9 @@ env_next_machine="${ENV_NEXT_MACHINE:-${HOST:-${HOSTNAME:-}}}"
 [ -n "$env_next_machine" ] || env_next_machine="$(hostname -s 2>/dev/null || hostname 2>/dev/null || printf unknown)"
 env_next_machine="${env_next_machine%%.*}"
 env_next_machine="$(printf '%s' "$env_next_machine" | tr '[:upper:]' '[:lower:]')"
+if [ -z "${OMNI_HOSTNAME:-}" ]; then
+  export OMNI_HOSTNAME="$env_next_machine"
+fi
 if [ -r "$ENV_DIR/machine/$env_next_machine.sh" ]; then
   # shellcheck source=/dev/null
   . "$ENV_DIR/machine/$env_next_machine.sh"

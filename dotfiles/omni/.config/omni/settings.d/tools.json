@@ -1624,11 +1624,11 @@
     "pip": {
       "providers": [
         {
-          "provider": "pip",
+          "provider": "uv",
           "package": "pip"
         },
         {
-          "provider": "uv",
+          "provider": "pip",
           "package": "pip"
         }
       ]

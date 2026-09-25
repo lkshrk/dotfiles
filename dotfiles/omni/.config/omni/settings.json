@@ -204,7 +204,8 @@
         "git-delta",
         "actionlint",
         "direnv",
-        "gitleaks"
+        "gitleaks",
+        "devcontainer"
       ],
       "dots": [
         {
@@ -377,7 +378,8 @@
       "tools": [
         "bun",
         "nvm",
-        "uv"
+        "uv",
+        "apm"
       ],
       "dots": [
         {
@@ -439,7 +441,8 @@
         "python@3.14",
         "wheel",
         "pyright",
-        "poetry"
+        "poetry",
+        "basedpyright"
       ]
     },
     {
@@ -530,6 +533,42 @@
     {
       "name": "apm3ljhmvg7xgcf",
       "special": "host",
+      "tools": [
+        "opencode",
+        "awscli",
+        "azure-cli",
+        "fzf",
+        "gum",
+        "icu4c@76",
+        "jd",
+        "karakeep",
+        "kubeconform",
+        "maven",
+        "minio-mc",
+        "mkcert",
+        "nss",
+        "openjdk@21",
+        "openshift-cli",
+        "pinentry-mac",
+        "sblim-sfcc",
+        "tldr",
+        "wakeonlan",
+        "youtube-dl",
+        "alt-tab",
+        "betterdisplay",
+        "bruno",
+        "copilot-cli",
+        "dbeaver-community",
+        "git-credential-manager",
+        "helium",
+        "lightworks",
+        "oracle-jdk",
+        "postman",
+        "rectangle",
+        "sqlcl",
+        "telegram",
+        "visual-studio-code"
+      ],
       "dots": [
         {
           "name": "gitconfig",
@@ -549,6 +588,10 @@
           "name": "aws",
           "path": "~/.aws",
           "ignored": true
+        },
+        {
+          "name": "nvim-plantuml.lua",
+          "path": "~/.config/nvim/lua/plugins/plantuml.lua"
         }
       ]
     },
@@ -665,8 +708,10 @@
     "apm3ljhmvg7xgcf": [
       "core",
       "prereqs",
+      "python",
       "shell",
-      "utils"
+      "utils",
+      "dev-tooling"
     ],
     "topaz": [
       "ai",
@@ -700,7 +745,12 @@
       "npm",
       "asyncpg",
       "pnpm",
-      "telegram"
+      "telegram",
+      "alt-tab",
+      "bruno",
+      "visual-studio-code",
+      "rectangle",
+      "postman"
     ]
   },
   "settings": {
@@ -745,11 +795,27 @@
       ],
       "git": "https://github.com/rhysd/actionlint"
     },
+    "alt-tab": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "alt-tab"
+        }
+      ]
+    },
     "android-commandlinetools": {
       "providers": [
         {
           "provider": "brew",
           "package": "android-commandlinetools"
+        }
+      ]
+    },
+    "apm": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "apm"
         }
       ]
     },
@@ -781,6 +847,24 @@
       ],
       "git": "https://github.com/argoproj/argo-workflows"
     },
+    "awscli": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "awscli"
+        }
+      ],
+      "git": "https://github.com/aws/aws-cli"
+    },
+    "azure-cli": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "azure-cli"
+        }
+      ],
+      "git": "https://github.com/Azure/azure-cli"
+    },
     "bam": {
       "providers": [
         {
@@ -789,6 +873,14 @@
         }
       ],
       "git": "https://github.com/lkshrk/better-audio-mixer"
+    },
+    "basedpyright": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "basedpyright"
+        }
+      ]
     },
     "bash-language-server": {
       "providers": [
@@ -869,6 +961,15 @@
         }
       ]
     },
+    "betterdisplay": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "betterdisplay"
+        }
+      ],
+      "git": "https://github.com/waydabber/BetterDisplay"
+    },
     "brave-browser": {
       "providers": [
         {
@@ -876,6 +977,15 @@
           "package": "brave-browser"
         }
       ]
+    },
+    "bruno": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "bruno"
+        }
+      ],
+      "git": "https://github.com/usebruno/bruno"
     },
     "bubblewrap": {
       "providers": [
@@ -1108,6 +1218,15 @@
         }
       ]
     },
+    "copilot-cli": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "copilot-cli"
+        }
+      ],
+      "git": "https://github.com/github/copilot-cli"
+    },
     "corepack": {
       "providers": [
         {
@@ -1145,6 +1264,15 @@
       ],
       "git": "https://github.com/lkshrk/d-streamy"
     },
+    "dbeaver-community": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "dbeaver-community"
+        }
+      ],
+      "ignore": true
+    },
     "deepwiki-rs": {
       "providers": [
         {
@@ -1163,6 +1291,14 @@
         }
       ],
       "git": "https://github.com/sopaco/deepwiki-rs"
+    },
+    "devcontainer": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "devcontainer"
+        }
+      ]
     },
     "direnv": {
       "providers": [
@@ -1446,6 +1582,15 @@
         }
       ]
     },
+    "fzf": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "fzf"
+        }
+      ],
+      "git": "https://github.com/junegunn/fzf"
+    },
     "gh": {
       "providers": [
         {
@@ -1482,6 +1627,15 @@
           "package": "git"
         }
       ]
+    },
+    "git-credential-manager": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "git-credential-manager"
+        }
+      ],
+      "git": "https://github.com/git-ecosystem/git-credential-manager"
     },
     "git-delta": {
       "providers": [
@@ -1680,6 +1834,15 @@
         }
       ]
     },
+    "gum": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "gum"
+        }
+      ],
+      "git": "https://github.com/charmbracelet/gum"
+    },
     "hammerspoon": {
       "providers": [
         {
@@ -1688,6 +1851,15 @@
         }
       ],
       "git": "https://github.com/Hammerspoon/hammerspoon"
+    },
+    "helium": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "helium"
+        }
+      ],
+      "git": "https://github.com/koush/support-wiki"
     },
     "helm": {
       "providers": [
@@ -1791,6 +1963,15 @@
       ],
       "git": "https://github.com/NousResearch/hermes-agent"
     },
+    "icu4c@76": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "icu4c@76"
+        }
+      ],
+      "git": "https://github.com/unicode-org/icu"
+    },
     "iina": {
       "providers": [
         {
@@ -1810,6 +1991,15 @@
         }
       ],
       "git": "https://github.com/ImageMagick/ImageMagick"
+    },
+    "jd": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "jd"
+        }
+      ],
+      "git": "https://github.com/josephburnett/jd"
     },
     "jq": {
       "providers": [
@@ -1842,6 +2032,14 @@
       ],
       "git": "https://github.com/casey/just"
     },
+    "karakeep": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "karakeep"
+        }
+      ]
+    },
     "krew": {
       "providers": [
         {
@@ -1861,6 +2059,15 @@
         }
       ],
       "git": "https://github.com/kubernetes-sigs/krew"
+    },
+    "kubeconform": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "kubeconform"
+        }
+      ],
+      "git": "https://github.com/yannh/kubeconform"
     },
     "kubectl-cnpg": {
       "providers": [
@@ -2039,6 +2246,14 @@
         }
       ]
     },
+    "lightworks": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "lightworks"
+        }
+      ]
+    },
     "linear": {
       "providers": [
         {
@@ -2143,6 +2358,14 @@
       ],
       "git": "https://github.com/mas-cli/mas"
     },
+    "maven": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "maven"
+        }
+      ]
+    },
     "minijinja-cli": {
       "providers": [
         {
@@ -2167,6 +2390,24 @@
         }
       ],
       "git": "https://github.com/mitsuhiko/minijinja"
+    },
+    "minio-mc": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "minio-mc"
+        }
+      ],
+      "git": "https://github.com/minio/mc"
+    },
+    "mkcert": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "mkcert"
+        }
+      ],
+      "git": "https://github.com/FiloSottile/mkcert"
     },
     "mlx": {
       "providers": [
@@ -2236,6 +2477,14 @@
         {
           "provider": "npm",
           "package": "npm"
+        }
+      ]
+    },
+    "nss": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "nss"
         }
       ]
     },
@@ -2336,6 +2585,32 @@
         }
       ]
     },
+    "opencode": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "anomalyco/tap/opencode"
+        }
+      ],
+      "git": "https://github.com/anomalyco/opencode"
+    },
+    "openjdk@21": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "openjdk@21"
+        }
+      ],
+      "git": "https://github.com/openjdk/jdk21u"
+    },
+    "openshift-cli": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "openshift-cli"
+        }
+      ]
+    },
     "openssl": {
       "providers": [
         {
@@ -2387,6 +2662,14 @@
         }
       ]
     },
+    "oracle-jdk": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "oracle-jdk"
+        }
+      ]
+    },
     "parsec": {
       "providers": [
         {
@@ -2396,14 +2679,23 @@
       ],
       "ignore": true
     },
+    "pinentry-mac": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "pinentry-mac"
+        }
+      ],
+      "git": "https://github.com/GPGTools/pinentry"
+    },
     "pip": {
       "providers": [
         {
-          "provider": "pip",
+          "provider": "uv",
           "package": "pip"
         },
         {
-          "provider": "uv",
+          "provider": "pip",
           "package": "pip"
         }
       ]
@@ -2477,6 +2769,14 @@
         }
       ]
     },
+    "postman": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "postman"
+        }
+      ]
+    },
     "pyright": {
       "providers": [
         {
@@ -2515,6 +2815,15 @@
         }
       ],
       "git": "https://github.com/doy/rbw"
+    },
+    "rectangle": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "rectangle"
+        }
+      ],
+      "git": "https://github.com/rxhanson/Rectangle"
     },
     "ripgrep": {
       "providers": [
@@ -2573,6 +2882,14 @@
         }
       ],
       "git": "https://github.com/rust-lang/rust-analyzer"
+    },
+    "sblim-sfcc": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "sblim-sfcc"
+        }
+      ]
     },
     "shellcheck": {
       "providers": [
@@ -2642,6 +2959,14 @@
         }
       ],
       "git": "https://github.com/getsops/sops"
+    },
+    "sqlcl": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "sqlcl"
+        }
+      ]
     },
     "sshpass": {
       "providers": [
@@ -2741,6 +3066,14 @@
       ],
       "git": "https://github.com/siderolabs/talos"
     },
+    "telegram": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "telegram"
+        }
+      ]
+    },
     "terraform-ls": {
       "providers": [
         {
@@ -2781,6 +3114,15 @@
         }
       ],
       "git": "https://github.com/nvbn/thefuck"
+    },
+    "tldr": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "tldr"
+        }
+      ],
+      "git": "https://github.com/tldr-pages/tldr-c-client"
     },
     "tmux": {
       "providers": [
@@ -2965,6 +3307,14 @@
       ],
       "git": "https://github.com/libvips/libvips"
     },
+    "visual-studio-code": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "visual-studio-code"
+        }
+      ]
+    },
     "vivaldi": {
       "providers": [
         {
@@ -2980,6 +3330,15 @@
           "package": "vlc"
         }
       ]
+    },
+    "wakeonlan": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "wakeonlan"
+        }
+      ],
+      "git": "https://github.com/jpoliv/wakeonlan"
     },
     "watch": {
       "providers": [
@@ -3119,6 +3478,14 @@
         }
       ],
       "git": "https://github.com/adrienverge/yamllint"
+    },
+    "youtube-dl": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "youtube-dl"
+        }
+      ]
     },
     "yq": {
       "providers": [
