@@ -224,6 +224,9 @@
           "name": "git",
           "path": "~/.config/git",
           "hosts": {
+            "apm3ljhmvg7xgcf": {
+              "package": "git@apm3ljhmvg7xgcf"
+            },
             "topaz": {
               "package": "git@topaz"
             }
@@ -332,7 +335,6 @@
         "the-unarchiver",
         "xcodebuildmcp",
         "zstd",
-        "hammerspoon",
         "rbw",
         "mlx",
         "flux-markdown",
@@ -568,18 +570,10 @@
         "rectangle",
         "sqlcl",
         "telegram",
-        "visual-studio-code"
+        "visual-studio-code",
+        "hammerspoon"
       ],
       "dots": [
-        {
-          "name": "gitconfig",
-          "path": "~/.gitconfig",
-          "hosts": {
-            "apm3ljhmvg7xgcf": {
-              "package": "gitconfig@apm3ljhmvg7xgcf"
-            }
-          }
-        },
         {
           "name": "homebrew",
           "path": "~/.config/homebrew",

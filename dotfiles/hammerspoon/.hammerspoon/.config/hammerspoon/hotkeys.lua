@@ -1,81 +1,64 @@
-local config      = require("config")
-local spaces      = require("spaces")
-local layouts     = require("layouts")
-local focus_cycle = require("focus_cycle")
-local helpers     = require("helpers")
-
 local M = {}
 
-local AC  = { "cmd", "alt", "ctrl" }
-local ACS = { "cmd", "alt", "ctrl", "shift" }
+local HYPER = { "cmd", "alt", "ctrl" }
 
-local function bind(mods, key, fn) hs.hotkey.bind(mods, key, fn) end
+local function bind(mods, key, fn)
+  hs.hotkey.bind(mods, key, fn)
+end
 
-local function setHorizGrid(cols, col)
-  local w = hs.window.focusedWindow()
-  if not w then return end
-  local f = w:screen():frame()
-  w:setFrame(hs.geometry.rect(f.x + col * f.w / cols, f.y, f.w / cols, f.h))
+local function focusedWindow()
+  return hs.window.focusedWindow()
 end
 
 local function maximize()
-  local w = hs.window.focusedWindow()
+  local w = focusedWindow()
   if w then w:setFrame(w:screen():frame()) end
 end
 
-local function moveAndFollow(label)
-  local w = hs.window.focusedWindow()
-  if w then spaces.moveWindowAndFollow(w, label) end
+local function tileHalf(side)
+  local w = focusedWindow()
+  if not w then return end
+
+  local f = w:screen():frame()
+  local halfW = f.w / 2
+  local x = f.x
+  if side == "right" then
+    x = f.x + halfW
+  end
+  w:setFrame(hs.geometry.rect(x, f.y, halfW, f.h))
 end
 
-local function shiftSpace(_)
-  hs.alert.show("move to space unavailable (hs.spaces bug #3698)")
+local function focusDesktop(n)
+  hs.eventtap.keyStroke({ "ctrl" }, tostring(n), 0)
 end
 
-local function focusNthSpace(n)
-  hs.eventtap.keyStroke({"ctrl"}, tostring(n), 0)
+local function focusApp(name)
+  local app = hs.application.find(name)
+  if app then
+    app:activate(true)
+    return
+  end
+  hs.application.launchOrFocus(name)
 end
 
 function M.setup()
-  for key, spec in pairs(config.appHotkeys) do
-    bind(AC, key, function()
-      if type(spec) == "table" then
-        focus_cycle.focusMany(spec)
-      else
-        focus_cycle.focus(spec)
-      end
+  local config = require("config")
+
+  for key, app in pairs(config.appHotkeys or {}) do
+    bind(HYPER, key, function()
+      focusApp(app)
     end)
   end
-  if config.gaming then bind(AC, "g", helpers.focusGaming) end
-  bind(AC, "return", helpers.finderHere)
 
-  local labels = {}
-  for _, l in ipairs(config.primaryLabels   or {}) do table.insert(labels, l) end
-  for _, l in ipairs(config.secondaryLabels or {}) do table.insert(labels, l) end
+  bind(HYPER, "f", maximize)
+  bind(HYPER, "left", function() tileHalf("left") end)
+  bind(HYPER, "right", function() tileHalf("right") end)
 
   for i = 1, 9 do
-    local label = labels[i]
-    if label then
-      bind(AC, tostring(i), function() spaces.focus(label) end)
-    else
-      bind(AC, tostring(i), function() focusNthSpace(i) end)
-    end
+    bind(HYPER, tostring(i), function()
+      focusDesktop(i)
+    end)
   end
-
-  bind(AC, "f",     maximize)
-  bind(AC, "left",  function() setHorizGrid(2, 0) end)
-  bind(AC, "right", function() setHorizGrid(2, 1) end)
-  bind(AC, "z",     function() hs.alert.show("toggle float (n/a)") end)
-
-  bind(ACS, "left",  function() shiftSpace(-1) end)
-  bind(ACS, "right", function() shiftSpace(1)  end)
-  for i = 1, math.min(9, #labels) do
-    local label = labels[i]
-    bind(ACS, tostring(i), function() moveAndFollow(label) end)
-  end
-
-  bind(ACS, "u", helpers.toggleAbove)
-  bind(ACS, "l", layouts.applySecondScreen)
 end
 
 return M

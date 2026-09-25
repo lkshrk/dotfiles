@@ -1,14 +1,11 @@
--- nvim-treesitter (neovim-treesitter fork, main branch rewrite)
+-- nvim-treesitter (upstream, main branch rewrite)
 -- Requires: tree-sitter CLI >= 0.26.1 (brew install tree-sitter), curl, C compiler.
 -- Docs: https://github.com/neovim-treesitter/nvim-treesitter
 return {
-  'neovim-treesitter/nvim-treesitter',
+  'nvim-treesitter/nvim-treesitter',
   branch = 'main',
   lazy = false, -- plugin does not support lazy-loading
   build = ':TSUpdate',
-  dependencies = {
-    'neovim-treesitter/treesitter-parser-registry',
-  },
   config = function()
     local ensure = {
       'bash',

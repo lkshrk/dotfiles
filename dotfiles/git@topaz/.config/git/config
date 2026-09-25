@@ -1,6 +1,4 @@
 # Shared git config — device-specific settings live in config.local
-[include]
-	path = ~/.config/git/config.local
 [push]
 	autoSetupRemote = true
 [pull]
@@ -17,3 +15,5 @@
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
+[include]
+	path = ~/.config/git/config.local

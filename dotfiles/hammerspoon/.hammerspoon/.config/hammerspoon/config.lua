@@ -1,13 +1,13 @@
 local M = {}
 
 M.appHotkeys = {
-  b = "Vivaldi",
-  c = "Chatterino",
-  d = "Discord",
+  b = "Microsoft Edge",
+  c = "Microsoft Teams",
+  d = "Microsoft Outlook",
   e = "Zed",
   n = "Obsidian",
-  o = "OBS",
-  v = "Brave Browser",
+  o = "Microsoft Outlook",
+  v = "Helium",
   s = "Signal",
   t = "Ghostty",
   a = "ChatGPT",
