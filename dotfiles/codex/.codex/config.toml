@@ -396,3 +396,6 @@ trust_level = "trusted"
 
 [projects."/Users/lkshrk/Dev/better-audio-mixer"]
 trust_level = "trusted"
+
+[projects."/Users/lkshrk/Dev/useful-skills"]
+trust_level = "trusted"
