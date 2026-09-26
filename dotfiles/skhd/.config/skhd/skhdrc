@@ -52,6 +52,11 @@ alt + ctrl + cmd + shift - 4 : yabai -m window --space 4 && yabai -m space --foc
 alt + ctrl + cmd + shift - 5 : yabai -m window --space 5 && yabai -m space --focus 5
 alt + ctrl + cmd + shift - 6 : yabai -m window --space 6 && yabai -m space --focus 6
 
+# YouTube in Brave (Stream Deck hotkeys)
+alt + ctrl + cmd - f8 : ~/.config/yabai/yt.sh toggle
+alt + ctrl + cmd - f9 : ~/.config/yabai/yt.sh next
+alt + ctrl + cmd - f7 : ~/.config/yabai/yt.sh restart
+
 # Apply Layouts
 alt + ctrl + cmd + shift - u : ~/.config/yabai/toggle-above.sh
 alt + ctrl + cmd + shift - l : ~/.config/yabai/apply-layout.sh
