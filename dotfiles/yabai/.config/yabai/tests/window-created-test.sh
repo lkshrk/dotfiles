@@ -17,7 +17,7 @@ elif [[ "$*" == "-m query --windows --window "* ]]; then
   fi
 elif [ "$*" = "-m query --windows" ]; then
   case "$YABAI_WINDOW_ID" in
-    42) echo '[{"id":42,"app":"Finder"}]' ;;
+    42) echo '[{"id":42,"app":"Finder","frame":{"x":1800,"y":300,"w":1000,"h":600}}]' ;;
     43) echo '[{"id":42,"app":"Finder"},{"id":43,"app":"Finder"}]' ;;
     44) echo '[{"id":44,"app":"Telegram","title":"Telegram"}]' ;;
   esac
@@ -29,7 +29,7 @@ chmod +x "$tmp/yabai"
 
 PATH="$tmp:$PATH" YABAI_WINDOW_ID=42 "$(dirname "$0")/../window-created.sh"
 
-expected='-m window 42 --space stack'
+expected=$'-m window 42 --space stack\n-m window 42 --move abs:780:420'
 actual="$(cat "$YABAI_TEST_ACTIONS" 2>/dev/null || true)"
 [ "$actual" = "$expected" ] || {
   printf 'expected %q, got %q\n' "$expected" "$actual" >&2

@@ -29,7 +29,6 @@ SP_STACK=stack
 SP_MOONLIGHT=remote
 SP_REMOTE=remote
 SP_COMMS=comms
-SP_STREAM=stream
 
 # ── Portrait dimensions ──────────────────────────────────────────────────────
 S_THIRD_H=$(( SH / 3 ))
@@ -42,7 +41,6 @@ S_CHAT_W=$(( SW / 3 ))
 S_CHAT_H=$(( SH / 4 ))
 S_CHAT_X=$(( SX + SW - S_CHAT_W - 1 ))
 S_CHAT_Y=$(( SY + SH - S_CHAT_H - 43 ))
-S_HALF_H=$(( SH / 2 ))
 S_BOT45_Y=$(( SY + SH * 55 / 100 ))
 S_BOT45_H=$(( SH * 45 / 100 ))
 
@@ -197,13 +195,6 @@ wid="$(wid_nth "Obsidian" 0)"
 wid="$(wid_nth "ChatGPT Classic" 0)"
 [ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$S_BOT45_Y" "$SW" "$S_BOT45_H"
 
-# ── Space 6 (stream) ─────────────────────────────────────────────────────────
-wid="$(wid_nth "Stream Deck" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_STREAM" "$SX" "$SY" "$SW" "$S_HALF_H"
-
-wid="$(wid_nth "Elgato Wave Link" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_STREAM" "$SX" "$(( SY + S_HALF_H ))" "$SW" "$S_HALF_H"
-
 # ══════════════════════════════════════════════════════════════════════════════
 # CATCH-ALL: unknown apps → stack, preserving size
 # ══════════════════════════════════════════════════════════════════════════════
@@ -214,12 +205,15 @@ echo "$ALL_WINDOWS" | jq -r '
       .app != "Discord" and .app != "Claude" and .app != "Signal" and
       .app != "Messages" and .app != "Telegram" and
       .app != "OBS Studio" and .app != "Chatterino" and
-      .app != "Brave Browser" and .app != "Obsidian" and .app != "ChatGPT Classic" and
-      .app != "Stream Deck" and .app != "Elgato Wave Link"
+      .app != "Brave Browser" and .app != "Obsidian" and .app != "ChatGPT Classic"
     )]
   | .[]
-  | "\(.id) stack"
-' | while read -r wid target; do
+  | "\(.id) \(.frame.w // 0 | floor) \(.frame.h // 0 | floor)"
+' | while read -r wid w h; do
     [ -n "$wid" ] || continue
-    yabai -m window "$wid" --space "$target" || true
+    yabai -m window "$wid" --space "$SP_STACK" || true
+    [ -n "$TARGET_WINDOW_ID" ] && [ "$w" -gt 0 ] && [ "$h" -gt 0 ] || continue
+    w=$(( w < PW ? w : PW ))
+    h=$(( h < PH ? h : PH ))
+    yabai -m window "$wid" --move "abs:$(( PX + (PW - w) / 2 )):$(( PY + (PH - h) / 2 ))" || true
   done
