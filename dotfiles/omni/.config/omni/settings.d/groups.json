@@ -6,7 +6,8 @@
         "claude-code",
         "coder",
         "herdr",
-        "@openai/codex"
+        "@openai/codex",
+        "anomalyco/tap/opencode-v2"
       ]
     },
     {

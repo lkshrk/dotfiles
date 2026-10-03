@@ -15,6 +15,8 @@ elif [ "$*" = "-m query --windows" ]; then
 elif [ "$*" = "-m query --windows --window" ]; then
   [ -n "${YABAI_TEST_CURRENT:-}" ] || exit 1
   printf '{"id":%s}\n' "$YABAI_TEST_CURRENT"
+elif [ "$*" = "-m query --spaces --display 1" ]; then
+  echo '[{"index":1,"is-native-fullscreen":false},{"index":3,"is-native-fullscreen":false},{"index":4,"is-native-fullscreen":true}]'
 elif [ "$*" = "-m query --spaces --space" ]; then
   printf '{"index":%s}\n' "${YABAI_TEST_SPACE:-2}"
 elif [ "$*" = "-m window 42 --focus" ] && [ "${YABAI_TEST_FOCUS_FAIL:-0}" = 1 ]; then

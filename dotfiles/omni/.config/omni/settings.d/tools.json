@@ -52,6 +52,17 @@
         }
       ]
     },
+    "anomalyco/tap/opencode-v2": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "anomalyco/tap/opencode-v2"
+        }
+      ],
+      "taps": [
+        "anomalyco/tap"
+      ]
+    },
     "apm": {
       "providers": [
         {

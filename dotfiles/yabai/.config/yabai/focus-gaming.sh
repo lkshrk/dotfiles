@@ -3,7 +3,6 @@ set -euo pipefail
 
 TITLE="towerr"
 ALT_APP="moonlight"
-FALLBACK_SPACE="3"
 
 WIN_ID=$(
   yabai -m query --windows \
@@ -30,5 +29,9 @@ if [ -n "$WIN_ID" ]; then
     open -a "$(jq -r '.app' <<< "$WINDOW")"
   fi
 else
-  yabai -m space --focus "$FALLBACK_SPACE"
+  MAIN_DISPLAY="$(yabai -m query --displays | jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index // 1')"
+  yabai -m space --focus "$(
+    yabai -m query --spaces --display "$MAIN_DISPLAY" \
+      | jq -r '[.[] | select(."is-native-fullscreen" == false) | .index] | max'
+  )"
 fi

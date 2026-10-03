@@ -16,8 +16,6 @@ PREFERRED_DISPLAY_INDEX="$(
     | jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index'
 )"
 
-STACK_SPACE_INDEX=2
-
 if [ -z "$PREFERRED_DISPLAY_INDEX" ]; then
   echo "preferred display not found" >&2
   exit 1
@@ -45,8 +43,7 @@ WINDOW_IDS="$(
       --arg app_pattern "$APP_PATTERN" \
       --arg exclude "$EXCLUDE_TITLE" \
       --argjson hist "$FOCUS_HISTORY" \
-      --argjson preferred "$PREFERRED_DISPLAY_INDEX" \
-      --argjson stack "${STACK_SPACE_INDEX:-0}" '
+      --argjson preferred "$PREFERRED_DISPLAY_INDEX" '
         map(select(
           (.app == $app or ($app_pattern != "" and (.app | test($app_pattern))))
           and ($exclude == "" or (.title | test($exclude) | not))
@@ -54,7 +51,6 @@ WINDOW_IDS="$(
         | sort_by(
             -($hist[(.id | tostring)] // 0),
             (if .display == $preferred then 0 else 1 end),
-            (if .space == $stack then 0 else 1 end),
             .space,
             .id
           )

@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Load scripting addition — space create/destroy needs it, and a Dock restart
-# (login, macOS update, display reconfiguration) silently unloads it
-sudo yabai --load-sa
-yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+# A Dock restart (login, macOS update, display reconfiguration) silently unloads the scripting addition
+sudo -n yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo -n yabai --load-sa"
 
 # ── Global settings ───────────────────────────────────────────────────────────
 yabai -m config layout                float
@@ -24,11 +23,9 @@ defaults write com.apple.dock workspaces-swoosh-animation-off -bool true
 defaults write com.apple.universalaccess reduceMotion -bool true
 defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 
-# ── Spaces ────────────────────────────────────────────────────────────────────
 CONFIG_DIR="${HOME}/.config/yabai"
 
-# Ensure space count and labels (3 on widescreen, 2 on portrait)
-"${CONFIG_DIR}/relabel-spaces.sh" &
+"${CONFIG_DIR}/health.sh" &
 
 # ── Signals ───────────────────────────────────────────────────────────────────
 # Track focus history for smart app cycling (used by focus-app.sh)
@@ -45,13 +42,5 @@ yabai -m signal --add \
 yabai -m signal --add \
   event=window_title_changed \
   action="${CONFIG_DIR}/place-pip.sh"
-
-# Re-detect displays and fix space count/labels when monitors change
-yabai -m signal --add \
-  event=display_added \
-  action="${CONFIG_DIR}/relabel-spaces.sh"
-yabai -m signal --add \
-  event=display_removed \
-  action="${CONFIG_DIR}/relabel-spaces.sh"
 
 echo "yabai config loaded"

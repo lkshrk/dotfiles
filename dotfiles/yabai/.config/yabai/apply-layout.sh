@@ -2,33 +2,34 @@
 set -euo pipefail
 TARGET_WINDOW_ID="${1:-}"
 
-# ── Display detection ─────────────────────────────────────────────────────────
+# ── Displays and spaces ───────────────────────────────────────────────────────
+DISPLAYS="$(yabai -m query --displays)"
+SPACES="$(yabai -m query --spaces)"
+
 PRIMARY_DISPLAY="$(
-  yabai -m query --displays | jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index'
+  jq -r '[.[] | select(.frame.w > .frame.h)] | sort_by(.frame.w) | last | .index // 1' <<<"$DISPLAYS"
 )"
 SECONDARY_DISPLAY="$(
-  yabai -m query --displays | jq -r '[.[] | select(.frame.h > .frame.w)] | sort_by(.frame.h) | last | .index'
+  jq -r --argjson p "$PRIMARY_DISPLAY" '[.[] | select(.frame.h > .frame.w)] | sort_by(.frame.h) | last | .index // $p' <<<"$DISPLAYS"
 )"
 
-read -r PX PY PW PH < <(
-  yabai -m query --displays \
-    | jq -r --argjson d "$PRIMARY_DISPLAY" '
-        .[] | select(.index == $d) | "\(.frame.x|floor) \(.frame.y|floor) \(.frame.w|floor) \(.frame.h|floor)"'
-)
+display_frame() {
+  jq -r --argjson d "$1" '
+    .[] | select(.index == $d) | "\(.frame.x|floor) \(.frame.y|floor) \(.frame.w|floor) \(.frame.h|floor)"' <<<"$DISPLAYS"
+}
 
-read -r SX SY SW SH < <(
-  yabai -m query --displays \
-    | jq -r --argjson d "$SECONDARY_DISPLAY" '
-        .[] | select(.index == $d) | "\(.frame.x|floor) \(.frame.y|floor) \(.frame.w|floor) \(.frame.h|floor)"'
-)
+display_space() {
+  jq -r --argjson d "$1" --arg pick "$2" '
+    [.[] | select(.display == $d and ."is-native-fullscreen" == false) | .index]
+    | (if $pick == "last" then max else min end) // empty' <<<"$SPACES"
+}
 
-# ── Spaces ────────────────────────────────────────────────────────────────────
-# Labels maintained by relabel-spaces.sh; numeric indices drift when extra
-# spaces exist, labels don't. Moonlight and League share the remote space.
-SP_STACK=stack
-SP_MOONLIGHT=remote
-SP_REMOTE=remote
-SP_COMMS=comms
+read -r PX PY PW PH < <(display_frame "$PRIMARY_DISPLAY")
+read -r SX SY SW SH < <(display_frame "$SECONDARY_DISPLAY")
+
+SP_MAIN="$(display_space "$PRIMARY_DISPLAY" first)"
+SP_REMOTE="$(display_space "$PRIMARY_DISPLAY" last)"
+SP_SECOND="$(display_space "$SECONDARY_DISPLAY" first)"
 
 # ── Portrait dimensions ──────────────────────────────────────────────────────
 S_THIRD_H=$(( SH / 3 ))
@@ -128,22 +129,22 @@ move_only() {
 # MAIN MONITOR
 # ══════════════════════════════════════════════════════════════════════════════
 
-# ── Space 2 (stack): Ghostty, Zed, primary Helium — fullscreen ────────────────
+# ── First space: Ghostty, Zed, primary Helium — fullscreen ────────────────────
 while IFS= read -r wid; do
-  [ -n "$wid" ] && place "$wid" "$SP_STACK" "$PX" "$PY" "$PW" "$PH"
+  [ -n "$wid" ] && place "$wid" "$SP_MAIN" "$PX" "$PY" "$PW" "$PH"
 done < <(wid_all "Ghostty")
 
 wid="$(wid_nth "Zed" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_STACK" "$PX" "$PY" "$PW" "$PH"
+[ -n "$wid" ] && place "$wid" "$SP_MAIN" "$PX" "$PY" "$PW" "$PH"
 
 wid="$HELIUM_PRIMARY_WID"
-[ -n "$wid" ] && place "$wid" "$SP_STACK" "$PX" "$PY" "$PW" "$PH"
+[ -n "$wid" ] && place "$wid" "$SP_MAIN" "$PX" "$PY" "$PW" "$PH"
 
-# ── Space 3: Moonlight — move only ───────────────────────────────────────────
+# ── Last space: Moonlight — move only ────────────────────────────────────────
 wid="$(wid_nth "Moonlight" 0)"
-[ -n "$wid" ] && move_only "$wid" "$SP_MOONLIGHT"
+[ -n "$wid" ] && move_only "$wid" "$SP_REMOTE"
 
-# ── Space 4 (remote): League of Legends — fullscreen ─────────────────────────
+# ── Last space: League of Legends — fullscreen ───────────────────────────────
 wid="$(wid_nth "League of Legends" 0)"
 [ -n "$wid" ] && place "$wid" "$SP_REMOTE" "$PX" "$PY" "$PW" "$PH"
 
@@ -151,26 +152,26 @@ wid="$(wid_nth "League of Legends" 0)"
 # PORTRAIT MONITOR
 # ══════════════════════════════════════════════════════════════════════════════
 
-# ── Space 5 (comms) ──────────────────────────────────────────────────────────
+# ── First space ──────────────────────────────────────────────────────────────
 wid="$(wid_nth "Discord" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$SY" "$SW" "$S_THIRD_H"
+[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$SY" "$SW" "$S_THIRD_H"
 
 wid="$(wid_nth "Claude" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$S_SEVEN15_Y" "$SW" "$S_SEVEN15_H"
+[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_SEVEN15_Y" "$SW" "$S_SEVEN15_H"
 
 wid="$HELIUM_SECONDARY_WID"
-[ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$S_SEVEN15_Y" "$SW" "$S_SEVEN15_H"
+[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_SEVEN15_Y" "$SW" "$S_SEVEN15_H"
 
 for app in Signal Messages Telegram; do
   wid="$(wid_nth "$app" 0)"
-  [ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$S_BOT_THIRD_Y" "$SW" "$S_THIRD_H"
+  [ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_BOT_THIRD_Y" "$SW" "$S_THIRD_H"
 done
 
 wid="$(wid_nth "OBS Studio" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$S_BOT_THIRD_Y" "$SW" "$S_THIRD_H"
+[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_BOT_THIRD_Y" "$SW" "$S_THIRD_H"
 
 wid="$(wid_nth "Chatterino" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_COMMS" "$S_CHAT_X" "$S_CHAT_Y" "$S_CHAT_W" "$S_CHAT_H"
+[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$S_CHAT_X" "$S_CHAT_Y" "$S_CHAT_W" "$S_CHAT_H"
 
 wid="$(
   echo "$ALL_WINDOWS" | jq -r '
@@ -179,7 +180,7 @@ wid="$(
     | first.id // empty
   '
 )"
-[ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$S_BRAVE_Y" "$SW" "$S_BRAVE_H" "auto"
+[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_BRAVE_Y" "$SW" "$S_BRAVE_H" "auto"
 
 wid="$(
   echo "$ALL_WINDOWS" | jq -r '
@@ -190,13 +191,13 @@ wid="$(
 [ -n "$wid" ] && "$(dirname "$0")/place-pip.sh" "$wid"
 
 wid="$(wid_nth "Obsidian" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$S_BOT45_Y" "$SW" "$S_BOT45_H"
+[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_BOT45_Y" "$SW" "$S_BOT45_H"
 
 wid="$(wid_nth "ChatGPT Classic" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_COMMS" "$SX" "$S_BOT45_Y" "$SW" "$S_BOT45_H"
+[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_BOT45_Y" "$SW" "$S_BOT45_H"
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CATCH-ALL: unknown apps → stack, preserving size
+# CATCH-ALL: unknown apps → first space of main monitor, preserving size
 # ══════════════════════════════════════════════════════════════════════════════
 echo "$ALL_WINDOWS" | jq -r '
   [.[] | select(
@@ -211,7 +212,7 @@ echo "$ALL_WINDOWS" | jq -r '
   | "\(.id) \(.frame.w // 0 | floor) \(.frame.h // 0 | floor)"
 ' | while read -r wid w h; do
     [ -n "$wid" ] || continue
-    yabai -m window "$wid" --space "$SP_STACK" || true
+    yabai -m window "$wid" --space "$SP_MAIN" || true
     [ -n "$TARGET_WINDOW_ID" ] && [ "$w" -gt 0 ] && [ "$h" -gt 0 ] || continue
     w=$(( w < PW ? w : PW ))
     h=$(( h < PH ? h : PH ))
