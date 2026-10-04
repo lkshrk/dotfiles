@@ -4,8 +4,7 @@
     "CLAUDE_CODE_SYNTAX_HIGHLIGHT": "false",
     "ECC_CONTEXT_MONITOR_COST_WARNINGS": "false",
     "ECC_DISABLED_HOOKS": "stop:desktop-notify",
-    "ECC_GATEGUARD": "off",
-    "FORCE_PROMPT_CACHING_5M": "1"
+    "ECC_GATEGUARD": "off"
   },
   "attribution": {
     "commit": "",
@@ -28,26 +27,6 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-read.js\" || true",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/post-write.js\" || true",
-            "timeout": 10
-          }
-        ]
-      },
-      {
         "matcher": "Bash|Read|Write|Edit|NotebookEdit|Glob|Grep|TodoWrite|TaskCreate|TaskUpdate|EnterPlanMode|ExitPlanMode|Skill|Agent|AskUserQuestion|EnterWorktree|mcp__",
         "hooks": [
           {
@@ -64,36 +43,6 @@
           {
             "type": "command",
             "command": "rtk hook claude",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/openwolf-git-gate.sh",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\" || true",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-write.js\" || true",
             "timeout": 5
           }
         ]
@@ -190,16 +139,6 @@
         ]
       },
       {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/session-start.js\" || true",
-            "timeout": 5
-          }
-        ]
-      },
-      {
         "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
@@ -253,16 +192,6 @@
       }
     ],
     "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "test -f \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" && node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/stop.js\" || true",
-            "timeout": 10
-          }
-        ]
-      },
       {
         "matcher": "*",
         "hooks": [

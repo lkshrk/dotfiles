@@ -8,7 +8,7 @@ mkdir -p "$tmpdir/env/bin" "$tmpdir/bin"
 
 cat > "$tmpdir/env/bin/rbw-env" <<'EOF'
 #!/bin/sh
-[ "$1" = fclaude ] && [ "$2" = -- ]
+[ "$1" = claude-api ] && [ "$2" = -- ]
 shift 2
 export ANTHROPIC_AUTH_TOKEN=test-key
 exec "$@"
@@ -35,14 +35,29 @@ ENV_NEXT_PROFILE_VERSION=7
 export ENV_DIR ENV_NEXT_PROFILE_LOADED ENV_NEXT_PROFILE_PATH ENV_NEXT_PROFILE_VERSION
 # shellcheck source=../profile.sh
 . "$ENV_PACKAGE_DIR/profile.sh"
-command -v fclaude >/dev/null
+command -v claude >/dev/null
+command -v cc >/dev/null
 
 output=$(
   ENV_DIR="$tmpdir/env" \
   LITELLM_BASE_URL=https://gateway.example \
   PATH="$tmpdir/bin:/usr/bin:/bin" \
-  fclaude --model gateway-model prompt
+  claude --model gateway-model prompt
 )
+
+short_output=$(
+  ENV_DIR="$tmpdir/env" \
+  LITELLM_BASE_URL=https://gateway.example \
+  PATH="$tmpdir/bin:/usr/bin:/bin" \
+  cc --model gateway-model prompt
+)
+[ "$short_output" = "$output" ]
+
+default_base=$(
+  ENV_DIR="$tmpdir/env" PATH="$tmpdir/bin:/usr/bin:/bin" \
+  claude | sed -n 's/^base=//p'
+)
+[ "$default_base" = "https://api.ai.h-cloud.lan" ]
 
 [ "$output" = "base=https://gateway.example
 token=test-key
@@ -57,3 +72,20 @@ args=--model gateway-model prompt" ]
 [ -z "${ANTHROPIC_CUSTOM_MODEL_OPTION:-}" ]
 [ -z "${ANTHROPIC_CUSTOM_MODEL_OPTION_NAME:-}" ]
 [ -z "${ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION:-}" ]
+
+# The actual secret loader must resolve the folder-qualified gateway secret.
+cat > "$tmpdir/bin/rbw" <<'EOF'
+#!/bin/sh
+case "$1" in
+  unlocked) exit 0 ;;
+  get) shift; [ "$*" = '--folder ENV llm-gateway' ] || exit 1; printf test-key ;;
+  *) exit 1 ;;
+esac
+EOF
+chmod +x "$tmpdir/bin/rbw"
+actual_base=$(
+  ENV_DIR="$ENV_PACKAGE_DIR" PATH="$tmpdir/bin:/usr/bin:/bin" \
+  cc | sed -n 's/^base=//p'
+)
+[ "$actual_base" = "https://api.ai.h-cloud.lan" ]
+printf '%s\n' 'claude and cc: gateway, secret, arguments and isolation checks passed'

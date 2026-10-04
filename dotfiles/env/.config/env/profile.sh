@@ -6,9 +6,9 @@ ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 
 # Functions are cheap to reload and may have been added after the guarded env
 # setup ran in this shell.
-# shellcheck source=functions/fclaude
-if [ -r "$ENV_DIR/functions/fclaude" ]; then
-  . "$ENV_DIR/functions/fclaude"
+# shellcheck source=functions/claude
+if [ -r "$ENV_DIR/functions/claude" ]; then
+  . "$ENV_DIR/functions/claude"
 fi
 
 case "${CODER_OMNI_HOST:-${HOSTNAME:-}}" in

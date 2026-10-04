@@ -71,7 +71,12 @@ inject_secret() {
     return 0
   fi
 
-  if ! value=$(rbw get "$item" 2>/dev/null); then
+  case "$item" in
+    */*) set -- --folder "${item%%/*}" "${item#*/}" ;;
+    *) set -- "$item" ;;
+  esac
+
+  if ! value=$(rbw get "$@" 2>/dev/null); then
     printf 'rbw-env: could not retrieve %s for %s\n' "$item" "$var" >&2
     missing_secret=true
     return 0

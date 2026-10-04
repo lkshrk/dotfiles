@@ -24,3 +24,6 @@ if [[ "$OSTYPE" == darwin* && -d "$HOME/.config/zsh/macos" ]]; then
 fi
 
 # zprof | head -30
+
+# bun completions
+[ -s "/Users/lkshrk/.bun/_bun" ] && source "/Users/lkshrk/.bun/_bun"

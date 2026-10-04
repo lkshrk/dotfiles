@@ -2,6 +2,18 @@
 
 Shell-neutral environment layout for exported env, PATH, and secret injection.
 
+`claude` and `cc` both launch Claude Code through LiteLLM, using the gateway
+credential from `ENV/llm-gateway`. Override the endpoint with `LITELLM_BASE_URL`.
+Claude uses the system certificate trust without a per-launch CA wrapper; other
+AI clients retain the shared CA helper in `65-ai-certs.zsh` (`OMNI_CA_PATH`).
+
+Codex uses the LiteLLM Responses provider with its existing Astra default.
+Its native token command calls `bin/llm-gateway-token`: an injected
+`LITELLM_API_KEY`, a private Coder token file, or the vault gateway item.
+The Coder SSH hook now syncs that gateway token instead of ChatGPT OAuth.
+`oc` uses OpenCode v2's LiteLLM provider (Sol by default); its provider policy
+allows only LiteLLM, so stored direct-provider logins cannot route inference.
+
 This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 `~/.config/env` by Omni/Stow.
 
@@ -16,6 +28,8 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 - `bin/rbw-ssh-pubkeys`: writes fingerprint-named public-key selectors for
   rbw's native SSH agent to `~/.ssh/rbw`.
 - `secrets/*.envmap`: rbw item to environment variable mappings by consumer.
+  An item written as `<folder>/<name>` is fetched with `rbw get --folder`, for
+  names that exist in more than one folder.
 - `tests/smoke.sh`: shell-mode checks before migration.
 - `tests/linux-smoke.sh`: clean Linux env checks with fake HOME/NVM and
   optional rbw socket coverage.

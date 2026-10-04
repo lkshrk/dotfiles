@@ -167,6 +167,26 @@ env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bi
   claude \
   -- sh -c 'printf "HF_TOKEN=%s\n" "$HF_TOKEN"'
 
+printf "\n## rbw-env folder-qualified item\n"
+cat > "$tmpdir/rbw" <<'EOF'
+#!/bin/sh
+case "$1" in
+  unlocked) exit 0 ;;
+  get) shift; printf 'args:%s\n' "$*" ;;
+  *) exit 1 ;;
+esac
+EOF
+chmod +x "$tmpdir/rbw"
+folder_out=$(env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" \
+  claude-api \
+  -- sh -c 'printf "%s" "$ANTHROPIC_AUTH_TOKEN"')
+if [ "$folder_out" = "args:--folder ENV llm-gateway" ]; then
+  printf '%s\n' 'folder-item=ok'
+else
+  printf 'folder-item=unexpected:%s\n' "$folder_out"
+  exit 1
+fi
+
 printf "\n## rbw-env locked non-interactive\n"
 cat > "$tmpdir/rbw" <<'EOF'
 #!/bin/sh

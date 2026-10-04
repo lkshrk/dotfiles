@@ -106,8 +106,8 @@ ensure_omni_bootstrap() {
 
 omni_bootstrap() {
   step "omni bootstrap"
-  if [[ -z "${NODE_EXTRA_CA_CERTS:-}" && -r "${OMNI_OTEL_CA_PATH:-}" ]]; then
-    export NODE_EXTRA_CA_CERTS="$OMNI_OTEL_CA_PATH"
+  if [[ -z "${NODE_EXTRA_CA_CERTS:-}" && -r "${OMNI_CA_PATH:-}" ]]; then
+    export NODE_EXTRA_CA_CERTS="$OMNI_CA_PATH"
   fi
   # Codex may replace the managed symlink with a real config before bootstrap.
   # Keep the local copy, then let Omni install the tracked version.

@@ -1906,14 +1906,6 @@
       ],
       "git": "https://github.com/robinebers/openusage"
     },
-    "openwolf": {
-      "providers": [
-        {
-          "provider": "bun",
-          "package": "openwolf"
-        }
-      ]
-    },
     "oracle-jdk": {
       "providers": [
         {
