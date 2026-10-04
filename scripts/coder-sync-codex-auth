@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Copy the current local Codex login to a Coder workspace before its SSH shell
+# Copy the local gateway credential to a Coder workspace before its SSH shell
 # starts. Invoked through ~/.ssh/config's LocalCommand for *.coder hosts.
 set -euo pipefail
 
 target="${1:?usage: coder-sync-codex-auth <workspace.coder>}"
-auth_file="${CODEX_AUTH_FILE:-$HOME/.codex/auth.json}"
+token_helper="${XDG_CONFIG_HOME:-$HOME/.config}/env/bin/llm-gateway-token"
 
 # This hook is only for Coder aliases. Reject anything that could be interpreted
 # as an SSH option or a path when called outside its SSH-config entry.
@@ -13,13 +13,15 @@ if [[ "$target" != *.coder || "$target" == -* || "$target" == */* ]]; then
   exit 0
 fi
 
-# A missing local login must not prevent connecting to the workspace.
-[[ -f "$auth_file" && ! -L "$auth_file" ]] || exit 0
+# A missing local credential must not prevent connecting to the workspace.
+if ! token=$(sh "$token_helper"); then
+  printf '%s\n' 'coder auth sync: no gateway credential; continuing with existing workspace credential' >&2
+  exit 0
+fi
 
 # A single SSH connection streams to a temporary file and atomically replaces
 # the remote credential. Disable LocalCommand to avoid recursively syncing.
-if ! ssh -T -o PermitLocalCommand=no -o LogLevel=ERROR "$target" \
-  'umask 077; mkdir -p "$HOME/.codex"; cat > "$HOME/.codex/auth.json.tmp" && chmod 600 "$HOME/.codex/auth.json.tmp" && mv "$HOME/.codex/auth.json.tmp" "$HOME/.codex/auth.json"' \
-  < "$auth_file"; then
-  printf '%s\n' "coder auth sync: failed; continuing with existing workspace login" >&2
+if ! printf '%s\n' "$token" | ssh -T -o PermitLocalCommand=no -o LogLevel=ERROR "$target" \
+  'set -eu; umask 077; dir="${XDG_DATA_HOME:-$HOME/.local/share}/llm-gateway"; mkdir -p "$dir"; chmod 700 "$dir"; tmp=$(mktemp "$dir/token.XXXXXX"); trap '\''rm -f "$tmp"'\'' EXIT HUP INT TERM; cat > "$tmp"; test -s "$tmp"; chmod 600 "$tmp"; mv "$tmp" "$dir/token"'; then
+  printf '%s\n' "coder auth sync: failed; continuing with existing workspace credential" >&2
 fi

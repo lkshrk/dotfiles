@@ -26,7 +26,7 @@ oc() {
     local ca
     ca=$(_root_ca_cert_file) || return
     NODE_EXTRA_CA_CERTS="$ca" \
-    _rbw_env opencode -- command opencode --port "$@"
+    _rbw_env opencode -- command opencode "$@"
   )
 }
 

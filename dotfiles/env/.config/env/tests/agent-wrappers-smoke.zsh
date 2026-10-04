@@ -28,7 +28,7 @@ _rbw_env() {
   shift
   case $profile in
     codex) [[ $* == '-- command codex test prompt' ]] ;;
-    opencode) [[ $* == '-- command opencode --port test prompt' ]] ;;
+    opencode) [[ $* == '-- command opencode test prompt' ]] ;;
     *) return 1 ;;
   esac
 }

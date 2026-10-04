@@ -7,6 +7,13 @@ credential from `ENV/llm-gateway`. Override the endpoint with `LITELLM_BASE_URL`
 Claude uses the system certificate trust without a per-launch CA wrapper; other
 AI clients retain the shared CA helper in `65-ai-certs.zsh` (`OMNI_CA_PATH`).
 
+Codex uses the LiteLLM Responses provider with its existing Astra default.
+Its native token command calls `bin/llm-gateway-token`: an injected
+`LITELLM_API_KEY`, a private Coder token file, or the vault gateway item.
+The Coder SSH hook now syncs that gateway token instead of ChatGPT OAuth.
+`oc` uses OpenCode v2's LiteLLM provider (Sol by default); its provider policy
+allows only LiteLLM, so stored direct-provider logins cannot route inference.
+
 This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 `~/.config/env` by Omni/Stow.
 

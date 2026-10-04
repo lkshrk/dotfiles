@@ -1,5 +1,29 @@
 {
     "$schema": "https://opencode.ai/config.json",
+    "model": "litellm/gpt-6.1-sol",
+    "providers": {
+        "litellm": {
+            "name": "LiteLLM",
+            "canonical": "openai",
+            "env": ["LITELLM_API_KEY"],
+            "settings": {
+                "baseURL": "https://api.ai.h-cloud.lan/v1",
+                "transport": "http"
+            },
+            "models": {
+                "gpt-6-astra": {"modelID": "gpt-astra", "limit": {"context": 922000, "output": 128000}},
+                "gpt-6.1-sol": {"modelID": "gpt-sol", "limit": {"context": 922000, "output": 128000}},
+                "gpt-5.6-terra": {"modelID": "gpt-terra", "limit": {"context": 922000, "output": 128000}},
+                "gpt-6-luna": {"modelID": "gpt-luna", "limit": {"context": 922000, "output": 128000}}
+            }
+        }
+    },
+    "experimental": {
+        "policies": [
+            {"action": "provider.use", "resource": "*", "effect": "deny"},
+            {"action": "provider.use", "resource": "litellm", "effect": "allow"}
+        ]
+    },
     "mcp": {
         "web-search-prime": {
             "type": "remote",

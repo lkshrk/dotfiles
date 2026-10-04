@@ -24,4 +24,10 @@ _omni_ai_run() {
 }
 
 (( $+functions[codex]  )) || codex()  { ( _omni_ai_run command codex "$@" ) }
-(( $+functions[oc]     )) || oc()     { ( _omni_ai_run command opencode "$@" ) }
+(( $+functions[oc]     )) || oc() {
+  (
+    local key
+    key=$("${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/bin/llm-gateway-token") || return
+    LITELLM_API_KEY="$key" _omni_ai_run command opencode "$@"
+  )
+}
