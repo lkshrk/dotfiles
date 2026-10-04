@@ -42,31 +42,6 @@ dangerously_allow_all_unix_sockets = true
 "127.0.0.1" = "allow"
 "::1" = "allow"
 
-[otel]
-environment = "dev"
-log_user_prompt = true
-
-[otel.exporter.otlp-http]
-endpoint = "https://otel.h-cloud.lan/v1/logs"
-protocol = "binary"
-
-[otel.exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
-
-[otel.trace_exporter.otlp-http]
-endpoint = "https://otel.h-cloud.lan/v1/traces"
-protocol = "binary"
-
-[otel.trace_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
-
-[otel.metrics_exporter.otlp-http]
-endpoint = "https://otel.h-cloud.lan/v1/metrics"
-protocol = "binary"
-
-[otel.metrics_exporter.otlp-http.tls]
-ca-certificate = "/Users/lkshrk/.local/share/certs/lan-ca.pem"
-
 [tui]
 status_line = [
 	"model-with-reasoning",

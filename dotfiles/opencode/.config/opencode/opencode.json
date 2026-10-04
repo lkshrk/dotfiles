@@ -31,7 +31,6 @@
         }
     },
     "plugin": [
-        "oh-my-openagent@latest",
-        "@devtheops/opencode-plugin-otel"
+        "oh-my-openagent@latest"
     ]
 }
