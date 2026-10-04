@@ -7,7 +7,9 @@ for name in ${(k)parameters}; do
     OTEL_*|OPENCODE_ENABLE_TELEMETRY|OPENCODE_OTLP_*|OPENCODE_RESOURCE_ATTRIBUTES|CLAUDE_CODE_ENABLE_TELEMETRY|CLAUDE_CODE_ENHANCED_TELEMETRY*) unset "$name" ;;
   esac
 done
-source "$repo/dotfiles/zsh/.config/zsh/65-ai-otel.zsh"
+# The gateway command loaded by profile.sh must survive later zsh modules.
+claude() { [[ $* == 'test prompt' ]]; }
+source "$repo/dotfiles/zsh/.config/zsh/65-ai-certs.zsh"
 _root_ca_cert_file() { print -r -- /test/lan-ca.pem; }
 _omni_ai_ca() { _root_ca_cert_file; }
 check_env() {
@@ -25,11 +27,6 @@ _rbw_env() {
   local profile=$1
   shift
   case $profile in
-    claude)
-      [[ $* == '-- command claude test prompt' ]]
-      [[ -z ${ANTHROPIC_BASE_URL:-} && -z ${ANTHROPIC_AUTH_TOKEN:-} ]]
-      [[ -z ${ANTHROPIC_DEFAULT_OPUS_MODEL:-} ]]
-      ;;
     codex) [[ $* == '-- command codex test prompt' ]] ;;
     opencode) [[ $* == '-- command opencode --port test prompt' ]] ;;
     *) return 1 ;;
@@ -41,7 +38,8 @@ codex 'test prompt'
 oc 'test prompt'
 [[ $ANTHROPIC_AUTH_TOKEN == fake ]]
 _root_ca_cert_file() { return 1; }
-if claude test || codex test || oc test; then
+claude 'test prompt'
+if codex test || oc test; then
   print -u2 'wrapper ignored missing required CA'
   exit 1
 fi

@@ -10,16 +10,7 @@ _rbw_env() {
 
 (( $+functions[_root_ca_cert_file] )) || return 0
 
-builtin unalias claude codex oc sops 2>/dev/null || :
-
-claude() {
-  (
-    unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL ANTHROPIC_BASE_URL API_TIMEOUT_MS ANTHROPIC_AUTH_TOKEN
-    local ca
-    ca=$(_root_ca_cert_file) || return
-    NODE_EXTRA_CA_CERTS="$ca" _rbw_env claude -- command claude "$@"
-  )
-}
+builtin unalias codex oc sops 2>/dev/null || :
 
 codex() {
   (

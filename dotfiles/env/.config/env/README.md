@@ -2,6 +2,11 @@
 
 Shell-neutral environment layout for exported env, PATH, and secret injection.
 
+`claude` and `cc` both launch Claude Code through LiteLLM, using the gateway
+credential from `ENV/llm-gateway`. Override the endpoint with `LITELLM_BASE_URL`.
+Claude uses the system certificate trust without a per-launch CA wrapper; other
+AI clients retain the shared CA helper in `65-ai-certs.zsh` (`OMNI_CA_PATH`).
+
 This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 `~/.config/env` by Omni/Stow.
 
