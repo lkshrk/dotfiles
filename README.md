@@ -79,13 +79,27 @@ omni dots add --adopt PATH # adopt a local path into dotfile management
 omni dots sync [name]      # repair all dots or one dot entry
 ```
 
-The zsh helpers mirror those commands:
+Use the zsh helpers for routine reconciliation:
 
 ```sh
-dotsync                   # omni reconcile
+dotsync                   # omni reconcile, preserving local agent state
 dotcheck                  # omni dots status
 dottrack PATH [args...]   # omni dots add --adopt PATH [args...]
 ```
+
+`setup.sh`, `dotsync`, and Coder setup keep files in `scripts/volatile-dots.txt`
+as local copies. Claude/Codex can then write machine-specific state without
+changing the shared templates. Existing local settings are preserved, so merge
+intentional template changes into those local configs explicitly. Codex project
+trust and hook approval records stay local; do not replace their paths with `~`.
+Direct `omni dots sync --use-repo` bypasses this protection and can recreate
+writable links; use `dotsync` for routine syncs.
+
+The `agent-paths` pre-commit hook checks staged shared Claude/Codex JSON and TOML
+configs for host-local paths (home directories, temporary directories, mounted
+volumes, Homebrew installations and Windows drive paths). `$HOME`, `~` and shared
+system paths remain allowed. Explicit `@host` packages are outside this check.
+Run `python3 scripts/check-agent-paths.py` to check the current index manually.
 
 ## Layout
 

@@ -104,23 +104,21 @@ ensure_omni_bootstrap() {
   ok "$(omni --version 2>/dev/null || printf 'omni found')"
 }
 
-omni_bootstrap() {
+omni_bootstrap() (
   step "omni bootstrap"
   if [[ -z "${NODE_EXTRA_CA_CERTS:-}" && -r "${OMNI_CA_PATH:-}" ]]; then
     export NODE_EXTRA_CA_CERTS="$OMNI_CA_PATH"
   fi
-  # Codex may replace the managed symlink with a real config before bootstrap.
-  # Keep the local copy, then let Omni install the tracked version.
-  local codex_config="$HOME/.codex/config.toml"
-  if [[ -e "$codex_config" && ! -L "$codex_config" ]]; then
-    mv "$codex_config" "$codex_config.pre-omni-$(date +%Y%m%d%H%M%S)"
-    warn "backed up local Codex config before dots sync"
-  fi
+  # Preserve runtime edits and never leave agent-writable files linked to git.
+  bash "$REPO_DIR/scripts/volatile-dots.sh" detach
+  trap 'bash "$REPO_DIR/scripts/volatile-dots.sh" detach' EXIT
+  bash "$REPO_DIR/scripts/volatile-dots.sh" prepare
   omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
+  bash "$REPO_DIR/scripts/volatile-dots.sh" detach
 
   step "omni tools"
   omni --config "$OMNI_CONFIG_PATH" --yes tools sync
-}
+)
 
 # ─── Shared: generated shell completions ─────────────────────────────────────
 

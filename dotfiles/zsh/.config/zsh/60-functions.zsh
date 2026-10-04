@@ -259,7 +259,16 @@ _dotfiles_omni() {
     return 1
   }
 
-  command omni --config "$repo/dotfiles/omni/.config/omni/settings.json" "$@"
+  if [[ "${1:-}" == reconcile ]]; then
+    (
+      bash "$repo/scripts/volatile-dots.sh" detach || exit
+      trap 'bash "$repo/scripts/volatile-dots.sh" detach' EXIT
+      bash "$repo/scripts/volatile-dots.sh" prepare || exit
+      command omni --config "$repo/dotfiles/omni/.config/omni/settings.json" "$@"
+    )
+  else
+    command omni --config "$repo/dotfiles/omni/.config/omni/settings.json" "$@"
+  fi
 }
 
 # Sync tools, upgrades, dotfile links, and dotfile commits.
