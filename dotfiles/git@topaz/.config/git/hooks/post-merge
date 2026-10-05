@@ -84,4 +84,7 @@ call_lefthook()
   fi
 }
 
-call_lefthook run "post-merge" "$@"
+# Resolve extends/local overrides without consuming Git's hook input.
+lefthook_dump="$(call_lefthook dump --format yaml </dev/null)" || exit $?
+printf '%s\n' "$lefthook_dump" | grep -q '^post-merge:' || exit 0
+call_lefthook run --no-auto-install "post-merge" "$@"

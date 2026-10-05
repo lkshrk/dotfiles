@@ -8,6 +8,18 @@ if [ "$LEFTHOOK" = "0" ]; then
   exit 0
 fi
 
+# This hook directory is global; repositories without Lefthook must stay untouched.
+[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || exit 0
+lefthook_root="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+lefthook_config=""
+for lefthook_candidate in lefthook.yml lefthook.yaml lefthook.toml lefthook.json .lefthook.yml .lefthook.yaml .lefthook.toml .lefthook.json .config/lefthook.yml .config/lefthook.yaml .config/lefthook.toml .config/lefthook.json; do
+  if [ -e "$lefthook_root/$lefthook_candidate" ]; then
+    lefthook_config=1
+    break
+  fi
+done
+[ -n "$lefthook_config" ] || exit 0
+
 call_lefthook()
 {
   if test -n "$LEFTHOOK_BIN"
@@ -68,4 +80,7 @@ call_lefthook()
   fi
 }
 
-call_lefthook run "commit-msg" "$@"
+# Resolve extends/local overrides without consuming Git's hook input.
+lefthook_dump="$(call_lefthook dump --format yaml </dev/null)" || exit $?
+printf '%s\n' "$lefthook_dump" | grep -q '^commit-msg:' || exit 0
+call_lefthook run --no-auto-install "commit-msg" "$@"
