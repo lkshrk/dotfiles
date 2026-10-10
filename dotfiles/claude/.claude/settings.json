@@ -189,6 +189,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/knowledge-sync",
+            "timeout": 30
+          }
+        ]
       }
     ],
     "Stop": [
