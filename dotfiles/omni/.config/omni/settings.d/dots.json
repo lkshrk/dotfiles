@@ -154,7 +154,7 @@
             }
           },
           "ignore": [
-            "hooks/pre-commit.old"
+            "hooks/"
           ]
         },
         {

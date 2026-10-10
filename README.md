@@ -20,7 +20,13 @@ The setup flow:
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
 7. Loads `com.lkshrk.knowledge-sync` as a user LaunchAgent (runs `~/knowledge/scripts/sync.sh` every 5 minutes; needs the vault clone, see its `scripts/setup.sh`).
 8. Refreshes the yabai sudoers entry.
-9. Installs lefthook hooks.
+9. Installs repository-local Lefthook hooks.
+
+Git hooks use Git's default repository-local directory. Do not set a global
+`core.hooksPath`: Lefthook installs from different repositories would share and
+overwrite that directory. Run `lefthook install` in each new clone that uses
+Lefthook (or its normal package setup); Coder setup does this automatically for
+configured repositories. Linked worktrees share their repository's hooks.
 
 Admin-required package actions are handled by normal macOS authentication. Setup warms the sudo session with `sudo -v` when running in an interactive terminal.
 
