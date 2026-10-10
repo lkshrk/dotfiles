@@ -5,9 +5,11 @@
 	</map>
 	<map name="CommonSettings">
 		<value name="IntegrationsClientsAccessExplicitDecisionPerformed">Stream Deck</value>
+		<value name="ShowLastPackagesOperationResultNotification">false</value>
+		<value name="StartOnStartup">true</value>
 	</map>
 	<map name="DataCollectionSettings">
-		<value name="configuration_loaded_date">2026-10-02T17:05:09.484</value>
+		<value name="configuration_loaded_date">2026-10-10T02:22:11.286</value>
 		<value name="dataConsent">false</value>
 		<map name="hwProfilesHashes">
 			<map name="{32486e58-a900-497e-bc14-280517bd1d15}">
@@ -60,7 +62,41 @@
 				<value name="UniqueDeviceId">{97ed8be2-c6bd-486e-aa88-036534e460ce}</value>
 			</map>
 		</map>
-		<binary name="UniqueDeviceIds">%00%01%00%00%00%00%00%003QHash%3CQUuid%2Ccue_settings%3A%3Atypes%3A%3AUniqueDeviceData%3E%00%00%00%00%02%14%1B.F~%A5L%F1%A9n%5BM%05%95%0CP%00%00%1B%1C%00%00%2B%00%00%00%00%20%008%00F%004%00E%004%00E%003%008%00F%007%007%007%000%003%007%002%00%00%00%04%9FP%F9%F72HnX%A9%00I~%BC%14%28%05%17%BD%1D%15%00%00%1B%1C%00%00%2B%22%00%00%00%20%00C%00F%000%005%00E%00D%006%00D%004%006%00A%00F%005%006%00F%00D%00%00%00%04%9FP%F9%F7</binary>
+		<binary name="UniqueDeviceIds">%00%01%00%00%00%00%00%003QHash%3CQUuid%2Ccue_settings%3A%3Atypes%3A%3AUniqueDeviceData%3E%00%00%00%00%04%9D%3C%B3eWDN%2F%97%16g%F5%E0%B0%20%E8%00%00%1B%1C%00%00%2A%02%00%00%00%1C%00A%009%00S%00V%00C%005%001%004%000%000%00Q%00V%00D%006%00%00%00%10%84%E5%0B%FD%EAa%9D%8A%80%CF%80%C6%01%A8A%912HnX%A9%00I~%BC%14%28%05%17%BD%1D%15%00%00%1B%1C%00%00%2B%22%00%00%00%20%00C%00F%000%005%00E%00D%006%00D%004%006%00A%00F%005%006%00F%00D%00%00%00%04%9FP%F9%F7%FF%9AI%15U%2CH%0D%88JB%F8%DF%A1y%16%00%00%1B%1C%00%00%2A%00%00%00%00%1C%00A%009%00S%00V%00C%005%001%004%000%000%00Q%00V%00D%006%00%00%00%10%84%E5%0B%FD%EAa%9D%8A%80%CF%80%C6%01%A8A%91%14%1B.F~%A5L%F1%A9n%5BM%05%95%0CP%00%00%1B%1C%00%00%2B%00%00%00%00%20%008%00F%004%00E%004%00E%003%008%00F%007%007%007%000%003%007%002%00%00%00%04%9FP%F9%F7</binary>
+		<map name="VIRTUOSO MAX WIRELESS">
+			<map name="{ff9a4915-552c-480d-884a-42f8dfa17916}">
+				<value name="ActiveHardwareProfileIndex">0</value>
+				<value name="BodyColor">0</value>
+				<value name="BrightnessLevel">50</value>
+				<value name="FirstDetected">2026-10-05T15:41:02.806Z</value>
+				<value name="Layout">1</value>
+				<binary name="LedChannelCounts">%00%01%00%00%00%00%00%00%0BQList%3Cint%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelExtensionsTypes">%00%01%00%00%00%00%00%001QList%3CQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%3E%00%00%00%00%01%00%00%00%00</binary>
+				<binary name="LedChannelSynchronizations">%00%01%00%00%00%00%00%00%0CQList%3Cbool%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelTypeCombinations">%00%01%00%00%00%00%00%001QList%3CQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelTypes">%00%01%00%00%00%00%00%00%2AQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%00%00%00%00%01%00%00%00%0CNotConnected</binary>
+				<value name="LightingMode">Software</value>
+				<value name="SleepModeEnabled">true</value>
+				<value name="SleepModeWaitDelaySec">300</value>
+				<value name="SoundNotificationsEnabled">false</value>
+				<value name="UniqueDeviceId">{26b9dd84-98af-43df-a28e-aef7685e67f7}</value>
+				<value name="UniqueDongleId">{08905ef4-12e2-4108-83cd-1284e4769a73}</value>
+			</map>
+		</map>
+		<map name="VIRTUOSO MAX WIRELESS DONGLE">
+			<map name="{9d3cb365-5744-4e2f-9716-67f5e0b020e8}">
+				<value name="BodyColor">0</value>
+				<value name="FirstDetected">2026-10-05T15:41:02.797Z</value>
+				<value name="Layout">1</value>
+				<binary name="LedChannelCounts">%00%01%00%00%00%00%00%00%0BQList%3Cint%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelExtensionsTypes">%00%01%00%00%00%00%00%001QList%3CQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%3E%00%00%00%00%01%00%00%00%00</binary>
+				<binary name="LedChannelSynchronizations">%00%01%00%00%00%00%00%00%0CQList%3Cbool%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelTypeCombinations">%00%01%00%00%00%00%00%001QList%3CQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%3E%00%00%00%00%00</binary>
+				<binary name="LedChannelTypes">%00%01%00%00%00%00%00%00%2AQList%3Ccue%3A%3Adev%3A%3Amanifest%3A%3ALedChannelType%3E%00%00%00%00%01%00%00%00%0CNotConnected</binary>
+				<value name="LightingMode">Software</value>
+				<value name="UniqueDeviceId">{3dcca59a-213c-4ab5-9ebc-69e6408e027b}</value>
+			</map>
+		</map>
 	</map>
 	<map name="HWPInfoPopup">
 		<value name="InfoPopupVisible">false</value>
@@ -86,12 +122,12 @@
 		<value name="-Users-lkshrk-Library-Application Support-Corsair-CUE5-sensors-UserProps">true</value>
 	</map>
 	<map name="SwUpdate">
-		<value name="LastCheckDate">2026-10-06</value>
+		<value name="LastCheckDate">2026-10-20</value>
 	</map>
 	<map name="Update">
-		<value name="PrevUpdateTime">2026-10-02T15:05:07.950Z</value>
-		<value name="UpdateCount">74</value>
-		<value name="UpdateEndTime">2026-10-02T15:05:07.996Z</value>
+		<value name="PrevUpdateTime">2026-10-10T00:22:09.458Z</value>
+		<value name="UpdateCount">92</value>
+		<value name="UpdateEndTime">2026-10-10T00:22:09.489Z</value>
 	</map>
 	<value name="defaultProfile">{6cd71b5b-3931-40b3-b349-10604b36d69e}</value>
 	<value name="htmlWidgetsBrowserStorageMigration_5_51">false</value>

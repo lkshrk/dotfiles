@@ -59,6 +59,7 @@
           "package": "anomalyco/tap/opencode-v2"
         }
       ],
+      "git": "https://github.com/anomalyco/opencode",
       "taps": [
         "anomalyco/tap"
       ]
@@ -1588,6 +1589,14 @@
       ],
       "git": "https://github.com/metaspartan/mactop"
     },
+    "make": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "make"
+        }
+      ]
+    },
     "markdownlint-cli": {
       "providers": [
         {
@@ -2771,7 +2780,8 @@
           "provider": "brew",
           "package": "zed"
         }
-      ]
+      ],
+      "git": "https://github.com/zed-industries/zed"
     },
     "zsh": {
       "providers": [

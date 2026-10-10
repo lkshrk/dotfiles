@@ -399,6 +399,21 @@
               "package": "herdr-mirror@topaz"
             }
           }
+        },
+        {
+          "name": "com.elgato",
+          "path": "~/.config/com.elgato",
+          "ignored": true
+        },
+        {
+          "name": "oc-control-plane.token",
+          "path": "~/.config/oc-control-plane.token",
+          "ignored": true
+        },
+        {
+          "name": "rclone",
+          "path": "~/.config/rclone",
+          "ignored": true
         }
       ]
     }
