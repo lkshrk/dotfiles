@@ -45,7 +45,10 @@
             "!/statusline-command.sh",
             "!/tokenline.sh",
             "!/RTK.md",
-            "!/rules/"
+            "!/rules/",
+            "!/hooks/",
+            "/hooks/*",
+            "!/hooks/knowledge-sync"
           ]
         },
         {
@@ -200,6 +203,10 @@
         {
           "name": "sleep-on-lock",
           "path": "~/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
+        },
+        {
+          "name": "knowledge-sync",
+          "path": "~/Library/LaunchAgents/com.lkshrk.knowledge-sync.plist"
         },
         {
           "name": "hammerspoon",

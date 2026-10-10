@@ -18,8 +18,9 @@ The setup flow:
 4. Runs `omni bootstrap --no-import`, then `omni tools sync` for the host's tools and agent state.
 5. Compiles `~/.local/bin/sleep-on-lock` from the tracked Swift source.
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
-7. Refreshes the yabai sudoers entry.
-8. Installs lefthook hooks.
+7. Loads `com.lkshrk.knowledge-sync` as a user LaunchAgent (runs `~/knowledge/scripts/sync.sh` every 5 minutes; needs the vault clone, see its `scripts/setup.sh`).
+8. Refreshes the yabai sudoers entry.
+9. Installs lefthook hooks.
 
 Admin-required package actions are handled by normal macOS authentication. Setup warms the sudo session with `sudo -v` when running in an interactive terminal.
 

@@ -94,6 +94,28 @@ install_sleep_on_lock_agent() {
   ok "loaded com.lkshrk.sleep-on-lock"
 }
 
+# ─── knowledge vault sync ─────────────────────────────────────────────────────
+
+install_knowledge_sync_agent() {
+  step "knowledge-sync launchagent"
+  local agent="$HOME/Library/LaunchAgents/com.lkshrk.knowledge-sync.plist"
+  local service="gui/$UID/com.lkshrk.knowledge-sync"
+
+  [[ -x "$HOME/knowledge/scripts/sync.sh" ]] || {
+    warn "no ~/knowledge clone with scripts/sync.sh; clone lkshrk/knowledge to ~/knowledge, run its scripts/setup.sh, then rerun setup"
+    return
+  }
+  [[ -f "$agent" ]] || {
+    warn "missing $agent; run 'omni --config \"$OMNI_CONFIG_PATH\" dots sync knowledge-sync' and rerun setup"
+    return
+  }
+
+  launchctl bootout "$service" >/dev/null 2>&1 || true
+  launchctl bootstrap "gui/$UID" "$agent"
+  launchctl enable "$service"
+  ok "loaded com.lkshrk.knowledge-sync"
+}
+
 # ─── yabai sudoers ────────────────────────────────────────────────────────────
 
 refresh_yabai_sudoers() {
@@ -129,5 +151,6 @@ ensure_homebrew
 install_bootstrap_tools
 compile_sleep_on_lock
 install_sleep_on_lock_agent
+install_knowledge_sync_agent
 refresh_yabai_sudoers
 run_macos_defaults
