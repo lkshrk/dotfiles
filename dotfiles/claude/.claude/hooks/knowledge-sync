@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# SessionStart: bring ~/knowledge up to date; tell the agent only when the clone needs attention.
+set -uo pipefail
+
+script="$HOME/knowledge/scripts/sync.sh"
+[ -x "$script" ] || exit 0
+
+out="$(timeout 25 "$script" --quiet 2>&1)"
+case $? in
+  0 | 3) exit 0 ;;
+  1) echo "knowledge vault was NOT synced: uncommitted changes in ~/knowledge. Commit or discard them before reading or writing vault pages. $out" ;;
+  2) echo "knowledge vault was NOT synced: rebase conflict in ~/knowledge. Resolve it before reading or writing vault pages. $out" ;;
+  *) echo "knowledge vault sync failed: $out" ;;
+esac
+exit 0
