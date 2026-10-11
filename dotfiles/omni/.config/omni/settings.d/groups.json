@@ -184,7 +184,7 @@
         "bun",
         "nvm",
         "uv",
-        "apm"
+        "apm-cli"
       ]
     },
     {
@@ -306,10 +306,20 @@
         "certifi",
         "numpy",
         "npm",
-        "android-commandlinetools",
         "gradle",
         "vips",
-        "yt-dlp"
+        "yt-dlp",
+        "cliclick",
+        "depflush",
+        "duckdb",
+        "duti",
+        "osmium-tool",
+        "pilot",
+        "prometheus",
+        "rclone",
+        "sbx",
+        "obsidian-wiki",
+        "corepack"
       ]
     }
   ]

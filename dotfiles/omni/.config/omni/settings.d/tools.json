@@ -44,14 +44,6 @@
         }
       ]
     },
-    "android-commandlinetools": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "android-commandlinetools"
-        }
-      ]
-    },
     "anomalyco/tap/opencode-v2": {
       "providers": [
         {
@@ -62,14 +54,6 @@
       "git": "https://github.com/anomalyco/opencode",
       "taps": [
         "anomalyco/tap"
-      ]
-    },
-    "apm": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "apm"
-        }
       ]
     },
     "apm-cli": {
@@ -396,6 +380,15 @@
         }
       ]
     },
+    "cliclick": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "cliclick"
+        }
+      ],
+      "git": "https://github.com/BlueM/cliclick"
+    },
     "cmake": {
       "providers": [
         {
@@ -485,6 +478,10 @@
         {
           "provider": "bun",
           "package": "corepack"
+        },
+        {
+          "provider": "pnpm",
+          "package": "corepack"
         }
       ]
     },
@@ -544,6 +541,15 @@
         }
       ],
       "git": "https://github.com/sopaco/deepwiki-rs"
+    },
+    "depflush": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "depflush"
+        }
+      ],
+      "git": "https://github.com/cypriennkeneng/depflush"
     },
     "devcontainer": {
       "providers": [
@@ -615,6 +621,24 @@
           "package": "docker-buildx"
         }
       ]
+    },
+    "duckdb": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "duckdb"
+        }
+      ],
+      "git": "https://github.com/duckdb/duckdb"
+    },
+    "duti": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "duti"
+        }
+      ],
+      "git": "https://github.com/moretension/duti"
     },
     "elgato-stream-deck": {
       "providers": [
@@ -1793,6 +1817,14 @@
       ],
       "git": "https://github.com/obsidianmd/obsidian-releases"
     },
+    "obsidian-wiki": {
+      "providers": [
+        {
+          "provider": "uv",
+          "package": "obsidian-wiki"
+        }
+      ]
+    },
     "oh-my-codex": {
       "providers": [
         {
@@ -1923,6 +1955,15 @@
         }
       ]
     },
+    "osmium-tool": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "osmium-tool"
+        }
+      ],
+      "git": "https://github.com/osmcode/osmium-tool"
+    },
     "parsec": {
       "providers": [
         {
@@ -1931,6 +1972,15 @@
         }
       ],
       "ignore": true
+    },
+    "pilot": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "pilot"
+        }
+      ],
+      "git": "https://github.com/qf-studio/pilot"
     },
     "pinentry-mac": {
       "providers": [
@@ -2030,6 +2080,15 @@
         }
       ]
     },
+    "prometheus": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "prometheus"
+        }
+      ],
+      "git": "https://github.com/prometheus/prometheus"
+    },
     "pyright": {
       "providers": [
         {
@@ -2068,6 +2127,15 @@
         }
       ],
       "git": "https://github.com/doy/rbw"
+    },
+    "rclone": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "rclone"
+        }
+      ],
+      "git": "https://github.com/rclone/rclone"
     },
     "rectangle": {
       "providers": [
@@ -2143,6 +2211,15 @@
           "package": "sblim-sfcc"
         }
       ]
+    },
+    "sbx": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "sbx"
+        }
+      ],
+      "git": "https://github.com/docker/sbx-releases"
     },
     "shellcheck": {
       "providers": [
