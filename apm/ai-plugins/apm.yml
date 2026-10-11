@@ -28,7 +28,7 @@ dependencies:
     targets:
     - claude
   - git: lkshrk/linear-ai
-    ref: v1.6.3
+    ref: v2.0.0
   - git: lkshrk/useful-skills
   - git: mksglu/context-mode
     targets:
