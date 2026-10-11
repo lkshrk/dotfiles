@@ -127,9 +127,7 @@ enabled = false
 
 [mcp_servers.litellm-tools]
 url = "https://api.ai.h-cloud.lan/mcp/"
-
-[mcp_servers.litellm-tools.env_http_headers]
-x-litellm-api-key = "LITELLM_API"
+http_headers_helper = "~/.config/env/bin/litellm-mcp-headers"
 
 [mcp_servers.shiplight]
 command = "bunx"

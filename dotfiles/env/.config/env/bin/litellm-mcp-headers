@@ -1,0 +1,24 @@
+#!/bin/sh
+# Print the LiteLLM MCP auth header as JSON for Codex http_headers_helper.
+set -eu
+
+if [ -n "${LITELLM_API:-}" ]; then
+  token=$LITELLM_API
+elif command -v rbw >/dev/null 2>&1; then
+  token=$(rbw get litellm-api) || {
+    printf '%s\n' 'litellm mcp: unable to read litellm-api from rbw (vault locked?)' >&2
+    exit 1
+  }
+else
+  printf '%s\n' 'litellm mcp: set LITELLM_API or install rbw' >&2
+  exit 1
+fi
+
+case "$token" in
+  '' | *'"'* | *\\*)
+    printf '%s\n' 'litellm mcp: credential is empty or not JSON-safe' >&2
+    exit 1
+    ;;
+esac
+
+printf '{"x-litellm-api-key":"%s"}\n' "$token"
