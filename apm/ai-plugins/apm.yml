@@ -103,8 +103,10 @@ dependencies:
     registry: false
     transport: http
     url: https://api.ai.h-cloud.lan/mcp/
-    headers:
-      x-litellm-api-key: ${env:LITELLM_API}
+    extra:
+      headersHelper: ~/.config/env/bin/litellm-mcp-headers
+      http_headers_helper: ~/.config/env/bin/litellm-mcp-headers
+      required: true
   - name: openaiDeveloperDocs
     registry: false
     transport: http

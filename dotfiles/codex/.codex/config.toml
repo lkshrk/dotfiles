@@ -127,6 +127,8 @@ enabled = false
 
 [mcp_servers.litellm-tools]
 url = "https://api.ai.h-cloud.lan/mcp/"
+id = ""
+headersHelper = "~/.config/env/bin/litellm-mcp-headers"
 http_headers_helper = "~/.config/env/bin/litellm-mcp-headers"
 required = true
 
