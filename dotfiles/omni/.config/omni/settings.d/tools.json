@@ -16,6 +16,10 @@
           "package": "actionlint"
         },
         {
+          "provider": "pacman",
+          "package": "actionlint"
+        },
+        {
           "provider": "script",
           "bin": "actionlint",
           "options": {
@@ -123,6 +127,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "bash-language-server"
+        },
+        {
+          "provider": "pacman",
           "package": "bash-language-server"
         },
         {
@@ -566,6 +574,10 @@
           "package": "direnv"
         },
         {
+          "provider": "pacman",
+          "package": "direnv"
+        },
+        {
           "provider": "script",
           "bin": "direnv",
           "options": {
@@ -597,6 +609,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "docker"
+        },
+        {
+          "provider": "pacman",
           "package": "docker"
         },
         {
@@ -664,6 +680,10 @@
           "package": "eza"
         },
         {
+          "provider": "pacman",
+          "package": "eza"
+        },
+        {
           "provider": "apt",
           "package": "eza"
         },
@@ -690,6 +710,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "fd"
+        },
+        {
+          "provider": "pacman",
           "package": "fd"
         },
         {
@@ -875,6 +899,10 @@
           "package": "gh"
         },
         {
+          "provider": "pacman",
+          "package": "github-cli"
+        },
+        {
           "provider": "script",
           "options": {
             "key_url": "https://cli.github.com/packages/githubcli-archive-keyring.gpg",
@@ -921,6 +949,10 @@
           "package": "git-delta"
         },
         {
+          "provider": "pacman",
+          "package": "git-delta"
+        },
+        {
           "provider": "apt",
           "package": "git-delta",
           "bin": "delta"
@@ -935,6 +967,10 @@
           "package": "git-filter-repo"
         },
         {
+          "provider": "pacman",
+          "package": "git-filter-repo"
+        },
+        {
           "provider": "apt"
         }
       ],
@@ -944,6 +980,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "gitleaks"
+        },
+        {
+          "provider": "pacman",
           "package": "gitleaks"
         },
         {
@@ -971,6 +1011,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "glow"
+        },
+        {
+          "provider": "pacman",
           "package": "glow"
         },
         {
@@ -1264,6 +1308,10 @@
           "package": "imagemagick"
         },
         {
+          "provider": "pacman",
+          "package": "imagemagick"
+        },
+        {
           "provider": "apt"
         }
       ],
@@ -1285,6 +1333,10 @@
           "package": "jq"
         },
         {
+          "provider": "pacman",
+          "package": "jq"
+        },
+        {
           "provider": "apt"
         }
       ],
@@ -1294,6 +1346,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "just"
+        },
+        {
+          "provider": "pacman",
           "package": "just"
         },
         {
@@ -1447,6 +1503,10 @@
           "package": "lazydocker"
         },
         {
+          "provider": "pacman",
+          "package": "lazydocker"
+        },
+        {
           "provider": "script",
           "bin": "lazydocker",
           "options": {
@@ -1471,6 +1531,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "lazygit"
+        },
+        {
+          "provider": "pacman",
           "package": "lazygit"
         },
         {
@@ -1618,6 +1682,10 @@
         {
           "provider": "brew",
           "package": "make"
+        },
+        {
+          "provider": "pacman",
+          "package": "make"
         }
       ]
     },
@@ -1733,6 +1801,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "neovim"
+        },
+        {
+          "provider": "pacman",
           "package": "neovim"
         },
         {
@@ -2153,6 +2225,10 @@
           "package": "ripgrep"
         },
         {
+          "provider": "pacman",
+          "package": "ripgrep"
+        },
+        {
           "provider": "apt"
         }
       ],
@@ -2187,6 +2263,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "rust-analyzer"
+        },
+        {
+          "provider": "pacman",
           "package": "rust-analyzer"
         },
         {
@@ -2228,6 +2308,10 @@
           "package": "shellcheck"
         },
         {
+          "provider": "pacman",
+          "package": "shellcheck"
+        },
+        {
           "provider": "apt",
           "package": "shellcheck"
         }
@@ -2255,6 +2339,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "skopeo"
+        },
+        {
+          "provider": "pacman",
           "package": "skopeo"
         },
         {
@@ -2319,6 +2407,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "stow"
+        },
+        {
+          "provider": "pacman",
           "package": "stow"
         },
         {
@@ -2461,6 +2553,10 @@
           "package": "tmux"
         },
         {
+          "provider": "pacman",
+          "package": "tmux"
+        },
+        {
           "provider": "apt"
         }
       ],
@@ -2470,6 +2566,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "tree"
+        },
+        {
+          "provider": "pacman",
           "package": "tree"
         },
         {
@@ -2491,6 +2591,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "tree-sitter-cli"
+        },
+        {
+          "provider": "pacman",
           "package": "tree-sitter-cli"
         },
         {
@@ -2752,6 +2856,10 @@
     "yaml-language-server": {
       "providers": [
         {
+          "provider": "pacman",
+          "package": "yaml-language-server"
+        },
+        {
           "provider": "bun",
           "package": "yaml-language-server"
         },
@@ -2774,6 +2882,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "yamlfmt"
+        },
+        {
+          "provider": "pacman",
           "package": "yamlfmt"
         },
         {
@@ -2804,6 +2916,10 @@
           "package": "yamllint"
         },
         {
+          "provider": "pacman",
+          "package": "yamllint"
+        },
+        {
           "provider": "apt"
         }
       ],
@@ -2822,6 +2938,10 @@
         {
           "provider": "brew",
           "package": "yq"
+        },
+        {
+          "provider": "pacman",
+          "package": "go-yq"
         },
         {
           "provider": "script",
