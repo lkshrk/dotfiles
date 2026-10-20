@@ -32,6 +32,7 @@ description = "Full project development with build tools, public/local networkin
 
 [permissions.project-tools-docker.filesystem]
 ":minimal" = "read"
+"~/.config/git" = "read"
 ":tmpdir" = "write"
 ":slash_tmp" = "write"
 "~/.docker" = "write"

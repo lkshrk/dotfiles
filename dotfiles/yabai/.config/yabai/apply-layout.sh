@@ -190,8 +190,9 @@ wid="$(
 )"
 [ -n "$wid" ] && "$(dirname "$0")/place-pip.sh" "$wid"
 
-wid="$(wid_nth "Obsidian" 0)"
-[ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_BOT45_Y" "$SW" "$S_BOT45_H"
+while IFS= read -r wid; do
+  [ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_BOT45_Y" "$SW" "$S_BOT45_H"
+done < <(wid_all "Obsidian")
 
 wid="$(wid_nth "ChatGPT Classic" 0)"
 [ -n "$wid" ] && place "$wid" "$SP_SECOND" "$SX" "$S_BOT45_Y" "$SW" "$S_BOT45_H"

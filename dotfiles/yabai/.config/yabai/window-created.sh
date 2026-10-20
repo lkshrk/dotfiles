@@ -18,6 +18,10 @@ fi
 SUBROLE="$(echo "$WIN" | jq -r '.subrole // empty')"
 [ "$SUBROLE" != "AXStandardWindow" ] && exit 0
 
+if [ "$APP" = "Obsidian" ]; then
+  exec "$(dirname "$0")/apply-layout.sh" "$YABAI_WINDOW_ID"
+fi
+
 # Existing apps keep macOS's default position and size
 HAS_SIBLING="$(
   yabai -m query --windows \

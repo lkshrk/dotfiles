@@ -33,7 +33,7 @@ yabai -m signal --add \
   event=window_focused \
   action="${CONFIG_DIR}/track-focus.sh"
 
-# First app windows use auto-layout; later windows keep macOS placement
+# First app windows and all Obsidian windows use auto-layout
 yabai -m signal --add \
   event=window_created \
   action="${CONFIG_DIR}/window-created.sh"

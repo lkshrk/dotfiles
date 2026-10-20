@@ -73,6 +73,19 @@ args=--model gateway-model prompt" ]
 [ -z "${ANTHROPIC_CUSTOM_MODEL_OPTION_NAME:-}" ]
 [ -z "${ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION:-}" ]
 
+sub_output=$(
+  ANTHROPIC_BASE_URL=https://leak.example ANTHROPIC_AUTH_TOKEN=leak ANTHROPIC_API_KEY=leak \
+  PATH="$tmpdir/bin:/usr/bin:/bin" \
+  ccs prompt
+)
+[ "$sub_output" = "base=
+token=
+discovery=
+custom_model=
+custom_model_name=
+custom_model_description=
+args=prompt" ]
+
 # The actual secret loader must resolve the folder-qualified gateway secret.
 cat > "$tmpdir/bin/rbw" <<'EOF'
 #!/bin/sh
