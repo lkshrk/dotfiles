@@ -121,10 +121,6 @@
             "prompts/prompts-library-db.0.mdb",
             "conversations"
           ]
-        },
-        {
-          "name": "cmux",
-          "path": "~/.config/cmux"
         }
       ]
     },
@@ -170,10 +166,6 @@
         {
           "name": "com.corsair",
           "path": "~/.config/com.corsair"
-        },
-        {
-          "name": "linearmouse",
-          "path": "~/.config/linearmouse"
         }
       ]
     },
@@ -226,6 +218,25 @@
           "name": "mac-disk-reclaim",
           "path": "~/.config/mac-disk-reclaim",
           "ignored": true
+        },
+        {
+          "name": "yabai",
+          "path": "~/.config/yabai",
+          "ignore": [
+            "sleep-on-lock"
+          ]
+        },
+        {
+          "name": "skhd",
+          "path": "~/.config/skhd"
+        },
+        {
+          "name": "cmux",
+          "path": "~/.config/cmux"
+        },
+        {
+          "name": "linearmouse",
+          "path": "~/.config/linearmouse"
         }
       ]
     },
@@ -242,17 +253,6 @@
     {
       "name": "priv",
       "dots": [
-        {
-          "name": "yabai",
-          "path": "~/.config/yabai",
-          "ignore": [
-            "sleep-on-lock"
-          ]
-        },
-        {
-          "name": "skhd",
-          "path": "~/.config/skhd"
-        },
         {
           "name": "moshi",
           "path": "~/.config/moshi",
