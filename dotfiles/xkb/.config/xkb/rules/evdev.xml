@@ -13,7 +13,7 @@
         <variant>
           <configItem>
             <name>intl</name>
-            <description>English (US, intl., Mac ISO, Alt umlauts)</description>
+            <description>English (US, intl., Mac ISO, umlauts)</description>
           </configItem>
         </variant>
       </variantList>
