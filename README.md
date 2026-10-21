@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal macOS config managed by [Omni](https://github.com/lkshrk/omni). Omni owns package reconciliation and dotfile symlinks; this repo only keeps the bootstrap glue and a few local post-sync steps.
+Personal macOS and Omarchy config managed by [Omni](https://github.com/lkshrk/omni). Omni owns package reconciliation and dotfile symlinks; this repo only keeps the bootstrap glue and a few local post-sync steps.
 
 ## Setup
 
@@ -55,6 +55,53 @@ CODER_AGENT_CLIENTS=claude,codex ./setup-coder-dots.sh
 Use `--print-config` to inspect the resolved Omni configuration without syncing anything. With no client selected, setup only syncs the core personal configuration. Agent clients are opt-in. Required dots failures stop setup; local configuration conflicts are preserved.
 
 This script expects `omni`, `jq`, `git` and `python3` already on `PATH` (auto-code-env's installer guarantees `omni` before calling this). No OpenHands settings, APM skills, agent hooks, marketplace plugins or MCP registrations are implicitly installed. `CODER_MCP_URL` is an explicit override for selected clients only.
+
+## Omarchy
+
+`towerr` runs [Omarchy](https://omarchy.org/) (Arch Linux + Hyprland). It gets
+the same CLI, dev, AI and secrets groups as `topaz`, resolved through `pacman`
+and `aur` providers, plus the `omarchy` group (keyd, Hyprland and Omarchy shell
+config).
+
+On a fresh Omarchy install:
+
+```sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/lkshrk/dotfiles/main/setup-omarchy.sh)"
+```
+
+The script clones this repo to `~/Dev/dotfiles` (`DOTFILES_DIR` and
+`DOTFILES_REF` override the path and branch) and continues from the checkout;
+from an existing checkout, run `./setup-omarchy.sh`. It is safe to rerun.
+
+The setup flow:
+
+1. Installs the latest Omni release's Arch package (checksum-verified) when the
+   installed Omni cannot read this config.
+2. On the first run only, lets the repo's configs replace the fresh defaults:
+   volatile agent configs are moved aside as `*.pre-dotfiles.<stamp>` and
+   conflicting dots are resolved with `--use-repo` (Omni backs those up).
+3. Runs `omni bootstrap --no-import` and `omni tools sync`. Omni installs its
+   own prerequisites: GNU Stow before linking dots, and the package managers
+   this host lists as tools (bun, uv, ...) before the tools that need them.
+4. Removes the Omarchy packages and web apps listed in
+   `omarchy/remove.packages` and `omarchy/remove.webapps`.
+5. Switches the login shell to zsh, installs the keyd Caps Lock → Hyper mapping
+   and makes Helium the default browser.
+6. Configures rbw (asking for the Bitwarden email and server once) and unlocks
+   it, which starts the SSH agent used for git signing.
+7. Installs the repository's Lefthook hooks and checks that Hyprland loads the
+   linked config.
+
+Omarchy owns most of `~/.config/hypr` and `~/.config/omarchy` and rewrites them
+on refresh, so those dots track only the files listed in their `ignore`
+negations (`bindings.lua`, `rules.lua`, `shell.json`, `plugins/`, ...). Editors
+that save by replacing the file turn the symlink into a plain copy;
+`omni dots status` then reports a conflict, and `omni dots resolve <name>
+--use-local` takes the edit back into the repo.
+
+`~/.bashrc` and git use `@towerr` variants: bash keeps Omarchy's rc, and git
+points the GitHub credential helper at `/usr/bin/gh`. Commit signing goes
+through the rbw SSH agent, as on `topaz`.
 
 ## Omni
 
@@ -112,12 +159,20 @@ Run `python3 scripts/check-agent-paths.py` to check the current index manually.
 
 ```text
 setup.sh                  # macOS bootstrap
+setup-omarchy.sh          # Omarchy bootstrap
 setup-coder-dots.sh       # Coder workspace personal-dots sync
 scripts/
   coder-bootstrap.sh      # side-effect-free logging, notes and terminfo helpers
   macos-defaults.sh       # optional macOS defaults
+omarchy/
+  keyd/default.conf       # Caps Lock → Hyper, installed to /etc/keyd
+  remove.packages         # Omarchy preinstalls setup removes
+  remove.webapps          # Omarchy web apps setup removes
+docs/reviews/             # design reviews and evaluations
 dotfiles/
   omni/                   # tracked Omni config
+  hypr/                   # Hyprland bindings, rules, input, look and feel
+  omarchy-shell/          # Omarchy shell.json and custom shell plugins
   yabai/                  # yabai config + sleep-on-lock Swift source
   sleep-on-lock/          # LaunchAgent plist
   ...                     # managed dotfile packages

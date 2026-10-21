@@ -5,7 +5,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
-OMNI_MIN_VERSION="0.10.16"
+OMNI_MIN_VERSION="0.11.2"
 RUN_MACOS_DEFAULTS=0
 
 usage() {
@@ -138,6 +138,19 @@ install_zsh_completions() {
   fi
 }
 
+# ─── Shared: rbw ──────────────────────────────────────────────────────────────
+
+configure_rbw() {
+  step "rbw"
+  command -v rbw >/dev/null 2>&1 || { warn "rbw is not installed; skipping rbw config"; return; }
+  # i32::MAX seconds (~68 years): never, yet safe for Instant math on every platform.
+  local lock_timeout=2147483647
+  if [[ "$(rbw config show 2>/dev/null | jq -r '.lock_timeout // empty')" != "$lock_timeout" ]]; then
+    rbw config set lock_timeout "$lock_timeout"
+  fi
+  ok "rbw lock_timeout is $lock_timeout seconds"
+}
+
 # ─── Shared: lefthook ─────────────────────────────────────────────────────────
 
 install_lefthook() {
@@ -176,6 +189,7 @@ main() {
   ensure_omni_bootstrap
   omni_bootstrap
   install_zsh_completions
+  configure_rbw
 
   install_lefthook
 }
