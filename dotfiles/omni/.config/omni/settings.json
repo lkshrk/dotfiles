@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v25.schema.json",
-  "version": 25,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v26.schema.json",
+  "version": 26,
   "$include": [
     "settings.d/tools.json",
     "settings.d/groups.json",
@@ -24,6 +24,19 @@
         "apt",
         "npm",
         "pnpm",
+        "pip"
+      ]
+    },
+    "towerr": {
+      "dots_repo": "~/Dev/dotfiles",
+      "dots_disabled": false,
+      "provider_priority": [
+        "pacman",
+        "aur",
+        "bun",
+        "uv",
+        "pnpm",
+        "npm",
         "pip"
       ]
     },
@@ -54,11 +67,35 @@
       "utils",
       "dev-tooling"
     ],
+    "towerr": [
+      "ai",
+      "ai-plugins",
+      "apps",
+      "core",
+      "desk",
+      "dev",
+      "dev-tooling",
+      "go",
+      "infra",
+      "lua",
+      "omarchy",
+      "omni",
+      "prereqs",
+      "priv",
+      "python",
+      "secrets",
+      "shell",
+      "test-tooling",
+      "ts",
+      "utils"
+    ],
     "topaz": [
       "ai",
       "ai-plugins",
+      "apps",
       "core",
       "desk",
+      "desk-mac",
       "dev",
       "dev-tooling",
       "gaming",
@@ -69,6 +106,7 @@
       "omni",
       "prereqs",
       "priv",
+      "priv-mac",
       "python",
       "shell",
       "test-tooling",

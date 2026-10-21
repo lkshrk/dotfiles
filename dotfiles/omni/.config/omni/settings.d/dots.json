@@ -59,6 +59,20 @@
       ]
     },
     {
+      "name": "apps",
+      "dots": [
+        {
+          "name": "zed",
+          "path": "~/.config/zed",
+          "ignore": [
+            "settings_backup.json",
+            "prompts/prompts-library-db.0.mdb",
+            "conversations"
+          ]
+        }
+      ]
+    },
+    {
       "name": "core",
       "dots": [
         {
@@ -81,11 +95,6 @@
         {
           "name": "omni-apm",
           "path": "~/.config/omni",
-          "hosts": {
-            "topaz": {
-              "package": "omni-apm@topaz"
-            }
-          },
           "ignore": [
             "*",
             "!/apm.yml"
@@ -107,20 +116,11 @@
       ]
     },
     {
-      "name": "desk",
+      "name": "desk-mac",
       "dots": [
         {
           "name": "ghostty",
           "path": "~/.config/ghostty"
-        },
-        {
-          "name": "zed",
-          "path": "~/.config/zed",
-          "ignore": [
-            "settings_backup.json",
-            "prompts/prompts-library-db.0.mdb",
-            "conversations"
-          ]
         }
       ]
     },
@@ -147,6 +147,9 @@
             },
             "topaz": {
               "package": "git@topaz"
+            },
+            "towerr": {
+              "package": "git@towerr"
             }
           },
           "ignore": [
@@ -241,6 +244,53 @@
       ]
     },
     {
+      "name": "omarchy",
+      "dots": [
+        {
+          "name": "hypr",
+          "path": "~/.config/hypr",
+          "ignore": [
+            "*",
+            "!/bindings.lua",
+            "!/input.lua",
+            "!/looknfeel.lua",
+            "!/rules.lua",
+            "!/scripts/"
+          ]
+        },
+        {
+          "name": "omarchy-shell",
+          "path": "~/.config/omarchy",
+          "ignore": [
+            "*",
+            "!/shell.json",
+            "!/plugins/"
+          ]
+        },
+        {
+          "name": "knowledge-sync-systemd",
+          "path": "~/.config/systemd/user",
+          "ignore": [
+            "*",
+            "!/knowledge-sync.service",
+            "!/knowledge-sync.timer"
+          ]
+        },
+        {
+          "name": "xkb",
+          "path": "~/.config/xkb"
+        },
+        {
+          "name": "fcitx5",
+          "path": "~/.config/fcitx5",
+          "ignore": [
+            "*",
+            "!/profile"
+          ]
+        }
+      ]
+    },
+    {
       "name": "prereqs",
       "dots": [
         {
@@ -286,7 +336,12 @@
         },
         {
           "name": "bashrc",
-          "path": "~/.bashrc"
+          "path": "~/.bashrc",
+          "hosts": {
+            "towerr": {
+              "package": "bashrc@towerr"
+            }
+          }
         },
         {
           "name": "zshrc",
@@ -357,17 +412,6 @@
           "path": "~/.config/taskless"
         },
         {
-          "name": "herdr",
-          "path": "~/.config/herdr",
-          "ignore": [
-            "plugins",
-            ".config.toml.lock",
-            ".plugins.lock",
-            "release-notes.json",
-            "session.json"
-          ]
-        },
-        {
           "name": "profile",
           "path": "~/.profile"
         },
@@ -385,20 +429,6 @@
           "name": "rustup",
           "path": "~/.rustup",
           "ignored": true
-        },
-        {
-          "name": "herdr-tether",
-          "path": "~/.config/herdr-tether",
-          "ignored": true
-        },
-        {
-          "name": "herdr-mirror",
-          "path": "~/.config/herdr-mirror",
-          "hosts": {
-            "topaz": {
-              "package": "herdr-mirror@topaz"
-            }
-          }
         },
         {
           "name": "com.elgato",

@@ -5,9 +5,9 @@
       "tools": [
         "claude-code",
         "coder",
-        "herdr",
         "@openai/codex",
-        "anomalyco/tap/opencode-v2"
+        "anomalyco/tap/opencode-v2",
+        "obsidian-wiki"
       ]
     },
     {
@@ -19,8 +19,22 @@
         "deepwiki-rs",
         "oh-my-codex",
         "rtk",
-        "herdr-tether",
         "codebase-memory-mcp"
+      ]
+    },
+    {
+      "name": "apps",
+      "tools": [
+        "brave-browser",
+        "chatterino",
+        "elgato-stream-deck",
+        "moonlight",
+        "mosh",
+        "obs",
+        "obsidian",
+        "plex",
+        "signal",
+        "zed"
       ]
     },
     {
@@ -49,14 +63,14 @@
     {
       "name": "desk",
       "tools": [
-        "brave-browser",
+        "font-jetbrains-mono-nerd-font"
+      ]
+    },
+    {
+      "name": "desk-mac",
+      "tools": [
         "iina",
-        "zed",
         "ghostty",
-        "obsidian",
-        "font-hack-nerd-font",
-        "font-intel-one-mono",
-        "font-jetbrains-mono-nerd-font",
         "chatgpt-classic",
         "openusage"
       ]
@@ -97,10 +111,7 @@
       "tools": [
         "battle-net",
         "discord",
-        "elgato-stream-deck",
         "elgato-wave-link",
-        "moonlight",
-        "obs",
         "linearmouse"
       ]
     },
@@ -167,7 +178,15 @@
         "tree-sitter",
         "xcodegen",
         "typewhisper",
-        "hammerspoon"
+        "hammerspoon",
+        "bcrypt"
+      ]
+    },
+    {
+      "name": "omarchy",
+      "tools": [
+        "keyd",
+        "pipeweaver"
       ]
     },
     {
@@ -183,25 +202,19 @@
       "tools": [
         "bun",
         "nvm",
-        "uv",
-        "apm-cli"
+        "uv"
       ]
     },
     {
-      "name": "priv",
+      "name": "priv-mac",
       "tools": [
-        "mosh",
-        "plex",
-        "signal",
         "skhd-zig",
-        "vivaldi",
-        "vlc",
         "yabai",
         "linear",
         "bam",
-        "chatterino",
         "cmux",
-        "d-streamy"
+        "d-streamy",
+        "vlc"
       ]
     },
     {
@@ -248,7 +261,6 @@
       "name": "utils",
       "tools": [
         "plantuml",
-        "bcrypt",
         "sshpass",
         "witr"
       ]
@@ -318,8 +330,15 @@
         "prometheus",
         "rclone",
         "sbx",
-        "obsidian-wiki",
         "corepack"
+      ]
+    },
+    {
+      "name": "towerr",
+      "special": "host",
+      "tools": [
+        "discord",
+        "helium-browser"
       ]
     }
   ]

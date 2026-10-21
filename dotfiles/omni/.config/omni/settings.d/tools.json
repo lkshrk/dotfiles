@@ -53,19 +53,15 @@
         {
           "provider": "brew",
           "package": "anomalyco/tap/opencode-v2"
+        },
+        {
+          "provider": "pacman",
+          "package": "opencode"
         }
       ],
       "git": "https://github.com/anomalyco/opencode",
       "taps": [
         "anomalyco/tap"
-      ]
-    },
-    "apm-cli": {
-      "providers": [
-        {
-          "provider": "uv",
-          "package": "apm-cli"
-        }
       ]
     },
     "argo": {
@@ -119,6 +115,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "basedpyright"
+        },
+        {
+          "provider": "uv",
           "package": "basedpyright"
         }
       ]
@@ -183,6 +183,10 @@
           "package": "bats-core"
         },
         {
+          "provider": "pacman",
+          "package": "bats"
+        },
+        {
           "provider": "apt",
           "package": "bats"
         }
@@ -220,6 +224,10 @@
         {
           "provider": "brew",
           "package": "brave-browser"
+        },
+        {
+          "provider": "pacman",
+          "package": "brave-bin"
         }
       ]
     },
@@ -255,6 +263,10 @@
           "package": "bun"
         },
         {
+          "provider": "pacman",
+          "package": "bun-bin"
+        },
+        {
           "provider": "script",
           "options": {
             "check": "test -x \"$HOME/.bun/bin/bun\"",
@@ -272,6 +284,10 @@
         {
           "provider": "brew",
           "package": "busted"
+        },
+        {
+          "provider": "pacman",
+          "package": "lua-busted"
         },
         {
           "provider": "apt",
@@ -341,6 +357,10 @@
         {
           "provider": "brew",
           "package": "chatterino"
+        },
+        {
+          "provider": "aur",
+          "package": "chatterino2-bin"
         }
       ]
     },
@@ -348,6 +368,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "cilium-cli"
+        },
+        {
+          "provider": "pacman",
           "package": "cilium-cli"
         },
         {
@@ -432,7 +456,7 @@
           "provider": "script",
           "bin": "codebase-memory-mcp",
           "options": {
-            "arch_map": "aarch64:arm64,x86_64:amd64,arm64:arm64,amd64:amd64",
+            "arch_map": "aarch64:arm64-portable,arm64:arm64,x86_64:amd64-portable,amd64:amd64-portable",
             "version": "PATH=\"$HOME/.local/bin:$PATH\" codebase-memory-mcp --version 2\u003e/dev/null | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+' | head -1"
           },
           "source": {
@@ -500,6 +524,10 @@
           "package": "coreutils"
         },
         {
+          "provider": "pacman",
+          "package": "coreutils"
+        },
+        {
           "provider": "apt",
           "package": "coreutils"
         }
@@ -564,6 +592,10 @@
         {
           "provider": "brew",
           "package": "devcontainer"
+        },
+        {
+          "provider": "bun",
+          "package": "@devcontainers/cli"
         }
       ]
     },
@@ -601,9 +633,12 @@
         {
           "provider": "brew",
           "package": "discord"
+        },
+        {
+          "provider": "pacman",
+          "package": "discord"
         }
-      ],
-      "ignore": true
+      ]
     },
     "docker": {
       "providers": [
@@ -661,6 +696,10 @@
         {
           "provider": "brew",
           "package": "elgato-stream-deck"
+        },
+        {
+          "provider": "pacman",
+          "package": "opendeck"
         }
       ]
     },
@@ -817,7 +856,8 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "flux_{version}_linux_{arch}.tar.gz",
-            "checksum_asset_pattern": "flux_{version}_checksums.txt"
+            "checksum_asset_pattern": "flux_{version}_checksums.txt",
+            "installed_version": "2.9.6"
           }
         }
       ],
@@ -840,29 +880,15 @@
       ],
       "git": "https://github.com/xykong/flux-markdown"
     },
-    "font-hack-nerd-font": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "font-hack-nerd-font"
-        }
-      ],
-      "git": "https://github.com/ryanoasis/nerd-fonts"
-    },
-    "font-intel-one-mono": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "font-intel-one-mono"
-        }
-      ],
-      "git": "https://github.com/intel/intel-one-mono"
-    },
     "font-jetbrains-mono-nerd-font": {
       "providers": [
         {
           "provider": "brew",
           "package": "font-jetbrains-mono-nerd-font"
+        },
+        {
+          "provider": "pacman",
+          "package": "ttf-jetbrains-mono-nerd"
         }
       ],
       "git": "https://github.com/ryanoasis/nerd-fonts"
@@ -1053,6 +1079,10 @@
           "package": "go"
         },
         {
+          "provider": "pacman",
+          "package": "go"
+        },
+        {
           "provider": "apt",
           "package": "golang-go"
         }
@@ -1077,7 +1107,8 @@
           },
           "recipe": {
             "type": "github_release_asset",
-            "asset_pattern": "task_linux_{arch}.tar.gz"
+            "asset_pattern": "task_linux_{arch}.tar.gz",
+            "installed_version": "3.54.0"
           }
         }
       ],
@@ -1087,6 +1118,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "golangci-lint"
+        },
+        {
+          "provider": "pacman",
           "package": "golangci-lint"
         },
         {
@@ -1122,7 +1157,8 @@
           },
           "recipe": {
             "type": "github_release_asset",
-            "asset_pattern": "gomplate_linux-{arch}"
+            "asset_pattern": "gomplate_linux-{arch}",
+            "installed_version": "5.3.0"
           }
         }
       ],
@@ -1132,6 +1168,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "gopls"
+        },
+        {
+          "provider": "pacman",
           "package": "gopls"
         },
         {
@@ -1182,10 +1222,23 @@
       ],
       "git": "https://github.com/koush/support-wiki"
     },
+    "helium-browser": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "helium-browser-bin"
+        }
+      ],
+      "git": "https://github.com/imputnet/helium-linux"
+    },
     "helm": {
       "providers": [
         {
           "provider": "brew",
+          "package": "helm"
+        },
+        {
+          "provider": "pacman",
           "package": "helm"
         },
         {
@@ -1209,6 +1262,10 @@
           "package": "helmfile"
         },
         {
+          "provider": "pacman",
+          "package": "helmfile"
+        },
+        {
           "provider": "script",
           "bin": "helmfile",
           "options": {
@@ -1228,46 +1285,6 @@
         }
       ],
       "git": "https://github.com/helmfile/helmfile"
-    },
-    "herdr": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "herdr"
-        },
-        {
-          "provider": "script",
-          "bin": "herdr",
-          "options": {
-            "check": "command -v herdr || test -x \"$HOME/.local/bin/herdr\"",
-            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://herdr.dev/install.sh -o \"$tmp/install.sh\"; bash \"$tmp/install.sh\"",
-            "latest": "curl -fsSL https://herdr.dev/latest.json | awk -F '\"' '/^[[:space:]]*\"version\"[[:space:]]*:/ \u0026\u0026 !found { print $4; found = 1 }'",
-            "uninstall": "rm -f \"$HOME/.local/bin/herdr\"",
-            "url": "https://herdr.dev/install.sh",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" herdr --version | awk '{print $2}'"
-          },
-          "recipe": {
-            "type": "curl_install_script"
-          }
-        }
-      ],
-      "git": "https://github.com/ogulcancelik/herdr"
-    },
-    "herdr-tether": {
-      "providers": [
-        {
-          "provider": "script",
-          "bin": "herdr-tether",
-          "options": {
-            "check": "test -x \"$HOME/.cargo/bin/herdr-tether\"",
-            "install": "set -eu; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/moneycaringcoder/herdr-tether/releases/latest); tag=${release#*releases/tag/}; \"$HOME/.cargo/bin/cargo\" install --git https://github.com/moneycaringcoder/herdr-tether --tag \"$tag\" --locked herdr-tether; PATH=\"$HOME/.cargo/bin:$PATH\" herdr-tether setup --yes",
-            "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/moneycaringcoder/herdr-tether/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
-            "uninstall": "\"$HOME/.cargo/bin/cargo\" uninstall herdr-tether",
-            "version": "PATH=\"$HOME/.cargo/bin:$PATH\" herdr-tether --version | awk '{print $2}'"
-          }
-        }
-      ],
-      "git": "https://github.com/moneycaringcoder/herdr-tether"
     },
     "hermes": {
       "providers": [
@@ -1373,6 +1390,15 @@
         }
       ]
     },
+    "keyd": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "keyd"
+        }
+      ],
+      "git": "https://github.com/rvaiya/keyd"
+    },
     "krew": {
       "providers": [
         {
@@ -1423,7 +1449,8 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "kubectl-cnpg_{version}_linux_{arch}.tar.gz",
-            "checksum_asset_pattern": "cnpg-{version}-checksums.txt"
+            "checksum_asset_pattern": "cnpg-{version}-checksums.txt",
+            "installed_version": "1.30.1"
           }
         }
       ],
@@ -1433,6 +1460,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "kubectx"
+        },
+        {
+          "provider": "pacman",
           "package": "kubectx"
         },
         {
@@ -1463,6 +1494,10 @@
           "package": "kubernetes-cli"
         },
         {
+          "provider": "pacman",
+          "package": "kubectl"
+        },
+        {
           "provider": "script",
           "bin": "kubectl",
           "options": {
@@ -1480,6 +1515,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "kustomize"
+        },
+        {
+          "provider": "pacman",
           "package": "kustomize"
         },
         {
@@ -1618,6 +1657,10 @@
           "package": "lua"
         },
         {
+          "provider": "pacman",
+          "package": "lua"
+        },
+        {
           "provider": "apt",
           "package": "lua5.4",
           "bin": "lua"
@@ -1628,6 +1671,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "lua-language-server"
+        },
+        {
+          "provider": "pacman",
           "package": "lua-language-server"
         },
         {
@@ -1650,6 +1697,10 @@
           "package": "luacheck"
         },
         {
+          "provider": "pacman",
+          "package": "luacheck"
+        },
+        {
           "provider": "apt",
           "package": "lua-check"
         }
@@ -1660,6 +1711,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "luarocks"
+        },
+        {
+          "provider": "pacman",
           "package": "luarocks"
         },
         {
@@ -1693,6 +1748,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "markdownlint-cli"
+        },
+        {
+          "provider": "pacman",
           "package": "markdownlint-cli"
         },
         {
@@ -1738,7 +1797,8 @@
           },
           "recipe": {
             "type": "github_release_asset",
-            "asset_pattern": "minijinja-cli-{arch}.tar.xz"
+            "asset_pattern": "minijinja-cli-{arch}.tar.xz",
+            "installed_version": "3.0.1"
           }
         }
       ],
@@ -1784,6 +1844,10 @@
         {
           "provider": "brew",
           "package": "moonlight"
+        },
+        {
+          "provider": "pacman",
+          "package": "moonlight-qt"
         }
       ],
       "git": "https://github.com/moonlight-stream/moonlight-qt"
@@ -1792,6 +1856,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "mosh"
+        },
+        {
+          "provider": "pacman",
           "package": "mosh"
         }
       ],
@@ -1864,7 +1932,7 @@
           "provider": "script",
           "options": {
             "check": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; test -s \"$NVM_DIR/nvm.sh\" \u0026\u0026 . \"$NVM_DIR/nvm.sh\" --no-use \u0026\u0026 nvm version default 2\u003e/dev/null | grep -q '^v24'",
-            "install": "set -eu; export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/nvm-sh/nvm/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' \"https://raw.githubusercontent.com/nvm-sh/nvm/$tag/install.sh\" -o \"$tmp/install.sh\"; PROFILE=/dev/null bash \"$tmp/install.sh\"; . \"$NVM_DIR/nvm.sh\" --no-use; nvm install 24 --latest-npm; nvm alias default 24; nvm use --silent default",
+            "install": "set -eu; export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; mkdir -p \"$NVM_DIR\"; release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/nvm-sh/nvm/releases/latest); tag=${release#*releases/tag/}; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' \"https://raw.githubusercontent.com/nvm-sh/nvm/$tag/install.sh\" -o \"$tmp/install.sh\"; PROFILE=/dev/null bash \"$tmp/install.sh\"; . \"$NVM_DIR/nvm.sh\" --no-use; nvm install 24 --latest-npm; nvm alias default 24; nvm use --silent default",
             "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/nvm-sh/nvm/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
             "version": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; . \"$NVM_DIR/nvm.sh\" --no-use; nvm --version"
           }
@@ -1877,6 +1945,10 @@
         {
           "provider": "brew",
           "package": "obs"
+        },
+        {
+          "provider": "pacman",
+          "package": "obs-studio"
         }
       ]
     },
@@ -1884,6 +1956,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "obsidian"
+        },
+        {
+          "provider": "pacman",
           "package": "obsidian"
         }
       ],
@@ -1990,6 +2066,10 @@
           "package": "opentofu"
         },
         {
+          "provider": "pacman",
+          "package": "opentofu"
+        },
+        {
           "provider": "script",
           "bin": "tofu",
           "options": {
@@ -2082,6 +2162,10 @@
           "package": "pipx"
         },
         {
+          "provider": "pacman",
+          "package": "python-pipx"
+        },
+        {
           "provider": "apt",
           "package": "pipx"
         }
@@ -2108,6 +2192,10 @@
         {
           "provider": "brew",
           "package": "plantuml"
+        },
+        {
+          "provider": "pacman",
+          "package": "plantuml"
         }
       ],
       "git": "https://github.com/plantuml/plantuml"
@@ -2117,6 +2205,10 @@
         {
           "provider": "brew",
           "package": "plex"
+        },
+        {
+          "provider": "aur",
+          "package": "plex-desktop"
         }
       ]
     },
@@ -2130,6 +2222,10 @@
     },
     "pnpm": {
       "providers": [
+        {
+          "provider": "pacman",
+          "package": "pnpm"
+        },
         {
           "provider": "npm",
           "package": "pnpm"
@@ -2164,6 +2260,10 @@
     "pyright": {
       "providers": [
         {
+          "provider": "pacman",
+          "package": "pyright"
+        },
+        {
           "provider": "npm",
           "package": "pyright"
         }
@@ -2175,6 +2275,10 @@
         {
           "provider": "brew",
           "package": "python@3.14"
+        },
+        {
+          "provider": "pacman",
+          "package": "python"
         },
         {
           "provider": "script",
@@ -2191,6 +2295,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "rbw"
+        },
+        {
+          "provider": "pacman",
           "package": "rbw"
         },
         {
@@ -2253,7 +2361,8 @@
           },
           "recipe": {
             "type": "github_release_asset",
-            "asset_pattern": "rtk-{arch}.tar.gz"
+            "asset_pattern": "rtk-{arch}.tar.gz",
+            "installed_version": "1.0.1"
           }
         }
       ],
@@ -2323,6 +2432,10 @@
         {
           "provider": "brew",
           "package": "signal"
+        },
+        {
+          "provider": "pacman",
+          "package": "signal-desktop"
         }
       ]
     },
@@ -2355,6 +2468,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "sops"
+        },
+        {
+          "provider": "pacman",
           "package": "sops"
         },
         {
@@ -2391,6 +2508,10 @@
         {
           "provider": "brew",
           "package": "sshpass"
+        },
+        {
+          "provider": "pacman",
+          "package": "sshpass"
         }
       ]
     },
@@ -2422,6 +2543,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "stylua"
+        },
+        {
+          "provider": "pacman",
           "package": "stylua"
         },
         {
@@ -2465,6 +2590,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "talosctl"
+        },
+        {
+          "provider": "pacman",
           "package": "talosctl"
         },
         {
@@ -2528,6 +2657,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "thefuck"
+        },
+        {
+          "provider": "pacman",
           "package": "thefuck"
         },
         {
@@ -2654,6 +2787,10 @@
     "typescript": {
       "providers": [
         {
+          "provider": "pacman",
+          "package": "typescript"
+        },
+        {
           "provider": "npm",
           "package": "typescript"
         }
@@ -2661,6 +2798,10 @@
     },
     "typescript-language-server": {
       "providers": [
+        {
+          "provider": "pacman",
+          "package": "typescript-language-server"
+        },
         {
           "provider": "npm",
           "package": "typescript-language-server"
@@ -2691,6 +2832,10 @@
           "package": "uv"
         },
         {
+          "provider": "pacman",
+          "package": "uv"
+        },
+        {
           "provider": "script",
           "bin": "uv",
           "options": {
@@ -2709,6 +2854,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "vhs"
+        },
+        {
+          "provider": "pacman",
           "package": "vhs"
         },
         {
@@ -2749,14 +2898,6 @@
         }
       ]
     },
-    "vivaldi": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "vivaldi"
-        }
-      ]
-    },
     "vlc": {
       "providers": [
         {
@@ -2781,6 +2922,10 @@
           "package": "watch"
         },
         {
+          "provider": "pacman",
+          "package": "procps-ng"
+        },
+        {
           "provider": "script",
           "bin": "watch",
           "options": {
@@ -2796,6 +2941,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "wget"
+        },
+        {
+          "provider": "pacman",
           "package": "wget"
         }
       ],
@@ -2813,6 +2962,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "witr"
+        },
+        {
+          "provider": "aur",
           "package": "witr"
         }
       ],
@@ -2976,6 +3129,10 @@
         {
           "provider": "brew",
           "package": "zed"
+        },
+        {
+          "provider": "pacman",
+          "package": "zed"
         }
       ],
       "git": "https://github.com/zed-industries/zed"
@@ -2984,6 +3141,10 @@
       "providers": [
         {
           "provider": "brew",
+          "package": "zsh"
+        },
+        {
+          "provider": "pacman",
           "package": "zsh"
         },
         {
@@ -2999,6 +3160,15 @@
         }
       ],
       "git": "https://github.com/facebook/zstd"
+    },
+    "pipeweaver": {
+      "providers": [
+        {
+          "provider": "aur",
+          "package": "pipeweaver"
+        }
+      ],
+      "git": "https://github.com/pipeweaver/pipeweaver"
     }
   }
 }
