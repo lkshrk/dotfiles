@@ -59,6 +59,11 @@ o.bind("SUPER + SHIFT + code:13", "Screenshot region or window to clipboard", sc
 o.bind("SUPER + CTRL + SHIFT + code:12", "Screenshot full screen to file and clipboard", "omarchy-capture-screenshot fullscreen")
 o.bind("SUPER + CTRL + SHIFT + code:13", "Screenshot region or window to file and clipboard", "omarchy-capture-screenshot smart")
 
+-- The Keychron sends Ctrl + Super + Q for Fn + L (the Mac lock key): lock and turn the monitors off,
+-- without suspending; any key or mouse movement wakes them.
+hl.unbind("SUPER + CTRL + Q") -- was: Calculator
+o.bind("SUPER + CTRL + Q", "Lock and turn off monitors", "omarchy-system-lock && sleep 1 && omarchy-brightness-display off")
+
 -- Super + Q quits the focused app (all its windows), like Cmd + Q; Super + W
 -- still closes just the one window.
 o.bind("SUPER + Q", "Quit application", scripts .. "/quit-app")
