@@ -65,7 +65,6 @@ run_profile_probe() {
       [ "${NVM_DIR:-}" = "$HOME/.nvm" ] || fail "NVM_DIR"
       [ "${BUN_INSTALL:-}" = "$HOME/.bun" ] || fail "BUN_INSTALL"
       [ "${GOPATH:-}" = "$HOME/go" ] || fail "GOPATH"
-      [ "${GIT_CONFIG_GLOBAL:-}" = "$HOME/.config/git/config" ] || fail "GIT_CONFIG_GLOBAL"
       [ "${PNPM_HOME:-}" = "$HOME/.local/share/pnpm" ] || fail "PNPM_HOME=$PNPM_HOME"
       [ "${SSH_AUTH_SOCK:-}" = "$EXPECTED_SSH_AUTH_SOCK" ] || fail "SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
 

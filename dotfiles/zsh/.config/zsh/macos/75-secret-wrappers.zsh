@@ -1,16 +1,6 @@
-_rbw_env() {
-  local wrapper="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/bin/rbw-env"
-  if [[ -x "$wrapper" ]]; then
-    "$wrapper" "$@"
-  else
-    print -u2 "rbw-env: wrapper unavailable"
-    return 127
-  fi
-}
-
 (( $+functions[_root_ca_cert_file] )) || return 0
 
-builtin unalias codex oc sops 2>/dev/null || :
+builtin unalias codex oc 2>/dev/null || :
 
 codex() {
   (
@@ -28,8 +18,4 @@ oc() {
     NODE_EXTRA_CA_CERTS="$ca" \
     _rbw_env opencode -- command opencode "$@"
   )
-}
-
-sops() {
-  _rbw_env sops -- command sops "$@"
 }

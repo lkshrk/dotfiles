@@ -31,11 +31,10 @@ env_next_rbw_sock_linux() {
     return 0
   fi
 
+  env_next_rbw_runtime="${XDG_RUNTIME_DIR:-/run/user/$env_next_rbw_uid_val}"
   for env_next_rbw_candidate in \
-    "${XDG_RUNTIME_DIR:+$XDG_RUNTIME_DIR/rbw/ssh-agent-socket}" \
-    "${XDG_RUNTIME_DIR:+$XDG_RUNTIME_DIR/rbw-$env_next_rbw_uid_val/ssh-agent-socket}" \
-    "${env_next_rbw_uid_val:+/run/user/$env_next_rbw_uid_val/rbw/ssh-agent-socket}" \
-    "${env_next_rbw_uid_val:+/run/user/$env_next_rbw_uid_val/rbw-$env_next_rbw_uid_val/ssh-agent-socket}" \
+    "$env_next_rbw_runtime/rbw/ssh-agent-socket" \
+    "$env_next_rbw_runtime/rbw-$env_next_rbw_uid_val/ssh-agent-socket" \
     "${TMPDIR:-/tmp}/rbw-$env_next_rbw_uid_val/ssh-agent-socket"
   do
     [ -n "$env_next_rbw_candidate" ] || continue

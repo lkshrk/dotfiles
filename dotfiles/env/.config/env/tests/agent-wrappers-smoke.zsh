@@ -43,4 +43,20 @@ if codex test || oc test; then
   print -u2 'wrapper ignored missing required CA'
   exit 1
 fi
+(
+  unfunction _rbw_env codex oc 2>/dev/null
+  bin=$(mktemp -d)
+  trap '/bin/rm -rf $bin' EXIT
+  ENV_DIR=$bin/env
+  mkdir -p $ENV_DIR/bin
+  print -r -- '#!/bin/sh
+[ "$*" = "codex -- command codex test prompt" ]' > $ENV_DIR/bin/rbw-env
+  chmod +x $ENV_DIR/bin/rbw-env
+  path=($bin)
+  _root_ca_cert_file() { print -r -- /test/lan-ca.pem; }
+  source "$repo/dotfiles/zsh/.config/zsh/68-rbw.zsh"
+  source "$repo/dotfiles/zsh/.config/zsh/macos/75-secret-wrappers.zsh"
+  (( ! $+commands[rbw] && ! $+functions[git] && $+functions[sops] ))
+  codex 'test prompt'
+)
 print 'agent wrappers: CA, secret profiles, arguments, isolation and telemetry checks passed'
