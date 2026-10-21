@@ -51,6 +51,14 @@ hyper("DOWN", "Snap window to bottom half", scripts .. "/snap-half bottom")
 -- start full screen through a window rule.
 hyper("F", "Normal size", hl.dsp.window.fullscreen_state({ internal = 0, client = 0 }))
 
+-- Mac screenshot keys (code:12/13 are 3/4); moving a window to workspace 3/4 stays on Super + Shift + Alt.
+hl.unbind("SUPER + SHIFT + code:12") -- was: Move window to workspace 3
+hl.unbind("SUPER + SHIFT + code:13") -- was: Move window to workspace 4
+o.bind("SUPER + SHIFT + code:12", "Screenshot full screen to clipboard", scripts .. "/screenshot-copy fullscreen")
+o.bind("SUPER + SHIFT + code:13", "Screenshot region or window to clipboard", scripts .. "/screenshot-copy smart")
+o.bind("SUPER + CTRL + SHIFT + code:12", "Screenshot full screen to file and clipboard", "omarchy-capture-screenshot fullscreen")
+o.bind("SUPER + CTRL + SHIFT + code:13", "Screenshot region or window to file and clipboard", "omarchy-capture-screenshot smart")
+
 -- Super + Q quits the focused app (all its windows), like Cmd + Q; Super + W
 -- still closes just the one window.
 o.bind("SUPER + Q", "Quit application", scripts .. "/quit-app")
