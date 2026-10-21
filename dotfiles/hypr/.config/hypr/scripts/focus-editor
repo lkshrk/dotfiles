@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Cycle through editor windows: nvim (titled ".nvim. <project>") and Zed.
+# Hyprland port of dotfiles/yabai/.config/yabai/focus-editor.sh.
+set -euo pipefail
+
+REVERSE=false
+[ "${1:-}" = "--reverse" ] && REVERSE=true
+
+ADDRESSES="$(
+  hyprctl clients -j \
+    | jq -r '
+        map(select(.mapped and ((.title | test("\\.nvim\\.")) or (.class | test("zed"; "i")))))
+        | sort_by(.stableId)
+        | .[].address
+      '
+)"
+[ -n "$ADDRESSES" ] || exit 0
+
+ACTIVE="$(hyprctl activewindow -j 2>/dev/null | jq -r '.address // empty')" || ACTIVE=""
+
+NEXT="$(
+  printf '%s\n' "$ADDRESSES" \
+    | awk -v active="$ACTIVE" -v reverse="$REVERSE" '
+        { ids[NR] = $0; if ($0 == active) idx = NR }
+        END {
+          if (!idx) print ids[1]
+          else if (reverse == "true") print ids[(idx + NR - 2) % NR + 1]
+          else print ids[idx % NR + 1]
+        }
+      '
+)"
+
+hyprctl dispatch "hl.dsp.focus({ window = \"address:$NEXT\" })" >/dev/null

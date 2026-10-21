@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Focus the most recently used window whose class matches CLASS_RE; repeat
+# presses cycle through the matches. Launches the app when nothing matches.
+# Hyprland port of dotfiles/yabai/.config/yabai/focus-app.sh.
+set -euo pipefail
+
+usage() {
+  echo "usage: $0 [--exclude-title RE] [--no-launch] CLASS_RE [LAUNCH_CMD...]" >&2
+  exit 1
+}
+
+EXCLUDE_TITLE=""
+NO_LAUNCH=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --exclude-title) [ $# -ge 2 ] || usage; EXCLUDE_TITLE="$2"; shift 2 ;;
+    --no-launch) NO_LAUNCH=1; shift ;;
+    *) break ;;
+  esac
+done
+
+[ $# -ge 1 ] || usage
+CLASS_RE="$1"
+shift
+
+# Hyprland tracks focus order itself: focusHistoryID 0 is the active window.
+ADDRESSES="$(
+  hyprctl clients -j \
+    | jq -r --arg re "$CLASS_RE" --arg exclude "$EXCLUDE_TITLE" '
+        map(select(
+          .mapped
+          and (.class | test($re; "i"))
+          and ($exclude == "" or (.title | test($exclude) | not))
+        ))
+        | sort_by(.focusHistoryID)
+        | .[].address
+      '
+)"
+
+if [ -z "$ADDRESSES" ]; then
+  [ -n "$NO_LAUNCH" ] || [ $# -eq 0 ] || exec setsid uwsm-app -- "$@"
+  exit 0
+fi
+
+ACTIVE="$(hyprctl activewindow -j 2>/dev/null | jq -r '.address // empty')" || ACTIVE=""
+
+NEXT="$(
+  printf '%s\n' "$ADDRESSES" \
+    | awk -v active="$ACTIVE" '
+        { ids[NR] = $0; if ($0 == active) idx = NR }
+        END { print (idx ? ids[idx % NR + 1] : ids[1]) }
+      '
+)"
+
+hyprctl dispatch "hl.dsp.focus({ window = \"address:$NEXT\" })" >/dev/null

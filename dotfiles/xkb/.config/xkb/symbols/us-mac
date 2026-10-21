@@ -1,0 +1,14 @@
+// US intl with dead keys, Mac ISO placement (§ left of 1, ` right of left Shift), Left Alt + a/o/u/s for ä/ö/ü/ß.
+default partial alphanumeric_keys
+xkb_symbols "intl" {
+    include "us(intl)"
+    name[Group1] = "English (US, intl., Mac ISO, Alt umlauts)";
+
+    key <TLDE> { [ section, plusminus, section, plusminus ] };
+    key <LSGT> { [ grave, asciitilde, dead_grave, dead_tilde ] };
+
+    key <AC01> { type[Group1] = "ALT_UMLAUT", [ a, A, adiaeresis, Adiaeresis ] };
+    key <AD09> { type[Group1] = "ALT_UMLAUT", [ o, O, odiaeresis, Odiaeresis ] };
+    key <AD07> { type[Group1] = "ALT_UMLAUT", [ u, U, udiaeresis, Udiaeresis ] };
+    key <AC02> { type[Group1] = "ALT_UMLAUT", [ s, S, ssharp, U1E9E ] };
+};

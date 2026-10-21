@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Float the active window and snap it to one half of its monitor.
+# Replaces skhd's `yabai -m window --grid 1:2:{0,1}:0:1:1`.
+set -euo pipefail
+
+SIDE="${1:-}"
+case "$SIDE" in
+  left|right|top|bottom) ;;
+  *) echo "usage: $0 left|right|top|bottom" >&2; exit 1 ;;
+esac
+
+# Logical geometry of the focused monitor, minus the bar's reserved area.
+# Transforms 1, 3, 5 and 7 rotate by 90°, so width and height swap.
+read -r X Y W H < <(
+  hyprctl monitors -j \
+    | jq -r '
+        .[] | select(.focused)
+        | (if (.transform % 2) == 1 then [.height, .width] else [.width, .height] end) as [$w, $h]
+        | "\(.x + .reserved[0]) \(.y + .reserved[1])"
+          + " \(($w / .scale | floor) - .reserved[0] - .reserved[2])"
+          + " \(($h / .scale | floor) - .reserved[1] - .reserved[3])"
+      '
+)
+
+case "$SIDE" in
+  left) W=$(( W / 2 )) ;;
+  right) W=$(( W / 2 )); X=$(( X + W )) ;;
+  top) H=$(( H / 2 )) ;;
+  bottom) H=$(( H / 2 )); Y=$(( Y + H )) ;;
+esac
+
+hyprctl dispatch 'hl.dsp.window.float({ action = "set" })' >/dev/null
+hyprctl dispatch "hl.dsp.window.resize({ x = $W, y = $H })" >/dev/null
+hyprctl dispatch "hl.dsp.window.move({ x = $X, y = $Y })" >/dev/null

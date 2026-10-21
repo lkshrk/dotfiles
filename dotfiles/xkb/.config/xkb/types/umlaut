@@ -1,0 +1,15 @@
+// Alt picks level 3; Ctrl or Super fall back to level 1, so Hyper and app shortcuts keep the plain letter.
+default partial xkb_types "lalt" {
+    virtual_modifiers Alt, Super;
+
+    type "ALT_UMLAUT" {
+        modifiers = Shift + Alt + Control + Super;
+        map[Shift] = Level2;
+        map[Alt] = Level3;
+        map[Shift+Alt] = Level4;
+        level_name[Level1] = "Base";
+        level_name[Level2] = "Shift";
+        level_name[Level3] = "Alt";
+        level_name[Level4] = "Shift Alt";
+    };
+};

@@ -58,7 +58,6 @@ function M.applyMainScreen()
   if stackID then
     place("Ghostty", stackID, full)
     place("Zed",     stackID, full)
-    place("Vivaldi", stackID, full)
   end
   if remoteID then
     place("Moonlight",         remoteID, full)
@@ -85,7 +84,6 @@ function M.applySecondScreen()
   if commsID then
     place("Discord",  commsID, { x=f.x,           y=f.y,         w=halfW,           h=f.h  })
     place("ChatGPT",  commsID, { x=f.x+leftInset, y=f.y,         w=halfW-leftInset, h=f.h  })
-    place("Vivaldi",  commsID, { x=f.x+leftInset, y=f.y,         w=halfW-leftInset, h=f.h  })
     place("Signal",   commsID, { x=f.x,           y=bottomHalfY, w=halfW,           h=halfH })
     place("Messages", commsID, { x=f.x,           y=bottomHalfY, w=halfW,           h=halfH })
     placeCenteredBottomInRegion("Chatterino", commsID,

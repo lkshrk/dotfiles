@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Focus the running game (or Moonlight stream); otherwise go to the gaming
+# workspace. Hyprland port of dotfiles/yabai/.config/yabai/focus-gaming.sh.
+set -euo pipefail
+
+GAMING_WORKSPACE="${GAMING_WORKSPACE:-9}"
+
+ADDRESS="$(
+  hyprctl clients -j \
+    | jq -r '
+        map(select(
+          .mapped
+          and (.contentType == "game"
+            or (.class | test("^(steam_app_[0-9]+|gamescope|com\\.moonlight_stream\\.Moonlight)$")))
+        ))
+        | sort_by(.focusHistoryID)
+        | first.address // empty
+      '
+)"
+
+if [ -n "$ADDRESS" ]; then
+  hyprctl dispatch "hl.dsp.focus({ window = \"address:$ADDRESS\" })" >/dev/null
+else
+  hyprctl dispatch "hl.dsp.focus({ workspace = \"$GAMING_WORKSPACE\" })" >/dev/null
+fi

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>us-mac</name>
+        <shortDescription>en</shortDescription>
+        <description>English (US, Mac ISO)</description>
+        <languageList><iso639Id>eng</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>intl</name>
+            <description>English (US, intl., Mac ISO, Alt umlauts)</description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+  </layoutList>
+  <optionList>
+    <group allowMultipleSelection="true">
+      <configItem>
+        <name>umlaut</name>
+        <description>German umlauts</description>
+      </configItem>
+      <option>
+        <configItem>
+          <name>umlaut:lalt</name>
+          <description>Left Alt + a/o/u/s types ä/ö/ü/ß</description>
+        </configItem>
+      </option>
+    </group>
+  </optionList>
+</xkbConfigRegistry>

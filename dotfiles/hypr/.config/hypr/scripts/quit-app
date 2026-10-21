@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Quit the focused application, like Cmd+Q on the Mac: close every window of its
+# class. Each window gets a normal close request, so apps can still ask to save.
+set -euo pipefail
+
+class=$(hyprctl activewindow -j | jq -r '.class // empty')
+[[ -n $class ]] || exit 0
+
+hyprctl clients -j | jq -r --arg class "$class" '.[] | select(.class == $class) | .address' |
+  while read -r address; do
+    hyprctl dispatch "hl.dsp.window.close({ window = \"address:$address\" })" >/dev/null
+  done

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "lkshrk.alttab",
+  "name": "Alt-Tab",
+  "version": "1.0.0",
+  "author": "lkshrk",
+  "description": "Windows/macOS-style window switcher with live previews in most-recently-focused order",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "AltTab.qml"
+  }
+}

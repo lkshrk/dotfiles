@@ -17,12 +17,10 @@ local M = {
     ["Obsidian"]          = "comms",
     ["Stream Deck"]       = "stream",
     ["Elgato Wave Link"]  = "stream",
-    ["Vivaldi"]           = { "comms", "stack" },
   },
 
   appHotkeys = {
     a = "ChatGPT",
-    b = "Vivaldi",
     c = "Chatterino",
     d = "Discord",
     o = "OBS",
@@ -45,7 +43,6 @@ function M.applyMainScreen(layouts, spaces)
   if stackID then
     layouts.place("Ghostty", stackID, full)
     layouts.place("Zed",     stackID, full)
-    layouts.place("Vivaldi", stackID, full)
   end
   if remoteID then
     layouts.place("Moonlight",         remoteID, full)
@@ -72,7 +69,6 @@ function M.applySecondScreen(layouts, spaces)
   if commsID then
     layouts.place("Discord",  commsID, { x=f.x,           y=f.y,         w=halfW,           h=f.h  })
     layouts.place("ChatGPT",  commsID, { x=f.x+leftInset, y=f.y,         w=halfW-leftInset, h=f.h  })
-    layouts.place("Vivaldi",  commsID, { x=f.x+leftInset, y=f.y,         w=halfW-leftInset, h=f.h  })
     layouts.place("Signal",   commsID, { x=f.x,           y=bottomHalfY, w=halfW,           h=halfH })
     layouts.place("Messages", commsID, { x=f.x,           y=bottomHalfY, w=halfW,           h=halfH })
     layouts.placeCenteredBottomInRegion("Chatterino", commsID,
