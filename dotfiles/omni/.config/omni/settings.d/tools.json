@@ -888,7 +888,7 @@
         },
         {
           "provider": "pacman",
-          "package": "ttf-jetbrains-mono-nerd"
+          "package": "ttf-jetbrains-mono-nerd-basic"
         }
       ],
       "git": "https://github.com/ryanoasis/nerd-fonts"
