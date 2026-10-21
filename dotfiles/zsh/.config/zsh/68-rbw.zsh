@@ -99,6 +99,8 @@ sops() {
 (( $+commands[rbw] )) || return 0
 
 git() {
+  # Snapshotted shells (agents) can carry this wrapper without its helpers.
+  (( $+functions[_rbw_can_prompt] )) || { command git "$@"; return; }
   case "${1:-}" in
     commit|tag|merge|push|pull|fetch|clone|ls-remote|submodule)
       if (( ! ${+compstate} )) && _rbw_can_prompt; then
