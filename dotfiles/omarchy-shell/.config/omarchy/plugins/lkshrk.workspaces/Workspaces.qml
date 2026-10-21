@@ -76,7 +76,7 @@ BarWidget {
 
         text: icon ? icon.glyph : (focused ? "\uDB85\uDCFB" : (modelData === 10 ? "0" : String(modelData)))
         tooltipText: icon ? icon.name : ""
-        opacity: focused ? 1 : (occupied ? 0.7 : 0.3)
+        opacity: focused ? 1 : 0.5
         horizontalMargin: 6
         verticalPadding: 6
         fixedWidth: root.vertical ? root.barSize : Style.space(20)
