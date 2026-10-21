@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Remember which apps are open and start them again at login.
+# Usage: session save | save-later | restore
+# Apps are matched to their .desktop entry by StartupWMClass or file name; workspace
+# rules place them, and each app restores its own windows and tabs.
+set -euo pipefail
+
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/hypr-session"
+APPS="$STATE/apps"
+DIRS=("$HOME/.local/share/applications" /usr/share/applications)
+
+# Classes whose desktop entry has a different name.
+declare -A ALIASES=( [steam_app_battlenet]=battlenet )
+
+desktop_for() {
+  local class=$1 dir file
+  for dir in "${DIRS[@]}"; do
+    file=$(grep -lxF "StartupWMClass=$class" "$dir"/*.desktop 2>/dev/null | head -1) || true
+    [ -n "$file" ] && { basename "$file" .desktop; return; }
+  done
+  for name in "${ALIASES[$class]:-}" "$class"; do
+    [ -n "$name" ] || continue
+    for dir in "${DIRS[@]}"; do
+      [ -f "$dir/$name.desktop" ] && { echo "$name"; return; }
+    done
+  done
+}
+
+save() {
+  local classes
+  classes=$(hyprctl clients -j | jq -r '.[] | select(.mapped and (.tags | index("dialog*") | not)) | .class' | sort -u)
+  # Skip saving an empty desktop, so a crash or early save never wipes the list.
+  [ -n "$classes" ] || return 0
+  mkdir -p "$STATE"
+  while IFS= read -r class; do
+    desktop_for "$class"
+  done <<<"$classes" | sort -u > "$APPS.tmp"
+  [ -s "$APPS.tmp" ] && mv "$APPS.tmp" "$APPS" || rm -f "$APPS.tmp"
+}
+
+restore() {
+  [ -f "$APPS" ] || return 0
+  local id
+  while IFS= read -r id; do
+    [ -n "$id" ] && setsid -f gtk-launch "$id" >/dev/null 2>&1 || true
+  done < "$APPS"
+}
+
+# Each call replaces the pending one, so a burst of closes saves once, and only if it settles.
+save_later() {
+  mkdir -p "$STATE"
+  local token=$$
+  echo "$token" > "$STATE/pending"
+  sleep "${SESSION_SAVE_DELAY:-3}"
+  [ "$(cat "$STATE/pending" 2>/dev/null)" = "$token" ] && save
+}
+
+case "${1:-}" in
+  save) save ;;
+  save-later) save_later ;;
+  restore) restore ;;
+  *) echo "usage: $0 save|save-later|restore" >&2; exit 1 ;;
+esac
