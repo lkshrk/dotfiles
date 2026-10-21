@@ -56,8 +56,10 @@
         {
           "id": "omarchy.tray",
           "pinned": [
-            "PipeWeaver",
             "wine-0x100f0-0"
+          ],
+          "hidden": [
+            "PipeWeaver"
           ]
         },
         {
