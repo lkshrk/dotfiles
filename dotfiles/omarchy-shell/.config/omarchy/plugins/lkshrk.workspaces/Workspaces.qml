@@ -17,8 +17,7 @@ BarWidget {
     return null
   }
 
-  // Dedicated workspaces show an icon instead of a number, and only while
-  // they have windows (see ~/.config/hypr/rules.lua).
+  // Dedicated workspaces (see ~/.config/hypr/rules.lua) always show, with an icon instead of a number.
   readonly property var icons: ({
     1: { glyph: "\uDB80\uDC3B", name: "Apps" },
     2: { glyph: "\uDB80\uDD8D", name: "Terminal" },
@@ -31,7 +30,7 @@ BarWidget {
   })
 
   function workspaceIds() {
-    var ids = [1]
+    var ids = Object.keys(root.icons).map(function(id) { return parseInt(id, 10) })
     var values = Hyprland.workspaces.values
 
     for (var i = 0; i < values.length; i++) {
@@ -76,7 +75,7 @@ BarWidget {
 
         text: icon ? icon.glyph : (focused ? "\uDB85\uDCFB" : (modelData === 10 ? "0" : String(modelData)))
         tooltipText: icon ? icon.name : ""
-        opacity: icon ? (focused ? 1 : 0.5) : (occupied || focused ? 1 : 0.5)
+        opacity: focused ? 1 : (occupied ? 0.7 : 0.3)
         horizontalMargin: 6
         verticalPadding: 6
         fixedWidth: root.vertical ? root.barSize : Style.space(20)
