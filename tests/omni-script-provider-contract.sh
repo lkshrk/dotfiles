@@ -6,7 +6,7 @@ repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 settings="$repo_dir/dotfiles/omni/.config/omni/settings.json"
 tools="$repo_dir/dotfiles/omni/.config/omni/settings.d/tools.json"
 
-grep -Fq 'OMNI_MIN_VERSION="0.10.16"' "$repo_dir/setup.sh"
+grep -Fq 'OMNI_MIN_VERSION="0.11.2"' "$repo_dir/setup.sh"
 grep -Fq 'if ($i ~ /^v?[0-9]+' "$repo_dir/setup.sh"
 
 jq -e '
