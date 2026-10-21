@@ -292,7 +292,8 @@
           "path": "~/.config/fcitx5",
           "ignore": [
             "*",
-            "!/profile"
+            "!/profile",
+            "!/config"
           ]
         },
         {
