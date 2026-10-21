@@ -50,7 +50,9 @@ expect "$(focused 0xa)"
 HYPR_TEST_ACTIVE=0xa "$scripts/focus-app" --exclude-title '\.nvim\.' '^foot$' xdg-terminal-exec
 expect "$(focused 0xb)"
 
-# focus-editor: nvim titles and Zed in stable order, both directions.
+# focus-editor: no editor open launches Zed; otherwise nvim titles and Zed in stable order, both directions.
+HYPR_TEST_CLIENTS='[]' "$scripts/focus-editor"
+expect "launch uwsm-app -- zeditor"
 export HYPR_TEST_CLIENTS='[
   {"address":"0x1","class":"foot","title":".nvim. api","mapped":true,"stableId":"2"},
   {"address":"0x2","class":"dev.zed.Zed","title":"web","mapped":true,"stableId":"1"},

@@ -8,6 +8,7 @@ o.window(".*", { workspace = "1" })
 o.window("(?i)^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty)$", { workspace = "2" })
 o.window("^helium$", { workspace = "3" })
 o.window("^dev\\.zed\\.Zed(-Preview|-Nightly)?$", { workspace = "4" })
+o.window("^chrome-linear\\.app__-Default$", { workspace = "5" })
 -- PipeWeaver's Chromium web app; Chromium drops the port from the class.
 o.window("^chrome-localhost__-Default$", { workspace = "7" })
 
