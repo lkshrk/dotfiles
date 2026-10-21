@@ -20,6 +20,7 @@ BarWidget {
   // Dedicated workspaces show an icon instead of a number, and only while
   // they have windows (see ~/.config/hypr/rules.lua).
   readonly property var icons: ({
+    1: { glyph: "\uDB80\uDC3B", name: "Apps" },
     2: { glyph: "\uDB80\uDD8D", name: "Terminal" },
     3: { glyph: "\uDB81\uDD9F", name: "Browser" },
     4: { glyph: "\uDB80\uDD69", name: "Editor" },
