@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Warn when an Omarchy update adds window rules that override float-first
+# (tile, float = false, fullscreen, maximize, layout). Compares against a
+# baseline of rules already reviewed; --accept records the current set.
+set -euo pipefail
+
+DEFAULTS="${OMARCHY_PATH:-/usr/share/omarchy}/default/hypr"
+BASELINE="$(dirname "$(readlink -f "$0")")/omarchy-rules.baseline"
+
+current() {
+  grep -rhE 'tile *= *true|float *= *false|fullscreen *= *true|maximize *= *true|(^|[^_a-z])layout *= *"' \
+    --include='*.lua' "$DEFAULTS" \
+    | grep -vE '^\s*--' \
+    | sed -E 's/^\s+//' \
+    | sort -u
+}
+
+if [ "${1:-}" = "--accept" ]; then
+  current > "$BASELINE"
+  echo "baseline updated: $BASELINE"
+  exit 0
+fi
+
+[ -f "$BASELINE" ] || { echo "no baseline; run $0 --accept" >&2; exit 1; }
+
+NEW="$(comm -13 "$BASELINE" <(current))"
+[ -z "$NEW" ] && exit 0
+
+echo "New Omarchy layout rules (review, then run $0 --accept):"
+echo "$NEW"
+if command -v notify-send >/dev/null; then
+  notify-send -u critical "Omarchy added layout rules" \
+    "$(printf '%s\n' "$NEW" | head -5)\n\nCheck hypr/rules.lua, then: check-omarchy-rules --accept"
+fi
+exit 2

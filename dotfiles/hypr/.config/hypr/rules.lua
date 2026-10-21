@@ -6,10 +6,18 @@ hl.workspace_rule({ workspace = "1", layout = "monocle" })
 
 -- First, so app-specific rules and Omarchy's tagged floats can still place and size windows.
 o.window(".*", { float = true, center = true })
+-- Omarchy's browser.lua tiles this tag, which beats the catch-all float above.
+o.window({ tag = "chromium-based-browser" }, { float = true })
 
-o.window("(?i)^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty|dev\\.zed\\.Zed(-Preview|-Nightly)?|helium)$", { maximize = true })
+-- Screen-sized floats, not maximize: a workspace holds only one maximized window, which stays above focused floats.
+local top_bar = 26
+local screen_sized = {
+  size = { "(monitor_w)", "(monitor_h-" .. top_bar .. ")" },
+  move = { "(0)", "(" .. top_bar .. ")" },
+}
+o.window("(?i)^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty|dev\\.zed\\.Zed(-Preview|-Nightly)?|helium)$", screen_sized)
 -- PipeWeaver's Chromium web app; Chromium drops the port from the class.
-o.window("^chrome-localhost__-Default$", { maximize = true })
+o.window("^chrome-localhost__-Default$", screen_sized)
 
 if portrait_monitor then
   hl.workspace_rule({ workspace = "6", monitor = portrait_monitor, default = true })

@@ -256,7 +256,8 @@
             "!/input.lua",
             "!/looknfeel.lua",
             "!/rules.lua",
-            "!/scripts/"
+            "!/scripts/",
+            "!/.luarc.json"
           ]
         },
         {
@@ -265,7 +266,12 @@
           "ignore": [
             "*",
             "!/shell.json",
-            "!/plugins/"
+            "!/plugins/",
+            "!/hooks/",
+            "/hooks/*",
+            "!/hooks/post-update.d/",
+            "/hooks/post-update.d/*",
+            "!/hooks/post-update.d/check-layout-rules.hook"
           ]
         },
         {
