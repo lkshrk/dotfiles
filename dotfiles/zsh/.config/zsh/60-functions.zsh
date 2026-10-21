@@ -218,33 +218,6 @@ EOF
   coder ssh "$name"
 }
 
-# --- herdr ------------------------------------------------------------------
-herdr() {
-  (( $+commands[herdr] )) || { echo "herdr: command not found" >&2; return 127; }
-
-  local runtime_root="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
-  runtime_root="${runtime_root%/}"
-
-  local config_dir="$HOME/.config/herdr"
-  local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/herdr"
-  command mkdir -p "$runtime_root" "$config_dir" "$state_dir" || return
-
-  local log config_log state_log
-  for log in herdr.log herdr-client.log herdr-server.log; do
-    config_log="$config_dir/$log"
-    state_log="$state_dir/$log"
-    if [[ -e "$config_log" && ! -L "$config_log" ]]; then
-      command mv "$config_log" "$state_log" || return
-    fi
-    [[ -e "$config_log" || -L "$config_log" ]] || command ln -s "$state_log" "$config_log" || return
-  done
-
-  HERDR_CONFIG_PATH="$HOME/.config/herdr/config.toml" \
-  HERDR_SOCKET_PATH="$runtime_root/herdr.sock" \
-  HERDR_CLIENT_SOCKET_PATH="$runtime_root/herdr-client.sock" \
-  command herdr "$@"
-}
-
 _dotfiles_omni() {
   local repo="${DOTFILES_DIR:-}"
   if [[ -z "$repo" ]]; then
