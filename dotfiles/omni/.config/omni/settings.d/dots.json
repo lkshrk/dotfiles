@@ -294,6 +294,10 @@
             "*",
             "!/profile"
           ]
+        },
+        {
+          "name": "foot",
+          "path": "~/.config/foot"
         }
       ]
     },
