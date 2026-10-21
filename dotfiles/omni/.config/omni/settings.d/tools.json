@@ -2155,6 +2155,15 @@
         }
       ]
     },
+    "pipeweaver": {
+      "providers": [
+        {
+          "provider": "aur",
+          "package": "pipeweaver"
+        }
+      ],
+      "git": "https://github.com/pipeweaver/pipeweaver"
+    },
     "pipx": {
       "providers": [
         {
@@ -2971,6 +2980,18 @@
       ],
       "git": "https://github.com/pranshuparmar/witr"
     },
+    "wowup-cf": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "wowup-cf"
+        },
+        {
+          "provider": "aur",
+          "package": "wowup-cf-bin"
+        }
+      ]
+    },
     "xcodebuildmcp": {
       "providers": [
         {
@@ -3160,15 +3181,6 @@
         }
       ],
       "git": "https://github.com/facebook/zstd"
-    },
-    "pipeweaver": {
-      "providers": [
-        {
-          "provider": "aur",
-          "package": "pipeweaver"
-        }
-      ],
-      "git": "https://github.com/pipeweaver/pipeweaver"
     }
   }
 }

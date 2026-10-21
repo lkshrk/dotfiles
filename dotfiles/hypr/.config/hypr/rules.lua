@@ -40,7 +40,7 @@ o.window("(?i)chatterino", {
   move = { "(monitor_w-window_w)", "(monitor_h-window_h-" .. bar_height .. ")" },
 })
 
-o.window("^(steam_app_[0-9]+|steam_app_battlenet|gamescope|com\\.moonlight_stream\\.Moonlight)$", { workspace = "9" })
+o.window("^(steam_app_[0-9]+|steam_app_battlenet|gamescope|com\\.moonlight_stream\\.Moonlight|wowupcf)$", { workspace = "9" })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them.
 o.window("^(steam_app_[0-9]+|gamescope)$", { fullscreen = true, idle_inhibit = "fullscreen" })
 -- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.
