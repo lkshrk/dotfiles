@@ -20,12 +20,17 @@ BarWidget {
   // Dedicated workspaces show an icon instead of a number, and only while
   // they have windows (see ~/.config/hypr/rules.lua).
   readonly property var icons: ({
+    2: { glyph: "\uDB80\uDD8D", name: "Terminal" },
+    3: { glyph: "\uDB81\uDD9F", name: "Browser" },
+    4: { glyph: "\uDB80\uDD69", name: "Editor" },
+    6: { glyph: "\uDB80\uDE8C", name: "Chat" },
+    7: { glyph: "\uDB81\uDE6A", name: "Audio" },
     8: { glyph: "\uDB82\uDFC4", name: "Bitwarden" },
     9: { glyph: "\uDB84\uDF93", name: "Gaming" }
   })
 
   function workspaceIds() {
-    var ids = [1, 2]
+    var ids = [1]
     var values = Hyprland.workspaces.values
 
     for (var i = 0; i < values.length; i++) {

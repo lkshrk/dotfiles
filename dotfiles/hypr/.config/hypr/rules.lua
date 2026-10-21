@@ -2,34 +2,39 @@
 local portrait_monitor = nil
 local bar_height = 43
 
-hl.workspace_rule({ workspace = "1", layout = "monocle" })
-
--- First, so app-specific rules and Omarchy's tagged floats can still place and size windows.
-o.window(".*", { float = true, center = true })
--- Omarchy's browser.lua tiles this tag, which beats the catch-all float above.
-o.window({ tag = "chromium-based-browser" }, { float = true })
-
--- Screen-sized floats, not maximize: a workspace holds only one maximized window, which stays above focused floats.
-local top_bar = 26
-local screen_sized = {
-  size = { "(monitor_w)", "(monitor_h-" .. top_bar .. ")" },
-  move = { "(0)", "(" .. top_bar .. ")" },
-}
-o.window("(?i)^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty|dev\\.zed\\.Zed(-Preview|-Nightly)?|helium)$", screen_sized)
+-- One workspace per main app, tiled: alone on its workspace each fills the screen, and nothing overlaps.
+-- Workspace 1 collects every app without its own rule; the rules below override it.
+o.window(".*", { workspace = "1" })
+o.window("(?i)^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty)$", { workspace = "2" })
+o.window("^helium$", { workspace = "3" })
+o.window("^dev\\.zed\\.Zed(-Preview|-Nightly)?$", { workspace = "4" })
 -- PipeWeaver's Chromium web app; Chromium drops the port from the class.
-o.window("^chrome-localhost__-Default$", screen_sized)
+o.window("^chrome-localhost__-Default$", { workspace = "7" })
 
 if portrait_monitor then
   hl.workspace_rule({ workspace = "6", monitor = portrait_monitor, default = true })
 end
 
-o.window("(?i)^(discord|signal|org\\.telegram\\.desktop|com\\.obsproject\\.studio|obsidian|brave-browser)$", { workspace = "6" })
+-- Messengers float on workspace 6 so the portrait layout can overlap them.
+o.window("(?i)^(discord|signal|org\\.telegram\\.desktop|com\\.obsproject\\.studio|obsidian|brave-browser)$", {
+  workspace = "6",
+  float = true,
+})
+
+-- Opened from the Stats bar widget for a quick look, like Activity Monitor.
+o.window("^io\\.missioncenter\\.MissionCenter$", {
+  workspace = "unset",
+  float = true,
+  center = true,
+  size = { "(monitor_w*0.6)", "(monitor_h*0.7)" },
+})
 
 -- Password managers block screen capture, so they get a workspace to themselves.
 o.window("^(Bitwarden|1[pP]assword)$", { workspace = "8" })
 
 o.window("(?i)chatterino", {
   workspace = "6",
+  float = true,
   size = { "(monitor_w*0.33)", "(monitor_h*0.25)" },
   move = { "(monitor_w-window_w)", "(monitor_h-window_h-" .. bar_height .. ")" },
 })
@@ -51,5 +56,8 @@ o.window({
   class = "(sublime_text|DesktopEditors|org.gnome.Nautilus)",
   title = "^(Open.*Files?|Open [Ff]older.*|Save.*Files?|Save.*As|Save|All Files|.*wants to (open|save).*|[Cc]hoose.*)",
 }, { tag = "+dialog" })
-o.window({ tag = "dialog" }, { float = true, center = true, maximize = false })
-o.window({ tag = "pip" }, { maximize = false })
+o.window({ tag = "dialog" }, { float = true, center = true })
+-- Dialogs, PiP and Omarchy's floating tools open where they were triggered, not in the collector.
+o.window({ tag = "dialog" }, { workspace = "unset" })
+o.window({ tag = "pip" }, { workspace = "unset" })
+o.window({ tag = "floating-window" }, { workspace = "unset" })

@@ -20,6 +20,7 @@ ADDRESS="$(
 
 if [ -n "$ADDRESS" ]; then
   hyprctl dispatch "hl.dsp.focus({ window = \"address:$ADDRESS\" })" >/dev/null
+  hyprctl dispatch 'hl.dsp.window.bring_to_top()' >/dev/null
 else
   hyprctl dispatch "hl.dsp.focus({ workspace = \"$GAMING_WORKSPACE\" })" >/dev/null
 fi

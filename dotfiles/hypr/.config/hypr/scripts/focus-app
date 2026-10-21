@@ -53,3 +53,5 @@ NEXT="$(
 )"
 
 hyprctl dispatch "hl.dsp.focus({ window = \"address:$NEXT\" })" >/dev/null
+# Focus alone keeps a float's stacking order, so screen-sized floats would stay hidden.
+hyprctl dispatch 'hl.dsp.window.bring_to_top()' >/dev/null

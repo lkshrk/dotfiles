@@ -31,3 +31,4 @@ NEXT="$(
 )"
 
 hyprctl dispatch "hl.dsp.focus({ window = \"address:$NEXT\" })" >/dev/null
+hyprctl dispatch 'hl.dsp.window.bring_to_top()' >/dev/null

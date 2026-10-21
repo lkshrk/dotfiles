@@ -28,7 +28,7 @@ expect() {
   [ "$actual" = "$1" ] || { printf 'expected %q\n     got %q\n' "$1" "$actual" >&2; exit 1; }
   : > "$HYPR_TEST_ACTIONS"
 }
-focused() { echo "dispatch hl.dsp.focus({ window = \"address:$1\" })"; }
+focused() { printf 'dispatch hl.dsp.focus({ window = "address:%s" })\ndispatch hl.dsp.window.bring_to_top()' "$1"; }
 
 # focus-app: nothing open launches, unless --no-launch.
 "$scripts/focus-app" '^helium$' omarchy-launch-browser
