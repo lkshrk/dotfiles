@@ -36,9 +36,12 @@ o.window("(?i)chatterino", {
 
 o.window("^(steam_app_[0-9]+|steam_app_battlenet|gamescope|com\\.moonlight_stream\\.Moonlight)$", { workspace = "9" })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them.
-o.window("^(steam_app_[0-9]+|steam_app_battlenet|gamescope)$", { fullscreen = true, idle_inhibit = "fullscreen" })
--- Battle.net games share the launcher's class; the launcher's own windows are titled "Battle.net…" or untitled.
-o.window({ class = "^steam_app_battlenet$", title = "^(Battle\\.net.*)?$" }, { fullscreen = false })
+o.window("^(steam_app_[0-9]+|gamescope)$", { fullscreen = true, idle_inhibit = "fullscreen" })
+-- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.
+o.window({
+  class = "^steam_app_battlenet$",
+  title = "^(World of Warcraft|Diablo IV|Diablo II: Resurrected|Warcraft III|Hearthstone|Overwatch|StarCraft.*)$",
+}, { fullscreen = true, idle_inhibit = "fullscreen" })
 
 o.window({ modal = true }, { tag = "+dialog" })
 o.window("^(xdg-desktop-portal-gtk|zenity)$", { tag = "+dialog" })
