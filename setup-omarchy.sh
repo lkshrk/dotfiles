@@ -309,6 +309,9 @@ fi
 # ─── Hyprland ─────────────────────────────────────────────────────────────────
 
 step "hyprland"
+# The PipeWeaver daemon looks up `pipeweaver-app` on $PATH when its tray icon is clicked.
+mkdir -p "$HOME/.local/bin"
+ln -sfn "$HOME/.config/hypr/scripts/pipeweaver-app" "$HOME/.local/bin/pipeweaver-app"
 hyprctl reload >/dev/null
 errors="$(hyprctl configerrors)"
 [[ -z "${errors//[[:space:]]/}" ]] || die "$errors"
