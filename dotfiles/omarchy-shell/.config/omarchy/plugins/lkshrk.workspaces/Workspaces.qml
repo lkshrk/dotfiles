@@ -23,7 +23,7 @@ BarWidget {
     2: { glyph: "\uDB80\uDD8D", name: "Terminal" },
     3: { glyph: "\uDB81\uDD9F", name: "Browser" },
     4: { glyph: "\uDB80\uDD69", name: "Editor" },
-    5: { glyph: "\uDB81\uDF56", name: "Linear" },
+    5: { glyph: "\uDB82\uDD13", name: "Linear" },
     6: { glyph: "\uDB80\uDE8C", name: "Chat" },
     7: { glyph: "\uDB81\uDE6A", name: "Audio" },
     8: { glyph: "\uDB82\uDFC4", name: "Bitwarden" },
