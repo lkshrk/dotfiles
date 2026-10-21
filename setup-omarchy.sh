@@ -197,6 +197,26 @@ if [[ -n "$helium_desktop" ]]; then
   ok "Helium is the default browser"
 fi
 
+# ─── Web apps in Chromium ─────────────────────────────────────────────────────
+# omarchy-launch-webapp always uses the default browser, so these get their own Exec.
+
+step "web apps"
+while IFS='|' read -r name url icon; do
+  [[ -n "$name" && "$name" != \#* ]] || continue
+  if ! omarchy-webapp-install "$name" "$url" "$icon" "chromium --app=$url" >/dev/null; then
+    warn "web app $name could not be installed"
+    continue
+  fi
+  rest="${url#*://}"
+  host="${rest%%/*}"
+  host="${host%%:*}"
+  url_path="/"
+  [[ "$rest" != */* ]] || url_path="/${rest#*/}"
+  printf 'StartupWMClass=chrome-%s_%s-Default\n' "$host" "${url_path//\//_}" \
+    >> "$HOME/.local/share/applications/$name.desktop"
+  ok "web app $name opens in Chromium"
+done < "$REPO_DIR/omarchy/chromium.webapps"
+
 # ─── Bitwarden (rbw): secrets, SSH agent and commit signing ───────────────────
 # rbw's account settings are not a dot, so the first run asks for them.
 

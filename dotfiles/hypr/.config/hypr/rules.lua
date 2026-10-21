@@ -8,6 +8,8 @@ hl.workspace_rule({ workspace = "1", layout = "monocle" })
 o.window(".*", { float = true, center = true })
 
 o.window("(?i)^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty|dev\\.zed\\.Zed(-Preview|-Nightly)?|helium)$", { maximize = true })
+-- PipeWeaver's Chromium web app; Chromium drops the port from the class.
+o.window("^chrome-localhost__-Default$", { maximize = true })
 
 if portrait_monitor then
   hl.workspace_rule({ workspace = "6", monitor = portrait_monitor, default = true })

@@ -251,6 +251,7 @@
           "path": "~/.config/hypr",
           "ignore": [
             "*",
+            "!/autostart.lua",
             "!/bindings.lua",
             "!/input.lua",
             "!/looknfeel.lua",
