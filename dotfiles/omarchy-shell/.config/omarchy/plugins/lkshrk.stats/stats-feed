@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Every INTERVAL s prints: cpu cpuUser cpuSystem ram disk rx tx diskRead diskWrite (percent, then bytes/s).
+set -euo pipefail
+
+INTERVAL="${1:-2}"
+MOUNT="${2:-/}"
+
+src=$(findmnt -n -o SOURCE --target "$MOUNT" | sed 's/\[.*//')
+DISK=$(lsblk -sno NAME,TYPE "$src" 2>/dev/null | awk '$2=="disk"{ sub(/^[^a-zA-Z0-9]*/, "", $1); print $1; exit }')
+DISK=${DISK:-$(basename "$src")}
+
+cpu_sample() { awk '/^cpu /{ print $2+$3, $4+$7+$8, $5+$6, $2+$3+$4+$5+$6+$7+$8+$9; exit }' /proc/stat; }
+net_sample() { awk -F'[: ]+' 'NR>2 && $2 != "lo" && $2 !~ /^(docker|veth|br-|virbr|tailscale)/ { rx+=$3; tx+=$11 } END { print rx+0, tx+0 }' /proc/net/dev; }
+disk_sample() { awk -v d="$DISK" '$3==d { print $6*512, $10*512; exit }' /proc/diskstats; }
+
+read -r p_user p_sys p_idle p_total < <(cpu_sample)
+read -r p_rx p_tx < <(net_sample)
+read -r p_dr p_dw < <(disk_sample)
+
+while sleep "$INTERVAL"; do
+  read -r user sys idle total < <(cpu_sample)
+  read -r rx tx < <(net_sample)
+  read -r dr dw < <(disk_sample)
+
+  dt=$((total - p_total))
+  if (( dt > 0 )); then
+    cpu=$(( (100 * (dt - (idle - p_idle)) + dt / 2) / dt ))
+    cu=$(( (100 * (user - p_user) + dt / 2) / dt ))
+    cs=$(( (100 * (sys - p_sys) + dt / 2) / dt ))
+  else
+    cpu=0; cu=0; cs=0
+  fi
+  ram=$(awk '/^MemTotal:/{t=$2} /^MemAvailable:/{a=$2} END{ printf "%d", (t>0 ? (100*(t-a)+t/2)/t : 0) }' /proc/meminfo)
+  disk=$(df -P "$MOUNT" | awk 'NR==2{ gsub("%","",$5); print $5 }')
+
+  echo "$cpu $cu $cs $ram $disk $(( (rx - p_rx) / INTERVAL )) $(( (tx - p_tx) / INTERVAL )) $(( (dr - p_dr) / INTERVAL )) $(( (dw - p_dw) / INTERVAL ))"
+
+  p_user=$user; p_sys=$sys; p_idle=$idle; p_total=$total; p_rx=$rx; p_tx=$tx; p_dr=$dr; p_dw=$dw
+done
