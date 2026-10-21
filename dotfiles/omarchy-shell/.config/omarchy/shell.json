@@ -2,20 +2,27 @@
   "bar": {
     "background": "opaque",
     "layout": {
+      "left": [
+        {
+          "id": "omarchy.menu"
+        },
+        {
+          "id": "lkshrk.workspaces"
+        }
+      ],
       "center": [
+        {
+          "id": "omarchy.indicators"
+        },
         {
           "format": "ddd d. MMM HH:mm",
           "formatAlt": "d MMMM 'W'ww yyyy",
           "id": "omarchy.clock",
           "verticalFormat": "HH\n—\nmm"
-        }
-      ],
-      "centerBegin": [
+        },
         {
-          "id": "omarchy.indicators"
-        }
-      ],
-      "centerEnd": [
+          "id": "omarchy.weather"
+        },
         {
           "id": "omarchy.elsewhen",
           "cities": [
@@ -42,23 +49,16 @@
           ]
         },
         {
-          "id": "omarchy.weather"
-        },
-        {
           "id": "omarchy.system-update"
-        }
-      ],
-      "left": [
-        {
-          "id": "omarchy.menu"
-        },
-        {
-          "id": "lkshrk.workspaces"
         }
       ],
       "right": [
         {
-          "id": "omarchy.tray"
+          "id": "omarchy.tray",
+          "pinned": [
+            "PipeWeaver",
+            "wine-0x100f0-0"
+          ]
         },
         {
           "id": "omarchy.keyboard-layout"
@@ -70,21 +70,18 @@
           "id": "omarchy.bluetooth"
         },
         {
-          "id": "omarchy.network"
-        },
-        {
           "id": "omarchy.audio"
         },
         {
-          "id": "omarchy.monitor"
+          "id": "omarchy.power"
         },
         {
-          "id": "omarchy.power"
+          "id": "lkshrk.stats"
         }
       ]
     },
     "position": "top",
-    "transparent": false
+    "transparent": true
   },
   "dock": {
     "pinned": [
