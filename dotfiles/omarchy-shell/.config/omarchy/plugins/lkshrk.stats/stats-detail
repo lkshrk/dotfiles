@@ -35,7 +35,6 @@ net_tx=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo 0)
 jq -n -c \
   --argjson load1 "$load1" --argjson load5 "$load5" --argjson load15 "$load15" \
   --argjson freq "$freq" --argjson uptime "$uptime_s" --argjson cores "$(nproc)" \
-  --arg model "$(awk -F': ' '/^model name/{print $2; exit}' /proc/cpuinfo)" \
   --argjson topCpu "$(top pcpu)" --argjson topMem "$(top rss)" \
   --argjson memTotal "$mem_total" --argjson memFree "$mem_free" --argjson memAvail "$mem_avail" \
   --argjson app "$app" --argjson cache "$cache" \
@@ -45,7 +44,7 @@ jq -n -c \
   --argjson totalRead "${total_read:-0}" --argjson totalWritten "${total_written:-0}" \
   --arg iface "${iface:-}" --arg ip "${local_ip:-}" --arg mac "${mac:-}" --arg dns "${dns:-}" \
   --argjson netRx "$net_rx" --argjson netTx "$net_tx" \
-  '{cpu: {model: $model, cores: $cores, load: [$load1, $load5, $load15], frequency: $freq, uptime: $uptime, top: $topCpu},
+  '{cpu: {cores: $cores, load: [$load1, $load5, $load15], frequency: $freq, uptime: $uptime, top: $topCpu},
     ram: {total: $memTotal, used: ($memTotal - $memAvail), app: $app, cache: $cache, free: $memFree,
           swapTotal: $swapTotal, swapUsed: ($swapTotal - $swapFree), pressure: $pressure,
           top: ($topMem | map(.value *= 1024))},

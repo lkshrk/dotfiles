@@ -8,15 +8,6 @@ BarWidget {
   id: root
   moduleName: "omarchy.workspaces"
 
-  function workspaceById(id) {
-    var values = Hyprland.workspaces.values
-    for (var i = 0; i < values.length; i++) {
-      if (values[i].id === id) return values[i]
-    }
-
-    return null
-  }
-
   // Dedicated workspaces (see ~/.config/hypr/rules.lua) always show, with an icon instead of a number.
   readonly property var icons: ({
     1: { glyph: "\uDB80\uDC3B", name: "Apps" },
@@ -67,8 +58,6 @@ BarWidget {
       WidgetButton {
         required property int modelData
 
-        readonly property var workspace: root.workspaceById(modelData)
-        readonly property bool occupied: workspace !== null && workspace.toplevels.values.length > 0
         readonly property bool focused: Hyprland.focusedWorkspace !== null && Hyprland.focusedWorkspace.id === modelData
 
         bar: root.bar

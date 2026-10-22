@@ -5,7 +5,6 @@ import qs.Commons
 import qs.Commons as Commons
 import qs.Ui
 
-// One-line port of the macOS Stats app: icon + value per module, each with its own popup.
 BarWidget {
   id: root
   moduleName: "lkshrk.stats"
@@ -61,7 +60,6 @@ BarWidget {
   }
   function speed(bytes) { return scaled(bytes, ["B/s", "KB/s", "MB/s", "GB/s"], 1000) }
   function size(bytes) { return scaled(bytes, ["B", "KB", "MB", "GB", "TB"], 1024) }
-  function percentOf(part, whole) { return whole > 0 ? Math.round(part / whole * 100) + "%" : "–" }
   function duration(seconds) {
     var d = Math.floor(seconds / 86400), h = Math.floor(seconds % 86400 / 3600), m = Math.floor(seconds % 3600 / 60)
     return (d > 0 ? d + "d " : "") + h + "h " + m + "m"
