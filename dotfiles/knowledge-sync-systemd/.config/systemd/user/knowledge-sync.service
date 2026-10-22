@@ -4,5 +4,6 @@ ConditionPathExists=%h/knowledge/scripts/sync.sh
 
 [Service]
 Type=oneshot
+SuccessExitStatus=3
 # No tty to unlock from: skip quietly while rbw is locked.
 ExecStart=/usr/bin/bash -c '. %h/.config/env/profile.sh; rbw unlocked >/dev/null 2>&1 || exit 0; exec %h/knowledge/scripts/sync.sh --quiet'
