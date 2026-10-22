@@ -58,8 +58,8 @@ sudo -v
 ok "sudo credentials cached for this terminal"
 
 # ─── Omni ─────────────────────────────────────────────────────────────────────
-# Reading the config is the real requirement (the aur provider needs settings
-# v26), so an older omni is replaced by the latest release's Arch package.
+# Reading the config is the real requirement (settings v26), so an older omni is
+# replaced in ~/.local/bin, where the omni tool's script provider keeps it.
 
 omni_reads_config() { command -v omni >/dev/null 2>&1 && omni settings show --format json >/dev/null 2>&1; }
 
@@ -67,14 +67,15 @@ install_omni_release() (
   set -euo pipefail
   release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' "https://github.com/$OMNI_REPO/releases/latest")
   tag=${release##*/}
-  asset="omni-${tag#v}-1-$(uname -m).pkg.tar.zst"
+  asset="omni_linux_$(uname -m).tar.gz"
   base="https://github.com/$OMNI_REPO/releases/download/$tag"
   tmp=$(mktemp -d)
   trap 'rm -rf "$tmp"' EXIT
   curl -fsSL --proto-redir '=https' "$base/$asset" -o "$tmp/$asset"
   curl -fsSL --proto-redir '=https' "$base/checksums.txt" -o "$tmp/checksums.txt"
   (cd "$tmp" && grep -F "  $asset" checksums.txt | sha256sum -c -)
-  sudo pacman -U --needed --noconfirm "$tmp/$asset"
+  tar -xzf "$tmp/$asset" -C "$tmp" omni
+  install -Dm755 "$tmp/omni" "$HOME/.local/bin/omni"
 )
 
 step "omni"
@@ -89,7 +90,9 @@ ok "$(command omni --version)"
 # A fresh install's configs are distro or app defaults. Later runs keep local
 # edits instead (volatile-dots preserves them; conflicts are left to resolve).
 
-if [[ ! -e "$FIRST_RUN_MARKER" ]]; then
+first_run=0
+[[ -e "$FIRST_RUN_MARKER" ]] || first_run=1
+if ((first_run)); then
   step "first run: take the repo's configs"
   stamp=$(date +%Y%m%d%H%M%S)
   while IFS= read -r entry; do
@@ -101,11 +104,6 @@ if [[ ! -e "$FIRST_RUN_MARKER" ]]; then
       ok "kept the default as ${target/#"$HOME"/\~}.pre-dotfiles.$stamp"
     fi
   done < "$REPO_DIR/scripts/volatile-dots.txt"
-  # Resolving links with stow; omni installs it first when it is missing.
-  mapfile -t conflicts < <(omni dots status --state conflict --format json | jq -r '.entries[]?.name')
-  for name in "${conflicts[@]}"; do
-    omni --yes dots resolve "$name" --use-repo
-  done
 fi
 
 # ─── Tools and dots ───────────────────────────────────────────────────────────
@@ -134,6 +132,17 @@ case "$rc" in
   3) tools_failed=1; warn "some tools failed to install; continuing with the rest of the setup" ;;
   *) die "omni bootstrap failed" ;;
 esac
+
+# After bootstrap, so the host is active and stow is installed.
+if ((first_run)); then
+  status_json="$(omni dots status --state conflict --format json)" || die "omni dots status failed"
+  mapfile -t conflicts < <(jq -r '.entries[]?.name' <<<"$status_json")
+  for name in "${conflicts[@]}"; do
+    omni --yes dots resolve "$name" --use-repo
+  done
+  mkdir -p "$STATE_DIR"
+  touch "$FIRST_RUN_MARKER"
+fi
 
 # ─── Omarchy defaults this setup does not want ────────────────────────────────
 
@@ -164,12 +173,17 @@ fi
 # keyd itself comes from the omarchy group.
 
 step "keyd"
-sudo install -Dm644 "$REPO_DIR/omarchy/keyd/default.conf" /etc/keyd/default.conf
-# Restart rather than `keyd reload`: right after the first start the socket
-# isn't up yet, and a restart also picks up config changes on later runs.
-sudo systemctl enable keyd
-sudo systemctl restart keyd
-ok "Caps Lock is Hyper"
+if ! command -v keyd >/dev/null 2>&1; then
+  warn "keyd is not installed; Omni should install it through the omarchy group"
+else
+  # Restart rather than `keyd reload`: right after the first start the socket isn't up yet.
+  if ! cmp -s "$REPO_DIR/omarchy/keyd/default.conf" /etc/keyd/default.conf || ! systemctl is-active --quiet keyd; then
+    sudo install -Dm644 "$REPO_DIR/omarchy/keyd/default.conf" /etc/keyd/default.conf
+    sudo systemctl enable keyd
+    sudo systemctl restart keyd
+  fi
+  ok "Caps Lock is Hyper"
+fi
 
 # ─── Docker ───────────────────────────────────────────────────────────────────
 # docker itself comes from the dev-tooling group; the group is root-equivalent.
@@ -177,12 +191,7 @@ ok "Caps Lock is Hyper"
 step "docker"
 if command -v docker >/dev/null 2>&1; then
   sudo systemctl enable --now docker.socket
-  if id -nG "$USER" | tr ' ' '\n' | grep -qx docker; then
-    ok "$USER is in the docker group"
-  else
-    sudo usermod -aG docker "$USER"
-    ok "$USER joined the docker group (takes effect on next login)"
-  fi
+  OMARCHY_DEFER_REBOOT=1 omarchy-setup-security-sudoless-docker
 else
   warn "docker is not installed; Omni should install it through the dev-tooling group"
 fi
@@ -317,8 +326,6 @@ errors="$(hyprctl configerrors)"
 [[ -z "${errors//[[:space:]]/}" ]] || die "$errors"
 ok "config loads cleanly"
 
-mkdir -p "$STATE_DIR"
-touch "$FIRST_RUN_MARKER"
 if ((tools_failed)); then
   warn "setup finished, but some tools failed to install (listed above under omni tools)"
   warn "fix the cause, then run: omni --config $OMNI_CONFIG_PATH tools sync --retry-failed"
