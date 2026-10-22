@@ -32,7 +32,7 @@ if [ "$ORDER" = stable ]; then
   ACTIVE="$(hyprctl activewindow -j 2>/dev/null | jq -r '.address // empty')" || ACTIVE=""
 fi
 
-# History order: focusing moves a window to the front, so taking the least recent match reaches all of them.
+# Focusing moves a window to the front of the history, so the least recent match reaches all of them.
 NEXT="$(
   hyprctl clients -j \
     | jq -r --arg re "$CLASS_RE" --arg title "$TITLE" --arg exclude "$EXCLUDE_TITLE" \

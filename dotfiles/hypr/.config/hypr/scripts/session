@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# Remember which apps are open and start them again at login.
-# Usage: session save | save-later | restore
-# Apps are matched to their .desktop entry by StartupWMClass or file name; workspace
-# rules place them, and each app restores its own windows and tabs.
 set -euo pipefail
 
 STATE="${XDG_STATE_HOME:-$HOME/.local/state}/hypr-session"

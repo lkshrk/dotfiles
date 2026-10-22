@@ -1,4 +1,3 @@
-// US intl with dead keys, Mac ISO placement (§ left of 1, ` right of left Shift), AltGr + a/o/u/s for ä/ö/ü/ß.
 // keyd turns Left Alt + a/o/u/s into AltGr, since apps treat Alt + letter as a shortcut, not text.
 default partial alphanumeric_keys
 xkb_symbols "intl" {

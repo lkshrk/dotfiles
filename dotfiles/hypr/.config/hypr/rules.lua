@@ -1,7 +1,6 @@
 local bar_height = 43
 
--- One workspace per main app, tiled: alone on its workspace each fills the screen, and nothing overlaps.
--- Workspace 1 collects every app without its own rule; the rules below override it.
+-- One tiled workspace per main app; workspace 1 collects every app without its own rule.
 o.window(".*", { workspace = "1" })
 o.window("(?i)^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty)$", { workspace = "2" })
 o.window("^helium$", { workspace = "3" })
