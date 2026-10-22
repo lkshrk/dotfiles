@@ -125,10 +125,9 @@ mapfile -t drop < <(grep -v -e '^#' -e '^[[:space:]]*$' "$REPO_DIR/omarchy/remov
 ((${#drop[@]} == 0)) || omarchy pkg drop "${drop[@]}"
 while IFS= read -r webapp; do
   [[ -n "$webapp" && "$webapp" != \#* ]] || continue
-  [[ -e "$HOME/.local/share/applications/$webapp.desktop" ]] || continue
-  omarchy webapp remove "$webapp"
-  ok "removed web app $webapp"
+  OMARCHY_REMOVE_NOTIFY=false omarchy-webapp-remove "$webapp"
 done < "$REPO_DIR/omarchy/remove.webapps"
+ok "unwanted Omarchy web apps removed"
 
 # ─── Login shell ──────────────────────────────────────────────────────────────
 
@@ -182,17 +181,21 @@ fi
 step "web apps"
 while IFS='|' read -r name url icon; do
   [[ -n "$name" && "$name" != \#* ]] || continue
-  if ! omarchy-webapp-install "$name" "$url" "$icon" "chromium --app=$url" >/dev/null; then
-    warn "web app $name could not be installed"
-    continue
-  fi
   rest="${url#*://}"
   host="${rest%%/*}"
   host="${host%%:*}"
   url_path="/"
   [[ "$rest" != */* ]] || url_path="/${rest#*/}"
-  printf 'StartupWMClass=chrome-%s_%s-Default\n' "$host" "${url_path//\//_}" \
-    >> "$HOME/.local/share/applications/$name.desktop"
+  exec_line="Exec=chromium --app=$url"
+  wm_class_line="StartupWMClass=chrome-${host}_${url_path//\//_}-Default"
+  desktop="$HOME/.local/share/applications/$name.desktop"
+  if ! { grep -qxF "$exec_line" "$desktop" && grep -qxF "$wm_class_line" "$desktop"; } 2>/dev/null; then
+    if ! omarchy-webapp-install "$name" "$url" "$icon" "chromium --app=$url" >/dev/null; then
+      warn "web app $name could not be installed"
+      continue
+    fi
+    printf '%s\n' "$wm_class_line" >>"$desktop"
+  fi
   ok "web app $name opens in Chromium"
 done < "$REPO_DIR/omarchy/chromium.webapps"
 
