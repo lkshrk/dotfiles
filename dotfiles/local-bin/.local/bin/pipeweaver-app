@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# The PipeWeaver tray icon runs this from $PATH; without it the daemon opens the default browser.
+exec "$HOME/.config/hypr/scripts/focus-app" '^chrome-localhost__-Default$' chromium --app=http://localhost:14565

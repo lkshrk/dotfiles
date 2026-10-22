@@ -307,6 +307,14 @@
         {
           "name": "foot",
           "path": "~/.config/foot"
+        },
+        {
+          "name": "local-bin",
+          "path": "~/.local/bin",
+          "ignore": [
+            "*",
+            "!/pipeweaver-app"
+          ]
         }
       ]
     },
