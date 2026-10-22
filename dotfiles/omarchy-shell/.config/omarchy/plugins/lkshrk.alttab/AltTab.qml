@@ -31,6 +31,7 @@ Item {
   property var mru: []
   // A commit that arrives before its open (the two IPC calls race on a tap).
   property double pendingCommitAt: 0
+  property double closedAt: 0
   // Addresses (no 0x) of windows with no_screen_share (password managers):
   // their capture comes back blanked, so they show their icon instead.
   property var protectedWindows: ({})
@@ -124,7 +125,8 @@ Item {
 
   function commit() {
     if (!opened) {
-      pendingCommitAt = Date.now()
+      // The overlay and the release bind both commit; the second one must not arm the next open.
+      if (Date.now() - closedAt > 400) pendingCommitAt = Date.now()
       return
     }
     var target = windows[selectedIndex]
@@ -143,6 +145,8 @@ Item {
   function close() {
     opened = false
     windows = []
+    pendingCommitAt = 0
+    closedAt = Date.now()
   }
 
   function iconFor(toplevel) {

@@ -6,9 +6,12 @@
   "author": "lkshrk",
   "description": "CPU, RAM, disk and network speed in the style of the macOS Stats app",
   "kinds": [
+    "service",
     "bar-widget"
   ],
+  "keepLoaded": true,
   "entryPoints": {
+    "service": "Service.qml",
     "barWidget": "Stats.qml"
   },
   "barWidget": {

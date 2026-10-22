@@ -22,7 +22,7 @@ src=$(findmnt -n -o SOURCE --target "$MOUNT" | sed 's/\[.*//')
 dev=$(lsblk -sno NAME,TYPE "$src" 2>/dev/null | awk '$2=="disk"{ sub(/^[^a-zA-Z0-9]*/, "", $1); print $1; exit }')
 fstype=$(findmnt -n -o FSTYPE --target "$MOUNT")
 model=$(cat "/sys/block/$dev/device/model" 2>/dev/null | sed 's/ *$//' || true)
-read -r total_read total_written < <(awk -v d="$dev" '$3==d { print $6*512, $10*512; exit }' /proc/diskstats)
+read -r total_read total_written < <(awk -v d="$dev" '$3==d { r=$6*512; w=$10*512 } END { print r+0, w+0 }' /proc/diskstats)
 
 iface=$(ip -o route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<NF;i++) if($i=="dev"){print $(i+1); exit}}')
 local_ip=$(ip -o route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<NF;i++) if($i=="src"){print $(i+1); exit}}')

@@ -10,30 +10,30 @@ BarWidget {
   id: root
   moduleName: "lkshrk.stats"
 
-  readonly property int interval: setting("interval", 2)
-  readonly property string diskMount: setting("disk", "/")
+  readonly property var stats: bar?.shell?.serviceFor("lkshrk.stats") ?? null
+  readonly property int interval: stats ? stats.interval : 2
+  readonly property string diskMount: stats ? stats.diskMount : "/"
   readonly property string pluginDir: Qt.resolvedUrl(".").toString().replace("file://", "")
-  readonly property int historySize: 60
 
-  property int cpu: 0
-  property int cpuUser: 0
-  property int cpuSystem: 0
-  property int ram: 0
-  property int disk: 0
-  property real rx: 0
-  property real tx: 0
-  property real diskRead: 0
-  property real diskWrite: 0
+  readonly property int cpu: stats ? stats.cpu : 0
+  readonly property int cpuUser: stats ? stats.cpuUser : 0
+  readonly property int cpuSystem: stats ? stats.cpuSystem : 0
+  readonly property int ram: stats ? stats.ram : 0
+  readonly property int disk: stats ? stats.disk : 0
+  readonly property real rx: stats ? stats.rx : 0
+  readonly property real tx: stats ? stats.tx : 0
+  readonly property real diskRead: stats ? stats.diskRead : 0
+  readonly property real diskWrite: stats ? stats.diskWrite : 0
 
-  property var cpuHistory: []
-  property var ramHistory: []
-  property var rxHistory: []
-  property var txHistory: []
-  property var readHistory: []
-  property var writeHistory: []
+  readonly property var cpuHistory: stats ? stats.cpuHistory : []
+  readonly property var ramHistory: stats ? stats.ramHistory : []
+  readonly property var rxHistory: stats ? stats.rxHistory : []
+  readonly property var txHistory: stats ? stats.txHistory : []
+  readonly property var readHistory: stats ? stats.readHistory : []
+  readonly property var writeHistory: stats ? stats.writeHistory : []
 
   property var detail: null
-  property string publicIp: ""
+  readonly property string publicIp: stats ? stats.publicIp : ""
   property string openModule: ""
 
   function close() { openModule = "" }
@@ -50,11 +50,6 @@ BarWidget {
   readonly property color cacheColor: "#eab308"
   readonly property color idleColor: Qt.rgba(Commons.Color.muted.r, Commons.Color.muted.g, Commons.Color.muted.b, 0.35)
 
-  function pushed(list, value) {
-    var next = list.slice(Math.max(0, list.length - historySize + 1))
-    next.push(value)
-    return next
-  }
   function scaled(value, units, base) {
     var unit = 0
     while (value >= base && unit < units.length - 1) {
@@ -78,27 +73,6 @@ BarWidget {
   }
 
   Process {
-    command: [root.pluginDir + "stats-feed", String(root.interval), root.diskMount]
-    running: true
-    stdout: SplitParser {
-      onRead: function(line) {
-        var p = String(line).trim().split(/\s+/).map(Number)
-        if (p.length < 9) return
-        root.cpu = p[0]; root.cpuUser = p[1]; root.cpuSystem = p[2]
-        root.ram = p[3]; root.disk = p[4]
-        root.rx = p[5]; root.tx = p[6]
-        root.diskRead = p[7]; root.diskWrite = p[8]
-        root.cpuHistory = root.pushed(root.cpuHistory, p[0])
-        root.ramHistory = root.pushed(root.ramHistory, p[3])
-        root.rxHistory = root.pushed(root.rxHistory, p[5])
-        root.txHistory = root.pushed(root.txHistory, p[6])
-        root.readHistory = root.pushed(root.readHistory, p[7])
-        root.writeHistory = root.pushed(root.writeHistory, p[8])
-      }
-    }
-  }
-
-  Process {
     id: detailProc
     command: [root.pluginDir + "stats-detail", root.diskMount]
     stdout: StdioCollector {
@@ -108,20 +82,7 @@ BarWidget {
     }
   }
 
-  Process {
-    id: publicIpProc
-    command: ["curl", "-fsS", "--max-time", "4", "https://api.ipify.org"]
-    stdout: StdioCollector {
-      onStreamFinished: {
-        var ip = String(text).trim()
-        if (ip !== "") root.publicIp = ip
-      }
-    }
-  }
-
-  function refreshPublicIp() { if (!publicIpProc.running) publicIpProc.running = true }
-  onOpenModuleChanged: if (openModule === "net") refreshPublicIp()
-  Component.onCompleted: refreshPublicIp()
+  onOpenModuleChanged: if (openModule === "net" && stats) stats.refreshPublicIp()
 
   Timer {
     interval: root.interval * 1000
@@ -246,7 +207,7 @@ BarWidget {
     Layout.fillWidth: true
     Layout.preferredHeight: Style.space(70)
     grid: Qt.rgba(root.muted.r, root.muted.g, root.muted.b, 0.25)
-    capacity: root.historySize
+    capacity: root.stats ? root.stats.historySize : 60
   }
 
   component DonutRow: RowLayout {

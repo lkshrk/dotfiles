@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Every INTERVAL s prints: cpu cpuUser cpuSystem ram disk rx tx diskRead diskWrite (percent, then bytes/s).
-set -euo pipefail
+set -uo pipefail
 
 INTERVAL="${1:-2}"
 MOUNT="${2:-/}"
@@ -18,7 +18,7 @@ net_sample() {
   done
   echo "$rx $tx"
 }
-disk_sample() { awk -v d="$DISK" '$3==d { print $6*512, $10*512; exit }' /proc/diskstats; }
+disk_sample() { awk -v d="$DISK" '$3==d { r=$6*512; w=$10*512 } END { print r+0, w+0 }' /proc/diskstats; }
 
 read -r p_user p_sys p_idle p_total < <(cpu_sample)
 read -r p_rx p_tx < <(net_sample)
@@ -38,9 +38,9 @@ while sleep "$INTERVAL"; do
     cpu=0; cu=0; cs=0
   fi
   ram=$(awk '/^MemTotal:/{t=$2} /^MemAvailable:/{a=$2} END{ printf "%d", (t>0 ? (100*(t-a)+t/2)/t : 0) }' /proc/meminfo)
-  disk=$(df -P "$MOUNT" | awk 'NR==2{ gsub("%","",$5); print $5 }')
+  disk=$(df -P "$MOUNT" 2>/dev/null | awk 'NR==2{ print $5+0 }')
 
-  echo "$cpu $cu $cs $ram $disk $(( (rx - p_rx) / INTERVAL )) $(( (tx - p_tx) / INTERVAL )) $(( (dr - p_dr) / INTERVAL )) $(( (dw - p_dw) / INTERVAL ))"
+  echo "$cpu $cu $cs $ram ${disk:-0} $(( (rx - p_rx) / INTERVAL )) $(( (tx - p_tx) / INTERVAL )) $(( (dr - p_dr) / INTERVAL )) $(( (dw - p_dw) / INTERVAL ))"
 
   p_user=$user; p_sys=$sys; p_idle=$idle; p_total=$total; p_rx=$rx; p_tx=$tx; p_dr=$dr; p_dw=$dw
 done
