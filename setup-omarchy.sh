@@ -233,27 +233,7 @@ fi
 # The vault keeps the PEM on one line in the username field; rewrap it before trusting.
 
 step "lan ca"
-lan_ca="$HOME/.local/share/certs/lan-ca.pem"
-lan_ca_anchor=/etc/ca-certificates/trust-source/anchors/lan-ca.crt
-if rbw unlocked >/dev/null 2>&1 && raw="$(rbw get --field username root-CA 2>/dev/null)" && [[ -n "$raw" ]]; then
-  body="$(sed -e 's/-----BEGIN CERTIFICATE-----//' -e 's/-----END CERTIFICATE-----//' <<<"$raw" | tr -d '[:space:]')"
-  mkdir -p "${lan_ca%/*}"
-  tmp="$(mktemp "$lan_ca.tmp.XXXXXX")"
-  { echo "-----BEGIN CERTIFICATE-----"; fold -w64 <<<"$body"; echo "-----END CERTIFICATE-----"; } >"$tmp"
-  if openssl x509 -in "$tmp" -noout 2>/dev/null; then
-    mv "$tmp" "$lan_ca"
-    if ! cmp -s "$lan_ca" "$lan_ca_anchor"; then
-      sudo install -Dm644 "$lan_ca" "$lan_ca_anchor"
-      sudo update-ca-trust
-    fi
-    ok "LAN root CA is trusted system-wide"
-  else
-    rm -f "$tmp"
-    warn "vault item root-CA is not a valid certificate; LAN hosts (litellm) will fail TLS"
-  fi
-else
-  warn "could not read root-CA from the vault; LAN hosts (litellm) will fail TLS"
-fi
+bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
 
 # ─── Agents ───────────────────────────────────────────────────────────────────
 # After the CA: APM fetches the litellm marketplace from a LAN host.

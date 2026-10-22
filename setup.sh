@@ -127,6 +127,10 @@ configure_rbw() {
   command -v rbw >/dev/null 2>&1 || { warn "rbw is not installed; skipping rbw config"; return; }
   rbw_set_lock_timeout
   ok "rbw never locks on a timeout"
+  rbw unlocked >/dev/null 2>&1 || rbw unlock || { warn "rbw is locked; skipping the LAN root CA"; return; }
+
+  step "lan ca"
+  bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
 }
 
 # ─── Shared: lefthook ─────────────────────────────────────────────────────────
