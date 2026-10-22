@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# setup.sh - macOS workstation bootstrap for this dotfiles repo.
 
 set -euo pipefail
 
@@ -61,12 +60,8 @@ ensure_omni_version() {
     || die "installed omni $current is older than required $OMNI_MIN_VERSION; update omni and rerun setup"
 }
 
-# ─── OS guard ─────────────────────────────────────────────────────────────────
-
 OS="$(uname -s)"
 [[ "$OS" == "Darwin" ]] || die "setup.sh is macOS-only; use ./setup-coder-dots.sh for Linux workspaces"
-
-# ─── Shared: warm admin session ───────────────────────────────────────────────
 
 warm_admin_session() {
   [[ -t 0 && -t 1 ]] || {
@@ -78,8 +73,6 @@ warm_admin_session() {
   sudo -v
   ok "sudo credentials cached for this terminal"
 }
-
-# ─── Shared: omni bootstrap + reconcile ───────────────────────────────────────
 
 ensure_omni_bootstrap() {
   step "omni"
@@ -102,8 +95,6 @@ omni_bootstrap() (
   omni --config "$OMNI_CONFIG_PATH" --yes tools sync
 )
 
-# ─── Shared: generated shell completions ─────────────────────────────────────
-
 install_zsh_completions() {
   step "zsh completions"
 
@@ -120,8 +111,6 @@ install_zsh_completions() {
   fi
 }
 
-# ─── Shared: rbw ──────────────────────────────────────────────────────────────
-
 configure_rbw() {
   step "rbw"
   command -v rbw >/dev/null 2>&1 || { warn "rbw is not installed; skipping rbw config"; return; }
@@ -133,8 +122,6 @@ configure_rbw() {
   bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
 }
 
-# ─── Shared: lefthook ─────────────────────────────────────────────────────────
-
 setup_lefthook() {
   step "lefthook"
   if command -v lefthook >/dev/null 2>&1; then
@@ -143,8 +130,6 @@ setup_lefthook() {
     warn "lefthook is not installed; Omni reconcile should install it through the dev group"
   fi
 }
-
-# ─── main ─────────────────────────────────────────────────────────────────────
 
 main() {
   say "${c_dim}platform: macos${c_off}"
@@ -161,7 +146,6 @@ main() {
   local platform_script="$REPO_DIR/scripts/setup-macos.sh"
   [[ -f "$platform_script" ]] || die "platform script not found: $platform_script"
 
-  # Export variables the platform script needs.
   export REPO_DIR OMNI_CONFIG_PATH RUN_MACOS_DEFAULTS
   export c_red c_yel c_grn c_dim c_off
 

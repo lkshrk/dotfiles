@@ -1,5 +1,4 @@
 # Omarchy web apps that setup-omarchy.sh removes. Reinstall with `omarchy webapp install`.
-# Discord runs as the native app (apps group), so its web app goes too.
 Basecamp
 Discord
 Google Contacts

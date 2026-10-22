@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# setup-omarchy.sh - Omarchy (Arch Linux) workstation bootstrap for this dotfiles repo.
-#
-#
-# Safe to rerun.
 
 set -euo pipefail
 
@@ -19,9 +15,7 @@ STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
 FIRST_RUN_MARKER="$STATE_DIR/omarchy-setup-done"
 omni() { command omni --config "$OMNI_CONFIG_PATH" "$@"; }
 
-# Run omni under the same env spine as the login shell (BUN_INSTALL, PNPM_HOME,
-# NVM_DIR, PATH), so tools land where the shell later looks for them. Loaded
-# from the checkout: on a fresh machine ~/.config/env is not linked yet.
+# The login shell's env spine, from the checkout: ~/.config/env is not linked yet on a fresh machine.
 set +u
 ENV_DIR="$REPO_DIR/dotfiles/env/.config/env" . "$REPO_DIR/dotfiles/env/.config/env/profile.sh"
 set -u
@@ -29,10 +23,6 @@ set -u
 step "admin session"
 sudo -v
 ok "sudo credentials cached for this terminal"
-
-# ─── Omni ─────────────────────────────────────────────────────────────────────
-# Reading the config is the real requirement (settings v26), so an older omni is
-# replaced in ~/.local/bin, where the omni tool's script provider keeps it.
 
 omni_reads_config() { command -v omni >/dev/null 2>&1 && omni settings show --format json >/dev/null 2>&1; }
 
@@ -59,10 +49,6 @@ if ! omni_reads_config; then
 fi
 ok "$(command omni --version)"
 
-# ─── First run: the repo's configs win ────────────────────────────────────────
-# A fresh install's configs are distro or app defaults. Later runs keep local
-# edits instead (volatile-dots preserves them; conflicts are left to resolve).
-
 first_run=0
 [[ -e "$FIRST_RUN_MARKER" ]] || first_run=1
 if ((first_run)); then
@@ -79,13 +65,6 @@ if ((first_run)); then
   done < "$REPO_DIR/scripts/volatile-dots.txt"
 fi
 
-# ─── Tools and dots ───────────────────────────────────────────────────────────
-# Omni installs its own prerequisites: stow before linking dots, and the package
-# managers this host lists as tools (bun, uv, ...) before their dependents.
-
-# A tool that fails to install must not stop the rest of the setup: exit 3 marks
-# that, and the run reports it at the end. set -e does not apply inside a
-# subshell tested with ||, so each step exits explicitly.
 tools_failed=0
 rc=0
 (
@@ -107,7 +86,6 @@ for cmd in zsh keyd docker rbw lefthook; do
 done
 ((${#missing[@]} == 0)) || warn "not installed, so their steps are skipped: ${missing[*]} (rerun once omni tools sync installs them)"
 
-# After bootstrap, so the host is active and stow is installed.
 if ((first_run)); then
   status_json="$(omni dots status --state conflict --format json)" || die "omni dots status failed"
   mapfile -t conflicts < <(jq -r '.entries[]?.name' <<<"$status_json")
@@ -118,8 +96,6 @@ if ((first_run)); then
   touch "$FIRST_RUN_MARKER"
 fi
 
-# ─── Omarchy defaults this setup does not want ────────────────────────────────
-
 step "omarchy defaults"
 mapfile -t drop < <(grep -v -e '^#' -e '^[[:space:]]*$' "$REPO_DIR/omarchy/remove.packages")
 ((${#drop[@]} == 0)) || omarchy pkg drop "${drop[@]}"
@@ -128,8 +104,6 @@ while IFS= read -r webapp; do
   OMARCHY_REMOVE_NOTIFY=false omarchy-webapp-remove "$webapp"
 done < "$REPO_DIR/omarchy/remove.webapps"
 ok "unwanted Omarchy web apps removed"
-
-# ─── Login shell ──────────────────────────────────────────────────────────────
 
 if have zsh; then
   step "login shell"
@@ -142,9 +116,6 @@ if have zsh; then
   fi
 fi
 
-# ─── Caps Lock → Hyper ────────────────────────────────────────────────────────
-# keyd itself comes from the omarchy group.
-
 if have keyd; then
   step "keyd"
   # Restart rather than `keyd reload`: right after the first start the socket isn't up yet.
@@ -156,28 +127,20 @@ if have keyd; then
   ok "Caps Lock is Hyper"
 fi
 
-# ─── Docker ───────────────────────────────────────────────────────────────────
-# docker itself comes from the dev-tooling group; the group is root-equivalent.
-
 if have docker; then
   step "docker"
   sudo systemctl enable --now docker.socket
   OMARCHY_DEFER_REBOOT=1 omarchy-setup-security-sudoless-docker
 fi
 
-# ─── Helium as the default browser ────────────────────────────────────────────
-# `omarchy default browser` has no Helium option, so set the XDG handler the same
-# way it does.
-
+# `omarchy default browser` has no Helium option.
 helium_desktop="$(pacman -Qlq helium-browser-bin 2>/dev/null | grep -m1 '/usr/share/applications/.*\.desktop$' || true)"
 if [[ -n "$helium_desktop" ]]; then
   env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser "$(basename "$helium_desktop")"
   ok "Helium is the default browser"
 fi
 
-# ─── Web apps in Chromium ─────────────────────────────────────────────────────
 # omarchy-launch-webapp always uses the default browser, so these get their own Exec.
-
 step "web apps"
 while IFS='|' read -r name url icon; do
   [[ -n "$name" && "$name" != \#* ]] || continue
@@ -199,9 +162,6 @@ while IFS='|' read -r name url icon; do
   ok "web app $name opens in Chromium"
 done < "$REPO_DIR/omarchy/chromium.webapps"
 
-# ─── Bitwarden (rbw): secrets, SSH agent and commit signing ───────────────────
-# rbw's account settings are not a dot, so the first run asks for them.
-
 if have rbw; then
   step "rbw"
   if [[ -z "$(rbw config show 2>/dev/null | jq -r '.email // empty')" ]]; then
@@ -219,9 +179,7 @@ if have rbw; then
   bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
 fi
 
-# ─── Agents ───────────────────────────────────────────────────────────────────
 # After the CA: APM fetches the litellm marketplace from a LAN host.
-
 step "omni agents"
 if omni --yes agents sync; then
   ok "agent plugins and hooks installed"
@@ -229,9 +187,7 @@ else
   warn "omni agents sync failed; rerun it once the cause is fixed"
 fi
 
-# ─── Knowledge vault ──────────────────────────────────────────────────────────
-# The rbw SSH agent socket only exists after the unlock above, so adopt it now.
-
+# The rbw SSH agent socket exists only after the unlock above.
 step "knowledge vault"
 vault="$HOME/knowledge"
 . "$REPO_DIR/dotfiles/env/.config/env/lib/rbw-sock.sh"
@@ -248,14 +204,10 @@ if [[ -d "$vault/.git" ]]; then
   fi
 fi
 
-# ─── Lefthook ─────────────────────────────────────────────────────────────────
-
 if have lefthook; then
   step "lefthook"
   install_lefthook "$REPO_DIR" "$HOME/knowledge"
 fi
-
-# ─── Hyprland ─────────────────────────────────────────────────────────────────
 
 step "hyprland"
 hyprctl reload >/dev/null
