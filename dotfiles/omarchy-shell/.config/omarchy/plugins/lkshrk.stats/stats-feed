@@ -10,7 +10,14 @@ DISK=$(lsblk -sno NAME,TYPE "$src" 2>/dev/null | awk '$2=="disk"{ sub(/^[^a-zA-Z
 DISK=${DISK:-$(basename "$src")}
 
 cpu_sample() { awk '/^cpu /{ print $2+$3, $4+$7+$8, $5+$6, $2+$3+$4+$5+$6+$7+$8+$9; exit }' /proc/stat; }
-net_sample() { awk -F'[: ]+' 'NR>2 && $2 != "lo" && $2 !~ /^(docker|veth|br-|virbr|tailscale)/ { rx+=$3; tx+=$11 } END { print rx+0, tx+0 }' /proc/net/dev; }
+net_sample() {
+  local rx=0 tx=0 dev
+  for dev in /sys/class/net/*; do
+    case ${dev##*/} in lo|docker*|veth*|br-*|virbr*|tailscale*) continue ;; esac
+    rx=$((rx + $(<"$dev/statistics/rx_bytes"))); tx=$((tx + $(<"$dev/statistics/tx_bytes")))
+  done
+  echo "$rx $tx"
+}
 disk_sample() { awk -v d="$DISK" '$3==d { print $6*512, $10*512; exit }' /proc/diskstats; }
 
 read -r p_user p_sys p_idle p_total < <(cpu_sample)
