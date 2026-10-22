@@ -6,7 +6,8 @@ set -euo pipefail
 class=$(hyprctl activewindow -j | jq -r '.class // empty')
 [[ -n $class ]] || exit 0
 
-hyprctl clients -j | jq -r --arg class "$class" '.[] | select(.class == $class) | .address' |
-  while read -r address; do
-    hyprctl dispatch "hl.dsp.window.close({ window = \"address:$address\" })" >/dev/null
-  done
+batch=$(hyprctl clients -j | jq -r --arg class "$class" '
+  [.[] | select(.class == $class) | "dispatch hl.dsp.window.close({ window = \"address:\(.address)\" })"]
+  | join("; ")')
+[[ -n $batch ]] || exit 0
+hyprctl --batch "$batch" >/dev/null
