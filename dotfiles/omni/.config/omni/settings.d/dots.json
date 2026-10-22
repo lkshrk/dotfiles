@@ -95,6 +95,14 @@
         {
           "name": "omni-apm",
           "path": "~/.config/omni",
+          "hosts": {
+            "topaz": {
+              "package": "omni-apm@topaz"
+            },
+            "towerr": {
+              "package": "omni-apm@topaz"
+            }
+          },
           "ignore": [
             "*",
             "!/apm.yml"

@@ -1,8 +1,3 @@
 name: omni-migrated
 version: 1.0.0
-dependencies:
-  apm:
-  - path: ~/Dev/dotfiles/apm/ai-plugins
-targets:
-- claude
-- codex
+dependencies: {}
