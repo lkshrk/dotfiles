@@ -88,6 +88,9 @@ sops() {
   _rbw_env sops -- command sops "$@"
 }
 
+codex() { ( _omni_ai_run _rbw_env codex -- command codex "$@" ) }
+oc() { ( _omni_ai_run _rbw_env opencode -- command opencode "$@" ) }
+
 zmodload -F zsh/datetime p:EPOCHSECONDS
 
 h_cloud_auth() {
