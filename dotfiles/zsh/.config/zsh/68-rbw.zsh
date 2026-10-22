@@ -23,7 +23,7 @@ _rbw_unlock_if_needed() {
 }
 
 _rbw_ssh_auth_sock() {
-  local lib="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/lib/rbw-sock.sh"
+  local lib="$ENV_DIR/lib/rbw-sock.sh"
   [[ -r "$lib" ]] || return 1
   source "$lib"
   if [[ "$OSTYPE" == darwin* ]]; then
@@ -73,7 +73,7 @@ pocket_id_key()   { _lazy_secret POCKET_ID_API_KEY    pocket-id-api-key; }
 h_cloud_age_key() { _lazy_secret SOPS_AGE_KEY    h-cloud-age-key; }
 
 _rbw_env() {
-  local wrapper="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/bin/rbw-env"
+  local wrapper="$ENV_DIR/bin/rbw-env"
   if [[ -x "$wrapper" ]]; then
     "$wrapper" "$@"
   else

@@ -13,15 +13,7 @@ with tempfile.TemporaryDirectory() as work:
     home = Path(work)
     bin_dir = home / "bin"
     bin_dir.mkdir()
-    # The host may have a real rbw in /usr/bin; expose the system tools without
-    # it so the fake in bin_dir is the only rbw the helper can find.
-    sys_bin = home / "sysbin"
-    sys_bin.mkdir()
-    for system_dir in dict.fromkeys(os.path.realpath(d) for d in ("/usr/bin", "/bin")):
-        for tool in os.scandir(system_dir):
-            if tool.name != "rbw" and not os.path.lexists(sys_bin / tool.name):
-                (sys_bin / tool.name).symlink_to(tool.path)
-    env = {"HOME": work, "PATH": f"{bin_dir}:{sys_bin}",
+    env = {"HOME": work, "PATH": f"{bin_dir}:{os.environ['PATH']}",
            "XDG_DATA_HOME": str(home / "data"),
            "XDG_CONFIG_HOME": str(home / "config")}
     installed = home / "config/env/bin/llm-gateway-token"
@@ -54,7 +46,10 @@ with tempfile.TemporaryDirectory() as work:
     result = run(HELPER)
     assert result.returncode != 0 and not result.stdout and "rbw" in result.stderr
     rbw.unlink()
+    path = env["PATH"]
+    env["PATH"] = str(bin_dir)
     result = run(HELPER)
+    env["PATH"] = path
     assert result.returncode != 0 and not result.stdout and "install rbw" in result.stderr
 
     ssh = bin_dir / "ssh"
