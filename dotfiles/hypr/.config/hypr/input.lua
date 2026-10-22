@@ -1,6 +1,3 @@
--- Personal input overrides, loaded after Omarchy's defaults.
--- See https://wiki.hypr.land/Configuring/Basics/Variables/#input
-
 -- us-mac lives in ~/.config/xkb (umlauts on AltGr, sent by keyd for Left Alt); Right Alt stays AltGr for intl, so Compose goes to Menu.
 hl.config({
   input = {

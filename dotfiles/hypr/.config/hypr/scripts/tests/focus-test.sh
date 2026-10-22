@@ -11,7 +11,6 @@ cat > "$tmp/hyprctl" <<'EOF'
 case "$*" in
   "clients -j") echo "${HYPR_TEST_CLIENTS:-[]}" ;;
   "activewindow -j") printf '{"address":"%s"}\n' "${HYPR_TEST_ACTIVE:-}" ;;
-  "monitors -j") echo "${HYPR_TEST_MONITORS:-[]}" ;;
   *) echo "$*" >> "$HYPR_TEST_ACTIONS" ;;
 esac
 EOF
@@ -28,7 +27,7 @@ expect() {
   [ "$actual" = "$1" ] || { printf 'expected %q\n     got %q\n' "$1" "$actual" >&2; exit 1; }
   : > "$HYPR_TEST_ACTIONS"
 }
-focused() { printf 'dispatch hl.dsp.focus({ window = "address:%s" })\ndispatch hl.dsp.window.bring_to_top()' "$1"; }
+focused() { printf 'dispatch hl.dsp.focus({ window = "address:%s" })' "$1"; }
 
 # focus-app: nothing open launches, unless --no-launch.
 "$scripts/focus-app" '^helium$' omarchy-launch-browser
@@ -58,27 +57,22 @@ expect "$(focused 0xa)"
 HYPR_TEST_CLIENTS="$(clients 0 2 1)" "$scripts/focus-app" '^foot$'
 expect "$(focused 0xb)"
 
-# focus-editor: no editor open launches Zed; otherwise nvim titles and Zed in stable order, both directions.
-HYPR_TEST_CLIENTS='[]' "$scripts/focus-editor"
+# Editors: no match launches Zed; otherwise nvim titles and Zed in stable order, both directions.
+editor() { "$scripts/focus-app" --order stable --title '\.nvim\.' "$@" zed zeditor; }
+HYPR_TEST_CLIENTS='[]' editor
 expect "launch uwsm-app -- zeditor"
 export HYPR_TEST_CLIENTS='[
-  {"address":"0x1","class":"foot","title":".nvim. api","mapped":true,"stableId":"2"},
-  {"address":"0x2","class":"dev.zed.Zed","title":"web","mapped":true,"stableId":"1"},
-  {"address":"0x3","class":"foot","title":"zsh","mapped":true,"stableId":"3"}
+  {"address":"0x1","class":"foot","title":".nvim. api","mapped":true,"stableId":"2","focusHistoryID":1},
+  {"address":"0x2","class":"dev.zed.Zed","title":"web","mapped":true,"stableId":"1","focusHistoryID":2},
+  {"address":"0x3","class":"foot","title":"zsh","mapped":true,"stableId":"3","focusHistoryID":0}
 ]'
-"$scripts/focus-editor"
+editor
 expect "$(focused 0x2)"
-HYPR_TEST_ACTIVE=0x2 "$scripts/focus-editor"
+HYPR_TEST_ACTIVE=0x2 editor
 expect "$(focused 0x1)"
-HYPR_TEST_ACTIVE=0x2 "$scripts/focus-editor" --reverse
+HYPR_TEST_ACTIVE=0x2 editor --reverse
 expect "$(focused 0x1)"
-
-# snap-half: portrait monitor (transform 1) with a 30px bar on top.
-HYPR_TEST_MONITORS='[{"focused":true,"x":2560,"y":0,"width":2560,"height":1440,"scale":1,"transform":1,"reserved":[0,30,0,0]}]' \
-  "$scripts/snap-half" right
-expect $'dispatch hl.dsp.window.float({ action = "set" })\ndispatch hl.dsp.window.resize({ x = 720, y = 2530 })\ndispatch hl.dsp.window.move({ x = 3280, y = 30 })'
-HYPR_TEST_MONITORS='[{"focused":true,"x":2560,"y":0,"width":2560,"height":1440,"scale":1,"transform":1,"reserved":[0,30,0,0]}]' \
-  "$scripts/snap-half" bottom
-expect $'dispatch hl.dsp.window.float({ action = "set" })\ndispatch hl.dsp.window.resize({ x = 1440, y = 1265 })\ndispatch hl.dsp.window.move({ x = 2560, y = 1295 })'
+HYPR_TEST_ACTIVE=0x1 editor
+expect "$(focused 0x2)"
 
 echo "focus tests passed"

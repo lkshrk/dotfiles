@@ -1,41 +1,58 @@
 #!/usr/bin/env bash
-# Focus the most recently used window whose class matches CLASS_RE; repeat
-# presses cycle through the matches. Launches the app when nothing matches.
-# Hyprland port of dotfiles/yabai/.config/yabai/focus-app.sh.
 set -euo pipefail
 
 usage() {
-  echo "usage: $0 [--exclude-title RE] [--no-launch] CLASS_RE [LAUNCH_CMD...]" >&2
+  echo "usage: $0 [--title RE] [--exclude-title RE] [--order history|stable] [--reverse] [--no-launch] CLASS_RE [LAUNCH_CMD...]" >&2
   exit 1
 }
 
+TITLE=""
 EXCLUDE_TITLE=""
+ORDER="history"
+REVERSE=false
 NO_LAUNCH=""
 while [ $# -gt 0 ]; do
   case "$1" in
+    --title) [ $# -ge 2 ] || usage; TITLE="$2"; shift 2 ;;
     --exclude-title) [ $# -ge 2 ] || usage; EXCLUDE_TITLE="$2"; shift 2 ;;
+    --order) [ $# -ge 2 ] || usage; ORDER="$2"; shift 2 ;;
+    --reverse) REVERSE=true; shift ;;
     --no-launch) NO_LAUNCH=1; shift ;;
     *) break ;;
   esac
 done
+case "$ORDER" in history|stable) ;; *) usage ;; esac
 
 [ $# -ge 1 ] || usage
 CLASS_RE="$1"
 shift
 
-# Focusing moves a window to the front of the history, so taking the least recent match reaches all of them.
+ACTIVE=""
+if [ "$ORDER" = stable ]; then
+  ACTIVE="$(hyprctl activewindow -j 2>/dev/null | jq -r '.address // empty')" || ACTIVE=""
+fi
+
+# Focusing moves a window to the front of the history, so the least recent match reaches all of them.
 NEXT="$(
   hyprctl clients -j \
-    | jq -r --arg re "$CLASS_RE" --arg exclude "$EXCLUDE_TITLE" '
+    | jq -r --arg re "$CLASS_RE" --arg title "$TITLE" --arg exclude "$EXCLUDE_TITLE" \
+        --arg order "$ORDER" --argjson reverse "$REVERSE" --arg active "$ACTIVE" '
         map(select(
           .mapped
-          and (.class | test($re; "i"))
+          and ((.class | test($re; "i")) or ($title != "" and (.title | test($title))))
           and ($exclude == "" or (.title | test($exclude) | not))
         ))
-        | sort_by(.focusHistoryID)
         | if length == 0 then empty
-          elif .[0].focusHistoryID == 0 then .[-1].address
-          else .[0].address end
+          elif $order == "stable" then
+            sort_by(.stableId)
+            | (map(.address) | index($active)) as $i
+            | if $i == null then .[0].address
+              elif $reverse then .[($i - 1 + length) % length].address
+              else .[($i + 1) % length].address end
+          else
+            sort_by(.focusHistoryID)
+            | if .[0].focusHistoryID == 0 then .[-1].address else .[0].address end
+          end
       '
 )"
 
@@ -45,5 +62,3 @@ if [ -z "$NEXT" ]; then
 fi
 
 hyprctl dispatch "hl.dsp.focus({ window = \"address:$NEXT\" })" >/dev/null
-# Focus alone keeps a float's stacking order, so screen-sized floats would stay hidden.
-hyprctl dispatch 'hl.dsp.window.bring_to_top()' >/dev/null

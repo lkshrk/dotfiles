@@ -19,18 +19,4 @@
       </variantList>
     </layout>
   </layoutList>
-  <optionList>
-    <group allowMultipleSelection="true">
-      <configItem>
-        <name>umlaut</name>
-        <description>German umlauts</description>
-      </configItem>
-      <option>
-        <configItem>
-          <name>umlaut:lalt</name>
-          <description>Left Alt + a/o/u/s types ä/ö/ü/ß</description>
-        </configItem>
-      </option>
-    </group>
-  </optionList>
 </xkbConfigRegistry>
