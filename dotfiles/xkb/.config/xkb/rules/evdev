@@ -1,4 +1,0 @@
-! include %S/evdev
-
-! option = types
-  umlaut:lalt = +umlaut(lalt)
