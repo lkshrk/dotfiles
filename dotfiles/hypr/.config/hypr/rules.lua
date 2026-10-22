@@ -51,5 +51,5 @@ o.window({ tag = "floating-window" }, { workspace = "unset" })
 o.window("^(org\\.omarchy\\..*|omacalc|dev\\.tensaku\\.Tensaku|WebcamOverlay-.*|localsend|Share|Hermes)$", { workspace = "unset" })
 -- Re-applied because the collector rule above overrides Omarchy's earlier one.
 o.window({ title = ".*is sharing.*" }, { workspace = "special silent" })
--- Password managers block screen capture, so they get a workspace to themselves; after the floating-window unset.
-o.window("^(Bitwarden|1[pP]assword)$", { workspace = "8" })
+-- Password managers block screen capture, so they get a tiled workspace to themselves; tag rules apply last, so drop Omarchy's floating-window tag.
+o.window("^(Bitwarden|1[pP]assword)$", { tag = "-floating-window", tile = true, workspace = "8" })
