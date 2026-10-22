@@ -83,6 +83,7 @@ env_next_path_prepend "$HOME/.cargo/bin"
 env_next_path_prepend "$BUN_INSTALL/bin"
 [ -z "$env_next_nvm_bin" ] || env_next_path_prepend "$env_next_nvm_bin"
 env_next_path_append "$GOPATH/bin"
+env_next_path_append "$ENV_DIR/bin"
 env_next_path_prepend "$HOME/.local/bin"
 env_next_path_prepend "$HOME/.mimocode/bin"
 
