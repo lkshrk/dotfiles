@@ -283,7 +283,7 @@
             "/hooks/*",
             "!/hooks/post-update.d/",
             "/hooks/post-update.d/*",
-            "!/hooks/post-update.d/check-layout-rules.hook"
+            "!/hooks/post-update.d/check-workspaces-widget.hook"
           ]
         },
         {
