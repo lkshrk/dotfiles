@@ -83,6 +83,8 @@ The setup flow:
 3. Runs `omni bootstrap --no-import` and `omni tools sync`. Omni installs its
    own prerequisites: GNU Stow before linking dots, and the package managers
    this host lists as tools (bun, uv, ...) before the tools that need them.
+   Commands a later step needs that are still missing are reported once, and
+   their steps are skipped.
 4. Removes the Omarchy packages and web apps listed in
    `omarchy/remove.packages` and `omarchy/remove.webapps`.
 5. Switches the login shell to zsh, installs the keyd Caps Lock → Hyper

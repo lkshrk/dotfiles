@@ -100,6 +100,13 @@ case "$rc" in
   *) die "omni bootstrap failed" ;;
 esac
 
+hash -r
+missing=()
+for cmd in zsh keyd docker rbw lefthook; do
+  have "$cmd" || missing+=("$cmd")
+done
+((${#missing[@]} == 0)) || warn "not installed, so their steps are skipped: ${missing[*]} (rerun once omni tools sync installs them)"
+
 # After bootstrap, so the host is active and stow is installed.
 if ((first_run)); then
   status_json="$(omni dots status --state conflict --format json)" || die "omni dots status failed"
@@ -125,24 +132,22 @@ done < "$REPO_DIR/omarchy/remove.webapps"
 
 # ─── Login shell ──────────────────────────────────────────────────────────────
 
-step "login shell"
-zsh_path="$(command -v zsh || true)"
-if [[ -z "$zsh_path" ]]; then
-  warn "zsh is not installed; Omni should install it through the shell group"
-elif [[ "$(getent passwd "$USER" | cut -d: -f7)" != "$zsh_path" ]]; then
-  chsh -s "$zsh_path"
-  ok "login shell is now $zsh_path (takes effect on next login)"
-else
-  ok "login shell is $zsh_path"
+if have zsh; then
+  step "login shell"
+  zsh_path="$(command -v zsh)"
+  if [[ "$(getent passwd "$USER" | cut -d: -f7)" != "$zsh_path" ]]; then
+    chsh -s "$zsh_path"
+    ok "login shell is now $zsh_path (takes effect on next login)"
+  else
+    ok "login shell is $zsh_path"
+  fi
 fi
 
 # ─── Caps Lock → Hyper ────────────────────────────────────────────────────────
 # keyd itself comes from the omarchy group.
 
-step "keyd"
-if ! command -v keyd >/dev/null 2>&1; then
-  warn "keyd is not installed; Omni should install it through the omarchy group"
-else
+if have keyd; then
+  step "keyd"
   # Restart rather than `keyd reload`: right after the first start the socket isn't up yet.
   if ! cmp -s "$REPO_DIR/omarchy/keyd/default.conf" /etc/keyd/default.conf || ! systemctl is-active --quiet keyd; then
     sudo install -Dm644 "$REPO_DIR/omarchy/keyd/default.conf" /etc/keyd/default.conf
@@ -155,12 +160,10 @@ fi
 # ─── Docker ───────────────────────────────────────────────────────────────────
 # docker itself comes from the dev-tooling group; the group is root-equivalent.
 
-step "docker"
-if command -v docker >/dev/null 2>&1; then
+if have docker; then
+  step "docker"
   sudo systemctl enable --now docker.socket
   OMARCHY_DEFER_REBOOT=1 omarchy-setup-security-sudoless-docker
-else
-  warn "docker is not installed; Omni should install it through the dev-tooling group"
 fi
 
 # ─── Helium as the default browser ────────────────────────────────────────────
@@ -196,10 +199,8 @@ done < "$REPO_DIR/omarchy/chromium.webapps"
 # ─── Bitwarden (rbw): secrets, SSH agent and commit signing ───────────────────
 # rbw's account settings are not a dot, so the first run asks for them.
 
-step "rbw"
-if ! command -v rbw >/dev/null 2>&1; then
-  warn "rbw is not installed; Omni should install it through the secrets group"
-else
+if have rbw; then
+  step "rbw"
   if [[ -z "$(rbw config show 2>/dev/null | jq -r '.email // empty')" ]]; then
     default_email="$(awk '{print $1; exit}' "$REPO_DIR/dotfiles/git/.config/git/allowed_signers")"
     read -rp "Bitwarden email [$default_email]: " email
@@ -210,13 +211,10 @@ else
   rbw_set_lock_timeout
   rbw unlocked >/dev/null 2>&1 || rbw unlock
   ok "vault unlocked"
+
+  step "lan ca"
+  bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
 fi
-
-# ─── LAN root CA ──────────────────────────────────────────────────────────────
-# The vault keeps the PEM on one line in the username field; rewrap it before trusting.
-
-step "lan ca"
-bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
 
 # ─── Agents ───────────────────────────────────────────────────────────────────
 # After the CA: APM fetches the litellm marketplace from a LAN host.
@@ -249,11 +247,9 @@ fi
 
 # ─── Lefthook ─────────────────────────────────────────────────────────────────
 
-step "lefthook"
-if command -v lefthook >/dev/null 2>&1; then
+if have lefthook; then
+  step "lefthook"
   install_lefthook "$REPO_DIR" "$HOME/knowledge"
-else
-  warn "lefthook is not installed; Omni should install it through the dev group"
 fi
 
 # ─── Hyprland ─────────────────────────────────────────────────────────────────
