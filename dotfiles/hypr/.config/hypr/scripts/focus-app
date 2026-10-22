@@ -23,8 +23,8 @@ done
 CLASS_RE="$1"
 shift
 
-# Hyprland tracks focus order itself: focusHistoryID 0 is the active window.
-ADDRESSES="$(
+# Focusing moves a window to the front of the history, so taking the least recent match reaches all of them.
+NEXT="$(
   hyprctl clients -j \
     | jq -r --arg re "$CLASS_RE" --arg exclude "$EXCLUDE_TITLE" '
         map(select(
@@ -33,24 +33,16 @@ ADDRESSES="$(
           and ($exclude == "" or (.title | test($exclude) | not))
         ))
         | sort_by(.focusHistoryID)
-        | .[].address
+        | if length == 0 then empty
+          elif .[0].focusHistoryID == 0 then .[-1].address
+          else .[0].address end
       '
 )"
 
-if [ -z "$ADDRESSES" ]; then
+if [ -z "$NEXT" ]; then
   [ -n "$NO_LAUNCH" ] || [ $# -eq 0 ] || exec setsid uwsm-app -- "$@"
   exit 0
 fi
-
-ACTIVE="$(hyprctl activewindow -j 2>/dev/null | jq -r '.address // empty')" || ACTIVE=""
-
-NEXT="$(
-  printf '%s\n' "$ADDRESSES" \
-    | awk -v active="$ACTIVE" '
-        { ids[NR] = $0; if ($0 == active) idx = NR }
-        END { print (idx ? ids[idx % NR + 1] : ids[1]) }
-      '
-)"
 
 hyprctl dispatch "hl.dsp.focus({ window = \"address:$NEXT\" })" >/dev/null
 # Focus alone keeps a float's stacking order, so screen-sized floats would stay hidden.

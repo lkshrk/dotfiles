@@ -36,18 +36,26 @@ expect "launch uwsm-app -- omarchy-launch-browser"
 "$scripts/focus-app" --no-launch '^signal$'
 expect ""
 
-# Most recently used first, then cycle; other classes and excluded titles are skipped.
-export HYPR_TEST_CLIENTS='[
+# From another app the most recent match wins; other classes and excluded titles are skipped.
+HYPR_TEST_CLIENTS='[
   {"address":"0xa","class":"foot","title":"zsh","mapped":true,"focusHistoryID":3},
   {"address":"0xb","class":"foot","title":"zsh","mapped":true,"focusHistoryID":1},
   {"address":"0xc","class":"foot","title":".nvim. dotfiles","mapped":true,"focusHistoryID":2},
   {"address":"0xd","class":"helium","title":"Mail","mapped":true,"focusHistoryID":0}
-]'
-HYPR_TEST_ACTIVE=0xd "$scripts/focus-app" --exclude-title '\.nvim\.' '^foot$' xdg-terminal-exec
+]' "$scripts/focus-app" --exclude-title '\.nvim\.' '^foot$' xdg-terminal-exec
 expect "$(focused 0xb)"
-HYPR_TEST_ACTIVE=0xb "$scripts/focus-app" --exclude-title '\.nvim\.' '^foot$' xdg-terminal-exec
+
+# Repeat presses walk all three matches as each focus moves to the front of the history.
+clients() {
+  printf '[{"address":"0xa","class":"foot","title":"a","mapped":true,"focusHistoryID":%s},
+    {"address":"0xb","class":"foot","title":"b","mapped":true,"focusHistoryID":%s},
+    {"address":"0xe","class":"foot","title":"e","mapped":true,"focusHistoryID":%s}]' "$@"
+}
+HYPR_TEST_CLIENTS="$(clients 1 0 2)" "$scripts/focus-app" '^foot$'
+expect "$(focused 0xe)"
+HYPR_TEST_CLIENTS="$(clients 2 1 0)" "$scripts/focus-app" '^foot$'
 expect "$(focused 0xa)"
-HYPR_TEST_ACTIVE=0xa "$scripts/focus-app" --exclude-title '\.nvim\.' '^foot$' xdg-terminal-exec
+HYPR_TEST_CLIENTS="$(clients 0 2 1)" "$scripts/focus-app" '^foot$'
 expect "$(focused 0xb)"
 
 # focus-editor: no editor open launches Zed; otherwise nvim titles and Zed in stable order, both directions.
