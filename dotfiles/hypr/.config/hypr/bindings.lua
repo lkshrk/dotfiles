@@ -42,10 +42,10 @@ hyper("A", "ChatGPT", focus("'^chrome-chatgpt\\.com__-Default$' chromium --app=h
 hyper("SLASH", "Bitwarden", focus("'^bitwarden$' bitwarden-desktop"))
 
 -- Window placement.
-hyper("LEFT", "Snap window to left half", scripts .. "/snap-half left")
-hyper("RIGHT", "Snap window to right half", scripts .. "/snap-half right")
-hyper("UP", "Snap window to top half", scripts .. "/snap-half top")
-hyper("DOWN", "Snap window to bottom half", scripts .. "/snap-half bottom")
+hyper("LEFT", "Move window left", hl.dsp.window.move({ direction = "left" }))
+hyper("RIGHT", "Move window right", hl.dsp.window.move({ direction = "right" }))
+hyper("UP", "Move window up", hl.dsp.window.move({ direction = "up" }))
+hyper("DOWN", "Move window down", hl.dsp.window.move({ direction = "down" }))
 -- Back to the window's normal size from full screen or full width, whichever
 -- it is in: Super + F and Super + Alt + F only toggle their own mode, and games
 -- start full screen through a window rule.

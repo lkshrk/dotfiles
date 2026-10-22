@@ -11,7 +11,6 @@ cat > "$tmp/hyprctl" <<'EOF'
 case "$*" in
   "clients -j") echo "${HYPR_TEST_CLIENTS:-[]}" ;;
   "activewindow -j") printf '{"address":"%s"}\n' "${HYPR_TEST_ACTIVE:-}" ;;
-  "monitors -j") echo "${HYPR_TEST_MONITORS:-[]}" ;;
   *) echo "$*" >> "$HYPR_TEST_ACTIONS" ;;
 esac
 EOF
@@ -75,14 +74,5 @@ HYPR_TEST_ACTIVE=0x2 editor --reverse
 expect "$(focused 0x1)"
 HYPR_TEST_ACTIVE=0x1 editor
 expect "$(focused 0x2)"
-unset HYPR_TEST_CLIENTS
-
-# snap-half: portrait monitor (transform 1) with a 30px bar on top.
-HYPR_TEST_MONITORS='[{"focused":true,"x":2560,"y":0,"width":2560,"height":1440,"scale":1,"transform":1,"reserved":[0,30,0,0]}]' \
-  "$scripts/snap-half" right
-expect $'dispatch hl.dsp.window.float({ action = "set" })\ndispatch hl.dsp.window.resize({ x = 720, y = 2530 })\ndispatch hl.dsp.window.move({ x = 3280, y = 30 })'
-HYPR_TEST_MONITORS='[{"focused":true,"x":2560,"y":0,"width":2560,"height":1440,"scale":1,"transform":1,"reserved":[0,30,0,0]}]' \
-  "$scripts/snap-half" bottom
-expect $'dispatch hl.dsp.window.float({ action = "set" })\ndispatch hl.dsp.window.resize({ x = 1440, y = 1265 })\ndispatch hl.dsp.window.move({ x = 2560, y = 1295 })'
 
 echo "focus tests passed"
