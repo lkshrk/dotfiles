@@ -56,25 +56,15 @@ _rbw_ssh_agent_ready() {
   print -u2 "rbw: SSH agent unreachable at ${SSH_AUTH_SOCK:-<unset>}"; return 1
 }
 
-_rbw_get_or_unlock() {
-  local item=$1 val
-  _rbw_unlock_if_needed || return 1
-  val=$(rbw get "$item" 2>/dev/null) || return 1
-
-  [[ -n $val ]] || return 1
-  print -rn -- "$val"
-}
-
 _lazy_secret() {
-  local var=$1 item=$2
-  if [[ -z ${(P)var} ]]; then
-    local val
-    val=$(_rbw_get_or_unlock "$item") || {
-      print -u2 "rbw: could not retrieve '$item' for $var; vault may be locked, item may be missing, or rbw auth may need attention"
-      return 1
-    }
+  local var=$1 item=$2 val
+  [[ -z ${(P)var} ]] || return 0
+  if _rbw_unlock_if_needed && val=$(rbw get "$item" 2>/dev/null) && [[ -n $val ]]; then
     typeset -gx "$var=$val"
+    return 0
   fi
+  print -u2 "rbw: could not retrieve '$item' for $var; vault may be locked, item may be missing, or rbw auth may need attention"
+  return 1
 }
 
 hf_key()       { _lazy_secret HF_TOKEN          hf-token; }
