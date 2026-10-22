@@ -26,7 +26,6 @@ find_command_path() {
   fi
 }
 printf "EDITOR=%s\n" "${EDITOR:-}"
-printf "GIT_CONFIG_GLOBAL=%s\n" "${GIT_CONFIG_GLOBAL:-}"
 printf "NVM_DIR=%s\n" "${NVM_DIR:-}"
 printf "PNPM_HOME=%s\n" "${PNPM_HOME:-}"
 [ "${PNPM_HOME:-}" = "$HOME/Library/pnpm" ] || exit 1
@@ -73,10 +72,10 @@ run_probe "bash -lc" bash -lc
 run_probe "sh -c" sh -c
 
 printf "\n## zshenv adapter\n"
-zsh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$HOME/.zshenv"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
+zsh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$HOME/.zshenv"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
 
 printf "\n## profile entrypoint (sh)\n"
-sh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; printf "GIT_CONFIG_GLOBAL=%s\n" "$GIT_CONFIG_GLOBAL"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
+sh -c 'unset SSH_AUTH_SOCK; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK"'
 
 printf "\n## launchd SSH_AUTH_SOCK override\n"
 sh -c 'SSH_AUTH_SOCK=/var/run/com.apple.launchd.example/Listeners; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; case "$SSH_AUTH_SOCK" in */rbw-*/ssh-agent-socket) printf "launchd-override=rbw\n" ;; *) printf "launchd-override=unexpected:%s\n" "$SSH_AUTH_SOCK"; exit 1 ;; esac'

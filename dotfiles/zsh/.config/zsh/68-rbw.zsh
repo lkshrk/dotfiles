@@ -23,7 +23,7 @@ _rbw_unlock_if_needed() {
 }
 
 _rbw_ssh_auth_sock() {
-  local lib="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/lib/rbw-sock.sh"
+  local lib="$ENV_DIR/lib/rbw-sock.sh"
   [[ -r "$lib" ]] || return 1
   source "$lib"
   if [[ "$OSTYPE" == darwin* ]]; then
@@ -56,25 +56,15 @@ _rbw_ssh_agent_ready() {
   print -u2 "rbw: SSH agent unreachable at ${SSH_AUTH_SOCK:-<unset>}"; return 1
 }
 
-_rbw_get_or_unlock() {
-  local item=$1 val
-  _rbw_unlock_if_needed || return 1
-  val=$(rbw get "$item" 2>/dev/null) || return 1
-
-  [[ -n $val ]] || return 1
-  print -rn -- "$val"
-}
-
 _lazy_secret() {
-  local var=$1 item=$2
-  if [[ -z ${(P)var} ]]; then
-    local val
-    val=$(_rbw_get_or_unlock "$item") || {
-      print -u2 "rbw: could not retrieve '$item' for $var; vault may be locked, item may be missing, or rbw auth may need attention"
-      return 1
-    }
+  local var=$1 item=$2 val
+  [[ -z ${(P)var} ]] || return 0
+  if _rbw_unlock_if_needed && val=$(rbw get "$item" 2>/dev/null) && [[ -n $val ]]; then
     typeset -gx "$var=$val"
+    return 0
   fi
+  print -u2 "rbw: could not retrieve '$item' for $var; vault may be locked, item may be missing, or rbw auth may need attention"
+  return 1
 }
 
 hf_key()       { _lazy_secret HF_TOKEN          hf-token; }
@@ -83,7 +73,7 @@ pocket_id_key()   { _lazy_secret POCKET_ID_API_KEY    pocket-id-api-key; }
 h_cloud_age_key() { _lazy_secret SOPS_AGE_KEY    h-cloud-age-key; }
 
 _rbw_env() {
-  local wrapper="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/bin/rbw-env"
+  local wrapper="$ENV_DIR/bin/rbw-env"
   if [[ -x "$wrapper" ]]; then
     "$wrapper" "$@"
   else
@@ -97,6 +87,9 @@ _rbw_env() {
 sops() {
   _rbw_env sops -- command sops "$@"
 }
+
+codex() { ( _omni_ai_run _rbw_env codex -- command codex "$@" ) }
+oc() { ( _omni_ai_run _rbw_env opencode -- command opencode "$@" ) }
 
 zmodload -F zsh/datetime p:EPOCHSECONDS
 
