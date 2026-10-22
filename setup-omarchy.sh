@@ -1,37 +1,20 @@
 #!/usr/bin/env bash
 # setup-omarchy.sh - Omarchy (Arch Linux) workstation bootstrap for this dotfiles repo.
 #
-# Fresh machine, one line (stdin stays the terminal for sudo and rbw prompts):
-#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/lkshrk/dotfiles/main/setup-omarchy.sh)"
 #
-# Safe to rerun. DOTFILES_DIR (default ~/Dev/dotfiles) and DOTFILES_REF pick the
-# checkout and branch used when the script is not run from a checkout.
+# Safe to rerun.
 
 set -euo pipefail
 
-REPO_URL="https://github.com/lkshrk/dotfiles.git"
 OMNI_REPO="lkshrk/omni"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
 
-. "$(dirname "${BASH_SOURCE[0]:-$0}")/scripts/lib/setup-common.sh"
+. "$REPO_DIR/scripts/lib/setup-common.sh"
 
 [[ "$(uname -s)" == "Linux" && -d /usr/share/omarchy ]] || die "setup-omarchy.sh is for Omarchy hosts"
 [[ -t 0 && -t 1 ]] || die "run from an interactive terminal; setup prompts for sudo and Bitwarden"
 
-# ─── Checkout ─────────────────────────────────────────────────────────────────
-# Run through curl, there is no checkout yet: clone one and continue from it.
-
-self="${BASH_SOURCE[0]:-}"
-if [[ -z "$self" || ! -f "$(dirname "$self")/dotfiles/omni/.config/omni/settings.json" ]]; then
-  dir="${DOTFILES_DIR:-$HOME/Dev/dotfiles}"
-  if [[ ! -d "$dir/.git" ]]; then
-    step "clone $REPO_URL"
-    git clone ${DOTFILES_REF:+--branch "$DOTFILES_REF"} "$REPO_URL" "$dir"
-  fi
-  exec bash "$dir/setup-omarchy.sh" "$@"
-fi
-
-REPO_DIR="$(cd "$(dirname "$self")" && pwd)"
-OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
 FIRST_RUN_MARKER="$STATE_DIR/omarchy-setup-done"
 omni() { command omni --config "$OMNI_CONFIG_PATH" "$@"; }
