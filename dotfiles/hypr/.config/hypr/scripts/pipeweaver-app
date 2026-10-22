@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-# The PipeWeaver daemon runs `pipeweaver-app` from $PATH when its tray icon is clicked,
-# else opens the default browser; focus or launch the Chromium web app instead.
-exec "$(dirname "$(readlink -f "$0")")/focus-app" '^chrome-localhost__-Default$' chromium --app=http://localhost:14565

@@ -20,7 +20,9 @@ The setup flow:
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
 7. Loads `com.lkshrk.knowledge-sync` as a user LaunchAgent (runs `~/knowledge/scripts/sync.sh` every 5 minutes; needs the vault clone, see its `scripts/setup.sh`).
 8. Refreshes the yabai sudoers entry.
-9. Installs repository-local Lefthook hooks.
+9. Sets rbw's lock timeout, unlocks it and writes the LAN root CA from the
+   vault to `~/.local/share/certs/lan-ca.pem` (`scripts/lan-ca.sh`).
+10. Installs repository-local Lefthook hooks.
 
 Git hooks use Git's default repository-local directory. Do not set a global
 `core.hooksPath`: Lefthook installs from different repositories would share and
@@ -66,31 +68,39 @@ config).
 On a fresh Omarchy install:
 
 ```sh
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/lkshrk/dotfiles/main/setup-omarchy.sh)"
+git clone https://github.com/lkshrk/dotfiles.git ~/Dev/dotfiles && ~/Dev/dotfiles/setup-omarchy.sh
 ```
 
-The script clones this repo to `~/Dev/dotfiles` (`DOTFILES_DIR` and
-`DOTFILES_REF` override the path and branch) and continues from the checkout;
-from an existing checkout, run `./setup-omarchy.sh`. It is safe to rerun.
+It is safe to rerun.
 
 The setup flow:
 
-1. Installs the latest Omni release's Arch package (checksum-verified) when the
-   installed Omni cannot read this config.
+1. Installs the latest Omni release (checksum-verified) into `~/.local/bin`
+   when the installed Omni cannot read this config.
 2. On the first run only, lets the repo's configs replace the fresh defaults:
    volatile agent configs are moved aside as `*.pre-dotfiles.<stamp>` and
    conflicting dots are resolved with `--use-repo` (Omni backs those up).
 3. Runs `omni bootstrap --no-import` and `omni tools sync`. Omni installs its
    own prerequisites: GNU Stow before linking dots, and the package managers
    this host lists as tools (bun, uv, ...) before the tools that need them.
+   Commands a later step needs that are still missing are reported once, and
+   their steps are skipped.
 4. Removes the Omarchy packages and web apps listed in
    `omarchy/remove.packages` and `omarchy/remove.webapps`.
-5. Switches the login shell to zsh, installs the keyd Caps Lock → Hyper mapping
-   and makes Helium the default browser.
-6. Configures rbw (asking for the Bitwarden email and server once) and unlocks
+5. Switches the login shell to zsh, installs the keyd Caps Lock → Hyper
+   mapping, enables Docker with sudoless access and makes Helium the default
+   browser.
+6. Installs the web apps in `omarchy/chromium.webapps` as Chromium app windows
+   (Helium stays the default browser).
+7. Configures rbw (asking for the Bitwarden email and server once) and unlocks
    it, which starts the SSH agent used for git signing.
-7. Installs the repository's Lefthook hooks and checks that Hyprland loads the
-   linked config.
+8. Writes the LAN root CA from the vault to `~/.local/share/certs/lan-ca.pem`
+   and trusts it system-wide (`scripts/lan-ca.sh`).
+9. Runs `omni agents sync` (APM plugins and hooks; needs the LAN CA).
+10. Clones the knowledge vault to `~/knowledge` over the rbw SSH agent and
+    enables `knowledge-sync.timer`.
+11. Installs the Lefthook hooks of this repository and the vault, and checks
+    that Hyprland loads the linked config.
 
 Omarchy owns most of `~/.config/hypr` and `~/.config/omarchy` and rewrites them
 on refresh, so those dots track only the files listed in their `ignore`
@@ -99,9 +109,10 @@ that save by replacing the file turn the symlink into a plain copy;
 `omni dots status` then reports a conflict, and `omni dots resolve <name>
 --use-local` takes the edit back into the repo.
 
-`~/.bashrc` and git use `@towerr` variants: bash keeps Omarchy's rc, and git
-points the GitHub credential helper at `/usr/bin/gh`. Commit signing goes
-through the rbw SSH agent, as on `topaz`.
+`~/.bashrc` loads Omarchy's bash defaults when they exist, so interactive bash
+behaves like a stock Omarchy shell. git uses the `git@topaz` package, whose
+GitHub credential helper finds `gh` on `PATH`; commit signing goes through the
+rbw SSH agent on both hosts.
 
 ## Omni
 
@@ -164,8 +175,11 @@ setup-coder-dots.sh       # Coder workspace personal-dots sync
 scripts/
   coder-bootstrap.sh      # side-effect-free logging, notes and terminfo helpers
   macos-defaults.sh       # optional macOS defaults
+  lan-ca.sh               # LAN root CA from the vault, trusted on Linux
+  lib/setup-common.sh     # helpers shared by setup.sh and setup-omarchy.sh
 omarchy/
   keyd/default.conf       # Caps Lock → Hyper, installed to /etc/keyd
+  chromium.webapps        # web apps setup installs to open in Chromium
   remove.packages         # Omarchy preinstalls setup removes
   remove.webapps          # Omarchy web apps setup removes
 docs/reviews/             # design reviews and evaluations

@@ -1,54 +1,21 @@
 #!/usr/bin/env bash
-# setup-omarchy.sh - Omarchy (Arch Linux) workstation bootstrap for this dotfiles repo.
-#
-# Fresh machine, one line (stdin stays the terminal for sudo and rbw prompts):
-#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/lkshrk/dotfiles/main/setup-omarchy.sh)"
-#
-# Safe to rerun. DOTFILES_DIR (default ~/Dev/dotfiles) and DOTFILES_REF pick the
-# checkout and branch used when the script is not run from a checkout.
 
 set -euo pipefail
 
-REPO_URL="https://github.com/lkshrk/dotfiles.git"
 OMNI_REPO="lkshrk/omni"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
 
-c_red=$'\033[31m'
-c_yel=$'\033[33m'
-c_grn=$'\033[32m'
-c_dim=$'\033[2m'
-c_off=$'\033[0m'
-
-say()  { printf '%s\n' "$*"; }
-step() { say "${c_dim}-- $* --${c_off}"; }
-ok()   { say "${c_grn}ok${c_off} $*"; }
-warn() { say "${c_yel}!${c_off} $*" >&2; }
-die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
+. "$REPO_DIR/scripts/lib/setup-common.sh"
 
 [[ "$(uname -s)" == "Linux" && -d /usr/share/omarchy ]] || die "setup-omarchy.sh is for Omarchy hosts"
 [[ -t 0 && -t 1 ]] || die "run from an interactive terminal; setup prompts for sudo and Bitwarden"
 
-# ─── Checkout ─────────────────────────────────────────────────────────────────
-# Run through curl, there is no checkout yet: clone one and continue from it.
-
-self="${BASH_SOURCE[0]:-}"
-if [[ -z "$self" || ! -f "$(dirname "$self")/dotfiles/omni/.config/omni/settings.json" ]]; then
-  dir="${DOTFILES_DIR:-$HOME/Dev/dotfiles}"
-  if [[ ! -d "$dir/.git" ]]; then
-    step "clone $REPO_URL"
-    git clone ${DOTFILES_REF:+--branch "$DOTFILES_REF"} "$REPO_URL" "$dir"
-  fi
-  exec bash "$dir/setup-omarchy.sh" "$@"
-fi
-
-REPO_DIR="$(cd "$(dirname "$self")" && pwd)"
-OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
 FIRST_RUN_MARKER="$STATE_DIR/omarchy-setup-done"
 omni() { command omni --config "$OMNI_CONFIG_PATH" "$@"; }
 
-# Run omni under the same env spine as the login shell (BUN_INSTALL, PNPM_HOME,
-# NVM_DIR, PATH), so tools land where the shell later looks for them. Loaded
-# from the checkout: on a fresh machine ~/.config/env is not linked yet.
+# The login shell's env spine, from the checkout: ~/.config/env is not linked yet on a fresh machine.
 set +u
 ENV_DIR="$REPO_DIR/dotfiles/env/.config/env" . "$REPO_DIR/dotfiles/env/.config/env/profile.sh"
 set -u
@@ -56,10 +23,6 @@ set -u
 step "admin session"
 sudo -v
 ok "sudo credentials cached for this terminal"
-
-# ─── Omni ─────────────────────────────────────────────────────────────────────
-# Reading the config is the real requirement (settings v26), so an older omni is
-# replaced in ~/.local/bin, where the omni tool's script provider keeps it.
 
 omni_reads_config() { command -v omni >/dev/null 2>&1 && omni settings show --format json >/dev/null 2>&1; }
 
@@ -86,10 +49,6 @@ if ! omni_reads_config; then
 fi
 ok "$(command omni --version)"
 
-# ─── First run: the repo's configs win ────────────────────────────────────────
-# A fresh install's configs are distro or app defaults. Later runs keep local
-# edits instead (volatile-dots preserves them; conflicts are left to resolve).
-
 first_run=0
 [[ -e "$FIRST_RUN_MARKER" ]] || first_run=1
 if ((first_run)); then
@@ -106,23 +65,10 @@ if ((first_run)); then
   done < "$REPO_DIR/scripts/volatile-dots.txt"
 fi
 
-# ─── Tools and dots ───────────────────────────────────────────────────────────
-# Omni installs its own prerequisites: stow before linking dots, and the package
-# managers this host lists as tools (bun, uv, ...) before their dependents.
-
-# A tool that fails to install must not stop the rest of the setup: exit 3 marks
-# that, and the run reports it at the end. set -e does not apply inside a
-# subshell tested with ||, so each step exits explicitly.
 tools_failed=0
 rc=0
 (
-  # Preserve runtime edits and never leave agent-writable files linked to git.
-  bash "$REPO_DIR/scripts/volatile-dots.sh" detach || exit 2
-  trap 'bash "$REPO_DIR/scripts/volatile-dots.sh" detach' EXIT
-  bash "$REPO_DIR/scripts/volatile-dots.sh" prepare || exit 2
-  step "omni bootstrap"
-  omni --yes bootstrap --no-import || exit 2
-  bash "$REPO_DIR/scripts/volatile-dots.sh" detach || exit 2
+  omni_bootstrap_dots || exit 2
 
   step "omni tools"
   omni --yes tools sync || exit 3
@@ -133,7 +79,13 @@ case "$rc" in
   *) die "omni bootstrap failed" ;;
 esac
 
-# After bootstrap, so the host is active and stow is installed.
+hash -r
+missing=()
+for cmd in zsh keyd docker rbw lefthook; do
+  have "$cmd" || missing+=("$cmd")
+done
+((${#missing[@]} == 0)) || warn "not installed, so their steps are skipped: ${missing[*]} (rerun once omni tools sync installs them)"
+
 if ((first_run)); then
   status_json="$(omni dots status --state conflict --format json)" || die "omni dots status failed"
   mapfile -t conflicts < <(jq -r '.entries[]?.name' <<<"$status_json")
@@ -144,38 +96,28 @@ if ((first_run)); then
   touch "$FIRST_RUN_MARKER"
 fi
 
-# ─── Omarchy defaults this setup does not want ────────────────────────────────
-
 step "omarchy defaults"
 mapfile -t drop < <(grep -v -e '^#' -e '^[[:space:]]*$' "$REPO_DIR/omarchy/remove.packages")
 ((${#drop[@]} == 0)) || omarchy pkg drop "${drop[@]}"
 while IFS= read -r webapp; do
   [[ -n "$webapp" && "$webapp" != \#* ]] || continue
-  [[ -e "$HOME/.local/share/applications/$webapp.desktop" ]] || continue
-  omarchy webapp remove "$webapp"
-  ok "removed web app $webapp"
+  OMARCHY_REMOVE_NOTIFY=false omarchy-webapp-remove "$webapp"
 done < "$REPO_DIR/omarchy/remove.webapps"
+ok "unwanted Omarchy web apps removed"
 
-# ─── Login shell ──────────────────────────────────────────────────────────────
-
-step "login shell"
-zsh_path="$(command -v zsh || true)"
-if [[ -z "$zsh_path" ]]; then
-  warn "zsh is not installed; Omni should install it through the shell group"
-elif [[ "$(getent passwd "$USER" | cut -d: -f7)" != "$zsh_path" ]]; then
-  chsh -s "$zsh_path"
-  ok "login shell is now $zsh_path (takes effect on next login)"
-else
-  ok "login shell is $zsh_path"
+if have zsh; then
+  step "login shell"
+  zsh_path="$(command -v zsh)"
+  if [[ "$(getent passwd "$USER" | cut -d: -f7)" != "$zsh_path" ]]; then
+    chsh -s "$zsh_path"
+    ok "login shell is now $zsh_path (takes effect on next login)"
+  else
+    ok "login shell is $zsh_path"
+  fi
 fi
 
-# ─── Caps Lock → Hyper ────────────────────────────────────────────────────────
-# keyd itself comes from the omarchy group.
-
-step "keyd"
-if ! command -v keyd >/dev/null 2>&1; then
-  warn "keyd is not installed; Omni should install it through the omarchy group"
-else
+if have keyd; then
+  step "keyd"
   # Restart rather than `keyd reload`: right after the first start the socket isn't up yet.
   if ! cmp -s "$REPO_DIR/omarchy/keyd/default.conf" /etc/keyd/default.conf || ! systemctl is-active --quiet keyd; then
     sudo install -Dm644 "$REPO_DIR/omarchy/keyd/default.conf" /etc/keyd/default.conf
@@ -185,54 +127,43 @@ else
   ok "Caps Lock is Hyper"
 fi
 
-# ─── Docker ───────────────────────────────────────────────────────────────────
-# docker itself comes from the dev-tooling group; the group is root-equivalent.
-
-step "docker"
-if command -v docker >/dev/null 2>&1; then
+if have docker; then
+  step "docker"
   sudo systemctl enable --now docker.socket
   OMARCHY_DEFER_REBOOT=1 omarchy-setup-security-sudoless-docker
-else
-  warn "docker is not installed; Omni should install it through the dev-tooling group"
 fi
 
-# ─── Helium as the default browser ────────────────────────────────────────────
-# `omarchy default browser` has no Helium option, so set the XDG handler the same
-# way it does.
-
+# `omarchy default browser` has no Helium option.
 helium_desktop="$(pacman -Qlq helium-browser-bin 2>/dev/null | grep -m1 '/usr/share/applications/.*\.desktop$' || true)"
 if [[ -n "$helium_desktop" ]]; then
   env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser "$(basename "$helium_desktop")"
   ok "Helium is the default browser"
 fi
 
-# ─── Web apps in Chromium ─────────────────────────────────────────────────────
 # omarchy-launch-webapp always uses the default browser, so these get their own Exec.
-
 step "web apps"
 while IFS='|' read -r name url icon; do
   [[ -n "$name" && "$name" != \#* ]] || continue
-  if ! omarchy-webapp-install "$name" "$url" "$icon" "chromium --app=$url" >/dev/null; then
-    warn "web app $name could not be installed"
-    continue
-  fi
   rest="${url#*://}"
   host="${rest%%/*}"
   host="${host%%:*}"
   url_path="/"
   [[ "$rest" != */* ]] || url_path="/${rest#*/}"
-  printf 'StartupWMClass=chrome-%s_%s-Default\n' "$host" "${url_path//\//_}" \
-    >> "$HOME/.local/share/applications/$name.desktop"
+  exec_line="Exec=chromium --app=$url"
+  wm_class_line="StartupWMClass=chrome-${host}_${url_path//\//_}-Default"
+  desktop="$HOME/.local/share/applications/$name.desktop"
+  if ! { grep -qxF "$exec_line" "$desktop" && grep -qxF "$wm_class_line" "$desktop"; } 2>/dev/null; then
+    if ! omarchy-webapp-install "$name" "$url" "$icon" "chromium --app=$url" >/dev/null; then
+      warn "web app $name could not be installed"
+      continue
+    fi
+    printf '%s\n' "$wm_class_line" >>"$desktop"
+  fi
   ok "web app $name opens in Chromium"
 done < "$REPO_DIR/omarchy/chromium.webapps"
 
-# ─── Bitwarden (rbw): secrets, SSH agent and commit signing ───────────────────
-# rbw's account settings are not a dot, so the first run asks for them.
-
-step "rbw"
-if ! command -v rbw >/dev/null 2>&1; then
-  warn "rbw is not installed; Omni should install it through the secrets group"
-else
+if have rbw; then
+  step "rbw"
   if [[ -z "$(rbw config show 2>/dev/null | jq -r '.email // empty')" ]]; then
     default_email="$(awk '{print $1; exit}' "$REPO_DIR/dotfiles/git/.config/git/allowed_signers")"
     read -rp "Bitwarden email [$default_email]: " email
@@ -240,44 +171,15 @@ else
     read -rp "Bitwarden server URL (empty for bitwarden.com): " base_url
     [[ -z "$base_url" ]] || rbw config set base_url "$base_url"
   fi
-  # i32::MAX seconds (~68 years): never, yet safe for Instant math on every platform.
-  rbw_lock_timeout=2147483647
-  if [[ "$(rbw config show 2>/dev/null | jq -r '.lock_timeout // empty')" != "$rbw_lock_timeout" ]]; then
-    rbw config set lock_timeout "$rbw_lock_timeout"
-  fi
+  rbw_set_lock_timeout
   rbw unlocked >/dev/null 2>&1 || rbw unlock
   ok "vault unlocked"
+
+  step "lan ca"
+  bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
 fi
 
-# ─── LAN root CA ──────────────────────────────────────────────────────────────
-# The vault keeps the PEM on one line in the username field; rewrap it before trusting.
-
-step "lan ca"
-lan_ca="$HOME/.local/share/certs/lan-ca.pem"
-lan_ca_anchor=/etc/ca-certificates/trust-source/anchors/lan-ca.crt
-if rbw unlocked >/dev/null 2>&1 && raw="$(rbw get --field username root-CA 2>/dev/null)" && [[ -n "$raw" ]]; then
-  body="$(sed -e 's/-----BEGIN CERTIFICATE-----//' -e 's/-----END CERTIFICATE-----//' <<<"$raw" | tr -d '[:space:]')"
-  mkdir -p "${lan_ca%/*}"
-  tmp="$(mktemp "$lan_ca.tmp.XXXXXX")"
-  { echo "-----BEGIN CERTIFICATE-----"; fold -w64 <<<"$body"; echo "-----END CERTIFICATE-----"; } >"$tmp"
-  if openssl x509 -in "$tmp" -noout 2>/dev/null; then
-    mv "$tmp" "$lan_ca"
-    if ! cmp -s "$lan_ca" "$lan_ca_anchor"; then
-      sudo install -Dm644 "$lan_ca" "$lan_ca_anchor"
-      sudo update-ca-trust
-    fi
-    ok "LAN root CA is trusted system-wide"
-  else
-    rm -f "$tmp"
-    warn "vault item root-CA is not a valid certificate; LAN hosts (litellm) will fail TLS"
-  fi
-else
-  warn "could not read root-CA from the vault; LAN hosts (litellm) will fail TLS"
-fi
-
-# ─── Agents ───────────────────────────────────────────────────────────────────
 # After the CA: APM fetches the litellm marketplace from a LAN host.
-
 step "omni agents"
 if omni --yes agents sync; then
   ok "agent plugins and hooks installed"
@@ -285,9 +187,7 @@ else
   warn "omni agents sync failed; rerun it once the cause is fixed"
 fi
 
-# ─── Knowledge vault ──────────────────────────────────────────────────────────
-# The rbw SSH agent socket only exists after the unlock above, so adopt it now.
-
+# The rbw SSH agent socket exists only after the unlock above.
 step "knowledge vault"
 vault="$HOME/knowledge"
 . "$REPO_DIR/dotfiles/env/.config/env/lib/rbw-sock.sh"
@@ -304,23 +204,12 @@ if [[ -d "$vault/.git" ]]; then
   fi
 fi
 
-# ─── Lefthook ─────────────────────────────────────────────────────────────────
-
-step "lefthook"
-if command -v lefthook >/dev/null 2>&1; then
-  (cd "$REPO_DIR" && lefthook install)
-  [[ ! -d "$HOME/knowledge/.git" ]] || (cd "$HOME/knowledge" && lefthook install)
-  ok "lefthook installed"
-else
-  warn "lefthook is not installed; Omni should install it through the dev group"
+if have lefthook; then
+  step "lefthook"
+  install_lefthook "$REPO_DIR" "$HOME/knowledge"
 fi
 
-# ─── Hyprland ─────────────────────────────────────────────────────────────────
-
 step "hyprland"
-# The PipeWeaver daemon looks up `pipeweaver-app` on $PATH when its tray icon is clicked.
-mkdir -p "$HOME/.local/bin"
-ln -sfn "$HOME/.config/hypr/scripts/pipeweaver-app" "$HOME/.local/bin/pipeweaver-app"
 hyprctl reload >/dev/null
 errors="$(hyprctl configerrors)"
 [[ -z "${errors//[[:space:]]/}" ]] || die "$errors"
