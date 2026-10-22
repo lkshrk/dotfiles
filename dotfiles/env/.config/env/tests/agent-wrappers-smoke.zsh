@@ -56,7 +56,7 @@ fi
   _root_ca_cert_file() { print -r -- /test/lan-ca.pem; }
   source "$repo/dotfiles/zsh/.config/zsh/68-rbw.zsh"
   source "$repo/dotfiles/zsh/.config/zsh/macos/75-secret-wrappers.zsh"
-  (( ! $+commands[rbw] && ! $+functions[git] && $+functions[sops] ))
+  (( ! $+commands[rbw] && ! $+functions[git] && ! $+functions[sops] ))
   codex 'test prompt'
 )
 print 'agent wrappers: CA, secret profiles, arguments, isolation and telemetry checks passed'

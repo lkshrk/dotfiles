@@ -62,7 +62,7 @@ _rbw_get_or_unlock() {
   val=$(rbw get "$item" 2>/dev/null) || return 1
 
   [[ -n $val ]] || return 1
-  print -n "$val"
+  print -rn -- "$val"
 }
 
 _lazy_secret() {
@@ -92,11 +92,43 @@ _rbw_env() {
   fi
 }
 
+(( $+commands[rbw] )) || return 0
+
 sops() {
   _rbw_env sops -- command sops "$@"
 }
 
-(( $+commands[rbw] )) || return 0
+zmodload -F zsh/datetime p:EPOCHSECONDS
+
+h_cloud_auth() {
+  local script="$HOME/Dev/h-cloud/scripts/cluster-auth.sh" exports others=${KUBECONFIG:-}
+  local dir="${XDG_RUNTIME_DIR:-}/h-cloud"
+  # Re-run the script (which renews expiring certs) at most hourly per shell.
+  [[ -s ${TALOSCONFIG:-} && -s $dir/kubeconfig && :$others: == *:$dir/kubeconfig:* ]] \
+    && (( ${_H_CLOUD_AUTH_AT:-0} > EPOCHSECONDS - 3600 )) && return 0
+  # Tab completion must never block on an rbw/pinentry prompt.
+  (( ${+compstate} )) && return 0
+  [[ -x $script ]] || { print -u2 "h-cloud: $script missing"; return 1; }
+  _rbw_unlock_if_needed || { print -u2 "h-cloud: rbw locked"; return 1; }
+  exports=$("$script" env) || return 1
+  eval "$exports"
+  typeset -g _H_CLOUD_AUTH_AT=$EPOCHSECONDS
+  others=${${others//$dir\/kubeconfig/}##:}
+  [[ -z $others ]] || export KUBECONFIG="$KUBECONFIG:$others"
+}
+
+for _cmd in talosctl kubectl flux helm helmfile k9s; do
+  (( $+commands[$_cmd] )) || continue
+  eval "$_cmd() { h_cloud_auth || return; command $_cmd \"\$@\"; }"
+done
+unset _cmd
+
+just() {
+  if [[ $PWD == $HOME/Dev/h-cloud(|/*) && ${1:-} == (talos|bootstrap|kube) ]]; then
+    h_cloud_auth || return
+  fi
+  command just "$@"
+}
 
 git() {
   # Snapshotted shells (agents) can carry this wrapper without its helpers.
@@ -106,7 +138,7 @@ git() {
       if (( ! ${+compstate} )) && _rbw_can_prompt; then
         case $1 in
           commit|tag|merge) _rbw_unlock_if_needed || return ;;
-          *) _rbw_ssh_agent_ready || return ;;
+          *) _rbw_ssh_agent_ready ;;
         esac
       else
         _rbw_fix_ssh_auth_sock >/dev/null 2>&1
