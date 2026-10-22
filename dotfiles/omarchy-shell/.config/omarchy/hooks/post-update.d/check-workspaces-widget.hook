@@ -1,0 +1,7 @@
+#!/bin/bash
+
+upstream=/usr/share/omarchy/shell/plugins/bar/widgets/Workspaces.qml
+baseline="$HOME/.config/omarchy/plugins/lkshrk.workspaces/upstream.sha256"
+
+[[ $(sha256sum "$upstream" | cut -d' ' -f1) == $(<"$baseline") ]] ||
+  notify-send -u critical "Workspaces widget changed upstream" "Re-sync lkshrk.workspaces with $upstream, then update $baseline"

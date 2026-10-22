@@ -3,7 +3,7 @@
   "id": "lkshrk.workspaces",
   "name": "My Workspaces",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "lkshrk",
   "description": "Workspace number indicators",
   "kinds": [
     "bar-widget"
