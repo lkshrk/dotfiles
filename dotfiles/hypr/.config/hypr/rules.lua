@@ -30,9 +30,6 @@ o.window("^io\\.missioncenter\\.MissionCenter$", {
   size = { "(monitor_w*0.6)", "(monitor_h*0.7)" },
 })
 
--- Password managers block screen capture, so they get a workspace to themselves.
-o.window("^(Bitwarden|1[pP]assword)$", { workspace = "8" })
-
 o.window("(?i)chatterino", {
   workspace = "6",
   float = true,
@@ -40,7 +37,7 @@ o.window("(?i)chatterino", {
   move = { "(monitor_w-window_w)", "(monitor_h-window_h-" .. bar_height .. ")" },
 })
 
-o.window("^(steam_app_[0-9]+|steam_app_battlenet|gamescope|com\\.moonlight_stream\\.Moonlight|wowupcf)$", { workspace = "9" })
+o.window("^(steam|steam_app_[0-9]+|steam_app_battlenet|gamescope|com\\.moonlight_stream\\.Moonlight|wowupcf)$", { workspace = "9" })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them.
 o.window("^(steam_app_[0-9]+|gamescope)$", { fullscreen = true, idle_inhibit = "fullscreen" })
 -- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.
@@ -62,3 +59,8 @@ o.window({ tag = "dialog" }, { float = true, center = true })
 o.window({ tag = "dialog" }, { workspace = "unset" })
 o.window({ tag = "pip" }, { workspace = "unset" })
 o.window({ tag = "floating-window" }, { workspace = "unset" })
+o.window("^(org\\.omarchy\\..*|omacalc|dev\\.tensaku\\.Tensaku|WebcamOverlay-.*|localsend|Share|Hermes)$", { workspace = "unset" })
+-- Re-applied because the collector rule above overrides Omarchy's earlier one.
+o.window({ title = ".*is sharing.*" }, { workspace = "special silent" })
+-- Password managers block screen capture, so they get a workspace to themselves; after the floating-window unset.
+o.window("^(Bitwarden|1[pP]assword)$", { workspace = "8" })
