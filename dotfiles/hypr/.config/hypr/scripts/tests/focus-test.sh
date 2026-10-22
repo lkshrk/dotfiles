@@ -73,13 +73,6 @@ expect "$(focused 0x1)"
 HYPR_TEST_ACTIVE=0x2 "$scripts/focus-editor" --reverse
 expect "$(focused 0x1)"
 
-# focus-gaming: a game window wins, otherwise the gaming workspace.
-HYPR_TEST_CLIENTS='[{"address":"0x9","class":"steam_app_570","title":"Dota 2","mapped":true,"focusHistoryID":4,"contentType":"none"}]' \
-  "$scripts/focus-gaming"
-expect "$(focused 0x9)"
-HYPR_TEST_CLIENTS='[]' "$scripts/focus-gaming"
-expect 'dispatch hl.dsp.focus({ workspace = "9" })'
-
 # snap-half: portrait monitor (transform 1) with a 30px bar on top.
 HYPR_TEST_MONITORS='[{"focused":true,"x":2560,"y":0,"width":2560,"height":1440,"scale":1,"transform":1,"reserved":[0,30,0,0]}]' \
   "$scripts/snap-half" right

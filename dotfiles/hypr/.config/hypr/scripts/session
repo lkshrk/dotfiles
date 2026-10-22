@@ -27,15 +27,16 @@ desktop_for() {
 }
 
 save() {
-  local classes
+  local classes tmp
   classes=$(hyprctl clients -j | jq -r '.[] | select(.mapped and (.tags | index("dialog*") | not)) | .class' | sort -u)
   # Skip saving an empty desktop, so a crash or early save never wipes the list.
   [ -n "$classes" ] || return 0
   mkdir -p "$STATE"
+  tmp=$(mktemp "$STATE/apps.XXXXXX")
   while IFS= read -r class; do
-    desktop_for "$class"
-  done <<<"$classes" | sort -u > "$APPS.tmp"
-  [ -s "$APPS.tmp" ] && mv "$APPS.tmp" "$APPS" || rm -f "$APPS.tmp"
+    desktop_for "$class" || true
+  done <<<"$classes" | sort -u > "$tmp"
+  if [ -s "$tmp" ]; then mv "$tmp" "$APPS"; else rm -f "$tmp"; fi
 }
 
 restore() {
