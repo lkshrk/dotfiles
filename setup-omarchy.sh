@@ -12,17 +12,7 @@ set -euo pipefail
 REPO_URL="https://github.com/lkshrk/dotfiles.git"
 OMNI_REPO="lkshrk/omni"
 
-c_red=$'\033[31m'
-c_yel=$'\033[33m'
-c_grn=$'\033[32m'
-c_dim=$'\033[2m'
-c_off=$'\033[0m'
-
-say()  { printf '%s\n' "$*"; }
-step() { say "${c_dim}-- $* --${c_off}"; }
-ok()   { say "${c_grn}ok${c_off} $*"; }
-warn() { say "${c_yel}!${c_off} $*" >&2; }
-die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
+. "$(dirname "${BASH_SOURCE[0]:-$0}")/scripts/lib/setup-common.sh"
 
 [[ "$(uname -s)" == "Linux" && -d /usr/share/omarchy ]] || die "setup-omarchy.sh is for Omarchy hosts"
 [[ -t 0 && -t 1 ]] || die "run from an interactive terminal; setup prompts for sudo and Bitwarden"
@@ -116,13 +106,7 @@ fi
 tools_failed=0
 rc=0
 (
-  # Preserve runtime edits and never leave agent-writable files linked to git.
-  bash "$REPO_DIR/scripts/volatile-dots.sh" detach || exit 2
-  trap 'bash "$REPO_DIR/scripts/volatile-dots.sh" detach' EXIT
-  bash "$REPO_DIR/scripts/volatile-dots.sh" prepare || exit 2
-  step "omni bootstrap"
-  omni --yes bootstrap --no-import || exit 2
-  bash "$REPO_DIR/scripts/volatile-dots.sh" detach || exit 2
+  omni_bootstrap_dots || exit 2
 
   step "omni tools"
   omni --yes tools sync || exit 3
@@ -240,11 +224,7 @@ else
     read -rp "Bitwarden server URL (empty for bitwarden.com): " base_url
     [[ -z "$base_url" ]] || rbw config set base_url "$base_url"
   fi
-  # i32::MAX seconds (~68 years): never, yet safe for Instant math on every platform.
-  rbw_lock_timeout=2147483647
-  if [[ "$(rbw config show 2>/dev/null | jq -r '.lock_timeout // empty')" != "$rbw_lock_timeout" ]]; then
-    rbw config set lock_timeout "$rbw_lock_timeout"
-  fi
+  rbw_set_lock_timeout
   rbw unlocked >/dev/null 2>&1 || rbw unlock
   ok "vault unlocked"
 fi
@@ -308,9 +288,7 @@ fi
 
 step "lefthook"
 if command -v lefthook >/dev/null 2>&1; then
-  (cd "$REPO_DIR" && lefthook install)
-  [[ ! -d "$HOME/knowledge/.git" ]] || (cd "$HOME/knowledge" && lefthook install)
-  ok "lefthook installed"
+  install_lefthook "$REPO_DIR" "$HOME/knowledge"
 else
   warn "lefthook is not installed; Omni should install it through the dev group"
 fi

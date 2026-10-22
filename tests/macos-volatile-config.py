@@ -6,10 +6,7 @@ import subprocess
 import tempfile
 
 repo = Path(__file__).resolve().parents[1]
-setup = (repo / "setup.sh").read_text()
-bootstrap = setup.split("omni_bootstrap() ", 1)[1].split(
-    "# ─── Shared: generated shell completions", 1
-)[0]
+common = repo / "scripts/lib/setup-common.sh"
 functions = (repo / "dotfiles/zsh/.config/zsh/60-functions.zsh").read_text()
 omni_function = functions.split("_dotfiles_omni() {", 1)[1].split("\n}\n", 1)[0]
 
@@ -45,7 +42,7 @@ done < "$DOTFILES_DIR/scripts/volatile-dots.txt"
 ''')
     stub.chmod(0o755)
     for shell, body in (
-        ("bash", "set -euo pipefail\nstep() { :; }\nomni_bootstrap() " + bootstrap + "\nomni_bootstrap\n"),
+        ("bash", f"set -euo pipefail\n. '{common}'\nstep() {{ :; }}\n(omni_bootstrap_dots && command omni --config \"$OMNI_CONFIG_PATH\" --yes tools sync)\n"),
         ("zsh", "_dotfiles_omni() {" + omni_function + "\n}\n_dotfiles_omni reconcile\n"),
     ):
         for state in ("local", "linked", "fresh"):

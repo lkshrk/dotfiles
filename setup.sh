@@ -31,19 +31,7 @@ for arg in "$@"; do
   esac
 done
 
-# ─── Colour helpers ────────────────────────────────────────────────────────────
-
-c_red=$'\033[31m'
-c_yel=$'\033[33m'
-c_grn=$'\033[32m'
-c_dim=$'\033[2m'
-c_off=$'\033[0m'
-
-say()  { printf '%s\n' "$*"; }
-step() { say "${c_dim}-- $* --${c_off}"; }
-ok()   { say "${c_grn}ok${c_off} $*"; }
-warn() { say "${c_yel}!${c_off} $*" >&2; }
-die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
+. "$REPO_DIR/scripts/lib/setup-common.sh"
 
 export -f say step ok warn die
 
@@ -105,16 +93,10 @@ ensure_omni_bootstrap() {
 }
 
 omni_bootstrap() (
-  step "omni bootstrap"
   if [[ -z "${NODE_EXTRA_CA_CERTS:-}" && -r "${OMNI_CA_PATH:-}" ]]; then
     export NODE_EXTRA_CA_CERTS="$OMNI_CA_PATH"
   fi
-  # Preserve runtime edits and never leave agent-writable files linked to git.
-  bash "$REPO_DIR/scripts/volatile-dots.sh" detach
-  trap 'bash "$REPO_DIR/scripts/volatile-dots.sh" detach' EXIT
-  bash "$REPO_DIR/scripts/volatile-dots.sh" prepare
-  omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
-  bash "$REPO_DIR/scripts/volatile-dots.sh" detach
+  omni_bootstrap_dots
 
   step "omni tools"
   omni --config "$OMNI_CONFIG_PATH" --yes tools sync
@@ -143,21 +125,16 @@ install_zsh_completions() {
 configure_rbw() {
   step "rbw"
   command -v rbw >/dev/null 2>&1 || { warn "rbw is not installed; skipping rbw config"; return; }
-  # i32::MAX seconds (~68 years): never, yet safe for Instant math on every platform.
-  local lock_timeout=2147483647
-  if [[ "$(rbw config show 2>/dev/null | jq -r '.lock_timeout // empty')" != "$lock_timeout" ]]; then
-    rbw config set lock_timeout "$lock_timeout"
-  fi
-  ok "rbw lock_timeout is $lock_timeout seconds"
+  rbw_set_lock_timeout
+  ok "rbw never locks on a timeout"
 }
 
 # ─── Shared: lefthook ─────────────────────────────────────────────────────────
 
-install_lefthook() {
+setup_lefthook() {
   step "lefthook"
   if command -v lefthook >/dev/null 2>&1; then
-    (cd "$REPO_DIR" && lefthook install)
-    ok "lefthook installed"
+    install_lefthook "$REPO_DIR"
   else
     warn "lefthook is not installed; Omni reconcile should install it through the dev group"
   fi
@@ -191,7 +168,7 @@ main() {
   install_zsh_completions
   configure_rbw
 
-  install_lefthook
+  setup_lefthook
 }
 
 main "$@"
