@@ -38,6 +38,12 @@
       ]
     },
     {
+      "name": "browser",
+      "tools": [
+        "helium-browser"
+      ]
+    },
+    {
       "name": "core",
       "tools": [
         "bat",
@@ -109,8 +115,13 @@
     {
       "name": "gaming",
       "tools": [
+        "discord"
+      ]
+    },
+    {
+      "name": "gaming-mac",
+      "tools": [
         "battle-net",
-        "discord",
         "elgato-wave-link",
         "linearmouse",
         "wowup-cf"
@@ -173,7 +184,6 @@
         "the-unarchiver",
         "xcodebuildmcp",
         "zstd",
-        "rbw",
         "mlx",
         "flux-markdown",
         "tree-sitter",
@@ -296,7 +306,6 @@
         "copilot-cli",
         "dbeaver-community",
         "git-credential-manager",
-        "helium",
         "lightworks",
         "oracle-jdk",
         "postman",
@@ -337,10 +346,7 @@
     {
       "name": "towerr",
       "special": "host",
-      "tools": [
-        "discord",
-        "helium-browser"
-      ]
+      "tools": []
     }
   ]
 }

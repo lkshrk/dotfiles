@@ -109,9 +109,10 @@ that save by replacing the file turn the symlink into a plain copy;
 `omni dots status` then reports a conflict, and `omni dots resolve <name>
 --use-local` takes the edit back into the repo.
 
-`~/.bashrc` and git use `@towerr` variants: bash keeps Omarchy's rc, and git
-points the GitHub credential helper at `/usr/bin/gh`. Commit signing goes
-through the rbw SSH agent, as on `topaz`.
+`~/.bashrc` loads Omarchy's bash defaults when they exist, so interactive bash
+behaves like a stock Omarchy shell. git uses the `git@topaz` package, whose
+GitHub credential helper finds `gh` on `PATH`; commit signing goes through the
+rbw SSH agent on both hosts.
 
 ## Omni
 

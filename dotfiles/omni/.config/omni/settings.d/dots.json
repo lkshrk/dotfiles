@@ -55,6 +55,10 @@
           "name": "amp",
           "path": "~/.config/amp",
           "ignored": true
+        },
+        {
+          "name": "opencode",
+          "path": "~/.config/opencode"
         }
       ]
     },
@@ -157,7 +161,7 @@
               "package": "git@topaz"
             },
             "towerr": {
-              "package": "git@towerr"
+              "package": "git@topaz"
             }
           },
           "ignore": [
@@ -172,7 +176,7 @@
       ]
     },
     {
-      "name": "gaming",
+      "name": "gaming-mac",
       "dots": [
         {
           "name": "com.corsair",
@@ -364,12 +368,7 @@
         },
         {
           "name": "bashrc",
-          "path": "~/.bashrc",
-          "hosts": {
-            "towerr": {
-              "package": "bashrc@towerr"
-            }
-          }
+          "path": "~/.bashrc"
         },
         {
           "name": "zshrc",

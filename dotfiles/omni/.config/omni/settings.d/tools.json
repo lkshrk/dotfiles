@@ -169,13 +169,6 @@
       ],
       "git": "https://github.com/sharkdp/bat"
     },
-    "bats": {
-      "providers": [
-        {
-          "provider": "apt"
-        }
-      ]
-    },
     "bats-core": {
       "providers": [
         {
@@ -763,13 +756,6 @@
       ],
       "git": "https://github.com/sharkdp/fd"
     },
-    "fd-find": {
-      "providers": [
-        {
-          "provider": "apt"
-        }
-      ]
-    },
     "ffmpeg": {
       "providers": [
         {
@@ -1213,17 +1199,12 @@
       ],
       "git": "https://github.com/Hammerspoon/hammerspoon"
     },
-    "helium": {
+    "helium-browser": {
       "providers": [
         {
           "provider": "brew",
           "package": "helium"
-        }
-      ],
-      "git": "https://github.com/koush/support-wiki"
-    },
-    "helium-browser": {
-      "providers": [
+        },
         {
           "provider": "pacman",
           "package": "helium-browser-bin"
