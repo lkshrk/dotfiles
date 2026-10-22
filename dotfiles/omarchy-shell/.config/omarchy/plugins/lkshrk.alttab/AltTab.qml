@@ -7,17 +7,6 @@ import qs.Commons
 import qs.Commons as Commons
 import qs.Ui
 
-// Alt-Tab window switcher: live previews of every window, most recently
-// focused first. Driven by Hyprland binds through IPC:
-//
-//   omarchy-shell alttab next   Alt+Tab or Super+Tab (opens on the previous window)
-//   omarchy-shell alttab prev   Alt+Shift+Tab or Super+Shift+Tab
-//   omarchy-shell alttab commit Alt released (focus the selected window)
-//   omarchy-shell alttab list   what the switcher would show (diagnostics)
-//   omarchy-shell alttab cancel
-//
-// Releasing Alt or Super is also caught by the overlay itself; the commit bind covers
-// a quick tap where Alt comes up before the overlay has keyboard focus.
 Item {
   id: root
 
@@ -32,9 +21,8 @@ Item {
   // A commit that arrives before its open (the two IPC calls race on a tap).
   property double pendingCommitAt: 0
   property double closedAt: 0
-  // Addresses (no 0x) of windows with no_screen_share (password managers):
-  // their capture comes back blanked, so they show their icon instead.
-  property var protectedWindows: ({})
+  // Omarchy sets no_screen_share on these, so their capture comes back blank.
+  readonly property var protectedClass: /^(Bitwarden|1[pP]assword|chrome-nngceckbapebfimnlniiiahkandclblb-Default)$/
 
   property color background: Commons.Color.menu.background
   property color foreground: Commons.Color.menu.text
@@ -63,8 +51,7 @@ Item {
     mru = next
   }
 
-  // Hyprland's own focus history seeds the order for windows focused before
-  // the shell started; activeToplevel changes keep it current after that.
+  // Seeds the order for windows focused before the shell started.
   function historyRank(toplevel) {
     var ipc = toplevel.lastIpcObject
     return ipc && ipc.focusHistoryID !== undefined && ipc.focusHistoryID >= 0 ? ipc.focusHistoryID : 9999
@@ -72,19 +59,20 @@ Item {
 
   function buildWindows() {
     var list = []
+    var live = {}
     var all = Hyprland.toplevels.values
     for (var i = 0; i < all.length; i++) {
       var t = all[i]
       var ipc = t.lastIpcObject || {}
-      // Hyprland.toplevels can keep entries for windows that already closed;
-      // only a live foreign-toplevel handle proves the window still exists.
+      // Hyprland.toplevels keeps closed windows; only a live wayland handle proves one exists.
       if (!t.wayland) continue
+      live[normalize(t.address)] = true
       if (ipc.mapped === false || ipc.hidden === true) continue
-      // Wine/XWayland helper windows have neither class nor title; Omarchy
-      // already marks them no_focus, so they are not switch targets either.
+      // Wine/XWayland helpers have neither class nor title and are no_focus anyway.
       if (!(ipc.class || ipc.initialClass) && !t.title) continue
       list.push(t)
     }
+    mru = mru.filter(function(address) { return live[address] === true })
     var rank = {}
     for (var j = 0; j < mru.length; j++) rank[mru[j]] = j
     list.sort(function(a, b) {
@@ -97,14 +85,13 @@ Item {
     windows = list
   }
 
-  function refreshProtected() {
-    protectedProbe.running = false
-    protectedProbe.running = true
+  function isProtected(toplevel) {
+    var ipc = toplevel.lastIpcObject || {}
+    return protectedClass.test(ipc.class || ipc.initialClass || "")
   }
 
   function open(delta) {
     if (!opened) {
-      refreshProtected()
       buildWindows()
       if (windows.length === 0) return
       // Start on the previous window, like Windows and macOS.
@@ -132,14 +119,7 @@ Item {
     var target = windows[selectedIndex]
     close()
     if (!target) return
-    var address = "0x" + normalize(target.address)
-    if (Hyprland.usingLua) {
-      Hyprland.dispatch("hl.dsp.focus({ window = \"address:" + address + "\" })")
-      Hyprland.dispatch("hl.dsp.window.bring_to_top()")
-    } else {
-      Hyprland.dispatch("focuswindow address:" + address)
-      Hyprland.dispatch("bringactivetotop")
-    }
+    Hyprland.dispatch("hl.dsp.focus({ window = \"address:0x" + normalize(target.address) + "\" })")
   }
 
   function close() {
@@ -157,7 +137,6 @@ Item {
   }
 
   Component.onCompleted: {
-    refreshProtected()
     Hyprland.refreshToplevels()
     if (Hyprland.activeToplevel) touch(Hyprland.activeToplevel.address)
   }
@@ -169,46 +148,12 @@ Item {
     }
   }
 
-  Process {
-    id: protectedProbe
-    command: ["bash", "-c", "for a in $(hyprctl clients -j | jq -r '.[].address'); do "
-      + "[[ $(hyprctl getprop address:$a no_screen_share) == true ]] && echo ${a#0x}; done"]
-    stdout: StdioCollector {
-      onStreamFinished: {
-        var next = ({})
-        var lines = text.split("\n")
-        for (var i = 0; i < lines.length; i++) if (lines[i]) next[lines[i]] = true
-        root.protectedWindows = next
-      }
-    }
-  }
-
-  Connections {
-    target: Hyprland
-    function onRawEvent(event) {
-      if (event.name === "openwindow") root.refreshProtected()
-    }
-  }
-
   IpcHandler {
     target: "alttab"
     function next(): void { root.open(1) }
     function prev(): void { root.open(-1) }
     function commit(): void { root.commit() }
     function cancel(): void { root.close() }
-    // What the switcher would show right now, one window per line.
-    function list(): string {
-      root.buildWindows()
-      var lines = []
-      for (var i = 0; i < root.windows.length; i++) {
-        var w = root.windows[i]
-        var ipc = w.lastIpcObject || {}
-        lines.push(root.normalize(w.address) + "  " + (ipc.class || "?") + "  " + (w.title || ""))
-      }
-      if (!root.opened) root.windows = []
-      lines.push("(" + Hyprland.toplevels.values.length + " toplevels known to Quickshell)")
-      return lines.join("\n")
-    }
   }
 
   PanelWindow {
@@ -293,7 +238,8 @@ Item {
             required property int index
             readonly property bool selected: index === root.selectedIndex
             readonly property var ipc: modelData.lastIpcObject || {}
-            readonly property bool protectedWindow: root.protectedWindows[root.normalize(modelData.address)] === true
+            readonly property bool protectedWindow: root.isProtected(modelData)
+            readonly property string icon: root.iconFor(modelData)
             readonly property real aspect: {
               var size = ipc.size
               if (!protectedWindow && preview.hasContent && preview.sourceSize.height > 0)
@@ -318,11 +264,11 @@ Item {
               ScreencopyView {
                 id: preview
                 anchors.centerIn: parent
-                width: Math.min(parent.width, parent.height * (sourceSize.height > 0 ? sourceSize.width / sourceSize.height : tile.aspect))
-                height: Math.min(parent.height, parent.width / (sourceSize.height > 0 ? sourceSize.width / sourceSize.height : tile.aspect))
+                width: Math.min(parent.width, parent.height * tile.aspect)
+                height: Math.min(parent.height, parent.width / tile.aspect)
                 visible: !tile.protectedWindow
                 captureSource: root.opened && !tile.protectedWindow ? tile.modelData.wayland : null
-                live: root.opened
+                live: false
                 constraintSize: Qt.size(root.previewMaxWidth * 2, root.previewHeight * 2)
               }
 
@@ -332,7 +278,7 @@ Item {
                 width: Style.space(64)
                 height: width
                 sourceSize: Qt.size(width, height)
-                source: root.iconFor(tile.modelData)
+                source: tile.icon
               }
             }
 
@@ -349,7 +295,7 @@ Item {
                 width: Style.font.body * 1.4
                 height: width
                 sourceSize: Qt.size(width, height)
-                source: root.iconFor(tile.modelData)
+                source: tile.icon
                 anchors.verticalCenter: parent.verticalCenter
               }
 
