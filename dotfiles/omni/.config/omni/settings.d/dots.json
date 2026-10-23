@@ -319,6 +319,14 @@
             "*",
             "!/pipeweaver-app"
           ]
+        },
+        {
+          "name": "local-applications",
+          "path": "~/.local/share/applications",
+          "ignore": [
+            "*",
+            "!/battlenet.desktop"
+          ]
         }
       ]
     },
