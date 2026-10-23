@@ -53,3 +53,5 @@ o.window("^(org\\.omarchy\\..*|omacalc|dev\\.tensaku\\.Tensaku|WebcamOverlay-.*|
 o.window({ title = ".*is sharing.*" }, { workspace = "special silent" })
 -- Password managers block screen capture, so they get a tiled workspace to themselves; tag rules apply last, so drop Omarchy's floating-window tag.
 o.window("^(Bitwarden|1[pP]assword)$", { tag = "-floating-window", tile = true, workspace = "8" })
+-- Omarchy only catches Chrome's class for the Bitwarden extension popup; Brave prefixes it "brave-".
+o.window("^.+-nngceckbapebfimnlniiiahkandclblb-Default$", { no_screen_share = true, tag = "+floating-window" })
