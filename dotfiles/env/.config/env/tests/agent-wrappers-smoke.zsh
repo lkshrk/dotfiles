@@ -48,7 +48,7 @@ source "$repo/dotfiles/zsh/.config/zsh/68-rbw.zsh"
 _omni_ai_ca() { print -r -- /test/lan-ca.pem; }
 (_omni_ai_run check_env)
 codex 'test prompt'
-_rbw_env() {
+rbw_env() {
   check_env
   local profile=$1
   shift
