@@ -200,6 +200,8 @@
         "coppwr",
         "deepfilternet-ladspa",
         "file-roller",
+        "hunspell-de",
+        "hunspell-en_us",
         "keyd",
         "lsp-plugins-lv2",
         "moshi-hook",

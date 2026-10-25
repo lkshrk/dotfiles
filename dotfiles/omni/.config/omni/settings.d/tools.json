@@ -1314,6 +1314,22 @@
       ],
       "git": "https://github.com/NousResearch/hermes-agent"
     },
+    "hunspell-de": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "hunspell-de"
+        }
+      ]
+    },
+    "hunspell-en_us": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "hunspell-en_us"
+        }
+      ]
+    },
     "icu4c@76": {
       "providers": [
         {
