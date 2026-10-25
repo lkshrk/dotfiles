@@ -554,6 +554,311 @@
           "ignored": true
         }
       ]
+    },
+    {
+      "name": "towerr",
+      "dots": [
+        {
+          "name": "QtProject.conf",
+          "path": "~/.config/QtProject.conf",
+          "ignored": true
+        },
+        {
+          "name": "Bitwarden",
+          "path": "~/.config/Bitwarden",
+          "ignored": true
+        },
+        {
+          "name": "BraveSoftware",
+          "path": "~/.config/BraveSoftware",
+          "ignored": true
+        },
+        {
+          "name": "Signal",
+          "path": "~/.config/Signal",
+          "ignored": true
+        },
+        {
+          "name": "Typora",
+          "path": "~/.config/Typora",
+          "ignored": true
+        },
+        {
+          "name": "WowUpCf",
+          "path": "~/.config/WowUpCf",
+          "ignored": true
+        },
+        {
+          "name": "aether",
+          "path": "~/.config/aether",
+          "ignored": true
+        },
+        {
+          "name": "alacritty",
+          "path": "~/.config/alacritty",
+          "ignored": true
+        },
+        {
+          "name": "autostart",
+          "path": "~/.config/autostart",
+          "ignored": true
+        },
+        {
+          "name": "bash_logout",
+          "path": "~/.bash_logout",
+          "ignored": true
+        },
+        {
+          "name": "bash_profile",
+          "path": "~/.bash_profile",
+          "ignored": true
+        },
+        {
+          "name": "brave-flags.conf",
+          "path": "~/.config/brave-flags.conf",
+          "ignored": true
+        },
+        {
+          "name": "brave-origin-beta-flags.conf",
+          "path": "~/.config/brave-origin-beta-flags.conf",
+          "ignored": true
+        },
+        {
+          "name": "chromium",
+          "path": "~/.config/chromium",
+          "ignored": true
+        },
+        {
+          "name": "chromium-flags.conf",
+          "path": "~/.config/chromium-flags.conf",
+          "ignored": true
+        },
+        {
+          "name": "dconf",
+          "path": "~/.config/dconf",
+          "ignored": true
+        },
+        {
+          "name": "discord",
+          "path": "~/.config/discord",
+          "ignored": true
+        },
+        {
+          "name": "fcitx",
+          "path": "~/.config/fcitx",
+          "ignored": true
+        },
+        {
+          "name": "fontconfig",
+          "path": "~/.config/fontconfig",
+          "ignored": true
+        },
+        {
+          "name": "google-chrome",
+          "path": "~/.config/google-chrome",
+          "ignored": true
+        },
+        {
+          "name": "google-chrome-beta",
+          "path": "~/.config/google-chrome-beta",
+          "ignored": true
+        },
+        {
+          "name": "google-chrome-unstable",
+          "path": "~/.config/google-chrome-unstable",
+          "ignored": true
+        },
+        {
+          "name": "herdr",
+          "path": "~/.config/herdr",
+          "ignored": true
+        },
+        {
+          "name": "hyprland-mimeapps.list",
+          "path": "~/.config/hyprland-mimeapps.list",
+          "ignored": true
+        },
+        {
+          "name": "hyprland-preview-share-picker",
+          "path": "~/.config/hyprland-preview-share-picker",
+          "ignored": true
+        },
+        {
+          "name": "ibus",
+          "path": "~/.config/ibus",
+          "ignored": true
+        },
+        {
+          "name": "imv",
+          "path": "~/.config/imv",
+          "ignored": true
+        },
+        {
+          "name": "lazydocker",
+          "path": "~/.config/lazydocker",
+          "ignored": true
+        },
+        {
+          "name": "libaccounts-glib",
+          "path": "~/.config/libaccounts-glib",
+          "ignored": true
+        },
+        {
+          "name": "litellm",
+          "path": "~/.config/litellm",
+          "ignored": true
+        },
+        {
+          "name": "menus",
+          "path": "~/.config/menus",
+          "ignored": true
+        },
+        {
+          "name": "microsoft-edge",
+          "path": "~/.config/microsoft-edge",
+          "ignored": true
+        },
+        {
+          "name": "microsoft-edge-dev",
+          "path": "~/.config/microsoft-edge-dev",
+          "ignored": true
+        },
+        {
+          "name": "mise",
+          "path": "~/.config/mise",
+          "ignored": true
+        },
+        {
+          "name": "nautilus",
+          "path": "~/.config/nautilus",
+          "ignored": true
+        },
+        {
+          "name": "net.imput.helium",
+          "path": "~/.config/net.imput.helium",
+          "ignored": true
+        },
+        {
+          "name": "obs",
+          "path": "~/.config/obs",
+          "ignored": true
+        },
+        {
+          "name": "obs-studio",
+          "path": "~/.config/obs-studio",
+          "ignored": true
+        },
+        {
+          "name": "obsidian",
+          "path": "~/.config/obsidian",
+          "ignored": true
+        },
+        {
+          "name": "ow-electron",
+          "path": "~/.config/ow-electron",
+          "ignored": true
+        },
+        {
+          "name": "pipeweaver",
+          "path": "~/.config/pipeweaver",
+          "ignored": true
+        },
+        {
+          "name": "procps",
+          "path": "~/.config/procps",
+          "ignored": true
+        },
+        {
+          "name": "pulse",
+          "path": "~/.config/pulse",
+          "ignored": true
+        },
+        {
+          "name": "qalculate",
+          "path": "~/.config/qalculate",
+          "ignored": true
+        },
+        {
+          "name": "rbw",
+          "path": "~/.config/rbw",
+          "ignored": true
+        },
+        {
+          "name": "systemd",
+          "path": "~/.config/systemd",
+          "ignored": true
+        },
+        {
+          "name": "unity3d",
+          "path": "~/.config/unity3d",
+          "ignored": true
+        },
+        {
+          "name": "user-dirs.locale",
+          "path": "~/.config/user-dirs.locale",
+          "ignored": true
+        },
+        {
+          "name": "uwsm",
+          "path": "~/.config/uwsm",
+          "ignored": true
+        },
+        {
+          "name": "xdg-desktop-portal",
+          "path": "~/.config/xdg-desktop-portal",
+          "ignored": true
+        },
+        {
+          "name": "xournalpp",
+          "path": "~/.config/xournalpp",
+          "ignored": true
+        },
+        {
+          "name": "yay",
+          "path": "~/.config/yay",
+          "ignored": true
+        },
+        {
+          "name": "btop",
+          "path": "~/.config/btop",
+          "ignored": true
+        },
+        {
+          "name": "environment.d",
+          "path": "~/.config/environment.d",
+          "ignored": true
+        },
+        {
+          "name": "fastfetch",
+          "path": "~/.config/fastfetch",
+          "ignored": true
+        },
+        {
+          "name": "kitty",
+          "path": "~/.config/kitty",
+          "ignored": true
+        },
+        {
+          "name": "mimeapps.list",
+          "path": "~/.config/mimeapps.list",
+          "ignored": true
+        },
+        {
+          "name": "mpv",
+          "path": "~/.config/mpv",
+          "ignored": true
+        },
+        {
+          "name": "starship.toml",
+          "path": "~/.config/starship.toml",
+          "ignored": true
+        },
+        {
+          "name": "user-dirs.dirs",
+          "path": "~/.config/user-dirs.dirs",
+          "ignored": true
+        }
+      ]
     }
   ]
 }
