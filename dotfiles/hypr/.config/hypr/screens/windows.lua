@@ -63,6 +63,8 @@ hl.on("window.open", function(w)
     hl.dispatch(hl.dsp.window.center({ window = w }))
     return
   end
+  -- Gaming windows keep the frame they were last left at (frames.lua), so they skip slots and the dialog box.
+  if w.workspace and w.workspace.name == C.gaming_workspace then return end
   -- Settings and other extra windows share the app's class, so class-based slots would give them the main window's place.
   if not U.transient(w) and U.secondary(w) then
     hl.dispatch(hl.dsp.window.tag({ tag = "+secondary", window = w }))

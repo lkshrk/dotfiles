@@ -6,6 +6,7 @@ C.top = "desc:Samsung Electric Company Odyssey G60SD HNAX800191"
 C.side = "desc:Samsung Electric Company Odyssey G60SD HNAX800182"
 
 C.top_workspace = "10"
+C.gaming_workspace = "9"
 C.side_workspaces = { ["6"] = true, ["7"] = true }
 
 for _, workspace in ipairs({ "1", "2", "3", "4", "5", "8", "9" }) do

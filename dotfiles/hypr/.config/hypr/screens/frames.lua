@@ -1,17 +1,15 @@
--- Floating launchers that Hyprland only keeps the size of: their last frame is saved on close and reapplied on open.
+-- Floating windows on the gaming workspace, which Hyprland only keeps the size of: their last frame is saved on close and reapplied on open.
+local C = require("hypr.screens.config")
 local U = require("hypr.screens.util")
 
 local frames_file = (os.getenv("XDG_STATE_HOME") or (os.getenv("HOME") .. "/.local/state")) .. "/hypr-screens/frames"
 
--- Battle.net games share the launcher's class, so only the launcher's own title counts.
-local remembered = {
-  wowupcf = ".*",
-  steam_app_battlenet = "^Battle%.net$",
-}
-
+-- Keyed by title too, since Steam's main window, friends list and popups share one class.
 local function key(w)
-  local pattern = remembered[w.class or ""]
-  if pattern and (w.title or ""):match(pattern) then return w.class end
+  local title = w.title or ""
+  if title ~= "" and w.class and w.workspace and w.workspace.name == C.gaming_workspace then
+    return w.class .. "|" .. title
+  end
 end
 
 local function load()
