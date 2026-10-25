@@ -196,16 +196,20 @@
     {
       "name": "omarchy",
       "tools": [
+        "7zip",
         "coppwr",
         "deepfilternet-ladspa",
+        "file-roller",
         "keyd",
         "lsp-plugins-lv2",
         "moshi-hook",
         "nfs-utils",
         "ntfsprogs",
         "obs-vkcapture",
+        "ouch",
         "pipeweaver",
-        "x42-plugins-lv2"
+        "x42-plugins-lv2",
+        "yazi"
       ]
     },
     {

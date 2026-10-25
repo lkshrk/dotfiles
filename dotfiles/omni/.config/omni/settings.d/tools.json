@@ -1,5 +1,13 @@
 {
   "tools": {
+    "7zip": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "7zip"
+        }
+      ]
+    },
     "@openai/codex": {
       "providers": [
         {
@@ -808,6 +816,14 @@
         {
           "provider": "zypper",
           "package": "ffmpeg"
+        }
+      ]
+    },
+    "file-roller": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "file-roller"
         }
       ]
     },
@@ -2160,6 +2176,15 @@
       ],
       "git": "https://github.com/osmcode/osmium-tool"
     },
+    "ouch": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "ouch"
+        }
+      ],
+      "git": "https://github.com/ouch-org/ouch"
+    },
     "parsec": {
       "providers": [
         {
@@ -3150,6 +3175,15 @@
         }
       ],
       "git": "https://github.com/adrienverge/yamllint"
+    },
+    "yazi": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "yazi"
+        }
+      ],
+      "git": "https://github.com/sxyazi/yazi"
     },
     "youtube-dl": {
       "providers": [
