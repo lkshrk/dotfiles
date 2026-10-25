@@ -6,7 +6,8 @@ set -euo pipefail
 
 live="$HOME/.config/obs-studio"
 repo="$HOME/Dev/dotfiles/dotfiles/obs/.config/obs-studio"
-secrets=(OBS_TWITCH_STREAM_KEY OBS_WEBSOCKET_PASSWORD OBS_STREAMLABS_ALERT_URL)
+secrets=(OBS_TWITCH_STREAM_KEY OBS_STREAMLABS_ALERT_URL)
+# The websocket config stays local: OBS shows its password in one click and only local clients use it.
 files=(
   global.ini
   user.ini
@@ -15,7 +16,6 @@ files=(
   basic/profiles/Untitled/service.json
   basic/profiles/Untitled/streamEncoder.json
   basic/profiles/Untitled/recordEncoder.json
-  plugin_config/obs-websocket/config.json
 )
 
 usage() { echo "usage: obs-config export|apply" >&2; exit 1; }
