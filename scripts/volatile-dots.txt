@@ -1,7 +1,7 @@
 # Repo-relative dotfiles modified by workspace setup or their tools. Kept as
-# real copies instead of stow symlinks so local writes never dirty the checkout.
-dotfiles/claude/.claude/settings.json
-dotfiles/claude/.claude/CLAUDE.md
-dotfiles/codex/.codex/config.toml
-dotfiles/codex/.codex/rules/default.rules
-dotfiles/codex/.codex/AGENTS.md
+# real copies, not managed by omni; templates/ holds the shared defaults.
+templates/claude/.claude/settings.json
+templates/claude/.claude/CLAUDE.md
+templates/codex/.codex/config.toml
+templates/codex/.codex/rules/default.rules
+templates/codex/.codex/AGENTS.md

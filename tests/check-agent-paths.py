@@ -38,9 +38,16 @@ with tempfile.TemporaryDirectory() as directory:
     check(1)
     git("rm", "-f", str(claude))
     check(0)
+    template = root / "templates/claude/.claude/settings.json"
+    template.parent.mkdir(parents=True)
+    template.write_text('{"env":{"ROOT":"/home/test/plugin"}}\n')
+    git("add", ".")
+    check(1)
+    git("rm", "-f", str(template))
+    check(0)
     host = root / "dotfiles/codex@host/.codex/config.toml"
     host.parent.mkdir(parents=True)
     host.write_text("path = '/home/host/tool'\n")
     git("add", ".")
     check(0)
-print("PASS: staged path guard, partial staging, both clients, deletions and explicit host packages")
+print("PASS: staged path guard, partial staging, both clients, templates, deletions and explicit host packages")

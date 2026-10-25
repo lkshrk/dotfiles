@@ -9,8 +9,8 @@ import tempfile
 import tomllib
 
 repo = Path(__file__).resolve().parents[1]
-codex_path = repo / "dotfiles/codex/.codex/config.toml"
-claude_path = repo / "dotfiles/claude/.claude/settings.json"
+codex_path = repo / "templates/codex/.codex/config.toml"
+claude_path = repo / "templates/claude/.claude/settings.json"
 codex = tomllib.loads(codex_path.read_text())
 claude = json.loads(claude_path.read_text())
 for path in (codex_path, claude_path):

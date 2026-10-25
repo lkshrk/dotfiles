@@ -28,7 +28,7 @@ for file in "$tmp_dir/.codex/AGENTS.md" "$tmp_dir/.claude/CLAUDE.md"; do
   grep -Fq 'Docker-in-Docker (DinD) is not enabled' "$file"
 done
 
-grep -Fxq 'dotfiles/codex/.codex/AGENTS.md' "$repo_dir/scripts/volatile-dots.txt"
-grep -Fxq 'dotfiles/claude/.claude/CLAUDE.md' "$repo_dir/scripts/volatile-dots.txt"
+grep -Fxq 'templates/codex/.codex/AGENTS.md' "$repo_dir/scripts/volatile-dots.txt"
+grep -Fxq 'templates/claude/.claude/CLAUDE.md' "$repo_dir/scripts/volatile-dots.txt"
 
 printf 'PASS: Coder workspace agent notes are installed locally\n'

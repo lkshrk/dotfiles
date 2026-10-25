@@ -12,8 +12,6 @@
           "path": "~/.codex",
           "ignore": [
             "*",
-            "!/config.toml",
-            "!/AGENTS.md",
             "!/RTK.md",
             "/rules/default.local.rules"
           ]
@@ -38,8 +36,6 @@
           "path": "~/.claude",
           "ignore": [
             "*",
-            "!/settings.json",
-            "!/CLAUDE.md",
             "!/scripts/",
             "!/keybindings.json",
             "!/statusline-command.sh",

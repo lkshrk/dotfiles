@@ -6,7 +6,7 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 export HOME=$tmp/home
 
-source_file=$repo_dir/dotfiles/claude/.claude/settings.json
+source_file=$repo_dir/templates/claude/.claude/settings.json
 target=$HOME/.claude/settings.json
 mkdir -p "$(dirname "$target")"
 
