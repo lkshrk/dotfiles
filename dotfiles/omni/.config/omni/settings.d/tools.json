@@ -241,22 +241,6 @@
       ],
       "git": "https://github.com/usebruno/bruno"
     },
-    "bubblewrap": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "bubblewrap"
-        }
-      ]
-    },
-    "build-essential": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "build-essential"
-        }
-      ]
-    },
     "bun": {
       "providers": [
         {
@@ -296,23 +280,6 @@
         }
       ],
       "git": "https://github.com/lunarmodules/busted"
-    },
-    "ca-certificates": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "ca-certificates"
-        }
-      ]
-    },
-    "camofox-browser": {
-      "providers": [
-        {
-          "provider": "bun",
-          "package": "@askjo/camofox-browser"
-        }
-      ],
-      "git": "https://github.com/jo-inc/camofox-browser"
     },
     "cargo": {
       "providers": [
@@ -547,14 +514,6 @@
         {
           "provider": "apt",
           "package": "coreutils"
-        }
-      ]
-    },
-    "curl": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "curl"
         }
       ]
     },
@@ -977,14 +936,6 @@
         }
       ]
     },
-    "git": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "git"
-        }
-      ]
-    },
     "git-credential-manager": {
       "providers": [
         {
@@ -1306,21 +1257,6 @@
         }
       ],
       "git": "https://github.com/helmfile/helmfile"
-    },
-    "hermes": {
-      "providers": [
-        {
-          "provider": "script",
-          "options": {
-            "check": "command -v hermes || test -x \"$HOME/.local/bin/hermes\"",
-            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://hermes-agent.nousresearch.com/install.sh -o \"$tmp/install.sh\"; bash \"$tmp/install.sh\" --non-interactive",
-            "latest": "release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' https://github.com/NousResearch/hermes-agent/releases/latest); tag=${release#*releases/tag/}; printf '%s\\n' \"${tag#v}\"",
-            "upgrade": "PATH=\"$HOME/.local/bin:$PATH\" hermes update",
-            "version": "PATH=\"$HOME/.local/bin:$PATH\" hermes --version 2\u003e/dev/null | grep -Eo 'v?[0-9]+(\\.[0-9]+){2,3}' | head -1 | sed 's/^v//'"
-          }
-        }
-      ],
-      "git": "https://github.com/NousResearch/hermes-agent"
     },
     "hunspell-de": {
       "providers": [
@@ -1655,14 +1591,6 @@
         }
       ]
     },
-    "libssl-dev": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "libssl-dev"
-        }
-      ]
-    },
     "lightworks": {
       "providers": [
         {
@@ -1858,6 +1786,14 @@
       ],
       "git": "https://github.com/minio/mc"
     },
+    "mission-center": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "mission-center"
+        }
+      ]
+    },
     "mkcert": {
       "providers": [
         {
@@ -1874,14 +1810,6 @@
         }
       ],
       "ignore": true
-    },
-    "mission-center": {
-      "providers": [
-        {
-          "provider": "pacman",
-          "package": "mission-center"
-        }
-      ]
     },
     "mole": {
       "providers": [
@@ -2110,14 +2038,6 @@
       ],
       "git": "https://github.com/lkshrk/omni"
     },
-    "omniroute": {
-      "providers": [
-        {
-          "provider": "bun",
-          "package": "omniroute"
-        }
-      ]
-    },
     "opencode": {
       "providers": [
         {
@@ -2141,13 +2061,6 @@
         {
           "provider": "brew",
           "package": "openshift-cli"
-        }
-      ]
-    },
-    "openssl": {
-      "providers": [
-        {
-          "provider": "apt"
         }
       ]
     },
@@ -2278,14 +2191,6 @@
         {
           "provider": "apt",
           "package": "pipx"
-        }
-      ]
-    },
-    "pkg-config": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "pkg-config"
         }
       ]
     },
@@ -2935,14 +2840,6 @@
       ],
       "git": "https://github.com/TypeWhisper/typewhisper-mac"
     },
-    "unzip": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "unzip"
-        }
-      ]
-    },
     "uv": {
       "providers": [
         {
@@ -3134,14 +3031,6 @@
         }
       ],
       "git": "https://github.com/yonaskolb/XcodeGen"
-    },
-    "xz-utils": {
-      "providers": [
-        {
-          "provider": "apt",
-          "package": "xz-utils"
-        }
-      ]
     },
     "xpadneo-dkms": {
       "providers": [
