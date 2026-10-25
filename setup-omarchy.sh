@@ -178,6 +178,19 @@ if ((units_changed)); then
 fi
 ok "STUFF on /mnt/stuff (ntfsfix before mount), NAS gaming share automounts on /mnt/gaming"
 
+# Proton prefixes break on NTFS, so the STUFF library keeps them on the home disk.
+stuff_library=/mnt/stuff/Games/SteamLibrary/steamapps
+home_compat="$HOME/.local/share/Steam/steamapps/compatdata"
+if [[ -d $stuff_library && ! -L $stuff_library/compatdata ]]; then
+  if [[ -e $stuff_library/compatdata ]]; then
+    warn "$stuff_library/compatdata is a real folder; move its prefixes to $home_compat and rerun"
+  else
+    mkdir -p "$home_compat"
+    ln -s "$home_compat" "$stuff_library/compatdata"
+  fi
+fi
+[[ -L $stuff_library/compatdata ]] && ok "STUFF Steam library keeps Proton prefixes in $home_compat"
+
 step "system tweaks"
 if have cloudflared; then
   dropin=cloudflared.service.d/wait-dns.conf
