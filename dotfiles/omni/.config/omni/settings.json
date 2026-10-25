@@ -6,6 +6,136 @@
     "settings.d/groups.json",
     "settings.d/dots.json"
   ],
+  "agents": {
+    "ignored": [
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "marketplace",
+        "id": "claude-plugins-official",
+        "reason": "Marketplace for the official LSP plugins"
+      },
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "plugin",
+        "id": "gopls-lsp@claude-plugins-official",
+        "reason": "Official LSP plugin; APM cannot package LSP-only plugins yet"
+      },
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "plugin",
+        "id": "lua-lsp@claude-plugins-official",
+        "reason": "Official LSP plugin; APM cannot package LSP-only plugins yet"
+      },
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "plugin",
+        "id": "pyright-lsp@claude-plugins-official",
+        "reason": "Official LSP plugin; APM cannot package LSP-only plugins yet"
+      },
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "plugin",
+        "id": "rust-analyzer-lsp@claude-plugins-official",
+        "reason": "Official LSP plugin; APM cannot package LSP-only plugins yet"
+      },
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "plugin",
+        "id": "typescript-lsp@claude-plugins-official",
+        "reason": "Official LSP plugin; APM cannot package LSP-only plugins yet"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "marketplace",
+        "id": "openai-bundled",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "marketplace",
+        "id": "openai-primary-runtime",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "mcp",
+        "id": "cua_repl",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "mcp",
+        "id": "node_repl",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "browser@openai-bundled",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "documents@openai-primary-runtime",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "pdf@openai-primary-runtime",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "presentations@openai-primary-runtime",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "spreadsheets@openai-primary-runtime",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "template-creator@openai-primary-runtime",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "unified-computer-use@openai-bundled",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "visualize@openai-bundled",
+        "reason": "Bundled and managed by the ChatGPT desktop app"
+      }
+    ]
+  },
   "host_settings": {
     "apm3ljhmvg7xgcf": {
       "dots_repo": "~/Developer/priv/dotfiles",
