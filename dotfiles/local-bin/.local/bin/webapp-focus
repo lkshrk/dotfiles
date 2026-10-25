@@ -11,4 +11,13 @@ url_path="/"
 [[ "$rest" != */* ]] || url_path="/${rest#*/}"
 class="chrome-${host}_${url_path//\//_}-Default"
 
+# A local app's page that loads before its daemon listens never reconnects, e.g. PipeWeaver during session restore.
+if [[ "$rest" =~ ^localhost:([0-9]+) ]]; then
+  port=${BASH_REMATCH[1]}
+  for _ in $(seq 30); do
+    (exec 3<>"/dev/tcp/127.0.0.1/$port") 2>/dev/null && break
+    sleep 0.5
+  done
+fi
+
 exec "$HOME/.config/hypr/scripts/focus-app" "^${class//./\\.}\$" chromium --app="$url"
