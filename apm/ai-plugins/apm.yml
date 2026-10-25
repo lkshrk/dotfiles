@@ -6,10 +6,6 @@ dependencies:
   - git: DietrichGebert/ponytail
     targets:
     - codex
-  - git: JuliusBrussee/caveman
-    ref: d262ab3882952a59312ff3537cd86d894523c5ab
-    targets:
-    - claude
   - git: ShiplightAI/agent-skills-v2
     path: shiplight
   - git: anthropics/claude-plugins-official
