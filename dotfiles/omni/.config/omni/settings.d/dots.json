@@ -362,6 +362,16 @@
           ]
         },
         {
+          "name": "wireplumber",
+          "path": "~/.config/wireplumber",
+          "ignore": [
+            "*",
+            "!/wireplumber.conf.d/",
+            "/wireplumber.conf.d/*",
+            "!/wireplumber.conf.d/hide-devices.conf"
+          ]
+        },
+        {
           "name": "local-bin",
           "path": "~/.local/bin",
           "ignore": [
