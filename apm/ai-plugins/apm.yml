@@ -7,7 +7,7 @@ dependencies:
     targets:
     - codex
   - git: JuliusBrussee/caveman
-    ref: 367fdb7f0f8f8e7994b5aab632c7ce5014802b32
+    ref: d262ab3882952a59312ff3537cd86d894523c5ab
     targets:
     - claude
   - git: ShiplightAI/agent-skills-v2
@@ -35,7 +35,7 @@ dependencies:
     - claude
     - codex
   - git: obra/superpowers
-    ref: b36e0829c6d0140e93cfef2ca599b1b07d4a7797
+    ref: 2ce8aa15d05bd57213e6f746f953aafb7ded7a8b
     targets:
     - claude
   - git: openai/codex-plugin-cc
