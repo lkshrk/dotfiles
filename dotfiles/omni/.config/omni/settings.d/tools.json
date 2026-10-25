@@ -818,8 +818,8 @@
           "package": "ffmpeg"
         },
         {
-          "provider": "pacman",
-          "package": "ffmpeg"
+          "provider": "aur",
+          "package": "ffmpeg-obs"
         },
         {
           "provider": "zypper",
@@ -1875,6 +1875,14 @@
       ],
       "ignore": true
     },
+    "mission-center": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "mission-center"
+        }
+      ]
+    },
     "mole": {
       "providers": [
         {
@@ -2022,14 +2030,6 @@
           "provider": "brew",
           "package": "obs"
         },
-        {
-          "provider": "pacman",
-          "package": "obs-studio"
-        }
-      ]
-    },
-    "obs-studio-browser": {
-      "providers": [
         {
           "provider": "aur",
           "package": "obs-studio-browser"
@@ -3142,6 +3142,15 @@
           "package": "xz-utils"
         }
       ]
+    },
+    "xpadneo-dkms": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "xpadneo-dkms"
+        }
+      ],
+      "git": "https://github.com/atar-axis/xpadneo"
     },
     "yabai": {
       "providers": [

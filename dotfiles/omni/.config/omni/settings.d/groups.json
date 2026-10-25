@@ -204,6 +204,7 @@
         "hunspell-en_us",
         "keyd",
         "lsp-plugins-lv2",
+        "mission-center",
         "moshi-hook",
         "nfs-utils",
         "ntfsprogs",
@@ -211,11 +212,11 @@
         "ouch",
         "pipeweaver",
         "x42-plugins-lv2",
+        "xpadneo-dkms",
         "yazi",
         "cloudflared",
         "wowup-cf-bin",
-        "steam",
-        "obs-studio-browser"
+        "steam"
       ]
     },
     {
