@@ -5,7 +5,7 @@
 set -euo pipefail
 
 live="$HOME/.config/obs-studio"
-repo="$HOME/Dev/dotfiles/dotfiles/obs/.config/obs-studio"
+repo="$HOME/Dev/dotfiles/templates/obs"
 secrets=(OBS_TWITCH_STREAM_KEY OBS_STREAMLABS_ALERT_URL)
 # The websocket config stays local: OBS shows its password in one click and only local clients use it.
 files=(
