@@ -6,12 +6,12 @@ repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 settings="$repo_dir/dotfiles/omni/.config/omni/settings.json"
 tools="$repo_dir/dotfiles/omni/.config/omni/settings.d/tools.json"
 
-grep -Fq 'OMNI_MIN_VERSION="0.10.16"' "$repo_dir/setup.sh"
+grep -Fq 'OMNI_MIN_VERSION="0.11.2"' "$repo_dir/setup.sh"
 grep -Fq 'if ($i ~ /^v?[0-9]+' "$repo_dir/setup.sh"
 
 jq -e '
-  .version == 25
-  and (.["$schema"] | endswith("/omni.settings.v25.schema.json"))
+  .version == 26
+  and (.["$schema"] | endswith("/omni.settings.v26.schema.json"))
 ' "$settings" >/dev/null
 
 jq -e '
@@ -29,7 +29,7 @@ jq -e '
       and (.options.check? != null or .options.check_path? != null or .options.detect? != null))
   and all([
       "bun", "cargo", "coder", "deepwiki-rs", "golangci-lint", "gopls",
-      "herdr-tether", "hermes", "just", "lazydocker", "nvm", "uv",
+      "hermes", "just", "lazydocker", "nvm", "uv",
       "actionlint", "ffmpeg", "gitleaks", "glow", "lazygit", "ttyd", "vhs", "yamlfmt"
     ][];
       . as $name
@@ -58,7 +58,7 @@ jq -e '
       ((.options.install // "") | test("curl[^;|]*\\|[[:space:]]*(sh|bash)") | not))
   and all($scripts[];
       ((.options.uninstall // "") | test("rm[[:space:]][^;]*[[:space:]]\\$HOME") | not))
-  and all(["bun", "cargo", "claude-code", "coder", "golangci-lint", "herdr", "hermes", "just"][];
+  and all(["bun", "cargo", "claude-code", "coder", "golangci-lint", "hermes", "just"][];
       . as $name
       | any($scripts[];
           .logical_name == $name

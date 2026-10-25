@@ -33,7 +33,7 @@ M.appRules = {
   ["Elgato Wave Link"]  = "stream",
 }
 
-M.managedApps = { Vivaldi = true }
+M.managedApps = {}
 for app in pairs(M.appRules) do M.managedApps[app] = true end
 
 return M

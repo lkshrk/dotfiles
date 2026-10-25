@@ -2,28 +2,6 @@
 
 alias bu='brew update && brew upgrade'
 
-# Ensure rbw is usable before git operations that need signing or SSH keys.
-git() {
-  case "${1:-}" in
-    commit|tag|merge)
-      if (( $+functions[_rbw_can_prompt] )) && _rbw_can_prompt && (( $+functions[_rbw_unlock_if_needed] )); then
-        _rbw_unlock_if_needed || return
-      else
-        (( $+functions[_rbw_fix_ssh_auth_sock] )) && _rbw_fix_ssh_auth_sock >/dev/null 2>&1 || true
-      fi
-      ;;
-    push|pull|fetch|clone|ls-remote|submodule)
-      if (( $+functions[_rbw_can_prompt] )) && _rbw_can_prompt && (( $+functions[_rbw_ssh_agent_ready] )); then
-        _rbw_ssh_agent_ready || return
-      else
-        (( $+functions[_rbw_fix_ssh_auth_sock] )) && _rbw_fix_ssh_auth_sock >/dev/null 2>&1 || true
-      fi
-      ;;
-  esac
-
-  command git "$@"
-}
-
 # Refresh yabai's sudoers entry after Homebrew actions that can replace the
 # yabai binary. The script is idempotent and quiet when the hash is current.
 brew() {

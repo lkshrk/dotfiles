@@ -20,7 +20,9 @@ The setup flow:
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
 7. Loads `com.lkshrk.knowledge-sync` as a user LaunchAgent (runs `~/knowledge/scripts/sync.sh` every 5 minutes; needs the vault clone, see its `scripts/setup.sh`).
 8. Refreshes the yabai sudoers entry.
-9. Installs repository-local Lefthook hooks.
+9. Sets rbw's lock timeout, unlocks it and writes the LAN root CA from the
+   vault to `~/.local/share/certs/lan-ca.pem` (`scripts/lan-ca.sh`).
+10. Installs repository-local Lefthook hooks.
 
 Git hooks use Git's default repository-local directory. Do not set a global
 `core.hooksPath`: Lefthook installs from different repositories would share and
@@ -116,6 +118,9 @@ setup-coder-dots.sh       # Coder workspace personal-dots sync
 scripts/
   coder-bootstrap.sh      # side-effect-free logging, notes and terminfo helpers
   macos-defaults.sh       # optional macOS defaults
+  lan-ca.sh               # LAN root CA from the vault, trusted on Linux
+  lib/setup-common.sh     # helpers shared by the setup scripts
+docs/reviews/             # design reviews and evaluations
 dotfiles/
   omni/                   # tracked Omni config
   yabai/                  # yabai config + sleep-on-lock Swift source

@@ -83,6 +83,7 @@ env_next_path_prepend "$HOME/.cargo/bin"
 env_next_path_prepend "$BUN_INSTALL/bin"
 [ -z "$env_next_nvm_bin" ] || env_next_path_prepend "$env_next_nvm_bin"
 env_next_path_append "$GOPATH/bin"
+env_next_path_append "$ENV_DIR/bin"
 env_next_path_prepend "$HOME/.local/bin"
 env_next_path_prepend "$HOME/.mimocode/bin"
 
@@ -92,7 +93,7 @@ unset env_next_nvm_pattern env_next_nvm_best env_next_nvm_best_major env_next_nv
 unset env_next_nvm_best_patch env_next_nvm_candidate env_next_nvm_name env_next_nvm_version
 unset env_next_nvm_major env_next_nvm_rest env_next_nvm_minor env_next_nvm_patch
 unset env_next_nvm_target env_next_nvm_dir
-unset env_next_rbw_uid_val env_next_rbw_tmp env_next_rbw_sock env_next_rbw_candidate
+unset env_next_rbw_uid_val env_next_rbw_tmp env_next_rbw_sock env_next_rbw_candidate env_next_rbw_runtime
 unset -f env_next_nvm_alias_target env_next_nvm_best_dir_from_candidates 2>/dev/null || true
 unset -f env_next_nvm_resolve_dir env_next_nvm_resolve_bin 2>/dev/null || true
 unset -f env_next_rbw_uid env_next_rbw_sock_darwin env_next_rbw_sock_linux 2>/dev/null || true

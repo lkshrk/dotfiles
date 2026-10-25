@@ -5,7 +5,7 @@
   ]
 
 # App shortcuts
-alt + ctrl + cmd - b : FOCUS_APP_PATTERN='^(Helium|Vivaldi)$' ~/.config/yabai/focus-app.sh 'Helium'
+alt + ctrl + cmd - b : ~/.config/yabai/focus-app.sh 'Helium'
 alt + ctrl + cmd - c : ~/.config/yabai/focus-app.sh 'Chatterino'
 alt + ctrl + cmd - d : ~/.config/yabai/focus-app.sh 'Discord'
 alt + ctrl + cmd - e : ~/.config/yabai/focus-editor.sh

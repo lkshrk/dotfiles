@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v25.schema.json",
-  "version": 25,
+  "$schema": "https://raw.githubusercontent.com/lkshrk/omni/main/spec/omni.settings.v26.schema.json",
+  "version": 26,
   "$include": [
     "settings.d/tools.json",
     "settings.d/groups.json",
@@ -52,16 +52,20 @@
       "python",
       "shell",
       "utils",
-      "dev-tooling"
+      "dev-tooling",
+      "browser"
     ],
     "topaz": [
       "ai",
       "ai-plugins",
+      "apps",
       "core",
       "desk",
+      "desk-mac",
       "dev",
       "dev-tooling",
       "gaming",
+      "gaming-mac",
       "go",
       "infra",
       "lua",
@@ -69,7 +73,9 @@
       "omni",
       "prereqs",
       "priv",
+      "priv-mac",
       "python",
+      "secrets",
       "shell",
       "test-tooling",
       "ts",

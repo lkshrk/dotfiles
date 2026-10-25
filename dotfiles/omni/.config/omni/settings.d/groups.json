@@ -5,9 +5,9 @@
       "tools": [
         "claude-code",
         "coder",
-        "herdr",
         "@openai/codex",
-        "anomalyco/tap/opencode-v2"
+        "anomalyco/tap/opencode-v2",
+        "obsidian-wiki"
       ]
     },
     {
@@ -19,8 +19,28 @@
         "deepwiki-rs",
         "oh-my-codex",
         "rtk",
-        "herdr-tether",
         "codebase-memory-mcp"
+      ]
+    },
+    {
+      "name": "apps",
+      "tools": [
+        "brave-browser",
+        "chatterino",
+        "elgato-stream-deck",
+        "moonlight",
+        "mosh",
+        "obs",
+        "obsidian",
+        "plex",
+        "signal",
+        "zed"
+      ]
+    },
+    {
+      "name": "browser",
+      "tools": [
+        "helium-browser"
       ]
     },
     {
@@ -49,14 +69,14 @@
     {
       "name": "desk",
       "tools": [
-        "brave-browser",
+        "font-jetbrains-mono-nerd-font"
+      ]
+    },
+    {
+      "name": "desk-mac",
+      "tools": [
         "iina",
-        "zed",
         "ghostty",
-        "obsidian",
-        "font-hack-nerd-font",
-        "font-intel-one-mono",
-        "font-jetbrains-mono-nerd-font",
         "chatgpt-classic",
         "openusage"
       ]
@@ -95,12 +115,14 @@
     {
       "name": "gaming",
       "tools": [
+        "discord"
+      ]
+    },
+    {
+      "name": "gaming-mac",
+      "tools": [
         "battle-net",
-        "discord",
-        "elgato-stream-deck",
         "elgato-wave-link",
-        "moonlight",
-        "obs",
         "linearmouse"
       ]
     },
@@ -161,13 +183,13 @@
         "the-unarchiver",
         "xcodebuildmcp",
         "zstd",
-        "rbw",
         "mlx",
         "flux-markdown",
         "tree-sitter",
         "xcodegen",
         "typewhisper",
-        "hammerspoon"
+        "hammerspoon",
+        "bcrypt"
       ]
     },
     {
@@ -183,25 +205,19 @@
       "tools": [
         "bun",
         "nvm",
-        "uv",
-        "apm-cli"
+        "uv"
       ]
     },
     {
-      "name": "priv",
+      "name": "priv-mac",
       "tools": [
-        "mosh",
-        "plex",
-        "signal",
         "skhd-zig",
-        "vivaldi",
-        "vlc",
         "yabai",
         "linear",
         "bam",
-        "chatterino",
         "cmux",
-        "d-streamy"
+        "d-streamy",
+        "vlc"
       ]
     },
     {
@@ -248,7 +264,6 @@
       "name": "utils",
       "tools": [
         "plantuml",
-        "bcrypt",
         "sshpass",
         "witr"
       ]
@@ -283,7 +298,6 @@
         "copilot-cli",
         "dbeaver-community",
         "git-credential-manager",
-        "helium",
         "lightworks",
         "oracle-jdk",
         "postman",
@@ -318,7 +332,6 @@
         "prometheus",
         "rclone",
         "sbx",
-        "obsidian-wiki",
         "corepack"
       ]
     }

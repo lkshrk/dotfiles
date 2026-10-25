@@ -7,7 +7,10 @@ config="$repo_dir/dotfiles/codex/.codex/config.toml"
 
 [[ "$(grep -c '^approval_policy[[:space:]]*=' "$config")" == 1 ]]
 [[ "$(grep -c '^default_permissions[[:space:]]*=' "$config")" == 1 ]]
-[[ "$(grep -c '^[[:space:]]*ca-certificate[[:space:]]*=' "$config")" == 3 ]]
+# The shared template must not pin a host-local CA bundle (the old OTel TLS blocks did).
+if grep -Eq '^[[:space:]]*ca-certificate[[:space:]]*=[[:space:]]*"(/Users/|/home/)' "$config"; then
+  exit 1
+fi
 [[ "$(grep -c 'url = "https://api\.ai\.h-cloud\.lan/mcp/"' "$config")" == 1 ]]
 if grep -q '^\[mcp_servers\.node_repl' "$config"; then
   exit 1

@@ -13,7 +13,7 @@ with tempfile.TemporaryDirectory() as work:
     home = Path(work)
     bin_dir = home / "bin"
     bin_dir.mkdir()
-    env = {"HOME": work, "PATH": f"{bin_dir}:/usr/bin:/bin",
+    env = {"HOME": work, "PATH": f"{bin_dir}:{os.environ['PATH']}",
            "XDG_DATA_HOME": str(home / "data"),
            "XDG_CONFIG_HOME": str(home / "config")}
     installed = home / "config/env/bin/llm-gateway-token"
@@ -46,7 +46,10 @@ with tempfile.TemporaryDirectory() as work:
     result = run(HELPER)
     assert result.returncode != 0 and not result.stdout and "rbw" in result.stderr
     rbw.unlink()
+    path = env["PATH"]
+    env["PATH"] = str(bin_dir)
     result = run(HELPER)
+    env["PATH"] = path
     assert result.returncode != 0 and not result.stdout and "install rbw" in result.stderr
 
     ssh = bin_dir / "ssh"

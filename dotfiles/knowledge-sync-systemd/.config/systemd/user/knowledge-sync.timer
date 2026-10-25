@@ -1,0 +1,9 @@
+[Unit]
+Description=Sync the ~/knowledge vault every 5 minutes
+
+[Timer]
+OnStartupSec=1min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

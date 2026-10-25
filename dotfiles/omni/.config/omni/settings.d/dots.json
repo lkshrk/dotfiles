@@ -55,6 +55,24 @@
           "name": "amp",
           "path": "~/.config/amp",
           "ignored": true
+        },
+        {
+          "name": "opencode",
+          "path": "~/.config/opencode"
+        }
+      ]
+    },
+    {
+      "name": "apps",
+      "dots": [
+        {
+          "name": "zed",
+          "path": "~/.config/zed",
+          "ignore": [
+            "settings_backup.json",
+            "prompts/prompts-library-db.0.mdb",
+            "conversations"
+          ]
         }
       ]
     },
@@ -84,6 +102,9 @@
           "hosts": {
             "topaz": {
               "package": "omni-apm@topaz"
+            },
+            "towerr": {
+              "package": "omni-apm@topaz"
             }
           },
           "ignore": [
@@ -107,24 +128,11 @@
       ]
     },
     {
-      "name": "desk",
+      "name": "desk-mac",
       "dots": [
         {
           "name": "ghostty",
           "path": "~/.config/ghostty"
-        },
-        {
-          "name": "zed",
-          "path": "~/.config/zed",
-          "ignore": [
-            "settings_backup.json",
-            "prompts/prompts-library-db.0.mdb",
-            "conversations"
-          ]
-        },
-        {
-          "name": "cmux",
-          "path": "~/.config/cmux"
         }
       ]
     },
@@ -151,6 +159,9 @@
             },
             "topaz": {
               "package": "git@topaz"
+            },
+            "towerr": {
+              "package": "git@topaz"
             }
           },
           "ignore": [
@@ -165,15 +176,11 @@
       ]
     },
     {
-      "name": "gaming",
+      "name": "gaming-mac",
       "dots": [
         {
           "name": "com.corsair",
           "path": "~/.config/com.corsair"
-        },
-        {
-          "name": "linearmouse",
-          "path": "~/.config/linearmouse"
         }
       ]
     },
@@ -226,6 +233,25 @@
           "name": "mac-disk-reclaim",
           "path": "~/.config/mac-disk-reclaim",
           "ignored": true
+        },
+        {
+          "name": "yabai",
+          "path": "~/.config/yabai",
+          "ignore": [
+            "sleep-on-lock"
+          ]
+        },
+        {
+          "name": "skhd",
+          "path": "~/.config/skhd"
+        },
+        {
+          "name": "cmux",
+          "path": "~/.config/cmux"
+        },
+        {
+          "name": "linearmouse",
+          "path": "~/.config/linearmouse"
         }
       ]
     },
@@ -242,17 +268,6 @@
     {
       "name": "priv",
       "dots": [
-        {
-          "name": "yabai",
-          "path": "~/.config/yabai",
-          "ignore": [
-            "sleep-on-lock"
-          ]
-        },
-        {
-          "name": "skhd",
-          "path": "~/.config/skhd"
-        },
         {
           "name": "moshi",
           "path": "~/.config/moshi",
@@ -357,17 +372,6 @@
           "path": "~/.config/taskless"
         },
         {
-          "name": "herdr",
-          "path": "~/.config/herdr",
-          "ignore": [
-            "plugins",
-            ".config.toml.lock",
-            ".plugins.lock",
-            "release-notes.json",
-            "session.json"
-          ]
-        },
-        {
           "name": "profile",
           "path": "~/.profile"
         },
@@ -385,20 +389,6 @@
           "name": "rustup",
           "path": "~/.rustup",
           "ignored": true
-        },
-        {
-          "name": "herdr-tether",
-          "path": "~/.config/herdr-tether",
-          "ignored": true
-        },
-        {
-          "name": "herdr-mirror",
-          "path": "~/.config/herdr-mirror",
-          "hosts": {
-            "topaz": {
-              "package": "herdr-mirror@topaz"
-            }
-          }
         },
         {
           "name": "com.elgato",
