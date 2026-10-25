@@ -90,14 +90,16 @@ The setup flow:
 5. Switches the login shell to zsh, installs the keyd Caps Lock → Hyper
    mapping, enables Docker with sudoless access and makes Helium the default
    browser.
-6. Configures rbw (asking for the Bitwarden email and server once) and unlocks
+6. Installs the web apps in `omarchy/chromium.webapps` as Chromium app windows
+   (Helium stays the default browser).
+7. Configures rbw (asking for the Bitwarden email and server once) and unlocks
    it, which starts the SSH agent used for git signing.
-7. Writes the LAN root CA from the vault to `~/.local/share/certs/lan-ca.pem`
+8. Writes the LAN root CA from the vault to `~/.local/share/certs/lan-ca.pem`
    and trusts it system-wide (`scripts/lan-ca.sh`).
-8. Runs `omni agents sync` (APM plugins and hooks; needs the LAN CA).
-9. Clones the knowledge vault to `~/knowledge` over the rbw SSH agent and
-   enables `knowledge-sync.timer`.
-10. Installs the Lefthook hooks of this repository and the vault, and checks
+9. Runs `omni agents sync` (APM plugins and hooks; needs the LAN CA).
+10. Clones the knowledge vault to `~/knowledge` over the rbw SSH agent and
+    enables `knowledge-sync.timer`.
+11. Installs the Lefthook hooks of this repository and the vault, and checks
     that Hyprland loads the linked config.
 
 Omarchy owns most of `~/.config/hypr` and `~/.config/omarchy` and rewrites them
@@ -177,6 +179,7 @@ scripts/
   lib/setup-common.sh     # helpers shared by setup.sh and setup-omarchy.sh
 omarchy/
   keyd/default.conf       # Caps Lock → Hyper, installed to /etc/keyd
+  chromium.webapps        # web apps setup installs to open in Chromium
   remove.packages         # Omarchy preinstalls setup removes
   remove.webapps          # Omarchy web apps setup removes
 docs/reviews/             # design reviews and evaluations

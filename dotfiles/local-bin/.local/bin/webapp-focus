@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Chromium names an --app window's class after the URL, the same rule setup-omarchy.sh uses for StartupWMClass.
+set -euo pipefail
+
+[ $# -eq 1 ] || { echo "usage: $0 URL" >&2; exit 1; }
+url=$1
+rest="${url#*://}"
+host="${rest%%/*}"
+host="${host%%:*}"
+url_path="/"
+[[ "$rest" != */* ]] || url_path="/${rest#*/}"
+class="chrome-${host}_${url_path//\//_}-Default"
+
+exec "$HOME/.config/hypr/scripts/focus-app" "^${class//./\\.}\$" chromium --app="$url"

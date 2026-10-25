@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Usage: brave-media Previous|PlayPause|Next
+set -euo pipefail
+player=$(busctl --user list --no-legend | awk '$1 ~ /^org\.mpris\.MediaPlayer2\.brave/ {print $1; exit}')
+[ -n "$player" ] || exit 0
+busctl --user call "$player" /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player "$1"

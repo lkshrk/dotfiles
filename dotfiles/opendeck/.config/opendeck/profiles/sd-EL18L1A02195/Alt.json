@@ -1,0 +1,378 @@
+{
+  "infobars": [],
+  "keys": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    {
+      "action": {
+        "controllers": [
+          "Keypad",
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/switchProfile.png",
+        "name": "Switch Profile",
+        "plugin": "com.amansprojects.starterpack.sdPlugin",
+        "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/switchProfile.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.amansprojects.starterpack.sdPlugin/icons/switchProfile.png",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Switch the selected profile",
+        "uuid": "com.amansprojects.starterpack.switchprofile",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.7.0",
+      "current_state": 0,
+      "settings": {
+        "anticlockwise": "Alt",
+        "clockwise": "Alt",
+        "device": "sd-EL18L1A02195",
+        "profile": "Default"
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    }
+  ],
+  "sliders": [
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/deckweaver.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute",
+            "rotate": "Change Volume",
+            "touch": ""
+          }
+        },
+        "icon": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+        "name": "DeckWeaver Knob",
+        "plugin": "com.designgears.deckweaver.sdPlugin",
+        "property_inspector": "plugins/com.designgears.deckweaver.sdPlugin/propertyInspector/action.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+            "image_scale": 100,
+            "name": "",
+            "show": false,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Control PipeWeaver volume with a dial",
+        "uuid": "com.designgears.deckweaver.knob",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.0.0",
+      "current_state": 0,
+      "settings": {
+        "device_id": "01M5FM3N033GQYWE7FMMHT00KX",
+        "device_type": "target",
+        "icon_fa": "regular/headphones",
+        "icon_path": null
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.png",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "Headphones",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": true,
+        "encoder": {
+          "background": "",
+          "icon": "/home/lkshrk/.config/opendeck/plugins/de.felitendo.obs-tools.sdPlugin/images/encoder/volume.svg",
+          "layout": "layouts/volume-meter.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute",
+            "rotate": "Volume",
+            "touch": "Mute"
+          }
+        },
+        "icon": "plugins/de.felitendo.obs-tools.sdPlugin/images/actions/volume.svg",
+        "name": "Volume (Dial)",
+        "plugin": "de.felitendo.obs-tools.sdPlugin",
+        "property_inspector": "plugins/de.felitendo.obs-tools.sdPlugin/pi/index.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/encoder/volume-key.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Turn the dial to change the volume of an audio source, with a live level meter. Press or touch to mute.",
+        "uuid": "de.felitendo.obs-tools.inputvolume",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.1.0",
+      "current_state": 0,
+      "settings": {
+        "allowBoost": false,
+        "disableTouch": false,
+        "input": "Mic",
+        "pressAction": "mute",
+        "showMeter": true,
+        "step": 5,
+        "unit": "percent"
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": true,
+        "encoder": {
+          "background": "",
+          "icon": "/home/lkshrk/.config/opendeck/plugins/de.felitendo.obs-tools.sdPlugin/images/encoder/volume.svg",
+          "layout": "layouts/volume-meter.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute",
+            "rotate": "Volume",
+            "touch": "Mute"
+          }
+        },
+        "icon": "plugins/de.felitendo.obs-tools.sdPlugin/images/actions/volume.svg",
+        "name": "Volume (Dial)",
+        "plugin": "de.felitendo.obs-tools.sdPlugin",
+        "property_inspector": "plugins/de.felitendo.obs-tools.sdPlugin/pi/index.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/encoder/volume-key.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Turn the dial to change the volume of an audio source, with a live level meter. Press or touch to mute.",
+        "uuid": "de.felitendo.obs-tools.inputvolume",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.2.0",
+      "current_state": 0,
+      "settings": {
+        "allowBoost": false,
+        "disableTouch": false,
+        "input": "Stream",
+        "pressAction": "mute",
+        "showMeter": true,
+        "step": 5,
+        "unit": "percent"
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": true,
+        "encoder": {
+          "background": "",
+          "icon": "/home/lkshrk/.config/opendeck/plugins/de.felitendo.obs-tools.sdPlugin/images/encoder/volume.svg",
+          "layout": "layouts/volume-meter.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute",
+            "rotate": "Volume",
+            "touch": "Mute"
+          }
+        },
+        "icon": "plugins/de.felitendo.obs-tools.sdPlugin/images/actions/volume.svg",
+        "name": "Volume (Dial)",
+        "plugin": "de.felitendo.obs-tools.sdPlugin",
+        "property_inspector": "plugins/de.felitendo.obs-tools.sdPlugin/pi/index.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/encoder/volume-key.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Turn the dial to change the volume of an audio source, with a live level meter. Press or touch to mute.",
+        "uuid": "de.felitendo.obs-tools.inputvolume",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.3.0",
+      "current_state": 0,
+      "settings": {
+        "allowBoost": false,
+        "disableTouch": false,
+        "input": "Music",
+        "pressAction": "mute",
+        "showMeter": true,
+        "step": 5,
+        "unit": "percent"
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    }
+  ]
+}

@@ -123,7 +123,8 @@
       "tools": [
         "battle-net",
         "elgato-wave-link",
-        "linearmouse"
+        "linearmouse",
+        "wowup-cf"
       ]
     },
     {
@@ -195,10 +196,16 @@
     {
       "name": "omarchy",
       "tools": [
+        "coppwr",
+        "deepfilternet-ladspa",
         "keyd",
+        "lsp-plugins-lv2",
         "moshi-hook",
         "nfs-utils",
-        "ntfsprogs"
+        "ntfsprogs",
+        "obs-vkcapture",
+        "pipeweaver",
+        "x42-plugins-lv2"
       ]
     },
     {

@@ -201,6 +201,25 @@ $ufw_rule" /etc/ufw/before.rules
 fi
 ok "cloudflared waits for DNS, irqbalance skips NVMe queues, ufw stops logging IGMP queries"
 
+step "opendeck images"
+# OpenDeck refuses to draw slot images that are symlinks out of its own folder, so these are copied, never linked.
+# --update=none keeps icons changed in the GUI since; new ones from the repo still arrive.
+mkdir -p "$HOME/.config/opendeck/images"
+cp -r --update=none "$REPO_DIR/dotfiles/opendeck/.config/opendeck/images/." "$HOME/.config/opendeck/images/"
+ok "Stream Deck icons in place"
+
+if have obs; then
+  step "obs"
+  # Only seeds a machine without OBS scenes yet; later changes go back to the repo with `obs-config export`.
+  if [[ -f "$HOME/.config/obs-studio/basic/scenes/Untitled.json" ]]; then
+    ok "OBS already configured; run obs-config apply to replace it with the repo version"
+  elif "$HOME/.local/bin/obs-config" apply; then
+    ok "OBS scenes, profile and websocket restored, secrets from the vault"
+  else
+    warn "OBS config not applied (vault locked or OBS running); run obs-config apply later"
+  fi
+fi
+
 if have docker; then
   step "docker"
   sudo systemctl enable --now docker.socket
@@ -213,6 +232,30 @@ if [[ -n "$helium_desktop" ]]; then
   env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser "$(basename "$helium_desktop")"
   ok "Helium is the default browser"
 fi
+
+# omarchy-launch-webapp always uses the default browser, so these get their own Exec.
+# gtk-launch expands neither ~ nor $HOME, so the focus-or-launch wrapper needs its absolute path.
+step "web apps"
+while IFS='|' read -r name url icon; do
+  [[ -n "$name" && "$name" != \#* ]] || continue
+  rest="${url#*://}"
+  host="${rest%%/*}"
+  host="${host%%:*}"
+  url_path="/"
+  [[ "$rest" != */* ]] || url_path="/${rest#*/}"
+  exec_cmd="$HOME/.local/bin/webapp-focus $url"
+  exec_line="Exec=$exec_cmd"
+  wm_class_line="StartupWMClass=chrome-${host}_${url_path//\//_}-Default"
+  desktop="$HOME/.local/share/applications/$name.desktop"
+  if ! { grep -qxF "$exec_line" "$desktop" && grep -qxF "$wm_class_line" "$desktop"; } 2>/dev/null; then
+    if ! omarchy-webapp-install "$name" "$url" "$icon" "$exec_cmd" >/dev/null; then
+      warn "web app $name could not be installed"
+      continue
+    fi
+    printf '%s\n' "$wm_class_line" >>"$desktop"
+  fi
+  ok "web app $name opens in Chromium"
+done < "$REPO_DIR/omarchy/chromium.webapps"
 
 if have rbw; then
   step "rbw"

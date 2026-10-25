@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# Restart the PipeWire stack and bring back everything that does not reconnect on its own.
+# With CANDIDATE, it swaps in that mic-filtered.conf and rolls back to the previous one if PipeWire crashes or the mic chain is missing.
+set -u
+
+conf="$HOME/.config/pipewire/pipewire.conf.d/mic-filtered.conf"
+candidate=${1:-}
+units=(pipewire.socket pipewire-pulse.socket pipewire.service pipewire-pulse.service wireplumber.service)
+
+say() { printf '%s\n' "$*"; }
+
+# A crash-looping PipeWire trips systemd's start limit on the socket too, so both are reset.
+restart_stack() {
+  systemctl --user stop wireplumber.service pipewire-pulse.service pipewire.service pipewire-pulse.socket pipewire.socket
+  systemctl --user reset-failed "${units[@]}" 2>/dev/null
+  systemctl --user start pipewire.socket pipewire-pulse.socket
+  systemctl --user start pipewire.service pipewire-pulse.service wireplumber.service
+  sleep 4
+}
+
+healthy() {
+  [ "$(systemctl --user is-active pipewire)" = active ] || return 1
+  pw-dump 2>/dev/null | jq -e '.[] | select(.info.props."node.name"? == "mic_filtered")' >/dev/null || return 1
+  ! journalctl --user --since "$1" -u pipewire -o cat --no-pager | grep -qE 'No space left on device|core-dump'
+}
+
+restart_pipeweaver() {
+  pkill -f '^/usr/bin/pipeweaver-daemon'
+  sleep 1
+  pkill -9 -f '^/usr/bin/pipeweaver-daemon' 2>/dev/null
+  setsid -f uwsm-app -- pipeweaver-daemon --background >/dev/null 2>&1
+  local n
+  for _ in $(seq 20); do
+    n=$(pw-dump 2>/dev/null | jq '[.[] | select((.info.props."node.name"? // "") | test("^pipeweaver_"))] | length' 2>/dev/null || echo 0)
+    [ "${n:-0}" -ge 6 ] && break
+    sleep 1
+  done
+  say "pipeweaver channels: ${n:-0}"
+}
+
+# Portals give up on PipeWire after repeated failures and never retry, which breaks screen sharing until they restart.
+restart_portals() {
+  systemctl --user restart xdg-desktop-portal-hyprland.service xdg-desktop-portal.service
+  sleep 2
+  if timeout 3 busctl --user get-property org.freedesktop.portal.Desktop /org/freedesktop/portal/desktop \
+    org.freedesktop.portal.ScreenCast version >/dev/null 2>&1; then
+    say "portals: screen sharing answers"
+  else
+    say "portals: screen sharing does NOT answer"
+  fi
+}
+
+# These keep a dead PipeWire connection and need their own restart (OBS: reload the capture source instead).
+stale_apps() {
+  local found=()
+  for app in Discord obs signal-desktop brave helium; do
+    pgrep -x "$app" >/dev/null 2>&1 && found+=("$app")
+  done
+  ((${#found[@]})) && say "reconnect these by hand: ${found[*]} (OBS: open the capture source and pick it again)"
+}
+
+if [ -n "$candidate" ]; then
+  [ -f "$candidate" ] || { say "no such file: $candidate"; exit 1; }
+  good=$(mktemp)
+  cp "$(readlink -f "$conf")" "$good"
+  cp "$candidate" "$(readlink -f "$conf")"
+fi
+
+since=$(date '+%Y-%m-%d %H:%M:%S')
+restart_stack
+if [ -n "$candidate" ] && ! healthy "$since"; then
+  say "candidate failed live, restoring the previous config:"
+  journalctl --user --since "$since" -u pipewire -o cat --no-pager | grep -iE 'error|unknown|can.t|space|core' | sort | uniq -c | head -4
+  cp "$good" "$(readlink -f "$conf")"
+  restart_stack
+fi
+[ -n "$candidate" ] && rm -f "$good"
+
+if [ "$(systemctl --user is-active pipewire)" != active ]; then
+  say "PipeWire is DOWN"
+  exit 2
+fi
+restart_pipeweaver
+restart_portals
+say "default mic: $(wpctl inspect @DEFAULT_AUDIO_SOURCE@ 2>/dev/null | sed -n 's/.*node.name = "\(.*\)"/\1/p' | head -1)"
+stale_apps

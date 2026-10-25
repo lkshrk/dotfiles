@@ -336,6 +336,51 @@
         {
           "name": "foot",
           "path": "~/.config/foot"
+        },
+        {
+          "name": "deck-icons",
+          "path": "~/.local/share/deck-icons"
+        },
+        {
+          "name": "opendeck",
+          "path": "~/.config/opendeck",
+          "ignore": [
+            "*",
+            "!/profiles/",
+            "!/settings.json",
+            "!/applications.json"
+          ]
+        },
+        {
+          "name": "pipewire",
+          "path": "~/.config/pipewire",
+          "ignore": [
+            "*",
+            "!/pipewire.conf.d/",
+            "/pipewire.conf.d/*",
+            "!/pipewire.conf.d/mic-filtered.conf"
+          ]
+        },
+        {
+          "name": "local-bin",
+          "path": "~/.local/bin",
+          "ignore": [
+            "*",
+            "!/brave-media",
+            "!/chatgpt",
+            "!/obs-config",
+            "!/pipeweaver-app",
+            "!/webapp-focus"
+          ]
+        },
+        {
+          "name": "local-applications",
+          "path": "~/.local/share/applications",
+          "ignore": [
+            "*",
+            "!/battlenet.desktop",
+            "!/pipeweaver.desktop"
+          ]
         }
       ]
     },

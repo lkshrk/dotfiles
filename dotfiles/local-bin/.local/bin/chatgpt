@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# The desktop app shares ~/.codex with the Codex CLI, whose config routes it through the LiteLLM gateway; its own home keeps the app on the ChatGPT subscription login.
+export CODEX_HOME="$HOME/.codex-app"
+mkdir -p "$CODEX_HOME"
+exec /usr/bin/chatgpt "$@"

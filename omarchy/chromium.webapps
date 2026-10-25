@@ -1,0 +1,6 @@
+# Web apps that setup-omarchy.sh installs to open in Chromium, as name|url|icon.
+# Helium stays the default browser. An empty icon fetches the site's favicon.
+Figma|https://figma.com/|
+GitHub|https://github.com/|
+Linear|https://linear.app/|
+PipeWeaver|http://localhost:14565|pipeweaver

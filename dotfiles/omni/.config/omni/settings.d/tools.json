@@ -498,6 +498,14 @@
       ],
       "git": "https://github.com/github/copilot-cli"
     },
+    "coppwr": {
+      "providers": [
+        {
+          "provider": "aur",
+          "package": "coppwr"
+        }
+      ]
+    },
     "corepack": {
       "providers": [
         {
@@ -571,6 +579,14 @@
       ],
       "git": "https://github.com/sopaco/deepwiki-rs"
     },
+    "deepfilternet-ladspa": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "deepfilternet-ladspa"
+        }
+      ]
+    },
     "depflush": {
       "providers": [
         {
@@ -626,9 +642,12 @@
         {
           "provider": "brew",
           "package": "discord"
+        },
+        {
+          "provider": "pacman",
+          "package": "discord"
         }
-      ],
-      "ignore": true
+      ]
     },
     "docker": {
       "providers": [
@@ -1628,6 +1647,14 @@
         }
       ]
     },
+    "lsp-plugins-lv2": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "lsp-plugins-lv2"
+        }
+      ]
+    },
     "lua": {
       "providers": [
         {
@@ -1961,6 +1988,14 @@
         }
       ]
     },
+    "obs-vkcapture": {
+      "providers": [
+        {
+          "provider": "aur",
+          "package": "obs-vkcapture"
+        }
+      ]
+    },
     "obsidian": {
       "providers": [
         {
@@ -2163,6 +2198,15 @@
           "package": "pip"
         }
       ]
+    },
+    "pipeweaver": {
+      "providers": [
+        {
+          "provider": "aur",
+          "package": "pipeweaver"
+        }
+      ],
+      "git": "https://github.com/pipeweaver/pipeweaver"
     },
     "pipx": {
       "providers": [
@@ -2979,6 +3023,26 @@
         }
       ],
       "git": "https://github.com/pranshuparmar/witr"
+    },
+    "wowup-cf": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "wowup-cf"
+        },
+        {
+          "provider": "aur",
+          "package": "wowup-cf-bin"
+        }
+      ]
+    },
+    "x42-plugins-lv2": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "x42-plugins-lv2"
+        }
+      ]
     },
     "xcodebuildmcp": {
       "providers": [

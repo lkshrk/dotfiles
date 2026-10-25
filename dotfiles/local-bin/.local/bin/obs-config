@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# Moves OBS settings between ~/.config/obs-studio and the dotfiles repo, keeping secrets in the vault.
+# export: live -> repo, secrets replaced by @@VAR@@ placeholders. apply: repo -> live, placeholders filled in.
+# OBS rewrites these files constantly, so they are copied, never linked; a link would put the real values in git.
+set -euo pipefail
+
+live="$HOME/.config/obs-studio"
+repo="$HOME/Dev/dotfiles/dotfiles/obs/.config/obs-studio"
+secrets=(OBS_TWITCH_STREAM_KEY OBS_WEBSOCKET_PASSWORD OBS_STREAMLABS_ALERT_URL)
+files=(
+  global.ini
+  user.ini
+  basic/scenes/Untitled.json
+  basic/profiles/Untitled/basic.ini
+  basic/profiles/Untitled/service.json
+  basic/profiles/Untitled/streamEncoder.json
+  basic/profiles/Untitled/recordEncoder.json
+  plugin_config/obs-websocket/config.json
+)
+
+usage() { echo "usage: obs-config export|apply" >&2; exit 1; }
+
+# Re-run under rbw-env so the three secrets arrive as environment variables.
+if [[ -z ${OBS_CONFIG_SECRETS:-} ]]; then
+  exec env OBS_CONFIG_SECRETS=1 "$HOME/.config/env/bin/rbw-env" obs -- "$0" "$@"
+fi
+for s in "${secrets[@]}"; do
+  [[ -n ${!s:-} ]] || { echo "obs-config: $s missing from the vault" >&2; exit 1; }
+done
+
+obs_running() { pgrep -x obs >/dev/null; }
+
+# Window geometry, dock layout and portal restore tokens only make sense on the machine that wrote them.
+strip_local_state() {
+  case "$1" in
+    *.ini) sed -i -E '/^(geometry|DockState)=/d; /^\[PropertiesWindow\]$/,/^\[/{/^\[PropertiesWindow\]$/d; /^(cx|cy)=/d}' "$2" ;;
+    *.json)
+      grep -q '"RestoreToken"' "$2" || return 0
+      jq 'walk(if type == "object" then del(.RestoreToken) else . end)' "$2" > "$2.tmp" && mv "$2.tmp" "$2"
+      ;;
+  esac
+}
+
+do_export() {
+  local tmp f s
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' RETURN
+  for f in "${files[@]}"; do
+    [[ -f $live/$f ]] || continue
+    mkdir -p "$tmp/$(dirname "$f")"
+    cp "$live/$f" "$tmp/$f"
+    strip_local_state "$f" "$tmp/$f"
+    for s in "${secrets[@]}"; do
+      SECRET="${!s}" PLACEHOLDER="@@${s}@@" perl -0pi -e 's/\Q$ENV{SECRET}\E/$ENV{PLACEHOLDER}/g' "$tmp/$f"
+    done
+  done
+  for s in "${secrets[@]}"; do
+    if grep -rqF -- "${!s}" "$tmp"; then
+      echo "obs-config: $s still present after export, aborting" >&2
+      exit 1
+    fi
+  done
+  for f in "${files[@]}"; do
+    [[ -f $tmp/$f ]] || continue
+    install -Dm644 "$tmp/$f" "$repo/$f"
+  done
+  echo "exported ${#files[@]} files to $repo"
+}
+
+do_apply() {
+  local f s
+  if obs_running; then
+    echo "obs-config: quit OBS first; it overwrites these files on exit" >&2
+    exit 1
+  fi
+  for f in "${files[@]}"; do
+    [[ -f $repo/$f ]] || continue
+    mkdir -p "$live/$(dirname "$f")"
+    cp "$repo/$f" "$live/$f.new"
+    for s in "${secrets[@]}"; do
+      SECRET="${!s}" PLACEHOLDER="@@${s}@@" perl -0pi -e 's/\Q$ENV{PLACEHOLDER}\E/$ENV{SECRET}/g' "$live/$f.new"
+    done
+    chmod 600 "$live/$f.new"
+    mv "$live/$f.new" "$live/$f"
+  done
+  echo "applied ${#files[@]} files to $live"
+}
+
+case "${1:-}" in
+  export) do_export ;;
+  apply) do_apply ;;
+  *) usage ;;
+esac

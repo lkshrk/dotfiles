@@ -1,0 +1,934 @@
+{
+  "infobars": [],
+  "keys": [
+    {
+      "action": {
+        "controllers": [
+          "Keypad"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "opendeck/toggle-action.png",
+        "name": "Toggle Action",
+        "plugin": "opendeck",
+        "property_inspector": "",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "opendeck/toggle-action.png",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Cycle through multiple actions",
+        "uuid": "opendeck.toggleaction",
+        "visible_in_action_list": true
+      },
+      "children": [
+        {
+          "action": {
+            "controllers": [
+              "Keypad"
+            ],
+            "disable_automatic_states": true,
+            "encoder": null,
+            "icon": "plugins/de.felitendo.obs-tools.sdPlugin/images/actions/mute.svg",
+            "name": "Source Mute Toggle",
+            "plugin": "de.felitendo.obs-tools.sdPlugin",
+            "property_inspector": "plugins/de.felitendo.obs-tools.sdPlugin/pi/index.html",
+            "states": [
+              {
+                "alignment": "bottom",
+                "background_colour": "#000000",
+                "colour": "#FFFFFF",
+                "family": "Liberation Sans",
+                "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/unmuted.svg",
+                "image_scale": 100,
+                "name": "",
+                "show": true,
+                "size": 11,
+                "stroke_colour": "#000000",
+                "stroke_size": 3,
+                "style": "Regular",
+                "text": "",
+                "underline": false
+              },
+              {
+                "alignment": "bottom",
+                "background_colour": "#000000",
+                "colour": "#FFFFFF",
+                "family": "Liberation Sans",
+                "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/muted.svg",
+                "image_scale": 100,
+                "name": "",
+                "show": true,
+                "size": 11,
+                "stroke_colour": "#000000",
+                "stroke_size": 3,
+                "style": "Regular",
+                "text": "",
+                "underline": false
+              }
+            ],
+            "supported_in_multi_actions": true,
+            "tooltip": "Mute or unmute an audio source.",
+            "uuid": "de.felitendo.obs-tools.mutetoggle",
+            "visible_in_action_list": true
+          },
+          "children": null,
+          "context": "Keypad.0.1",
+          "current_state": 0,
+          "settings": {
+            "double": "none",
+            "hold": "none",
+            "input": "Mic",
+            "mode": "mute",
+            "showName": false
+          },
+          "states": [
+            {
+              "alignment": "bottom",
+              "background_colour": "#000000",
+              "colour": "#FFFFFF",
+              "family": "Liberation Sans",
+              "image": "0.svg",
+              "image_scale": 100,
+              "name": "",
+              "show": true,
+              "size": 11,
+              "stroke_colour": "#000000",
+              "stroke_size": 3,
+              "style": "Regular",
+              "text": "",
+              "underline": false
+            },
+            {
+              "alignment": "bottom",
+              "background_colour": "#000000",
+              "colour": "#FFFFFF",
+              "family": "Liberation Sans",
+              "image": "1.svg",
+              "image_scale": 100,
+              "name": "",
+              "show": true,
+              "size": 11,
+              "stroke_colour": "#000000",
+              "stroke_size": 3,
+              "style": "Regular",
+              "text": "",
+              "underline": false
+            }
+          ]
+        },
+        {
+          "action": {
+            "controllers": [
+              "Keypad"
+            ],
+            "disable_automatic_states": true,
+            "encoder": null,
+            "icon": "plugins/de.felitendo.obs-tools.sdPlugin/images/actions/mute.svg",
+            "name": "Source Mute Toggle",
+            "plugin": "de.felitendo.obs-tools.sdPlugin",
+            "property_inspector": "plugins/de.felitendo.obs-tools.sdPlugin/pi/index.html",
+            "states": [
+              {
+                "alignment": "bottom",
+                "background_colour": "#000000",
+                "colour": "#FFFFFF",
+                "family": "Liberation Sans",
+                "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/unmuted.svg",
+                "image_scale": 100,
+                "name": "",
+                "show": true,
+                "size": 11,
+                "stroke_colour": "#000000",
+                "stroke_size": 3,
+                "style": "Regular",
+                "text": "",
+                "underline": false
+              },
+              {
+                "alignment": "bottom",
+                "background_colour": "#000000",
+                "colour": "#FFFFFF",
+                "family": "Liberation Sans",
+                "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/muted.svg",
+                "image_scale": 100,
+                "name": "",
+                "show": true,
+                "size": 11,
+                "stroke_colour": "#000000",
+                "stroke_size": 3,
+                "style": "Regular",
+                "text": "",
+                "underline": false
+              }
+            ],
+            "supported_in_multi_actions": true,
+            "tooltip": "Mute or unmute an audio source.",
+            "uuid": "de.felitendo.obs-tools.mutetoggle",
+            "visible_in_action_list": true
+          },
+          "children": null,
+          "context": "Keypad.0.2",
+          "current_state": 0,
+          "settings": {
+            "double": "none",
+            "hold": "none",
+            "input": "Mic",
+            "mode": "unmute",
+            "showName": false
+          },
+          "states": [
+            {
+              "alignment": "bottom",
+              "background_colour": "#000000",
+              "colour": "#FFFFFF",
+              "family": "Liberation Sans",
+              "image": "0.svg",
+              "image_scale": 100,
+              "name": "",
+              "show": true,
+              "size": 11,
+              "stroke_colour": "#000000",
+              "stroke_size": 3,
+              "style": "Regular",
+              "text": "",
+              "underline": false
+            },
+            {
+              "alignment": "bottom",
+              "background_colour": "#000000",
+              "colour": "#FFFFFF",
+              "family": "Liberation Sans",
+              "image": "1.svg",
+              "image_scale": 100,
+              "name": "",
+              "show": true,
+              "size": 11,
+              "stroke_colour": "#000000",
+              "stroke_size": 3,
+              "style": "Regular",
+              "text": "",
+              "underline": false
+            }
+          ]
+        }
+      ],
+      "context": "Keypad.0.0",
+      "current_state": 0,
+      "settings": {},
+      "states": [
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 11,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        },
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "1.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 11,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad",
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+        "name": "Run Command",
+        "plugin": "com.amansprojects.starterpack.sdPlugin",
+        "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+        "states": [
+          {
+            "alignment": "bottom",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "0.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": false,
+            "size": 11,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Run a command",
+        "uuid": "com.amansprojects.starterpack.runcommand",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.1.0",
+      "current_state": 0,
+      "settings": {
+        "down": "/home/lkshrk/.local/bin/brave-media Previous",
+        "file": "",
+        "rotate": "",
+        "show": false,
+        "up": ""
+      },
+      "states": [
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 11,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad",
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+        "name": "Run Command",
+        "plugin": "com.amansprojects.starterpack.sdPlugin",
+        "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+        "states": [
+          {
+            "alignment": "bottom",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "0.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": false,
+            "size": 11,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Run a command",
+        "uuid": "com.amansprojects.starterpack.runcommand",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.2.0",
+      "current_state": 0,
+      "settings": {
+        "down": "/home/lkshrk/.local/bin/brave-media PlayPause",
+        "file": "",
+        "rotate": "",
+        "show": false,
+        "up": ""
+      },
+      "states": [
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 11,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad",
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+        "name": "Run Command",
+        "plugin": "com.amansprojects.starterpack.sdPlugin",
+        "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+        "states": [
+          {
+            "alignment": "bottom",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "0.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": false,
+            "size": 11,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Run a command",
+        "uuid": "com.amansprojects.starterpack.runcommand",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.3.0",
+      "current_state": 0,
+      "settings": {
+        "down": "/home/lkshrk/.local/bin/brave-media Next",
+        "file": "",
+        "rotate": "",
+        "show": false,
+        "up": ""
+      },
+      "states": [
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 11,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad"
+        ],
+        "disable_automatic_states": true,
+        "encoder": null,
+        "icon": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_0.svg",
+        "name": "Toggle Mute",
+        "plugin": "me.amankhanna.oadiscord.sdPlugin",
+        "property_inspector": "plugins/me.amankhanna.oadiscord.sdPlugin/pi/simple.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_0.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          },
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_1.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Mute and unmute yourself",
+        "uuid": "me.amankhanna.oadiscord.togglemute",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.4.0",
+      "current_state": 0,
+      "settings": {},
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        },
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_1.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    },
+    null,
+    null,
+    {
+      "action": {
+        "controllers": [
+          "Keypad",
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/switchProfile.png",
+        "name": "Switch Profile",
+        "plugin": "com.amansprojects.starterpack.sdPlugin",
+        "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/switchProfile.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.amansprojects.starterpack.sdPlugin/icons/switchProfile.png",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Switch the selected profile",
+        "uuid": "com.amansprojects.starterpack.switchprofile",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.7.0",
+      "current_state": 0,
+      "settings": {
+        "anticlockwise": "Default",
+        "clockwise": "Default",
+        "device": "sd-EL18L1A02195",
+        "profile": "Alt"
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    }
+  ],
+  "sliders": [
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/deckweaver.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute",
+            "rotate": "Change Volume",
+            "touch": ""
+          }
+        },
+        "icon": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+        "name": "DeckWeaver Knob",
+        "plugin": "com.designgears.deckweaver.sdPlugin",
+        "property_inspector": "plugins/com.designgears.deckweaver.sdPlugin/propertyInspector/action.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+            "image_scale": 100,
+            "name": "",
+            "show": false,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Control PipeWeaver volume with a dial",
+        "uuid": "com.designgears.deckweaver.knob",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.0.0",
+      "current_state": 0,
+      "settings": {
+        "device_id": "01M5RC9G962ATM50GCGCWSGKNF",
+        "device_type": "source",
+        "hardware_device_description": null,
+        "hardware_device_node_id": null,
+        "icon_fa": "brands/rocketchat",
+        "icon_path": null,
+        "meter_color": null,
+        "meter_invert_color": null,
+        "meters_enabled": null,
+        "mute_profile_data": "[false,false]",
+        "mute_profile_index": 0,
+        "orientation": null,
+        "show_volume": null,
+        "source_mix": null,
+        "volume_bar_color": null,
+        "volume_step": 0
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.png",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "Voice",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/deckweaver.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute",
+            "rotate": "Change Volume",
+            "touch": ""
+          }
+        },
+        "icon": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+        "name": "DeckWeaver Knob",
+        "plugin": "com.designgears.deckweaver.sdPlugin",
+        "property_inspector": "plugins/com.designgears.deckweaver.sdPlugin/propertyInspector/action.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+            "image_scale": 100,
+            "name": "",
+            "show": false,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Control PipeWeaver volume with a dial",
+        "uuid": "com.designgears.deckweaver.knob",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.1.0",
+      "current_state": 0,
+      "settings": {
+        "device_id": "01M5FM3N03QRM0B54WDFDM5FN5",
+        "device_type": "source",
+        "icon_fa": "solid/globe",
+        "icon_path": null,
+        "meters_enabled": true
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.png",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "Browser",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/deckweaver.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute",
+            "rotate": "Change Volume",
+            "touch": ""
+          }
+        },
+        "icon": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+        "name": "DeckWeaver Knob",
+        "plugin": "com.designgears.deckweaver.sdPlugin",
+        "property_inspector": "plugins/com.designgears.deckweaver.sdPlugin/propertyInspector/action.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+            "image_scale": 100,
+            "name": "",
+            "show": false,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Control PipeWeaver volume with a dial",
+        "uuid": "com.designgears.deckweaver.knob",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.2.0",
+      "current_state": 0,
+      "settings": {
+        "device_id": "01M5FNGPDGQBQ52M86Q7Z6X1PH",
+        "device_type": "source",
+        "hardware_device_description": null,
+        "hardware_device_node_id": null,
+        "icon_fa": "solid/music",
+        "icon_path": null,
+        "meter_color": null,
+        "meter_invert_color": null,
+        "meters_enabled": true,
+        "mute_profile_data": "[false,false]",
+        "mute_profile_index": 0,
+        "orientation": null,
+        "show_volume": true,
+        "source_mix": null,
+        "volume_bar_color": null,
+        "volume_step": 0
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.png",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "Music",
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/deckweaver.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute",
+            "rotate": "Change Volume",
+            "touch": ""
+          }
+        },
+        "icon": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+        "name": "DeckWeaver Knob",
+        "plugin": "com.designgears.deckweaver.sdPlugin",
+        "property_inspector": "plugins/com.designgears.deckweaver.sdPlugin/propertyInspector/action.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.designgears.deckweaver.sdPlugin/icons/knob.png",
+            "image_scale": 100,
+            "name": "",
+            "show": false,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Control PipeWeaver volume with a dial",
+        "uuid": "com.designgears.deckweaver.knob",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.3.0",
+      "current_state": 0,
+      "settings": {
+        "device_id": "01M5FNGW0H56WS9HT27J0GP1CF",
+        "device_type": "source",
+        "icon_fa": "solid/gamepad",
+        "icon_path": null
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.png",
+          "image_scale": 100,
+          "name": "",
+          "show": false,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "Games",
+          "underline": false
+        }
+      ]
+    }
+  ]
+}
