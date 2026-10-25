@@ -7,7 +7,112 @@
     null,
     null,
     null,
-    null,
+    {
+      "action": {
+        "controllers": [
+          "Keypad"
+        ],
+        "disable_automatic_states": true,
+        "encoder": null,
+        "icon": "plugins/de.felitendo.obs-tools.sdPlugin/images/actions/replay.svg",
+        "name": "Instant Replay",
+        "plugin": "de.felitendo.obs-tools.sdPlugin",
+        "property_inspector": "plugins/de.felitendo.obs-tools.sdPlugin/pi/index.html",
+        "states": [
+          {
+            "alignment": "bottom",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/replay.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 11,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          },
+          {
+            "alignment": "bottom",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/replay-on.svg",
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 11,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Press to save the replay buffer, play it on stream and clip it on Twitch. Hold to turn the replay buffer on or off.",
+        "uuid": "de.felitendo.obs-tools.instantreplay",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.6.0",
+      "current_state": 0,
+      "settings": {
+        "autoReplay": false,
+        "chatCommand": false,
+        "clipMessage": ": {url}",
+        "command": "!replay",
+        "cooldown": 30,
+        "createClip": true,
+        "double": "none",
+        "hideWhenDone": true,
+        "hold": "buffer",
+        "mediaInput": "",
+        "permission": "everyone",
+        "postClip": true,
+        "press": "save",
+        "replayScene": "",
+        "returnToScene": true,
+        "speed": 100
+      },
+      "states": [
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/replay.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 11,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        },
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/replay-on.svg",
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 11,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "underline": false
+        }
+      ]
+    },
     {
       "action": {
         "controllers": [
