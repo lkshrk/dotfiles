@@ -358,7 +358,8 @@
             "*",
             "!/pipewire.conf.d/",
             "/pipewire.conf.d/*",
-            "!/pipewire.conf.d/mic-filtered.conf"
+            "!/pipewire.conf.d/mic-filtered.conf",
+            "!/pipewire.conf.d/min-quantum.conf"
           ]
         },
         {
