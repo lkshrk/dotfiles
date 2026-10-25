@@ -233,6 +233,13 @@ if [[ -n "$helium_desktop" ]]; then
   ok "Helium is the default browser"
 fi
 
+roller_desktop=/usr/share/applications/org.gnome.FileRoller.desktop
+if [[ -f "$roller_desktop" ]]; then
+  mapfile -t roller_types < <(sed -n 's/^MimeType=//p' "$roller_desktop" | tr ';' '\n' | grep .)
+  xdg-mime default org.gnome.FileRoller.desktop "${roller_types[@]}"
+  ok "File Roller opens ${#roller_types[@]} archive types"
+fi
+
 # omarchy-launch-webapp always uses the default browser, so these get their own Exec.
 # gtk-launch expands neither ~ nor $HOME, so the focus-or-launch wrapper needs its absolute path.
 step "web apps"
