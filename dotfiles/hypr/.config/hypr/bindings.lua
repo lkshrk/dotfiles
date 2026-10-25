@@ -77,7 +77,28 @@ hyper("J", "Toggle window floating/tiling", hl.dsp.window.float({ action = "togg
 -- keyd leaves no key sending plain Super, so Omarchy's Super+drag is unreachable; Wine title bars cannot be dragged at all.
 o.bind(HYPER .. " + mouse:272", "Move window", hl.dsp.window.drag(), { mouse = true })
 o.bind(HYPER .. " + mouse:273", "Resize window", hl.dsp.window.resize(), { mouse = true })
-hyper("P", "Pop window out (float & pin)", "omarchy-hyprland-window-pop")
+-- Only floating windows can be pinned; the tag sends a window floated here back to tiling on unpin.
+hyper("P", "Toggle stay on top", function()
+  local w = hl.get_active_window()
+  if not w then return end
+  if w.pinned then
+    hl.dispatch(hl.dsp.window.pin({ window = w }))
+    for _, tag in ipairs(type(w.tags) == "table" and w.tags or {}) do
+      if tag == "pinned-tiled" or tag == "pinned-tiled*" then
+        hl.dispatch(hl.dsp.window.tag({ tag = "-pinned-tiled", window = w }))
+        hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))
+      end
+    end
+    return
+  end
+  if not w.floating then
+    hl.dispatch(hl.dsp.window.tag({ tag = "+pinned-tiled", window = w }))
+    hl.dispatch(hl.dsp.window.float({ action = "enable", window = w }))
+  end
+  hl.dispatch(hl.dsp.window.pin({ window = w }))
+  hl.dispatch(hl.dsp.window.alter_zorder({ mode = "top", window = w }))
+end)
+hyper("SHIFT + P", "Pop window out (float & pin)", "omarchy-hyprland-window-pop")
 
 -- Mac screenshot keys (code:12/13 are 3/4); Hyper + Shift + 3/4 still moves a window to workspace 3/4.
 hl.unbind("SUPER + SHIFT + code:12")
