@@ -205,7 +205,7 @@ step "opendeck images"
 # OpenDeck refuses to draw slot images that are symlinks out of its own folder, so these are copied, never linked.
 # --update=none keeps icons changed in the GUI since; new ones from the repo still arrive.
 mkdir -p "$HOME/.config/opendeck/images"
-cp -r --update=none "$REPO_DIR/dotfiles/opendeck/.config/opendeck/images/." "$HOME/.config/opendeck/images/"
+cp -r --update=none "$REPO_DIR/omarchy/opendeck-images/." "$HOME/.config/opendeck/images/"
 ok "Stream Deck icons in place"
 
 if have obs; then
