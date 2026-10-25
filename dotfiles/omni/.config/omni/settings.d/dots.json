@@ -373,6 +373,14 @@
           ]
         },
         {
+          "name": "gtk",
+          "path": "~/.config/gtk-3.0",
+          "ignore": [
+            "*",
+            "!/bookmarks"
+          ]
+        },
+        {
           "name": "local-bin",
           "path": "~/.local/bin",
           "ignore": [
