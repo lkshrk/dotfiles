@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "lkshrk.stats",
+  "name": "Stats",
+  "version": "1.0.0",
+  "author": "lkshrk",
+  "description": "CPU, RAM, disk and network speed in the style of the macOS Stats app",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "Stats.qml"
+  },
+  "barWidget": {
+    "displayName": "Stats",
+    "description": "CPU, RAM, disk and network speed",
+    "category": "Info",
+    "allowMultiple": false
+  }
+}

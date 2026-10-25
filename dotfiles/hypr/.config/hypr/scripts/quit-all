@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Closing windows one by one makes browsers drop every window but the last from their session; SIGTERM quits each app whole.
+set -uo pipefail
+
+session="$HOME/.config/hypr/scripts/session"
+"$session" save
+
+mapfile -t pids < <(hyprctl clients -j | jq -r '.[] | select(.pid > 0) | .pid' | sort -un)
+((${#pids[@]})) || exit 0
+kill -TERM "${pids[@]}" 2>/dev/null
+
+for _ in $(seq 1 50); do
+  alive=0
+  for pid in "${pids[@]}"; do kill -0 "$pid" 2>/dev/null && alive=1 && break; done
+  ((alive)) || exit 0
+  sleep 0.1
+done

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Backgrounded: the check waits for the shell to finish loading, which must not hold up the other hooks.
+setsid -f "$HOME/.config/omarchy/scripts/check-shell-clones" >/dev/null 2>&1

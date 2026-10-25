@@ -1,0 +1,130 @@
+{
+  "bar": {
+    "background": "opaque",
+    "layout": {
+      "left": [
+        {
+          "id": "omarchy.menu"
+        },
+        {
+          "id": "lkshrk.workspaces"
+        }
+      ],
+      "center": [
+        {
+          "id": "omarchy.indicators"
+        },
+        {
+          "format": "ddd d. MMM HH:mm",
+          "formatAlt": "d MMMM 'W'ww yyyy",
+          "id": "omarchy.clock",
+          "verticalFormat": "HH\n—\nmm"
+        },
+        {
+          "id": "omarchy.weather"
+        },
+        {
+          "id": "omarchy.elsewhen",
+          "cities": [
+            {
+              "name": "Berlin",
+              "zone": "Europe/Berlin"
+            },
+            {
+              "name": "Delhi",
+              "zone": "Asia/Kolkata"
+            },
+            {
+              "name": "Tokyo",
+              "zone": "Asia/Tokyo"
+            },
+            {
+              "name": "Los Angeles",
+              "zone": "America/Los_Angeles"
+            },
+            {
+              "name": "New York",
+              "zone": "America/New_York"
+            }
+          ]
+        },
+        {
+          "id": "omarchy.system-update"
+        }
+      ],
+      "right": [
+        {
+          "id": "omarchy.tray",
+          "pinned": [
+            "wine-0x100f0-0"
+          ],
+          "hidden": [
+            "PipeWeaver"
+          ]
+        },
+        {
+          "id": "omarchy.keyboard-layout"
+        },
+        {
+          "id": "omarchy.agents"
+        },
+        {
+          "id": "omarchy.bluetooth"
+        },
+        {
+          "id": "omarchy.audio"
+        },
+        {
+          "id": "omarchy.power"
+        },
+        {
+          "id": "lkshrk.stats"
+        }
+      ]
+    },
+    "position": "top",
+    "transparent": false
+  },
+  "dock": {
+    "pinned": [
+      "org.gnome.Nautilus",
+      "chromium",
+      "foot",
+      "omacalc",
+      "omawrite",
+      "X",
+      "YouTube"
+    ],
+    "position": "bottom"
+  },
+  "idle": {
+    "lock": 5400,
+    "screensaver": 3600
+  },
+  "plugins": [
+    {
+      "id": "lkshrk.alttab"
+    },
+    {
+      "id": "lkshrk.lock"
+    },
+    {
+      "id": "lkshrk.polkit"
+    },
+    {
+      "id": "lkshrk.notifications"
+    }
+  ],
+  "version": 1,
+  "disabledPlugins": [
+    "omarchy.lock",
+    "omarchy.polkit",
+    "omarchy.notifications"
+  ],
+  "cloneSourceRestores": [
+    "lkshrk.lock",
+    "lkshrk.polkit",
+    "lkshrk.notifications"
+  ],
+  "mainScreen": "Odyssey G80SH"
+}

@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  echo "usage: $0 [--title RE] [--exclude-title RE] [--order history|stable] [--reverse] [--no-launch] CLASS_RE [LAUNCH_CMD...]" >&2
+  exit 1
+}
+
+TITLE=""
+EXCLUDE_TITLE=""
+ORDER="history"
+REVERSE=false
+NO_LAUNCH=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --title) [ $# -ge 2 ] || usage; TITLE="$2"; shift 2 ;;
+    --exclude-title) [ $# -ge 2 ] || usage; EXCLUDE_TITLE="$2"; shift 2 ;;
+    --order) [ $# -ge 2 ] || usage; ORDER="$2"; shift 2 ;;
+    --reverse) REVERSE=true; shift ;;
+    --no-launch) NO_LAUNCH=1; shift ;;
+    *) break ;;
+  esac
+done
+case "$ORDER" in history|stable) ;; *) usage ;; esac
+
+[ $# -ge 1 ] || usage
+CLASS_RE="$1"
+shift
+
+ACTIVE="$(hyprctl activewindow -j 2>/dev/null | jq -r '.address // empty')" || ACTIVE=""
+
+# Like macOS Cmd + `: entering the app picks its most recent window; once inside, a fixed order visits every window instead of bouncing between the last two.
+NEXT="$(
+  hyprctl clients -j \
+    | jq -r --arg re "$CLASS_RE" --arg title "$TITLE" --arg exclude "$EXCLUDE_TITLE" \
+        --arg order "$ORDER" --argjson reverse "$REVERSE" --arg active "$ACTIVE" '
+        map(select(
+          .mapped
+          and ((.class | test($re; "i")) or ($title != "" and (.title | test($title))))
+          and ($exclude == "" or (.title | test($exclude) | not))
+        ))
+        | (map(.address) | index($active)) as $inside
+        | if length == 0 then empty
+          elif $order == "history" and $inside == null then
+            sort_by(.focusHistoryID) | .[0].address
+          else
+            sort_by(.stableId)
+            | (map(.address) | index($active)) as $i
+            | if $i == null then .[0].address
+              elif $reverse then .[($i - 1 + length) % length].address
+              else .[($i + 1) % length].address end
+          end
+      '
+)"
+
+if [ -z "$NEXT" ]; then
+  [ -n "$NO_LAUNCH" ] || [ $# -eq 0 ] || exec setsid uwsm-app -- "$@"
+  exit 0
+fi
+
+hyprctl dispatch "hl.dsp.focus({ window = \"address:$NEXT\" })" >/dev/null
+# Focus alone leaves a floating window behind any it overlaps.
+hyprctl dispatch "hl.dsp.window.alter_zorder({ mode = \"top\", window = \"address:$NEXT\" })" >/dev/null

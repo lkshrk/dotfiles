@@ -1368,6 +1368,15 @@
         }
       ]
     },
+    "keyd": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "keyd"
+        }
+      ],
+      "git": "https://github.com/rvaiya/keyd"
+    },
     "krew": {
       "providers": [
         {
@@ -1881,6 +1890,14 @@
       ],
       "git": "https://github.com/neovim/neovim"
     },
+    "nfs-utils": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "nfs-utils"
+        }
+      ]
+    },
     "npm": {
       "providers": [
         {
@@ -1894,6 +1911,14 @@
         {
           "provider": "brew",
           "package": "nss"
+        }
+      ]
+    },
+    "ntfsprogs": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "ntfsprogs"
         }
       ]
     },

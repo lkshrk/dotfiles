@@ -256,6 +256,90 @@
       ]
     },
     {
+      "name": "omarchy",
+      "dots": [
+        {
+          "name": "hypr",
+          "path": "~/.config/hypr",
+          "ignore": [
+            "*",
+            "!/autostart.lua",
+            "!/bindings.lua",
+            "!/hyprland.lua",
+            "!/input.lua",
+            "!/looknfeel.lua",
+            "!/monitors.lua",
+            "!/rules.lua",
+            "!/screens.lua",
+            "!/screens/",
+            "!/xdph.conf",
+            "!/scripts/",
+            "!/.luarc.json"
+          ]
+        },
+        {
+          "name": "keyd",
+          "path": "~/.config/keyd",
+          "ignore": [
+            "*",
+            "!/app.conf"
+          ]
+        },
+        {
+          "name": "omarchy-shell",
+          "path": "~/.config/omarchy",
+          "ignore": [
+            "*",
+            "!/shell.json",
+            "!/extensions/",
+            "/extensions/*",
+            "!/extensions/omarchy-menu.jsonc",
+            "!/plugins/",
+            "!/scripts/",
+            "!/shared/",
+            "!/hooks/",
+            "/hooks/*",
+            "!/hooks/post-boot.d/",
+            "/hooks/post-boot.d/*",
+            "!/hooks/post-boot.d/check-shell-clones.hook",
+            "!/hooks/post-boot.d/check-system-health.hook",
+            "!/hooks/post-update.d/",
+            "/hooks/post-update.d/*",
+            "!/hooks/post-update.d/a-sync-shell-clones.hook",
+            "!/hooks/post-update.d/check-dots-links.hook",
+            "!/hooks/post-update.d/check-shell-clones.hook",
+            "!/hooks/post-update.d/check-system-health.hook"
+          ]
+        },
+        {
+          "name": "knowledge-sync-systemd",
+          "path": "~/.config/systemd/user",
+          "ignore": [
+            "*",
+            "!/knowledge-sync.service",
+            "!/knowledge-sync.timer"
+          ]
+        },
+        {
+          "name": "xkb",
+          "path": "~/.config/xkb"
+        },
+        {
+          "name": "fcitx5",
+          "path": "~/.config/fcitx5",
+          "ignore": [
+            "*",
+            "!/profile",
+            "!/config"
+          ]
+        },
+        {
+          "name": "foot",
+          "path": "~/.config/foot"
+        }
+      ]
+    },
+    {
       "name": "prereqs",
       "dots": [
         {

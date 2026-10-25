@@ -1,0 +1,13 @@
+[Unit]
+Description=Clear the NTFS dirty flag on STUFF after an unclean shutdown
+DefaultDependencies=no
+BindsTo=dev-disk-by\x2dlabel-STUFF.device
+After=dev-disk-by\x2dlabel-STUFF.device
+Before=mnt-stuff.mount
+# Remounting an already mounted STUFF also pulls this in; ntfsfix refuses a mounted volume, so skip instead of failing.
+ConditionPathIsMountPoint=!/mnt/stuff
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ntfsfix -d /dev/disk/by-label/STUFF
+TimeoutStartSec=60

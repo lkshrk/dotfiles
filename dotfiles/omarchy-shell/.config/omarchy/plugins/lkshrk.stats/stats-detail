@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# One JSON snapshot for the Stats popups. Usage: stats-detail [disk-mount]
+set -euo pipefail
+
+MOUNT="${1:-/}"
+
+top() { ps -eo comm=,"$1"= --sort=-"$1" | head -5 | jq -R -s -c 'split("\n") | map(select(length>0) | capture("^(?<name>.*?)\\s+(?<value>[0-9.]+)$") | .value |= tonumber)'; }
+
+read -r load1 load5 load15 _ < /proc/loadavg
+freq=$(cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq 2>/dev/null | awk '{s+=$1; n++} END{ printf "%d", (n ? s/n*1000 : 0) }')
+uptime_s=$(awk '{printf "%d", $1}' /proc/uptime)
+
+read -r mem_total mem_free mem_avail app cache swap_total swap_free < <(awk '
+  /^MemTotal:/{t=$2} /^MemFree:/{f=$2} /^MemAvailable:/{a=$2} /^AnonPages:/{an=$2}
+  /^Cached:/{c=$2} /^Buffers:/{b=$2} /^SReclaimable:/{sr=$2}
+  /^SwapTotal:/{st=$2} /^SwapFree:/{sf=$2}
+  END{ print t*1024, f*1024, a*1024, an*1024, (c+b+sr)*1024, st*1024, sf*1024 }' /proc/meminfo)
+pressure=$(awk '/^some/{ split($2, a, "="); print a[2]; exit }' /proc/pressure/memory 2>/dev/null || echo 0)
+
+read -r disk_total disk_used disk_free < <(df -PB1 "$MOUNT" | awk 'NR==2{print $2, $3, $4}')
+src=$(findmnt -n -o SOURCE --target "$MOUNT" | sed 's/\[.*//')
+dev=$(lsblk -sno NAME,TYPE "$src" 2>/dev/null | awk '$2=="disk"{ sub(/^[^a-zA-Z0-9]*/, "", $1); print $1; exit }')
+fstype=$(findmnt -n -o FSTYPE --target "$MOUNT")
+model=$(cat "/sys/block/$dev/device/model" 2>/dev/null | sed 's/ *$//' || true)
+read -r total_read total_written < <(awk -v d="$dev" '$3==d { r=$6*512; w=$10*512 } END { print r+0, w+0 }' /proc/diskstats)
+
+iface=$(ip -o route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<NF;i++) if($i=="dev"){print $(i+1); exit}}')
+local_ip=$(ip -o route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<NF;i++) if($i=="src"){print $(i+1); exit}}')
+mac=$(cat "/sys/class/net/$iface/address" 2>/dev/null || true)
+dns=$(resolvectl dns 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9a-f.:]+$/ && $i != "127.0.0.53" && $i ~ /[.:]/){print $i; exit}}')
+[ -z "$dns" ] && dns=$(awk '/^nameserver/ && $2 != "127.0.0.53" {print $2; exit}' /etc/resolv.conf)
+net_rx=$(cat "/sys/class/net/$iface/statistics/rx_bytes" 2>/dev/null || echo 0)
+net_tx=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo 0)
+
+jq -n -c \
+  --argjson load1 "$load1" --argjson load5 "$load5" --argjson load15 "$load15" \
+  --argjson freq "$freq" --argjson uptime "$uptime_s" --argjson cores "$(nproc)" \
+  --argjson topCpu "$(top pcpu)" --argjson topMem "$(top rss)" \
+  --argjson memTotal "$mem_total" --argjson memFree "$mem_free" --argjson memAvail "$mem_avail" \
+  --argjson app "$app" --argjson cache "$cache" \
+  --argjson swapTotal "$swap_total" --argjson swapFree "$swap_free" --argjson pressure "${pressure:-0}" \
+  --argjson diskTotal "$disk_total" --argjson diskUsed "$disk_used" --argjson diskFree "$disk_free" \
+  --arg mount "$MOUNT" --arg device "${dev:-}" --arg fstype "${fstype:-}" --arg diskModel "${model:-}" \
+  --argjson totalRead "${total_read:-0}" --argjson totalWritten "${total_written:-0}" \
+  --arg iface "${iface:-}" --arg ip "${local_ip:-}" --arg mac "${mac:-}" --arg dns "${dns:-}" \
+  --argjson netRx "$net_rx" --argjson netTx "$net_tx" \
+  '{cpu: {cores: $cores, load: [$load1, $load5, $load15], frequency: $freq, uptime: $uptime, top: $topCpu},
+    ram: {total: $memTotal, used: ($memTotal - $memAvail), app: $app, cache: $cache, free: $memFree,
+          swapTotal: $swapTotal, swapUsed: ($swapTotal - $swapFree), pressure: $pressure,
+          top: ($topMem | map(.value *= 1024))},
+    disk: {mount: $mount, device: $device, fstype: $fstype, model: $diskModel, total: $diskTotal, used: $diskUsed, free: $diskFree,
+           totalRead: $totalRead, totalWritten: $totalWritten},
+    net: {interface: $iface, ip: $ip, mac: $mac, dns: $dns, totalDownload: $netRx, totalUpload: $netTx}}'

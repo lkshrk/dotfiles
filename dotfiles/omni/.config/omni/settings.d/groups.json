@@ -193,6 +193,15 @@
       ]
     },
     {
+      "name": "omarchy",
+      "tools": [
+        "keyd",
+        "moshi-hook",
+        "nfs-utils",
+        "ntfsprogs"
+      ]
+    },
+    {
       "name": "omni",
       "tools": [
         "ffmpeg",
@@ -334,6 +343,11 @@
         "sbx",
         "corepack"
       ]
+    },
+    {
+      "name": "towerr",
+      "special": "host",
+      "tools": []
     }
   ]
 }

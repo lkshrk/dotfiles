@@ -1,0 +1,15 @@
+--- a/Service.qml
++++ b/Service.qml
+@@ -949,8 +949,11 @@
+   // keyboard focus — popups are passive surfaces and must never steal input
+   // from the focused application.
+ 
++  MainScreen { id: mainScreen }
++
++  // Toasts show on the main monitor only; every screen still gets them if it is not connected.
+   Variants {
+-    model: Quickshell.screens
++    model: mainScreen.screen ? [mainScreen.screen] : Quickshell.screens
+ 
+     PanelWindow {
+       id: popupWindow

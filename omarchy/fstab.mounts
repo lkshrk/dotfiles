@@ -1,0 +1,2 @@
+LABEL=STUFF /mnt/stuff ntfs3 uid=1000,gid=1000,windows_names,nofail,x-systemd.device-timeout=5s,x-systemd.mount-timeout=30s,x-gvfs-show,x-gvfs-name=STUFF 0 0
+172.22.30.2:/var/nfs/shared/gaming /mnt/gaming nfs vers=3,_netdev,nofail,noauto,x-systemd.automount,x-systemd.idle-timeout=10min,x-systemd.mount-timeout=15s,soft,timeo=50,retrans=2,x-gvfs-show,x-gvfs-name=NAS\040gaming 0 0

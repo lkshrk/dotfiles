@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Before check-shell-clones, so a clone that re-patched cleanly is what that check then verifies loads.
+"$HOME/.config/omarchy/scripts/sync-shell-clones"

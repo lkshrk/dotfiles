@@ -27,6 +27,19 @@
         "pip"
       ]
     },
+    "towerr": {
+      "dots_repo": "~/Dev/dotfiles",
+      "dots_disabled": false,
+      "provider_priority": [
+        "pacman",
+        "aur",
+        "bun",
+        "uv",
+        "pnpm",
+        "npm",
+        "pip"
+      ]
+    },
     "topaz": {
       "dots_repo": "~/Dev/dotfiles",
       "dots_disabled": false,
@@ -54,6 +67,30 @@
       "utils",
       "dev-tooling",
       "browser"
+    ],
+    "towerr": [
+      "ai",
+      "ai-plugins",
+      "apps",
+      "browser",
+      "core",
+      "desk",
+      "dev",
+      "dev-tooling",
+      "gaming",
+      "go",
+      "infra",
+      "lua",
+      "omarchy",
+      "omni",
+      "prereqs",
+      "priv",
+      "python",
+      "secrets",
+      "shell",
+      "test-tooling",
+      "ts",
+      "utils"
     ],
     "topaz": [
       "ai",

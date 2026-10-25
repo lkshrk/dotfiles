@@ -1,0 +1,18 @@
+// keyd sends Left Option + a/o/u/s and 2/3/4 as AltGr, since apps treat Alt + key as a shortcut, not text.
+default partial alphanumeric_keys
+xkb_symbols "intl" {
+    include "us(altgr-intl)"
+    name[Group1] = "English (US, intl., Mac ISO, umlauts)";
+
+    key <TLDE> { [ section, plusminus, section, plusminus ] };
+    key <LSGT> { [ grave, asciitilde, dead_grave, dead_tilde ] };
+
+    key <AC01> { type[Group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ a, A, adiaeresis, Adiaeresis ] };
+    key <AD09> { type[Group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ o, O, odiaeresis, Odiaeresis ] };
+    key <AD07> { type[Group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ u, U, udiaeresis, Udiaeresis ] };
+    key <AC02> { type[Group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ s, S, ssharp, U1E9E ] };
+
+    key <AE02> { [ 2, at, EuroSign, dead_doubleacute ] };
+    key <AE03> { [ 3, numbersign, sterling, dead_macron ] };
+    key <AE04> { [ 4, dollar, EuroSign, sterling ] };
+};

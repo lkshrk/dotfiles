@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/hypr-session"
+APPS="$STATE/apps"
+DIRS=("$HOME/.local/share/applications" /usr/share/applications)
+
+# Classes whose desktop entry has a different name.
+declare -A ALIASES=( [steam_app_battlenet]=battlenet )
+
+desktop_for() {
+  local class=$1 dir file
+  for dir in "${DIRS[@]}"; do
+    file=$(grep -lxF "StartupWMClass=$class" "$dir"/*.desktop 2>/dev/null | head -1) || true
+    [ -n "$file" ] && { basename "$file" .desktop; return; }
+  done
+  for name in "${ALIASES[$class]:-}" "$class"; do
+    [ -n "$name" ] || continue
+    for dir in "${DIRS[@]}"; do
+      [ -f "$dir/$name.desktop" ] && { echo "$name"; return; }
+    done
+  done
+}
+
+save() {
+  local classes tmp
+  classes=$(hyprctl clients -j | jq -r '.[] | select(.mapped and (.tags | index("dialog*") | not)) | .class' | sort -u)
+  # Skip saving an empty desktop, so a crash or early save never wipes the list.
+  [ -n "$classes" ] || return 0
+  mkdir -p "$STATE"
+  tmp=$(mktemp "$STATE/apps.XXXXXX")
+  while IFS= read -r class; do
+    desktop_for "$class" || true
+  done <<<"$classes" | sort -u > "$tmp"
+  if [ -s "$tmp" ]; then mv "$tmp" "$APPS"; else rm -f "$tmp"; fi
+}
+
+# busctl's own --timeout does not bound the call (a silent peer still takes the 25 s D-Bus default), so timeout caps it.
+portal_responds() {
+  timeout 3 busctl --user get-property org.freedesktop.portal.Desktop /org/freedesktop/portal/desktop \
+    org.freedesktop.portal.Settings version >/dev/null 2>&1
+}
+
+# The frontend keeps answering after a crash while the Hyprland backend still talks to the dead compositor.
+backend_current() {
+  local pid
+  pid=$(systemctl --user show -p MainPID --value xdg-desktop-portal-hyprland.service)
+  [ "${pid:-0}" != 0 ] || return 0
+  tr '\0' '\n' < "/proc/$pid/environ" 2>/dev/null | grep -qxF "HYPRLAND_INSTANCE_SIGNATURE=${HYPRLAND_INSTANCE_SIGNATURE:-}"
+}
+
+# Hyprland's crash restart keeps the graphical session, so the portals stay bound to the dead compositor and every
+# app that registers with them hangs on start; restart them before relaunching anything.
+ensure_portal() {
+  portal_responds && backend_current && return 0
+  systemctl --user restart xdg-desktop-portal-hyprland.service xdg-desktop-portal-gtk.service xdg-desktop-portal.service
+  for _ in 1 2 3 4 5; do
+    portal_responds && return 0
+    sleep 2
+  done
+  return 1
+}
+
+restore() {
+  [ -f "$APPS" ] || return 0
+  ensure_portal || true
+  local id
+  while IFS= read -r id; do
+    [ -n "$id" ] && setsid -f gtk-launch "$id" >/dev/null 2>&1 || true
+  done < "$APPS"
+}
+
+# Each call replaces the pending one, so a burst of closes saves once, and only if it settles.
+save_later() {
+  mkdir -p "$STATE"
+  local token=$$
+  echo "$token" > "$STATE/pending"
+  sleep "${SESSION_SAVE_DELAY:-3}"
+  [ "$(cat "$STATE/pending" 2>/dev/null)" = "$token" ] && save
+}
+
+case "${1:-}" in
+  save) save ;;
+  save-later) save_later ;;
+  restore) restore ;;
+  *) echo "usage: $0 save|save-later|restore" >&2; exit 1 ;;
+esac

@@ -1,0 +1,38 @@
+#!/bin/bash
+# The lock and polkit clones replace Omarchy's own; if one stops loading after an update there is no lock screen or password prompt at all.
+set -u
+
+log_of_current_shell() {
+  local dir
+  dir=$(ls -td "${XDG_RUNTIME_DIR}"/quickshell/by-id/*/ 2>/dev/null | head -1)
+  [[ -n $dir ]] && cat "$dir/log.log" 2>/dev/null
+}
+
+fall_back() {
+  local clone=$1 stock=$2 what=$3
+  omarchy plugin disable "$clone" >/dev/null 2>&1
+  omarchy plugin enable "$stock" >/dev/null 2>&1
+  notify-send -u critical "$what clone failed to load" "Switched back to Omarchy's $stock. Re-sync $clone, then: omarchy plugin enable $clone"
+}
+
+# Give a freshly (re)started shell time to load its plugins.
+for _ in $(seq 1 20); do
+  omarchy-shell lock status >/dev/null 2>&1 && break
+  sleep 1
+done
+
+# A shell that is not running says nothing about the clones, and plugin commands would fail anyway.
+if ! pgrep -x quickshell >/dev/null; then
+  notify-send -u critical "Omarchy shell is not running" "No bar, lock screen or notifications. Start it with: omarchy-restart-shell"
+  exit 0
+fi
+
+if jq -e '.plugins[]? | select(.id == "lkshrk.lock")' ~/.config/omarchy/shell.json >/dev/null 2>&1 &&
+  ! omarchy-shell lock status >/dev/null 2>&1; then
+  fall_back lkshrk.lock omarchy.lock "Lock screen"
+fi
+
+if jq -e '.plugins[]? | select(.id == "lkshrk.polkit")' ~/.config/omarchy/shell.json >/dev/null 2>&1 &&
+  log_of_current_shell | grep -q 'service plugin load failed for lkshrk.polkit'; then
+  fall_back lkshrk.polkit omarchy.polkit "Password prompt"
+fi

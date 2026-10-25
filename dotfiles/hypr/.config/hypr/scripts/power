@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Omarchy's power actions close every window first, which makes browsers forget all but their last window.
+set -euo pipefail
+
+action=${1:-}
+case "$action" in
+  reboot | poweroff | logout) ;;
+  *) echo "usage: $0 reboot|poweroff|logout" >&2; exit 1 ;;
+esac
+
+# Quitting the apps also quits the shell that launched this, so the rest runs in its own user unit.
+if [ "${2:-}" != --detached ]; then
+  exec systemd-run --user --collect --quiet --property=Type=exec --property=RuntimeMaxSec=30s "$0" "$action" --detached
+fi
+
+case "$action" in
+  reboot) omarchy-osd -i reboot -m "Rebooting" -d 5000 ;;
+  poweroff) omarchy-osd -i shutdown -m "Shutting down" -d 5000 ;;
+  logout) omarchy-osd -i logout -m "Logging out" -d 5000 ;;
+esac
+omarchy-state clear re*-required || true
+
+"$HOME/.config/hypr/scripts/quit-all" || true
+
+if [ "$action" = logout ]; then
+  exec uwsm stop
+fi
+exec systemctl "$action" --no-wall

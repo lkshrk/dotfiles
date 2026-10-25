@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Migrations rewrite configs through `mv "$tmp" "$file"`, which turns a dotfile symlink into a plain file and silently detaches it from the repo.
+entries='^(hypr|omarchy-shell|keyd|xkb|fcitx5)$'
+
+drift=$(omni dots status --format json 2>/dev/null |
+  jq -r --arg re "$entries" '.entries[]? | select((.name | test($re)) and .state != "synced") | "\(.name) (\(.state))"' |
+  paste -sd ', ')
+
+[[ -z $drift ]] ||
+  notify-send -u critical "Omarchy update changed dotfiles" "$drift no longer match the repo; review with: omni dots status"

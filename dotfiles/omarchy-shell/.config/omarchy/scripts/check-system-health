@@ -1,0 +1,24 @@
+#!/bin/bash
+# Customizations that fail quietly: keyd keeps running on a rejected config, Hyprland only shows its error bar, a failed ntfsfix just leaves STUFF unmounted.
+set -u
+
+problems=()
+
+if command -v keyd >/dev/null && ! keyd check /etc/keyd/*.conf >/dev/null 2>&1; then
+  problems+=("keyd rejects /etc/keyd (run: keyd check /etc/keyd/*.conf)")
+fi
+
+# hyprctl prints its socket error on stdout, so a stale session must not read as a config error.
+hypr_errors=$(hyprctl configerrors 2>/dev/null) || hypr_errors=
+hypr_errors=$(tr -s '[:space:]' ' ' <<<"$hypr_errors" | sed 's/^ //; s/ $//')
+[[ -z $hypr_errors ]] || problems+=("Hyprland config: ${hypr_errors:0:200}")
+
+for unit in keyd.service ntfsfix-stuff.service; do
+  systemctl is-failed --quiet "$unit" && problems+=("$unit failed (journalctl -u $unit -b)")
+done
+
+if grep -q '^LABEL=STUFF ' /etc/fstab && [[ -e /dev/disk/by-label/STUFF ]] && ! mountpoint -q /mnt/stuff; then
+  problems+=("STUFF is attached but not mounted on /mnt/stuff")
+fi
+
+((${#problems[@]} == 0)) || notify-send -u critical "System customizations need attention" "$(printf '• %s\n' "${problems[@]}")"

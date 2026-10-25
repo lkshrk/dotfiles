@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Like macOS Cmd + Q: SIGTERM ends the app as a whole, so browsers keep every window in their session.
+# XWayland windows (Wine games, X11 apps) report helper pids, so those still get close requests instead.
+set -euo pipefail
+
+read -r class xwayland < <(hyprctl activewindow -j | jq -r '"\(.class // "") \(.xwayland // false)"')
+[[ -n $class ]] || exit 0
+
+if [[ $xwayland == false ]]; then
+  mapfile -t pids < <(hyprctl clients -j | jq -r --arg class "$class" '.[] | select(.class == $class and .pid > 0) | .pid' | sort -un)
+  ((${#pids[@]})) || exit 0
+  kill -TERM "${pids[@]}" 2>/dev/null || true
+  exit 0
+fi
+
+batch=$(hyprctl clients -j | jq -r --arg class "$class" '
+  [.[] | select(.class == $class) | "dispatch hl.dsp.window.close({ window = \"address:\(.address)\" })"]
+  | join("; ")')
+[[ -n $batch ]] || exit 0
+hyprctl --batch "$batch" >/dev/null

@@ -1,0 +1,3 @@
+# Omarchy preinstalls that setup-omarchy.sh removes. Reinstall with `omarchy pkg add`.
+spotify
+typora

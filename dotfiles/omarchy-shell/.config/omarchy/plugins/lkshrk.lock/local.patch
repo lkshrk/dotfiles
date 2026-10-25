@@ -1,0 +1,43 @@
+--- a/Service.qml
++++ b/Service.qml
+@@ -61,6 +61,13 @@
+     return realScreenCount() > 0
+   }
+ 
++  MainScreen { id: mainScreen }
++
++  // Without the main monitor attached no screen matches, so every surface keeps its password field.
++  function mainScreenName() {
++    return mainScreen.screen ? mainScreen.screen.name : ""
++  }
++
+   function queueSessionLock() {
+     pendingSessionLock = true
+     if (!sessionLockStabilizeTimer.running) logEvent("lock-pending: screen-stabilizing")
+@@ -279,6 +286,7 @@
+       LockView {
+         id: lockView
+         anchors.fill: parent
++        primary: !lockSurface.screen || root.mainScreenName() === "" || lockSurface.screen.name === root.mainScreenName()
+         backgroundPath: root.backgroundPath
+         backgroundVersion: root.backgroundVersion
+         fingerprintConfigured: root.fingerprintConfigured
+--- a/LockView.qml
++++ b/LockView.qml
+@@ -17,6 +17,8 @@
+   property bool loadBackground: true
+   property string passwordText: ""
+   property bool syncingPasswordText: false
++  // Side screens hide the field but keep it focusable, so typing still works wherever the keyboard focus lands.
++  property bool primary: true
+ 
+   readonly property string placeholderText: "Enter Password"
+   readonly property int fieldWidth: 381
+@@ -125,6 +127,7 @@
+       width: root.fieldWidth
+       height: root.fieldHeight
+       anchors.centerIn: parent
++      opacity: root.primary || passwordInput.text.length > 0 || root.authenticatingPassword || root.failureMessage.length > 0 ? 1 : 0
+       color: Commons.Color.lock.background
+       borderSpec: root.inputBorderSpec
+       radius: Style.cornerRadius
