@@ -42,3 +42,7 @@ backspace = macro(S-home backspace)
 3 = M-S-3
 4 = M-S-4
 v = M-C-v
+
+# Ctrl + Cmd + Space is the macOS emoji picker; Omarchy opens its picker on Super + Ctrl + E.
+[cmd+control]
+space = M-C-e
