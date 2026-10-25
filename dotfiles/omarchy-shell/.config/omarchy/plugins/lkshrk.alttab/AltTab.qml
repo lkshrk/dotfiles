@@ -62,6 +62,12 @@ Item {
     return ipc && ipc.focusHistoryID !== undefined && ipc.focusHistoryID >= 0 ? ipc.focusHistoryID : 9999
   }
 
+  // lastIpcObject is only as fresh as the last refreshToplevels(); the Wayland app id is always live.
+  function appClass(toplevel) {
+    var ipc = toplevel.lastIpcObject || {}
+    return (toplevel.wayland && toplevel.wayland.appId) || ipc.class || ipc.initialClass || ""
+  }
+
   function buildWindows() {
     var list = []
     var live = {}
@@ -74,7 +80,7 @@ Item {
       live[normalize(t.address)] = true
       if (ipc.mapped === false || ipc.hidden === true) continue
       // Wine/XWayland helpers have neither class nor title and are no_focus anyway.
-      if (!(ipc.class || ipc.initialClass) && !t.title) continue
+      if (!appClass(t) && !t.title) continue
       list.push(t)
     }
     mru = mru.filter(function(address) { return live[address] === true })
@@ -91,13 +97,13 @@ Item {
   }
 
   function isProtected(toplevel) {
-    var ipc = toplevel.lastIpcObject || {}
-    return protectedClass.test(ipc.class || ipc.initialClass || "")
+    return protectedClass.test(appClass(toplevel))
   }
 
   function open(delta) {
     if (!opened) {
       cancelled = false
+      Hyprland.refreshToplevels()
       buildWindows()
       if (windows.length === 0) return
       // Start on the previous window, like Windows and macOS.
@@ -155,10 +161,24 @@ Item {
   }
 
   function iconFor(toplevel) {
-    var ipc = toplevel.lastIpcObject || {}
-    var cls = ipc.class || ipc.initialClass || ""
-    var entry = cls ? DesktopEntries.heuristicLookup(cls) : null
-    return Quickshell.iconPath(entry && entry.icon ? entry.icon : cls.toLowerCase(), "application-x-executable")
+    var cls = appClass(toplevel)
+    var entry = cls ? entryFor(cls) : null
+    var icon = entry && entry.icon ? entry.icon : cls.toLowerCase()
+    if (icon.charAt(0) === "/") return "file://" + icon
+    return Quickshell.iconPath(icon, "application-x-executable")
+  }
+
+  // heuristicLookup misses classes that differ from the entry id (helium-browser, web apps, OBS), so StartupWMClass wins.
+  function entryFor(cls) {
+    var lower = cls.toLowerCase()
+    var apps = DesktopEntries.applications.values || []
+    var byId = null
+    for (var i = 0; i < apps.length; i++) {
+      var e = apps[i]
+      if (String(e.startupClass || "").toLowerCase() === lower) return e
+      if (!byId && String(e.id || "").toLowerCase() === lower) byId = e
+    }
+    return byId || DesktopEntries.heuristicLookup(cls)
   }
 
   Component.onCompleted: {

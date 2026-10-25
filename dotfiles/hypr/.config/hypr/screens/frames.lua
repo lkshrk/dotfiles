@@ -2,8 +2,6 @@
 local C = require("hypr.screens.config")
 local U = require("hypr.screens.util")
 
-local frames_file = (os.getenv("XDG_STATE_HOME") or (os.getenv("HOME") .. "/.local/state")) .. "/hypr-screens/frames"
-
 -- Keyed by title too, since Steam's main window, friends list and popups share one class.
 local function key(w)
   local title = w.title or ""
@@ -12,31 +10,18 @@ local function key(w)
   end
 end
 
-local function load()
-  local frames = {}
-  local f = io.open(frames_file, "r")
-  if not f then return frames end
-  for line in f:lines() do
-    local class, x, y, width, height = line:match("^(.-)\t(-?%d+)\t(-?%d+)\t(%d+)\t(%d+)$")
-    if class then frames[class] = { x = tonumber(x), y = tonumber(y), w = tonumber(width), h = tonumber(height) } end
-  end
-  f:close()
-  return frames
-end
-
-local function same(a, b)
-  return a and b and a.x == b.x and a.y == b.y and a.w == b.w and a.h == b.h
+local function load(class)
+  local row = U.load_tsv("frames")[class]
+  local x, y, w, h = row and tonumber(row[1]), row and tonumber(row[2]), row and tonumber(row[3]), row and tonumber(row[4])
+  if x and y and w and h then return { x = x, y = y, w = w, h = h } end
 end
 
 local function save(class, frame)
-  local frames = load()
-  if same(frames[class], frame) then return end
-  frames[class] = frame
-  -- No mkdir here: blocking on a child process from inside the compositor can stall it. setup creates the directory.
-  local f = io.open(frames_file, "w")
-  if not f then return end
-  for c, b in pairs(frames) do f:write(c, "\t", b.x, "\t", b.y, "\t", b.w, "\t", b.h, "\n") end
-  f:close()
+  local frames = U.load_tsv("frames")
+  local row = { tostring(frame.x), tostring(frame.y), tostring(frame.w), tostring(frame.h) }
+  if table.concat(frames[class] or {}, "\t") == table.concat(row, "\t") then return end
+  frames[class] = row
+  U.save_tsv("frames", frames)
 end
 
 local applied = {}
@@ -44,7 +29,7 @@ local applied = {}
 local function restore(w)
   local class = key(w)
   if not class or applied[w.address] or not w.floating then return end
-  local frame = load()[class]
+  local frame = load(class)
   if not frame then return end
   applied[w.address] = true
   hl.dispatch(hl.dsp.window.resize({ x = frame.w, y = frame.h, window = w }))

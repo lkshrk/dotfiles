@@ -87,18 +87,22 @@ The setup flow:
    their steps are skipped.
 4. Removes the Omarchy packages and web apps listed in
    `omarchy/remove.packages` and `omarchy/remove.webapps`.
-5. Switches the login shell to zsh, installs the keyd Caps Lock → Hyper
-   mapping, enables Docker with sudoless access and makes Helium the default
-   browser.
-6. Installs the web apps in `omarchy/chromium.webapps` as Chromium app windows
-   (Helium stays the default browser).
-7. Configures rbw (asking for the Bitwarden email and server once) and unlocks
-   it, which starts the SSH agent used for git signing.
-8. Writes the LAN root CA from the vault to `~/.local/share/certs/lan-ca.pem`
-   and trusts it system-wide (`scripts/lan-ca.sh`).
-9. Runs `omni agents sync` (APM plugins and hooks; needs the LAN CA).
-10. Clones the knowledge vault to `~/knowledge` over the rbw SSH agent and
-    enables `knowledge-sync.timer`.
+5. Switches the login shell to zsh and installs the keyd Mac keymap from
+   `omarchy/keyd/` (Cmd sends Ctrl, Caps Lock is Hyper).
+6. Adds the managed `/etc/fstab` block from `omarchy/fstab.mounts` with the
+   units in `omarchy/systemd/`, keeps the STUFF Steam library's Proton
+   prefixes on the home disk, and applies the system tweaks (cloudflared,
+   `omarchy/default/irqbalance`, one ufw rule).
+7. Copies the Stream Deck images from `templates/opendeck-images/` and, on a
+   machine without OBS scenes, applies `templates/obs/` with `obs-config`.
+8. Enables Docker with sudoless access, makes Helium the default browser and
+   File Roller the archive handler, and installs the web apps in
+   `omarchy/chromium.webapps` as Chromium app windows.
+9. Configures rbw (asking for the Bitwarden email and server once), unlocks it
+   (which starts the SSH agent used for git signing) and writes the LAN root
+   CA from the vault, trusted system-wide (`scripts/lan-ca.sh`).
+10. Runs `omni agents sync` (APM plugins and hooks; needs the LAN CA), clones
+    the knowledge vault to `~/knowledge` and enables `knowledge-sync.timer`.
 11. Installs the Lefthook hooks of this repository and the vault, and checks
     that Hyprland loads the linked config.
 
@@ -177,11 +181,14 @@ scripts/
   macos-defaults.sh       # optional macOS defaults
   lan-ca.sh               # LAN root CA from the vault, trusted on Linux
   lib/setup-common.sh     # helpers shared by setup.sh and setup-omarchy.sh
-omarchy/
-  keyd/default.conf       # Caps Lock → Hyper, installed to /etc/keyd
+omarchy/                  # files setup-omarchy.sh installs outside $HOME
+  keyd/                   # Mac keymap per keyboard, installed to /etc/keyd
+  systemd/, fstab.mounts  # STUFF and NAS mounts, cloudflared drop-in
+  default/irqbalance      # /etc/default/irqbalance
   chromium.webapps        # web apps setup installs to open in Chromium
   remove.packages         # Omarchy preinstalls setup removes
   remove.webapps          # Omarchy web apps setup removes
+templates/                # copied, not linked: opendeck-images/, obs/
 docs/reviews/             # design reviews and evaluations
 dotfiles/
   omni/                   # tracked Omni config

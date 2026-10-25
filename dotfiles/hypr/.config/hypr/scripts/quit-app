@@ -1,46 +1,53 @@
 #!/usr/bin/env bash
-# Like macOS Cmd + Q: ends the app as a whole, so browsers keep every window in their session and tray apps really quit.
-# Each launch gets its own systemd unit, which also holds the real process behind an XWayland window's helper pid.
+# Like macOS Cmd + Q: stops the app's systemd unit, so browsers keep their session and tray apps really quit.
 set -euo pipefail
 
+# Battle.net games share the launcher's class and unit; each game is its own Wine process.
+per_process='^steam_app_battlenet$'
+
 clients=$(hyprctl clients -j)
-class=$(hyprctl activewindow -j | jq -r '.class // ""')
-[[ -n $class ]] || exit 0
+active=$(hyprctl activewindow -j)
+[[ $(jq -r '.class // ""' <<<"$active") ]] || exit 0
+
+app_of='"\(.class)" + (if (.class | test($pp)) then ":\(.pid)" else "" end)'
+app=$(jq -r --arg pp "$per_process" "$app_of" <<<"$active")
 
 unit_of() {
   sed -n 's|^0::.*/||p' "/proc/$1/cgroup" 2>/dev/null
 }
 
-declare -A unit_classes=()
-while IFS=$'\t' read -r pid window_class; do
+declare -A unit_apps=()
+while IFS=$'\t' read -r pid window_app; do
   unit=$(unit_of "$pid")
-  [[ -n $unit ]] && unit_classes[$unit]+="$window_class"$'\n'
-done < <(jq -r '.[] | select(.pid > 0) | "\(.pid)\t\(.class)"' <<<"$clients")
+  [[ -n $unit ]] && unit_apps[$unit]+="$window_app"$'\n'
+done < <(jq -r --arg pp "$per_process" ".[] | select(.pid > 0) | \"\(.pid)\t\($app_of)\"" <<<"$clients")
 
-mapfile -t pids < <(jq -r --arg class "$class" '.[] | select(.class == $class and .pid > 0) | .pid' <<<"$clients" | sort -un)
+windows=$(jq -r --arg pp "$per_process" --arg app "$app" \
+  ".[] | select(($app_of) == \$app) | \"\(.pid)\t\(.xwayland)\t\(.address)\"" <<<"$clients")
+
 declare -A done_units=()
 leftover=0
-for pid in "${pids[@]}"; do
+while IFS=$'\t' read -r pid _ _; do
+  ((pid > 0)) || { leftover=1; continue; }
   unit=$(unit_of "$pid")
   [[ -n $unit && -n ${done_units[$unit]:-} ]] && continue
   # A shared unit (a game inside Steam's, foot inside the compositor's service) must not take the others down with it.
-  if [[ $unit =~ ^app-.*\.(scope|service)$ ]] && ! grep -qvxF "$class" <<<"${unit_classes[$unit]%$'\n'}"; then
+  if [[ $unit =~ ^app-.*\.(scope|service)$ ]] && ! grep -qvxF "$app" <<<"${unit_apps[$unit]%$'\n'}"; then
     systemctl --user kill --signal=SIGTERM "$unit"
     done_units[$unit]=1
   else
     leftover=1
   fi
-done
+done <<<"$windows"
 ((leftover)) || exit 0
 
-# Windows left in shared units: Wayland pids are the app itself, XWayland ones may be helpers, so those get close requests.
-jq -r --arg class "$class" '.[] | select(.class == $class) | "\(.pid)\t\(.xwayland)\t\(.address)"' <<<"$clients" |
-  while IFS=$'\t' read -r pid xwayland address; do
-    unit=$(unit_of "$pid")
-    [[ -n $unit && -n ${done_units[$unit]:-} ]] && continue
-    if [[ $xwayland == false && $pid -gt 0 ]]; then
-      kill -TERM "$pid" 2>/dev/null || true
-    else
-      hyprctl dispatch "hl.dsp.window.close({ window = \"address:$address\" })" >/dev/null
-    fi
-  done
+# Windows left in shared units: Wayland and per-process pids are the app itself, other XWayland pids may be helpers.
+while IFS=$'\t' read -r pid xwayland address; do
+  unit=$(unit_of "$pid")
+  [[ -n $unit && -n ${done_units[$unit]:-} ]] && continue
+  if [[ $pid -gt 0 && ( $xwayland == false || $app == *:"$pid" ) ]]; then
+    kill -TERM "$pid" 2>/dev/null || true
+  else
+    hyprctl dispatch "hl.dsp.window.close({ window = \"address:$address\" })" >/dev/null
+  fi
+done <<<"$windows"

@@ -24,12 +24,19 @@ omni_bootstrap_dots() {
   bash "$volatile" detach
 }
 
-rbw_set_lock_timeout() {
+# Returns non-zero only when the vault stays locked; a missing LAN CA just warns.
+rbw_unlock_with_lan_ca() {
   # i32::MAX seconds (~68 years): never, yet safe for Instant math on every platform.
   local lock_timeout=2147483647
   if [[ "$(rbw config show 2>/dev/null | jq -r '.lock_timeout // empty')" != "$lock_timeout" ]]; then
-    rbw config set lock_timeout "$lock_timeout"
+    rbw config set lock_timeout "$lock_timeout" || die "could not set the rbw lock timeout"
   fi
+  ok "rbw never locks on a timeout"
+  rbw unlocked >/dev/null 2>&1 || rbw unlock || return
+  ok "vault unlocked"
+
+  step "lan ca"
+  bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
 }
 
 install_lefthook() {

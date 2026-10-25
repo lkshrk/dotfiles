@@ -22,37 +22,22 @@ rbw_unlock_if_needed() {
   return 1
 }
 
-rbw_ssh_auth_sock() {
-  local lib="$ENV_DIR/lib/rbw-sock.sh"
-  [[ -r "$lib" ]] || return 1
-  source "$lib"
-  if [[ "$OSTYPE" == darwin* ]]; then
-    env_next_rbw_sock_darwin
-  else
-    env_next_rbw_sock_linux
-  fi
-}
-
 rbw_fix_ssh_auth_sock() {
-  case "${SSH_AUTH_SOCK:-}" in
-    ''|/var/run/com.apple.launchd.*/Listeners)
-      local rbw_sock
-      rbw_sock=$(rbw_ssh_auth_sock) || return 1
-      export SSH_AUTH_SOCK="$rbw_sock"
-      ;;
-  esac
-}
-
-rbw_ssh_agent_available() {
-  rbw_fix_ssh_auth_sock || return 1
-  [[ -S "${SSH_AUTH_SOCK:-}" ]] || return 1
-  ssh-add -l >/dev/null 2>&1
+  [[ -z ${SSH_AUTH_SOCK:-} || $SSH_AUTH_SOCK == /var/run/com.apple.launchd.*/Listeners ]] || return 0
+  local sock os=linux
+  [[ $OSTYPE == darwin* ]] && os=darwin
+  sock=$(source "$ENV_DIR/lib/rbw-sock.sh" 2>/dev/null && env_next_rbw_sock_$os) || return 1
+  export SSH_AUTH_SOCK=$sock
 }
 
 rbw_ssh_agent_ready() {
-  rbw_ssh_agent_available && return 0
-  { rbw_available && rbw_can_prompt; } || { print -u2 "rbw: SSH agent unavailable; run 'rbw unlock' in an interactive shell"; return 1; }
-  rbw_unlock_if_needed && rbw_ssh_agent_available && return 0
+  local attempt
+  for attempt in 1 2; do
+    rbw_fix_ssh_auth_sock && [[ -S ${SSH_AUTH_SOCK:-} ]] && ssh-add -l >/dev/null 2>&1 && return 0
+    (( attempt == 1 )) || break
+    { rbw_available && rbw_can_prompt; } || { print -u2 "rbw: SSH agent unavailable; run 'rbw unlock' in an interactive shell"; return 1; }
+    rbw_unlock_if_needed || break
+  done
   print -u2 "rbw: SSH agent unreachable at ${SSH_AUTH_SOCK:-<unset>}"; return 1
 }
 
@@ -85,42 +70,7 @@ rbw_env() {
 (( $+commands[rbw] )) || return 0
 
 sops() {
-  rbw_env sops -- command sops "$@"
-}
-
-codex() { ( _omni_ai_run rbw_env codex -- command codex "$@" ) }
-oc() { ( _omni_ai_run rbw_env opencode -- command opencode "$@" ) }
-
-zmodload -F zsh/datetime p:EPOCHSECONDS
-
-h_cloud_auth() {
-  local script="$HOME/Dev/h-cloud/scripts/cluster-auth.sh" exports others=${KUBECONFIG:-}
-  local dir="${XDG_RUNTIME_DIR:-}/h-cloud"
-  # Re-run the script (which renews expiring certs) at most hourly per shell.
-  [[ -s ${TALOSCONFIG:-} && -s $dir/kubeconfig && :$others: == *:$dir/kubeconfig:* ]] \
-    && (( ${_H_CLOUD_AUTH_AT:-0} > EPOCHSECONDS - 3600 )) && return 0
-  # Tab completion must never block on an rbw/pinentry prompt.
-  (( ${+compstate} )) && return 0
-  [[ -x $script ]] || { print -u2 "h-cloud: $script missing"; return 1; }
-  rbw_unlock_if_needed || { print -u2 "h-cloud: rbw locked"; return 1; }
-  exports=$("$script" env) || return 1
-  eval "$exports"
-  typeset -g _H_CLOUD_AUTH_AT=$EPOCHSECONDS
-  others=${${others//$dir\/kubeconfig/}##:}
-  [[ -z $others ]] || export KUBECONFIG="$KUBECONFIG:$others"
-}
-
-for _cmd in talosctl kubectl flux helm helmfile k9s; do
-  (( $+commands[$_cmd] )) || continue
-  eval "$_cmd() { h_cloud_auth || return; command $_cmd \"\$@\"; }"
-done
-unset _cmd
-
-just() {
-  if [[ $PWD == $HOME/Dev/h-cloud(|/*) && ${1:-} == (talos|bootstrap|kube) ]]; then
-    h_cloud_auth || return
-  fi
-  command just "$@"
+  rbw_env sops -- sops "$@"
 }
 
 git() {

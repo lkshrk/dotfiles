@@ -17,11 +17,19 @@ print -r -- '#!/bin/sh
 [ "$*" = "test prompt" ] && [ "$LITELLM_API_KEY" = gateway-key ]' > $bin/norbw/opencode
 print -r -- '#!/bin/sh
 printf "gateway-key\n"' > $bin/env/bin/llm-gateway-token
+ln -s "$repo/dotfiles/env/.config/env/bin/rbw-env" $bin/env/bin/rbw-env
+ln -s "$repo/dotfiles/env/.config/env/secrets" $bin/env/secrets
 print -r -- '#!/bin/sh
-[ "$*" = "codex -- command codex test prompt" ]' > $bin/env/bin/rbw-env
-print -r -- '#!/bin/sh' > $bin/rbw
-chmod +x $bin/norbw/* $bin/env/bin/* $bin/rbw
+[ "$1" = get ] || exit 0
+for a; do :; done
+printf "secret-%s\n" "$a"' > $bin/rbw
+print -r -- '#!/bin/sh
+[ "$*" = "test prompt" ] && [ "$LITELLM_API" = secret-litellm-api ] && [ "${NODE_EXTRA_CA_CERTS:-}" = "$EXPECT_CA" ]' > $bin/codex
+print -r -- '#!/bin/sh
+[ "$*" = "test prompt" ] && [ "$LITELLM_API_KEY" = secret-llm-gateway ] && [ "${NODE_EXTRA_CA_CERTS:-}" = "$EXPECT_CA" ]' > $bin/opencode
+chmod +x $bin/norbw/* $bin/env/bin/llm-gateway-token $bin/rbw $bin/codex $bin/opencode
 ENV_DIR=$bin/env
+unset HF_TOKEN LITELLM_API CONTEXT7_API_KEY LITELLM_API_KEY
 expect_ca=/test/lan-ca.pem
 check_env() {
   [[ ${NODE_EXTRA_CA_CERTS:-} == $expect_ca ]]
@@ -46,25 +54,15 @@ claude() { [[ $* == 'test prompt' ]]; }
 source "$repo/dotfiles/zsh/.config/zsh/65-ai-certs.zsh"
 source "$repo/dotfiles/zsh/.config/zsh/68-rbw.zsh"
 _omni_ai_ca() { print -r -- /test/lan-ca.pem; }
+export EXPECT_CA=$expect_ca
 (_omni_ai_run check_env)
-codex 'test prompt'
-rbw_env() {
-  check_env
-  local profile=$1
-  shift
-  case $profile in
-    codex) [[ $* == '-- command codex test prompt' ]] ;;
-    opencode) [[ $* == '-- command opencode test prompt' ]] ;;
-    *) return 1 ;;
-  esac
-}
 export ANTHROPIC_BASE_URL=https://example.invalid ANTHROPIC_AUTH_TOKEN=fake ANTHROPIC_DEFAULT_OPUS_MODEL=fake
 claude 'test prompt'
 codex 'test prompt'
 oc 'test prompt'
 [[ $ANTHROPIC_AUTH_TOKEN == fake ]]
 _omni_ai_ca() { return 1; }
-expect_ca=
+expect_ca= EXPECT_CA=
 claude 'test prompt'
 codex 'test prompt'
 oc 'test prompt'

@@ -133,3 +133,10 @@ done
 [ -S "$socket_path" ] || fail "rbw socket fixture did not start"
 
 run_profile_probe "linux with existing rbw socket" "$socket_path"
+
+for focus_test in "$ENV_DIR/../hypr/scripts/tests/focus-test.sh" "$ENV_DIR/../../../hypr/.config/hypr/scripts/tests/focus-test.sh"; do
+  [ -r "$focus_test" ] || continue
+  printf '\n## hypr focus-app\n'
+  bash "$focus_test" || fail "focus-test.sh"
+  break
+done

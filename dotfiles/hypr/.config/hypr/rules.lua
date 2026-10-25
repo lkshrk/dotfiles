@@ -1,17 +1,16 @@
+local C = require("hypr.screens.config")
+
 -- One tiled workspace per main app; workspace 1 collects every app without its own rule.
 o.window(".*", { workspace = "1" })
-o.window("(?i)^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty)$", { workspace = "2" })
-o.window("^helium$", { workspace = "3" })
-o.window("^dev\\.zed\\.Zed(-Preview|-Nightly)?$", { workspace = "4" })
-o.window("^chrome-linear\\.app__-Default$", { workspace = "5" })
-
--- Portrait-screen apps float into their thirds slot (see screens.lua).
-o.window("(?i)^(discord|signal|org\\.telegram\\.desktop|com\\.obsproject\\.studio|com\\.chatterino\\.chatterino|chatgpt)$", {
-  workspace = "6",
-  float = true,
-})
-o.window("^(chrome-localhost__-Default|opendeck)$", { workspace = "7", float = true })
-o.window("^(brave-browser|md\\.obsidian\\.Obsidian)$", { workspace = "10" })
+for _, app in ipairs(C.apps) do
+  local classes = {}
+  for i, class in ipairs(app) do classes[i] = class:gsub("%.", "\\.") end
+  -- Portrait-screen apps float into their thirds slot (see screens/side.lua).
+  o.window("(?i)^(" .. table.concat(classes, "|") .. ")$", { workspace = app.workspace, float = C.side_workspaces[app.workspace] })
+end
+-- Steam games, and Chatterino's X11 class (U.app maps both to their app).
+o.window("^steam_app_[0-9]+$", { workspace = C.gaming_workspace })
+o.window("^chatterino$", { workspace = "6", float = true })
 
 -- Opened from the Stats bar widget for a quick look, like Activity Monitor.
 o.window("^io\\.missioncenter\\.MissionCenter$", {
@@ -21,10 +20,9 @@ o.window("^io\\.missioncenter\\.MissionCenter$", {
   size = { "(monitor_w*0.6)", "(monitor_h*0.7)" },
 })
 
-o.window("^(steam|steam_app_[0-9]+|steam_app_battlenet|gamescope|com\\.moonlight_stream\\.Moonlight|wowupcf)$", { workspace = "9" })
--- Launchers float and reopen at the size they were last left at; games sharing Battle.net's class match their own titles below.
-o.window("^wowupcf$", { float = true, persistent_size = true })
-o.window({ class = "^steam_app_battlenet$", title = "^Battle\\.net$" }, { float = true, persistent_size = true })
+-- Launchers float (screens/frames.lua restores their frame); games sharing Battle.net's class match their own titles below.
+o.window("^wowupcf$", { float = true })
+o.window({ class = "^steam_app_battlenet$", title = "^Battle\\.net$" }, { float = true })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them.
 o.window("^(steam_app_[0-9]+|gamescope)$", { fullscreen = true, idle_inhibit = "fullscreen" })
 -- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.
@@ -46,6 +44,6 @@ o.window("^(org\\.omarchy\\..*|omacalc|dev\\.tensaku\\.Tensaku|WebcamOverlay-.*|
 -- Re-applied because the collector rule above overrides Omarchy's earlier one.
 o.window({ title = ".*is sharing.*" }, { workspace = "special silent" })
 -- Password managers block screen capture, so they get a tiled workspace to themselves; tag rules apply last, so drop Omarchy's floating-window tag.
-o.window("^(Bitwarden|1[pP]assword)$", { tag = "-floating-window", tile = true, workspace = "8" })
+o.window("^(Bitwarden|1[pP]assword)$", { tag = "-floating-window", tile = true, workspace = C.homes.Bitwarden })
 -- Omarchy only catches Chrome's class for the Bitwarden extension popup; Brave prefixes it "brave-".
 o.window("^.+-nngceckbapebfimnlniiiahkandclblb-Default$", { no_screen_share = true, tag = "+floating-window" })

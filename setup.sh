@@ -76,7 +76,7 @@ warm_admin_session() {
 
 ensure_omni_bootstrap() {
   step "omni"
-  command -v omni >/dev/null 2>&1 || die "omni is not installed"
+  have omni || die "omni is not installed"
   ensure_omni_version
   omni bootstrap --help >/dev/null 2>&1 || die "installed omni does not support 'bootstrap'; update omni and rerun setup"
   [[ -f "$OMNI_CONFIG_PATH" ]] || die "Omni config not found: $OMNI_CONFIG_PATH"
@@ -101,7 +101,7 @@ install_zsh_completions() {
   local completions_dir="$HOME/.cache/zsh/completions"
   mkdir -p "$completions_dir"
 
-  if command -v argo >/dev/null 2>&1; then
+  if have argo; then
     argo completion zsh \
       | sed '/^#compdef argo$/d; /^compdef _argo argo$/d; s/_argo/_argo_upstream/g' \
       > "$completions_dir/_argo_upstream"
@@ -113,18 +113,13 @@ install_zsh_completions() {
 
 configure_rbw() {
   step "rbw"
-  command -v rbw >/dev/null 2>&1 || { warn "rbw is not installed; skipping rbw config"; return; }
-  rbw_set_lock_timeout
-  ok "rbw never locks on a timeout"
-  rbw unlocked >/dev/null 2>&1 || rbw unlock || { warn "rbw is locked; skipping the LAN root CA"; return; }
-
-  step "lan ca"
-  bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
+  have rbw || { warn "rbw is not installed; skipping rbw config"; return; }
+  rbw_unlock_with_lan_ca || warn "rbw is locked; skipping the LAN root CA"
 }
 
 setup_lefthook() {
   step "lefthook"
-  if command -v lefthook >/dev/null 2>&1; then
+  if have lefthook; then
     install_lefthook "$REPO_DIR"
   else
     warn "lefthook is not installed; Omni reconcile should install it through the dev group"

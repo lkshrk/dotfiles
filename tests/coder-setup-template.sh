@@ -7,7 +7,7 @@ config="$repo_dir/templates/codex/.codex/config.toml"
 
 [[ "$(grep -c '^approval_policy[[:space:]]*=' "$config")" == 1 ]]
 [[ "$(grep -c '^default_permissions[[:space:]]*=' "$config")" == 1 ]]
-# The shared template must not pin a host-local CA bundle (the old OTel TLS blocks did).
+# The shared template must not pin a host-local CA bundle.
 if grep -Eq '^[[:space:]]*ca-certificate[[:space:]]*=[[:space:]]*"(/Users/|/home/)' "$config"; then
   exit 1
 fi

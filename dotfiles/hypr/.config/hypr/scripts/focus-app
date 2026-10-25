@@ -46,7 +46,7 @@ NEXT="$(
           else
             sort_by(.stableId)
             | (map(.address) | index($active)) as $i
-            | if $i == null then .[0].address
+            | if $inside == null then .[0].address
               elif $reverse then .[($i - 1 + length) % length].address
               else .[($i + 1) % length].address end
           end

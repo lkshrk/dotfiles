@@ -1,4 +1,1 @@
-#!/bin/bash
-
-# Delayed and backgrounded so mounts and the Hyprland config have settled and other hooks are not held up.
-setsid -f sh -c 'sleep 20; exec "$HOME/.config/omarchy/scripts/check-system-health"' >/dev/null 2>&1
+../post-boot.d/check-system-health.hook

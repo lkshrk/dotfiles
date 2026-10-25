@@ -14,6 +14,8 @@ OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.j
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
 FIRST_RUN_MARKER="$STATE_DIR/omarchy-setup-done"
 omni() { command omni --config "$OMNI_CONFIG_PATH" "$@"; }
+list_entries() { grep -v -e '^#' -e '^[[:space:]]*$' "$1"; }
+install_if_changed() { cmp -s "$1" "$2" && return 1; sudo install -Dm644 "$1" "$2" || die "could not install $2"; }
 
 # The login shell's env spine, from the checkout: ~/.config/env is not linked yet on a fresh machine.
 set +u
@@ -45,7 +47,7 @@ step "omni"
 if ! omni_reads_config; then
   install_omni_release
   hash -r
-  omni_reads_config || die "omni $(command omni --version 2>/dev/null) cannot read this repo's config; it needs a release with settings v26"
+  omni_reads_config || die "omni $(command omni --version 2>/dev/null) cannot read this repo's config; it needs a release with settings v$(jq -r .version "$OMNI_CONFIG_PATH")"
 fi
 ok "$(command omni --version)"
 
@@ -55,14 +57,13 @@ if ((first_run)); then
   step "first run: take the repo's configs"
   stamp=$(date +%Y%m%d%H%M%S)
   while IFS= read -r entry; do
-    [[ -n "$entry" && "$entry" != \#* ]] || continue
-    rel="${entry#dotfiles/}"
+    rel="${entry#*/}"
     target="$HOME/${rel#*/}"
     if [[ -f "$target" && ! -L "$target" ]]; then
       mv "$target" "$target.pre-dotfiles.$stamp"
       ok "kept the default as ${target/#"$HOME"/\~}.pre-dotfiles.$stamp"
     fi
-  done < "$REPO_DIR/scripts/volatile-dots.txt"
+  done < <(list_entries "$REPO_DIR/scripts/volatile-dots.txt")
 fi
 
 tools_failed=0
@@ -92,17 +93,17 @@ if ((first_run)); then
   for name in "${conflicts[@]}"; do
     omni --yes dots resolve "$name" --use-repo
   done
+  bash "$REPO_DIR/scripts/volatile-dots.sh" detach
   mkdir -p "$STATE_DIR"
   touch "$FIRST_RUN_MARKER"
 fi
 
 step "omarchy defaults"
-mapfile -t drop < <(grep -v -e '^#' -e '^[[:space:]]*$' "$REPO_DIR/omarchy/remove.packages")
+mapfile -t drop < <(list_entries "$REPO_DIR/omarchy/remove.packages")
 ((${#drop[@]} == 0)) || omarchy pkg drop "${drop[@]}"
 while IFS= read -r webapp; do
-  [[ -n "$webapp" && "$webapp" != \#* ]] || continue
   OMARCHY_REMOVE_NOTIFY=false omarchy-webapp-remove "$webapp"
-done < "$REPO_DIR/omarchy/remove.webapps"
+done < <(list_entries "$REPO_DIR/omarchy/remove.webapps")
 ok "unwanted Omarchy web apps removed"
 
 if have zsh; then
@@ -120,14 +121,20 @@ if have keyd; then
   step "keyd"
   # Restart rather than `keyd reload`: right after the first start the socket isn't up yet.
   keyd_changed=0
-  for conf in common default.conf mac.conf scimitar.conf; do
-    if ! cmp -s "$REPO_DIR/omarchy/keyd/$conf" "/etc/keyd/$conf"; then
-      sudo install -Dm644 "$REPO_DIR/omarchy/keyd/$conf" "/etc/keyd/$conf"
-      keyd_changed=1
-    fi
+  for src in "$REPO_DIR"/omarchy/keyd/*; do
+    cmp -s "$src" "/etc/keyd/${src##*/}" || keyd_changed=1
   done
-  if ((keyd_changed)) || ! systemctl is-active --quiet keyd; then
-    sudo keyd check /etc/keyd/*.conf >/dev/null || die "keyd rejected the config in /etc/keyd"
+  stale=()
+  for dst in /etc/keyd/*.conf; do
+    [[ ! -e $dst || -e "$REPO_DIR/omarchy/keyd/${dst##*/}" ]] || stale+=("$dst")
+  done
+  if ((keyd_changed || ${#stale[@]})); then
+    keyd check "$REPO_DIR"/omarchy/keyd/*.conf >/dev/null || die "keyd rejected the config in omarchy/keyd"
+    sudo install -Dm644 -t /etc/keyd "$REPO_DIR"/omarchy/keyd/*
+    ((${#stale[@]} == 0)) || sudo rm -f "${stale[@]}"
+    sudo systemctl enable keyd
+    sudo systemctl restart keyd
+  elif ! systemctl is-active --quiet keyd; then
     sudo systemctl enable keyd
     sudo systemctl restart keyd
   fi
@@ -136,7 +143,7 @@ if have keyd; then
     sudo usermod -aG keyd "$USER"
     warn "added $USER to the keyd group; log out and back in for terminal Cmd + C/V"
   fi
-  ok "Mac keymap: Cmd sends Ctrl, Ctrl sends Super, Caps is Hyper"
+  ok "Mac keymap: Cmd sends Ctrl, Caps is Hyper"
 fi
 
 step "mounts"
@@ -144,7 +151,7 @@ fstab_begin="# BEGIN dotfiles mounts"
 fstab_end="# END dotfiles mounts"
 fstab_new="$(mktemp)"
 {
-  # Drops the old block and any unmanaged line for the same targets, so reruns and older hand edits converge.
+  # Drops the old block and any unmanaged line for the same targets.
   awk -v b="$fstab_begin" -v e="$fstab_end" '
     $0 == b { skip = 1; next }
     $0 == e { skip = 0; next }
@@ -160,10 +167,7 @@ fstab_new="$(mktemp)"
 } >"$fstab_new"
 units_changed=0
 for unit in ntfsfix-stuff.service mnt-stuff.mount.d/ntfsfix.conf; do
-  if ! cmp -s "$REPO_DIR/omarchy/systemd/$unit" "/etc/systemd/system/$unit"; then
-    sudo install -Dm644 "$REPO_DIR/omarchy/systemd/$unit" "/etc/systemd/system/$unit"
-    units_changed=1
-  fi
+  install_if_changed "$REPO_DIR/omarchy/systemd/$unit" "/etc/systemd/system/$unit" && units_changed=1
 done
 if ! cmp -s "$fstab_new" /etc/fstab; then
   sudo cp /etc/fstab "/etc/fstab.bak-dotfiles.$(date +%Y%m%d%H%M%S)"
@@ -194,13 +198,11 @@ fi
 step "system tweaks"
 if have cloudflared; then
   dropin=cloudflared.service.d/wait-dns.conf
-  if ! cmp -s "$REPO_DIR/omarchy/systemd/$dropin" "/etc/systemd/system/$dropin"; then
-    sudo install -Dm644 "$REPO_DIR/omarchy/systemd/$dropin" "/etc/systemd/system/$dropin"
+  if install_if_changed "$REPO_DIR/omarchy/systemd/$dropin" "/etc/systemd/system/$dropin"; then
     sudo systemctl daemon-reload
   fi
 fi
-if have irqbalance && ! cmp -s "$REPO_DIR/omarchy/default/irqbalance" /etc/default/irqbalance; then
-  sudo install -Dm644 "$REPO_DIR/omarchy/default/irqbalance" /etc/default/irqbalance
+if have irqbalance && install_if_changed "$REPO_DIR/omarchy/default/irqbalance" /etc/default/irqbalance; then
   sudo systemctl try-restart irqbalance
 fi
 # ufw owns before.rules, so only this one rule is added rather than shipping the whole file.
@@ -215,8 +217,7 @@ fi
 ok "cloudflared waits for DNS, irqbalance skips NVMe queues, ufw stops logging IGMP queries"
 
 step "opendeck images"
-# OpenDeck refuses to draw slot images that are symlinks out of its own folder, so these are copied, never linked.
-# --update=none keeps icons changed in the GUI since; new ones from the repo still arrive.
+# Copied, not linked: OpenDeck skips symlinked images; --update=none keeps icons changed in the GUI.
 mkdir -p "$HOME/.config/opendeck/images"
 cp -r --update=none "$REPO_DIR/templates/opendeck-images/." "$HOME/.config/opendeck/images/"
 ok "Stream Deck icons in place"
@@ -253,19 +254,12 @@ if [[ -f "$roller_desktop" ]]; then
   ok "File Roller opens ${#roller_types[@]} archive types"
 fi
 
-# omarchy-launch-webapp always uses the default browser, so these get their own Exec.
-# gtk-launch expands neither ~ nor $HOME, so the focus-or-launch wrapper needs its absolute path.
+# Own absolute Exec: omarchy-launch-webapp uses the default browser and gtk-launch expands neither ~ nor $HOME.
 step "web apps"
 while IFS='|' read -r name url icon; do
-  [[ -n "$name" && "$name" != \#* ]] || continue
-  rest="${url#*://}"
-  host="${rest%%/*}"
-  host="${host%%:*}"
-  url_path="/"
-  [[ "$rest" != */* ]] || url_path="/${rest#*/}"
   exec_cmd="$HOME/.local/bin/webapp-focus $url"
   exec_line="Exec=$exec_cmd"
-  wm_class_line="StartupWMClass=chrome-${host}_${url_path//\//_}-Default"
+  wm_class_line="StartupWMClass=$("$REPO_DIR/dotfiles/local-bin/.local/bin/webapp-focus" --class "$url")"
   desktop="$HOME/.local/share/applications/$name.desktop"
   if ! { grep -qxF "$exec_line" "$desktop" && grep -qxF "$wm_class_line" "$desktop"; } 2>/dev/null; then
     if ! omarchy-webapp-install "$name" "$url" "$icon" "$exec_cmd" >/dev/null; then
@@ -275,7 +269,7 @@ while IFS='|' read -r name url icon; do
     printf '%s\n' "$wm_class_line" >>"$desktop"
   fi
   ok "web app $name opens in Chromium"
-done < "$REPO_DIR/omarchy/chromium.webapps"
+done < <(list_entries "$REPO_DIR/omarchy/chromium.webapps")
 
 if have rbw; then
   step "rbw"
@@ -286,12 +280,7 @@ if have rbw; then
     read -rp "Bitwarden server URL (empty for bitwarden.com): " base_url
     [[ -z "$base_url" ]] || rbw config set base_url "$base_url"
   fi
-  rbw_set_lock_timeout
-  rbw unlocked >/dev/null 2>&1 || rbw unlock
-  ok "vault unlocked"
-
-  step "lan ca"
-  bash "$REPO_DIR/scripts/lan-ca.sh" || warn "continuing without the LAN root CA"
+  rbw_unlock_with_lan_ca || die "rbw is locked; unlock it and rerun setup"
 fi
 
 # After the CA: APM fetches the litellm marketplace from a LAN host.
@@ -327,7 +316,11 @@ fi
 step "hyprland"
 # screens/top.lua stores each app's top-screen side here and cannot create it from inside the compositor.
 mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/hypr-screens"
-hyprctl reload >/dev/null
+if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+  hyprctl reload >/dev/null
+else
+  warn "not inside Hyprland; it picks the config up at next login"
+fi
 errors="$(hyprctl configerrors)"
 [[ -z "${errors//[[:space:]]/}" ]] || die "$errors"
 ok "config loads cleanly"

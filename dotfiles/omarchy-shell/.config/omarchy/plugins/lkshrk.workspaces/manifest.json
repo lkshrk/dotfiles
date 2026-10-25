@@ -16,8 +16,5 @@
     "description": "Workspace number indicators",
     "category": "Compositor",
     "allowMultiple": false
-  },
-  "omarchy": {
-    "clonedFrom": "omarchy.workspaces"
   }
 }

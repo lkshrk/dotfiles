@@ -2,9 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// The monitor named by "mainScreen" (a screen model, e.g. "Odyssey G80SH") in shell.json. Neither Omarchy nor
-// Hyprland has a primary monitor, so the plugins that should only appear on one screen all read it from here.
-// Symlinked into each plugin folder that needs it; `screen` is null when that monitor is not connected.
+// The shell.json "mainScreen" monitor (neither Omarchy nor Hyprland has a primary); null when not connected.
 Item {
   id: root
 

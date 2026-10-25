@@ -22,10 +22,14 @@ delete = C-delete
 
 # Cmd sends Ctrl so app shortcuts match macOS; the system ones Hyprland keeps on Super are mapped across.
 [cmd:C]
-q = M-q
+# Repeat off where holding the key would close, open or capture again and again (macOS fires these once).
+q = macro2(0, 0, M-q)
+w = macro2(0, 0, C-w)
+t = macro2(0, 0, C-t)
+n = macro2(0, 0, C-n)
 # The switcher commits when Super is released, so Super has to stay held for as long as Cmd is.
 tab = swapm(cmdtab, tab)
-space = M-space
+space = macro2(0, 0, M-space)
 h = M-S-h
 m = M-S-h
 left = home
@@ -33,14 +37,15 @@ right = end
 up = C-home
 down = C-end
 backspace = macro(S-home backspace)
+v = macro2(0, 0, C-v)
 
 # Super stays held here, so Esc reaches Hyprland's alttab submap as Super + Esc and cancels the switcher.
 [cmdtab:M]
 
 # Cmd + Shift + 3/4 screenshots and Cmd + Shift + V clipboard history; Hyprland has them on Super, which no physical key sends anymore.
 [cmd+shift]
-3 = M-S-3
-4 = M-S-4
+3 = macro2(0, 0, M-S-3)
+4 = macro2(0, 0, M-S-4)
 v = M-C-v
 
 # Ctrl + Cmd + Space is the macOS emoji picker; Omarchy opens its picker on Super + Ctrl + E.

@@ -19,45 +19,44 @@ hl.workspace_rule({ workspace = "7", monitor = C.side, persistent = true })
 local TOP, MID, BOT = 0, 1, 2
 C.MID = MID
 
--- Portrait screen slots in thirds; col/cols default to the full width.
-C.slots = {
-  discord = { row = TOP },
-  helium = { row = MID },
-  chatgpt = { row = MID },
-  signal = { row = BOT },
-  ["org.telegram.desktop"] = { row = BOT },
-  ["com.obsproject.studio"] = { row = BOT },
-  ["com.chatterino.chatterino"] = { row = BOT, col = 2, cols = 1, above = true },
-  ["chrome-localhost__-Default"] = { row = TOP },
-  opendeck = { row = BOT },
+-- Each app's workspace, portrait-screen slot (col/cols default to full width), and multi = several equal windows on purpose.
+local apps = {
+  { "foot", "footclient", "Alacritty", "com.mitchellh.ghostty", workspace = "2", multi = true },
+  { "helium", workspace = "3", slot = { row = MID }, multi = true },
+  { "dev.zed.Zed", "dev.zed.Zed-Preview", "dev.zed.Zed-Nightly", workspace = "4", multi = true },
+  { "chrome-linear.app__-Default", workspace = "5" },
+  { "discord", workspace = "6", slot = { row = TOP } },
+  { "chatgpt", workspace = "6", slot = { row = MID } },
+  { "signal", "org.telegram.desktop", workspace = "6", slot = { row = BOT } },
+  { "com.chatterino.chatterino", workspace = "6", slot = { row = BOT, col = 2, cols = 1, above = true } },
+  { "chrome-localhost__-Default", workspace = "7", slot = { row = TOP } },
+  { "com.obsproject.Studio", workspace = "7", slot = { row = MID } },
+  { "opendeck", workspace = "7", slot = { row = BOT } },
+  { "Bitwarden", "1password", "1Password", workspace = "8" },
+  { "steam", "gamescope", "com.moonlight_stream.Moonlight", "wowupcf", workspace = "9" },
+  { "steam_app_battlenet", workspace = "9", multi = true },
+  { "brave-browser", "md.obsidian.Obsidian", workspace = "10" },
 }
 
-C.homes = {
-  foot = "2", footclient = "2", Alacritty = "2", ["com.mitchellh.ghostty"] = "2",
-  helium = "3",
-  ["dev.zed.Zed"] = "4", ["dev.zed.Zed-Preview"] = "4", ["dev.zed.Zed-Nightly"] = "4",
-  ["chrome-linear.app__-Default"] = "5",
-  discord = "6", chatgpt = "6", signal = "6", ["org.telegram.desktop"] = "6",
-  ["com.obsproject.studio"] = "6", ["com.chatterino.chatterino"] = "6",
-  ["chrome-localhost__-Default"] = "7", opendeck = "7",
-  Bitwarden = "8", ["1password"] = "8", ["1Password"] = "8",
-  steam = "9", steam_app_battlenet = "9", gamescope = "9", ["com.moonlight_stream.Moonlight"] = "9", wowupcf = "9",
-  ["brave-browser"] = "10", ["md.obsidian.Obsidian"] = "10",
-}
+C.apps = apps
+C.homes, C.slots, C.multi_window = {}, {}, {}
+for _, app in ipairs(apps) do
+  for _, class in ipairs(app) do
+    C.homes[class] = app.workspace
+    C.slots[class] = app.slot
+    C.multi_window[class] = app.multi
+  end
+end
 
--- Apps that open several equal windows on purpose; every other app's extra windows (settings, dialogs) float.
-C.multi_window = {
-  foot = true, footclient = true, Alacritty = true, ["com.mitchellh.ghostty"] = true,
-  ["dev.zed.Zed"] = true, ["dev.zed.Zed-Preview"] = true, ["dev.zed.Zed-Nightly"] = true,
-  helium = true, ["brave-browser"] = true, steam_app_battlenet = true,
-}
+-- Workspaces whose windows stay floating when put back in place.
+C.floating_workspaces = { ["6"] = true, ["7"] = true, ["9"] = true }
 
 -- Update splashes open before the main window under the same class, so they must not count as the primary window.
 C.splash_titles = { discord = "^Discord Updater$" }
 
--- Helium windows look identical to the compositor; the one named this in Helium (Name window…) is the main-screen one.
--- A named window's title is just its name, whatever tab is active, and Helium restores the name after a restart.
+-- Helium windows look identical; the one named this (Name window…) lives on main, the rest on the portrait screen.
 C.helium_main_title = "Main"
+C.helium_main_workspace = "3"
 
 -- Passphrase prompts (SSH keys, keyrings) are app-independent, so they always ask on the main monitor.
 C.password_prompt = { ["gcr-prompter"] = true, pinentry = true, ["pinentry-gtk"] = true, ["pinentry-qt"] = true, ["Pinentry-gtk"] = true }

@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-# One JSON snapshot for the Stats popups. Usage: stats-detail [disk-mount]
-set -euo pipefail
+# Usage: stats-detail [disk-mount] prints the popups' JSON snapshot; stats-detail --device [disk-mount] the disk's kernel name.
+set -u  # not -e: a failed probe must only blank its own field
 
+if [[ ${1:-} == --device ]]; then device_only=1; shift; fi
 MOUNT="${1:-/}"
+
+src=$(findmnt -n -o SOURCE --target "$MOUNT" | sed 's/\[.*//')
+dev=$(lsblk -sno NAME,TYPE "$src" 2>/dev/null | awk '$2=="disk"{ sub(/^[^a-zA-Z0-9]*/, "", $1); print $1; exit }')
+if [[ -n ${device_only:-} ]]; then echo "${dev:-$(basename "$src")}"; exit; fi
 
 top() { ps -eo comm=,"$1"= --sort=-"$1" | head -5 | jq -R -s -c 'split("\n") | map(select(length>0) | capture("^(?<name>.*?)\\s+(?<value>[0-9.]+)$") | .value |= tonumber)'; }
 
@@ -18,8 +23,6 @@ read -r mem_total mem_free mem_avail app cache swap_total swap_free < <(awk '
 pressure=$(awk '/^some/{ split($2, a, "="); print a[2]; exit }' /proc/pressure/memory 2>/dev/null || echo 0)
 
 read -r disk_total disk_used disk_free < <(df -PB1 "$MOUNT" | awk 'NR==2{print $2, $3, $4}')
-src=$(findmnt -n -o SOURCE --target "$MOUNT" | sed 's/\[.*//')
-dev=$(lsblk -sno NAME,TYPE "$src" 2>/dev/null | awk '$2=="disk"{ sub(/^[^a-zA-Z0-9]*/, "", $1); print $1; exit }')
 fstype=$(findmnt -n -o FSTYPE --target "$MOUNT")
 model=$(cat "/sys/block/$dev/device/model" 2>/dev/null | sed 's/ *$//' || true)
 read -r total_read total_written < <(awk -v d="$dev" '$3==d { r=$6*512; w=$10*512 } END { print r+0, w+0 }' /proc/diskstats)
@@ -39,11 +42,11 @@ jq -n -c \
   --argjson memTotal "$mem_total" --argjson memFree "$mem_free" --argjson memAvail "$mem_avail" \
   --argjson app "$app" --argjson cache "$cache" \
   --argjson swapTotal "$swap_total" --argjson swapFree "$swap_free" --argjson pressure "${pressure:-0}" \
-  --argjson diskTotal "$disk_total" --argjson diskUsed "$disk_used" --argjson diskFree "$disk_free" \
+  --argjson diskTotal "${disk_total:-0}" --argjson diskUsed "${disk_used:-0}" --argjson diskFree "${disk_free:-0}" \
   --arg mount "$MOUNT" --arg device "${dev:-}" --arg fstype "${fstype:-}" --arg diskModel "${model:-}" \
   --argjson totalRead "${total_read:-0}" --argjson totalWritten "${total_written:-0}" \
   --arg iface "${iface:-}" --arg ip "${local_ip:-}" --arg mac "${mac:-}" --arg dns "${dns:-}" \
-  --argjson netRx "$net_rx" --argjson netTx "$net_tx" \
+  --argjson netRx "${net_rx:-0}" --argjson netTx "${net_tx:-0}" \
   '{cpu: {cores: $cores, load: [$load1, $load5, $load15], frequency: $freq, uptime: $uptime, top: $topCpu},
     ram: {total: $memTotal, used: ($memTotal - $memAvail), app: $app, cache: $cache, free: $memFree,
           swapTotal: $swapTotal, swapUsed: ($swapTotal - $swapFree), pressure: $pressure,

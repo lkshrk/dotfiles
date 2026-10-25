@@ -2,14 +2,15 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.Io
 import qs.Commons
 import qs.Ui
 
 BarWidget {
   id: root
-  moduleName: "omarchy.workspaces"
+  moduleName: "lkshrk.workspaces"
 
-  // Dedicated workspaces (see ~/.config/hypr/rules.lua) always show, with an icon instead of a number.
+  // The apps each workspace holds are in ~/.config/hypr/screens/config.lua (C.homes).
   readonly property var icons: ({
     1: { glyph: "\uDB80\uDC3B", name: "Apps" },
     2: { glyph: "\uDB80\uDD8D", name: "Terminal" },
@@ -23,14 +24,40 @@ BarWidget {
     10: { glyph: "\uDB80\uDDE7", name: "Browse & Notes" }
   })
 
-  // Each screen owns its workspaces (see ~/.config/hypr/screens.lua); unknown screens show the main set.
-  readonly property var screenWorkspaces: ({
-    "Samsung Electric Company Odyssey G60SD HNAX800191": [10],
-    "Samsung Electric Company Odyssey G60SD HNAX800182": [6, 7]
-  })
-  readonly property var mainWorkspaces: [1, 2, 3, 4, 5, 8, 9]
+  property var rules: []
   readonly property var monitor: QsWindow.window ? Hyprland.monitorFor(QsWindow.window.screen) : null
-  readonly property var owned: (monitor && screenWorkspaces[monitor.description]) || mainWorkspaces
+  readonly property var owned: {
+    var mine = [], main = [], mainMonitor = ""
+    for (var i = 0; i < rules.length; i++) {
+      if (rules[i].workspaceString === "1") mainMonitor = rules[i].monitor
+    }
+    for (var j = 0; j < rules.length; j++) {
+      var id = Number(rules[j].workspaceString), target = rules[j].monitor
+      if (!(id > 0) || !target) continue
+      if (monitor && (target === "desc:" + monitor.description || target === monitor.name)) mine.push(id)
+      if (target === mainMonitor) main.push(id)
+    }
+    // A screen without workspace rules shows the set of the monitor that owns workspace 1.
+    return mine.length ? mine : main
+  }
+
+  Process {
+    id: rulesProc
+    command: ["hyprctl", "workspacerules", "-j"]
+    running: true
+    stdout: StdioCollector {
+      onStreamFinished: {
+        try { root.rules = JSON.parse(String(text)) } catch (e) {}
+      }
+    }
+  }
+
+  Connections {
+    target: Hyprland
+    function onRawEvent(event) {
+      if (event && event.name === "configreloaded" && !rulesProc.running) rulesProc.running = true
+    }
+  }
 
   function workspaceIds() {
     var ids = root.owned.slice()

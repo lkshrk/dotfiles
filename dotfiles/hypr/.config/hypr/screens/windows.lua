@@ -36,7 +36,7 @@ local function focus_soon(w)
 end
 
 local function helium_home(w)
-  return w.title == C.helium_main_title and "3" or "6"
+  return w.title == C.helium_main_title and C.helium_main_workspace or "6"
 end
 
 -- Helium sets a restored window's name a moment after opening it, so the window may need to move once its title arrives.
@@ -46,7 +46,7 @@ local function place_helium(w)
   U.state.placing = true
   U.move_to(w, home)
   U.state.placing = false
-  if home == "3" then
+  if home == C.helium_main_workspace then
     hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))
   else
     W.arrive(w)
@@ -100,7 +100,7 @@ function W.place_all()
       if not home and not w.floating then home = "1" end
       if home then
         U.move_to(w, home)
-        if home ~= "6" and home ~= "7" and home ~= "9" then
+        if not C.floating_workspaces[home] then
           hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))
         end
         last[#last + 1] = w

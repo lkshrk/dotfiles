@@ -1,11 +1,12 @@
-require("hypr.rules")
-
--- screens.lua leans on Hyprland's young Lua API; if an update breaks it, only its own bindings go dead instead of everything below.
--- Hyprland's require reports a failing module itself and hands back an empty table rather than raising.
-local screens = require("hypr.screens")
-if type(screens.arrow) ~= "function" then
+local C = require("hypr.screens.config")
+-- If an update breaks the screens modules, only their bindings go dead; Hyprland's require returns {} on failure.
+local M, W = require("hypr.screens.move"), require("hypr.screens.windows")
+require("hypr.screens.fullscreen")
+require("hypr.screens.frames")
+if type(M.arrow) ~= "function" or type(W.place_all) ~= "function" then
   local noop = function() return function() end end
-  screens = { arrow = noop, send = noop, send_to = noop, place_all = function() end, menu = function() hl.exec_cmd("omarchy-menu toggle") end }
+  M = { arrow = noop, send = noop, send_to = noop, menu = function() hl.exec_cmd("omarchy-menu toggle") end }
+  W = { place_all = function() end }
 end
 
 -- keyd turns Caps Lock into this chord.
@@ -21,9 +22,9 @@ local function focus(args)
 end
 
 -- Hyper + key enters the app at its most recent window and then steps through the rest; Shift sends the focused window to the app's workspace.
-local function app(key, name, workspace, args)
-  hyper(key, name, focus(args))
-  hyper("SHIFT + " .. key, "Send window to " .. name .. "'s workspace", screens.send_to(workspace))
+local function app(key, name, class, args)
+  hyper(key, name, args)
+  hyper("SHIFT + " .. key, "Send window to " .. name .. "'s workspace", M.send_to(C.homes[class]))
 end
 
 -- Omarchy's battery, calendar, time and weather notices sit on these Hyper keys; the app keys below take them, the bar keeps the info.
@@ -36,31 +37,31 @@ hl.unbind(HYPER .. " + R")
 hl.unbind(HYPER .. " + Z")
 hl.unbind(HYPER .. " + DELETE")
 
-app("B", "Helium", "3", "'^helium$' omarchy-launch-browser")
-app("C", "Chatterino", "6", "chatterino chatterino")
-app("D", "Discord", "6", "discord discord")
-app("E", "Editor", "4", "--order stable --title '\\.nvim\\.' zed zeditor")
-app("K", "Linear", "5", "'^chrome-linear\\.app__-Default$' chromium --app=https://linear.app")
-app("N", "Obsidian", "10", "--exclude-title '^Settings - ' '^md\\.obsidian\\.Obsidian$' obsidian")
-app("O", "OBS", "6", "obsproject obs")
-app("V", "Brave", "10", "'^brave-browser$' brave")
-app("S", "Messengers", "6", "'^(signal|org\\.telegram\\.desktop)$' signal-desktop")
-app("T", "Terminal", "2", "--exclude-title '\\.nvim\\.' '^(foot|footclient|Alacritty)$' xdg-terminal-exec")
-app("A", "ChatGPT", "6", "'^chatgpt$' chatgpt")
-app("SLASH", "Bitwarden", "8", "'^bitwarden$' bitwarden-desktop")
-hyper("G", "Gaming workspace", hl.dsp.focus({ workspace = "9" }))
-hyper("SHIFT + G", "Send window to the gaming workspace", screens.send_to("9"))
-hyper("U", "Sound workspace", hl.dsp.focus({ workspace = "7" }))
-hyper("SHIFT + U", "Send window to the sound workspace", screens.send_to("7"))
+app("B", "Helium", "helium", focus("'^helium$' omarchy-launch-browser"))
+app("C", "Chatterino", "com.chatterino.chatterino", focus("chatterino chatterino"))
+app("D", "Discord", "discord", focus("discord discord"))
+app("E", "Editor", "dev.zed.Zed", focus("--order stable --title '\\.nvim\\.' zed zeditor"))
+app("K", "Linear", "chrome-linear.app__-Default", os.getenv("HOME") .. "/.local/bin/webapp-focus https://linear.app")
+app("N", "Obsidian", "md.obsidian.Obsidian", focus("--exclude-title '^Settings - ' '^md\\.obsidian\\.Obsidian$' obsidian"))
+app("O", "OBS", "com.obsproject.Studio", focus("obsproject obs"))
+app("V", "Brave", "brave-browser", focus("'^brave-browser$' brave"))
+app("S", "Messengers", "signal", focus("'^(signal|org\\.telegram\\.desktop)$' signal-desktop"))
+app("T", "Terminal", "foot", focus("--exclude-title '\\.nvim\\.' '^(foot|footclient|Alacritty|com\\.mitchellh\\.ghostty)$' xdg-terminal-exec"))
+app("A", "ChatGPT", "chatgpt", focus("'^chatgpt$' chatgpt"))
+app("SLASH", "Bitwarden", "Bitwarden", focus("'^bitwarden$' bitwarden-desktop"))
+hyper("G", "Gaming workspace", hl.dsp.focus({ workspace = C.gaming_workspace }))
+hyper("SHIFT + G", "Send window to the gaming workspace", M.send_to(C.gaming_workspace))
+hyper("U", "Sound workspace", hl.dsp.focus({ workspace = C.homes.opendeck }))
+hyper("SHIFT + U", "Send window to the sound workspace", M.send_to(C.homes.opendeck))
 
 -- Arrows position the window (portrait: halves and thirds, top screen: column); Shift sends it to the screen that way.
 -- Hyper already holds Super, Ctrl and Alt, so Shift is the only modifier left to tell the two apart.
 for _, dir in ipairs({ "left", "right", "up", "down" }) do
   local key = dir:upper()
-  hyper(key, "Move window " .. dir, screens.arrow(dir))
-  hyper("SHIFT + " .. key, "Send window to the screen " .. dir, screens.send(dir))
+  hyper(key, "Move window " .. dir, M.arrow(dir))
+  hyper("SHIFT + " .. key, "Send window to the screen " .. dir, M.send(dir))
 end
-hyper("SHIFT + L", "Put every window back in place", screens.place_all)
+hyper("SHIFT + L", "Put every window back in place", W.place_all)
 -- Super + F and Super + Alt + F only toggle their own mode; this leaves either.
 hyper("F", "Normal size", hl.dsp.window.fullscreen_state({ internal = 0, client = 0 }))
 
@@ -68,7 +69,7 @@ hyper("F", "Normal size", hl.dsp.window.fullscreen_state({ internal = 0, client 
 for workspace = 1, 10 do
   local key = "code:" .. tostring(workspace + 9)
   hyper(key, "Switch to workspace " .. workspace, hl.dsp.focus({ workspace = tostring(workspace) }))
-  hyper("SHIFT + " .. key, "Send window to workspace " .. workspace, screens.send_to(tostring(workspace)))
+  hyper("SHIFT + " .. key, "Send window to workspace " .. workspace, M.send_to(tostring(workspace)))
 end
 hyper("W", "Close window", hl.dsp.window.close())
 hyper("M", "Full screen", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
@@ -117,9 +118,9 @@ o.bind("SUPER + Q", "Quit application", scripts .. "/quit-app")
 hl.unbind("CTRL + ALT + DELETE")
 
 hl.unbind("SUPER + SPACE")
-o.bind("SUPER + SPACE", "Omarchy menu", screens.menu)
+o.bind("SUPER + SPACE", "Omarchy menu", M.menu)
 
--- keyd sends Cmd + H / Cmd + M here (see omarchy/keyd/mac.conf); hidden windows come back from the bar or the menu.
+-- keyd sends Cmd + H / Cmd + M here (see omarchy/keyd/common); hidden windows come back from the bar or the menu.
 o.bind("SUPER + SHIFT + H", "Hide window", hl.dsp.window.move({ workspace = "special:scratchpad", follow = false }))
 
 -- Cmd sends Ctrl now, so apps get their native copy/paste and Omarchy's Super translation would only shadow physical Ctrl.
@@ -127,15 +128,18 @@ hl.unbind("SUPER + C")
 hl.unbind("SUPER + V")
 hl.unbind("SUPER + X")
 
--- Cmd + Tab reaches these as Super + Tab (see keyd's cmdtab layer). The switcher runs in its own submap, so Super + Esc
--- cancels it there instead of opening the system menu, and no Super release can commit before the cancel arrives.
+-- Cmd + Tab arrives as Super + Tab (keyd's cmdtab layer); the submap keeps Super + Esc from opening the system menu.
 hl.unbind("ALT + TAB")
 hl.unbind("ALT + SHIFT + TAB")
 hl.unbind("SUPER + TAB")
 hl.unbind("SUPER + SHIFT + TAB")
 
+local switching = false
+
 local function switcher(action, leave)
   return function()
+    if action == "commit" and not switching then return end
+    switching = not leave
     hl.exec_cmd("omarchy-shell -q alttab " .. action)
     hl.dispatch(hl.dsp.submap(leave and "reset" or "alttab"))
   end
@@ -143,7 +147,7 @@ end
 
 o.bind("SUPER + TAB", "Switch windows", switcher("next"))
 o.bind("SUPER + SHIFT + TAB", "Switch windows backwards", switcher("prev"))
--- A quick tap can release Cmd before the submap is entered, so the release also commits outside it.
+-- A quick tap can release Cmd before the submap is entered, so the release also commits outside it, but only mid-switch.
 o.bind("SUPER + SUPER_L", "Finish window switch", switcher("commit", true), { release = true, transparent = true })
 
 hl.define_submap("alttab", function()
@@ -152,6 +156,11 @@ hl.define_submap("alttab", function()
   o.bind("SUPER + ESCAPE", "Cancel window switch", switcher("cancel", true))
   -- The release bind also covers a tap that ends before the overlay grabs the keyboard.
   o.bind("SUPER + SUPER_L", "Finish window switch", switcher("commit", true), { release = true, transparent = true })
+  -- Adding Shift mid-switch steps backwards on the next Tab, so the Shift press itself must not reach the catchall.
+  for _, shift in ipairs({ "Shift_L", "Shift_R" }) do
+    o.bind("SUPER + " .. shift, "Hold Shift in window switch", function() end)
+    o.bind("SUPER + SHIFT + " .. shift, "Hold Shift in window switch", function() end)
+  end
   -- Any other key leaves the switcher, so a missed release can never strand the keyboard in this submap.
   o.bind("catchall", "Leave window switch", switcher("cancel", true))
 end)

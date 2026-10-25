@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# busctl's own --timeout does not bound the call (a silent peer still takes the 25 s D-Bus default), so timeout caps it.
+exec timeout 3 busctl --user get-property org.freedesktop.portal.Desktop /org/freedesktop/portal/desktop \
+  "org.freedesktop.portal.${1:-Settings}" version >/dev/null 2>&1

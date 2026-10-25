@@ -9,31 +9,34 @@ BarWidget {
   id: root
   moduleName: "lkshrk.stats"
 
-  readonly property var stats: bar?.shell?.serviceFor("lkshrk.stats") ?? null
-  readonly property int interval: stats ? stats.interval : 2
-  readonly property string diskMount: stats ? stats.diskMount : "/"
+  readonly property var stats: bar?.shell?.serviceFor("lkshrk.stats") ?? fallback
   readonly property string pluginDir: Qt.resolvedUrl(".").toString().replace("file://", "")
-
-  readonly property int cpu: stats ? stats.cpu : 0
-  readonly property int cpuUser: stats ? stats.cpuUser : 0
-  readonly property int cpuSystem: stats ? stats.cpuSystem : 0
-  readonly property int ram: stats ? stats.ram : 0
-  readonly property int disk: stats ? stats.disk : 0
-  readonly property real rx: stats ? stats.rx : 0
-  readonly property real tx: stats ? stats.tx : 0
-  readonly property real diskRead: stats ? stats.diskRead : 0
-  readonly property real diskWrite: stats ? stats.diskWrite : 0
-
-  readonly property var cpuHistory: stats ? stats.cpuHistory : []
-  readonly property var ramHistory: stats ? stats.ramHistory : []
-  readonly property var rxHistory: stats ? stats.rxHistory : []
-  readonly property var txHistory: stats ? stats.txHistory : []
-  readonly property var readHistory: stats ? stats.readHistory : []
-  readonly property var writeHistory: stats ? stats.writeHistory : []
-
   property var detail: null
-  readonly property string publicIp: stats ? stats.publicIp : ""
   property string openModule: ""
+
+  QtObject {
+    id: fallback
+    readonly property int interval: 2
+    readonly property string diskMount: "/"
+    readonly property int historySize: 60
+    readonly property int cpu: 0
+    readonly property int cpuUser: 0
+    readonly property int cpuSystem: 0
+    readonly property int ram: 0
+    readonly property int disk: 0
+    readonly property real rx: 0
+    readonly property real tx: 0
+    readonly property real diskRead: 0
+    readonly property real diskWrite: 0
+    readonly property var cpuHistory: []
+    readonly property var ramHistory: []
+    readonly property var rxHistory: []
+    readonly property var txHistory: []
+    readonly property var readHistory: []
+    readonly property var writeHistory: []
+    readonly property string publicIp: ""
+    function refreshPublicIp() {}
+  }
 
   function close() { openModule = "" }
   function toggle(name) { openModule = openModule === name ? "" : name }
@@ -72,7 +75,7 @@ BarWidget {
 
   Process {
     id: detailProc
-    command: [root.pluginDir + "stats-detail", root.diskMount]
+    command: [root.pluginDir + "stats-detail", root.stats.diskMount]
     stdout: StdioCollector {
       onStreamFinished: {
         try { root.detail = JSON.parse(String(text)) } catch (e) {}
@@ -80,10 +83,10 @@ BarWidget {
     }
   }
 
-  onOpenModuleChanged: if (openModule === "net" && stats) stats.refreshPublicIp()
+  onOpenModuleChanged: if (openModule === "net") stats.refreshPublicIp()
 
   Timer {
-    interval: root.interval * 1000
+    interval: root.stats.interval * 1000
     running: root.openModule !== ""
     repeat: true
     triggeredOnStart: true
@@ -205,7 +208,7 @@ BarWidget {
     Layout.fillWidth: true
     Layout.preferredHeight: Style.space(70)
     grid: Qt.rgba(root.muted.r, root.muted.g, root.muted.b, 0.25)
-    capacity: root.stats ? root.stats.historySize : 60
+    capacity: root.stats.historySize
   }
 
   component DonutRow: RowLayout {
@@ -262,24 +265,24 @@ BarWidget {
       name: "net"
       popupWidth: Style.space(320)
       BarText { text: "↑"; color: root.uploadColor }
-      BarText { text: root.speed(root.tx); Layout.minimumWidth: speedProbe.implicitWidth; horizontalAlignment: Text.AlignLeft }
+      BarText { text: root.speed(root.stats.tx); Layout.minimumWidth: speedProbe.implicitWidth; horizontalAlignment: Text.AlignLeft }
       BarText { text: "↓"; color: root.downloadColor; Layout.leftMargin: Style.spaceReal(4) }
-      BarText { text: root.speed(root.rx); Layout.minimumWidth: speedProbe.implicitWidth; horizontalAlignment: Text.AlignLeft }
+      BarText { text: root.speed(root.stats.rx); Layout.minimumWidth: speedProbe.implicitWidth; horizontalAlignment: Text.AlignLeft }
 
       popupContent: [
         Heading { text: "Network"; Layout.topMargin: 0 },
         History {
           series: [
-            { values: root.rxHistory, color: root.downloadColor },
-            { values: root.txHistory, color: root.uploadColor }
+            { values: root.stats.rxHistory, color: root.downloadColor },
+            { values: root.stats.txHistory, color: root.uploadColor }
           ]
         },
-        Field { name: "Downloading"; dot: root.downloadColor; value: root.speed(root.rx) },
-        Field { name: "Uploading"; dot: root.uploadColor; value: root.speed(root.tx) },
+        Field { name: "Downloading"; dot: root.downloadColor; value: root.speed(root.stats.rx) },
+        Field { name: "Uploading"; dot: root.uploadColor; value: root.speed(root.stats.tx) },
         Heading { text: "Details" },
         Field { name: "Interface"; value: root.detail && root.detail.net.interface ? root.detail.net.interface : "–" },
         Field { name: "Local IP"; value: root.detail && root.detail.net.ip ? root.detail.net.ip : "–" },
-        Field { name: "Public IP"; value: root.publicIp || "–" },
+        Field { name: "Public IP"; value: root.stats.publicIp || "–" },
         Field { name: "Physical address"; value: root.detail && root.detail.net.mac ? root.detail.net.mac : "–" },
         Field { name: "DNS server"; value: root.detail && root.detail.net.dns ? root.detail.net.dns : "–" },
         Field { name: "Total download"; value: root.detail ? root.size(root.detail.net.totalDownload) : "–" },
@@ -290,21 +293,21 @@ BarWidget {
     Module {
       name: "cpu"
       BarText { text: "󰻠" }
-      BarText { text: root.cpu + "%"; Layout.minimumWidth: percentProbe.implicitWidth }
+      BarText { text: root.stats.cpu + "%"; Layout.minimumWidth: percentProbe.implicitWidth }
 
       popupContent: [
         Heading { text: "CPU"; Layout.topMargin: 0 },
-        History { max: 100; series: [{ values: root.cpuHistory, color: root.accent }] },
+        History { max: 100; series: [{ values: root.stats.cpuHistory, color: root.accent }] },
         DonutRow {
-          centerText: root.cpu + "%"
+          centerText: root.stats.cpu + "%"
           slices: [
-            { value: root.cpuSystem, color: root.systemColor },
-            { value: root.cpuUser, color: root.userColor },
-            { value: Math.max(0, 100 - root.cpuSystem - root.cpuUser), color: root.idleColor }
+            { value: root.stats.cpuSystem, color: root.systemColor },
+            { value: root.stats.cpuUser, color: root.userColor },
+            { value: Math.max(0, 100 - root.stats.cpuSystem - root.stats.cpuUser), color: root.idleColor }
           ]
-          Field { name: "System"; dot: root.systemColor; value: root.cpuSystem + "%" }
-          Field { name: "User"; dot: root.userColor; value: root.cpuUser + "%" }
-          Field { name: "Idle"; dot: root.idleColor; value: Math.max(0, 100 - root.cpu) + "%" }
+          Field { name: "System"; dot: root.systemColor; value: root.stats.cpuSystem + "%" }
+          Field { name: "User"; dot: root.userColor; value: root.stats.cpuUser + "%" }
+          Field { name: "Idle"; dot: root.idleColor; value: Math.max(0, 100 - root.stats.cpu) + "%" }
         },
         Heading { text: "Average load" },
         Field { name: "1 minute"; value: root.detail ? root.detail.cpu.load[0].toFixed(2) : "–" },
@@ -322,13 +325,13 @@ BarWidget {
     Module {
       name: "ram"
       BarText { text: "󰍛" }
-      BarText { text: root.ram + "%"; Layout.minimumWidth: percentProbe.implicitWidth }
+      BarText { text: root.stats.ram + "%"; Layout.minimumWidth: percentProbe.implicitWidth }
 
       popupContent: [
         Heading { text: "Memory"; Layout.topMargin: 0 },
-        History { max: 100; series: [{ values: root.ramHistory, color: root.accent }] },
+        History { max: 100; series: [{ values: root.stats.ramHistory, color: root.accent }] },
         DonutRow {
-          centerText: root.ram + "%"
+          centerText: root.stats.ram + "%"
           slices: root.detail ? [
             { value: root.detail.ram.app, color: root.userColor },
             { value: root.detail.ram.cache, color: root.cacheColor },
@@ -350,18 +353,18 @@ BarWidget {
     Module {
       name: "ssd"
       BarText { text: "󰋊" }
-      BarText { text: root.disk + "%"; Layout.minimumWidth: percentProbe.implicitWidth }
+      BarText { text: root.stats.disk + "%"; Layout.minimumWidth: percentProbe.implicitWidth }
 
       popupContent: [
         Heading { text: root.detail && root.detail.disk.model ? root.detail.disk.model : "Disk"; Layout.topMargin: 0 },
         History {
           series: [
-            { values: root.readHistory, color: root.downloadColor },
-            { values: root.writeHistory, color: root.uploadColor }
+            { values: root.stats.readHistory, color: root.downloadColor },
+            { values: root.stats.writeHistory, color: root.uploadColor }
           ]
         },
-        Field { name: "Read"; dot: root.downloadColor; value: root.speed(root.diskRead) },
-        Field { name: "Write"; dot: root.uploadColor; value: root.speed(root.diskWrite) },
+        Field { name: "Read"; dot: root.downloadColor; value: root.speed(root.stats.diskRead) },
+        Field { name: "Write"; dot: root.uploadColor; value: root.speed(root.stats.diskWrite) },
         Heading { text: root.detail ? root.detail.disk.mount + "  (" + root.detail.disk.fstype + ")" : "Usage" },
         Rectangle {
           Layout.fillWidth: true
@@ -369,13 +372,13 @@ BarWidget {
           radius: height / 2
           color: root.idleColor
           Rectangle {
-            width: parent.width * Math.min(1, root.disk / 100)
+            width: parent.width * Math.min(1, root.stats.disk / 100)
             height: parent.height
             radius: parent.radius
             color: root.accent
           }
         },
-        Field { name: "Used"; value: root.detail ? root.size(root.detail.disk.used) + "  (" + root.disk + "%)" : root.disk + "%" },
+        Field { name: "Used"; value: root.detail ? root.size(root.detail.disk.used) + "  (" + root.stats.disk + "%)" : root.stats.disk + "%" },
         Field { name: "Free"; value: root.detail ? root.size(root.detail.disk.free) : "–" },
         Field { name: "Total"; value: root.detail ? root.size(root.detail.disk.total) : "–" },
         Heading { text: "Details" },

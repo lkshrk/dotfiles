@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Restart the PipeWire stack and bring back everything that does not reconnect on its own.
-# With CANDIDATE, it swaps in that mic-filtered.conf and rolls back to the previous one if PipeWire crashes or the mic chain is missing.
+# Restarts PipeWire and what does not reconnect; with CANDIDATE, trials that mic-filtered.conf and rolls back on failure.
 set -u
 
 conf="$HOME/.config/pipewire/pipewire.conf.d/mic-filtered.conf"
@@ -42,8 +41,7 @@ restart_pipeweaver() {
 restart_portals() {
   systemctl --user restart xdg-desktop-portal-hyprland.service xdg-desktop-portal.service
   sleep 2
-  if timeout 3 busctl --user get-property org.freedesktop.portal.Desktop /org/freedesktop/portal/desktop \
-    org.freedesktop.portal.ScreenCast version >/dev/null 2>&1; then
+  if "$(dirname "$0")/portal-ok" ScreenCast; then
     say "portals: screen sharing answers"
   else
     say "portals: screen sharing does NOT answer"
@@ -63,18 +61,26 @@ if [ -n "$candidate" ]; then
   [ -f "$candidate" ] || { say "no such file: $candidate"; exit 1; }
   good=$(mktemp)
   cp "$(readlink -f "$conf")" "$good"
+  # An interrupted trial must not leave the candidate in the tracked config.
+  trap 'cp "$good" "$(readlink -f "$conf")"; rm -f "$good"' EXIT
   cp "$candidate" "$(readlink -f "$conf")"
 fi
 
 since=$(date '+%Y-%m-%d %H:%M:%S')
 restart_stack
+kept=1
 if [ -n "$candidate" ] && ! healthy "$since"; then
+  kept=0
   say "candidate failed live, restoring the previous config:"
   journalctl --user --since "$since" -u pipewire -o cat --no-pager | grep -iE 'error|unknown|can.t|space|core' | sort | uniq -c | head -4
   cp "$good" "$(readlink -f "$conf")"
   restart_stack
 fi
-[ -n "$candidate" ] && rm -f "$good"
+if [ -n "$candidate" ]; then
+  trap - EXIT
+  rm -f "$good"
+  ((kept)) && say "candidate kept: $(readlink -f "$conf") now differs from git"
+fi
 
 if [ "$(systemctl --user is-active pipewire)" != active ]; then
   say "PipeWire is DOWN"

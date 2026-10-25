@@ -9,6 +9,8 @@ U.state = { placing = false }
 function U.app(w)
   local class = w.class or ""
   if class:match("^steam_app_%d+$") then return "steam" end
+  -- Chatterino's X11 class is bare "chatterino"; its Wayland app id is the reverse-DNS one.
+  if class == "chatterino" then return "com.chatterino.chatterino" end
   return class
 end
 
@@ -77,6 +79,30 @@ end
 function U.move_to(w, workspace)
   if w.workspace and w.workspace.name == workspace then return end
   hl.dispatch(hl.dsp.window.move({ workspace = workspace, window = w, follow = false }))
+end
+
+local state_dir = (os.getenv("XDG_STATE_HOME") or (os.getenv("HOME") .. "/.local/state")) .. "/hypr-screens/"
+
+-- Small tab-separated state files keyed by their first field.
+function U.load_tsv(name)
+  local rows = {}
+  local f = io.open(state_dir .. name, "r")
+  if not f then return rows end
+  for line in f:lines() do
+    local fields = {}
+    for field in (line .. "\t"):gmatch("(.-)\t") do fields[#fields + 1] = field end
+    if #fields > 1 then rows[table.remove(fields, 1)] = fields end
+  end
+  f:close()
+  return rows
+end
+
+-- No mkdir: blocking on a child process inside the compositor can stall it; setup creates the directory.
+function U.save_tsv(name, rows)
+  local f = io.open(state_dir .. name, "w")
+  if not f then return end
+  for key, fields in pairs(rows) do f:write(key, "\t", table.concat(fields, "\t"), "\n") end
+  f:close()
 end
 
 function U.on_side(w)

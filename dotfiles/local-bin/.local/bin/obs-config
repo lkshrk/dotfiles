@@ -20,7 +20,7 @@ files=(
 
 usage() { echo "usage: obs-config export|apply" >&2; exit 1; }
 
-# Re-run under rbw-env so the three secrets arrive as environment variables.
+# Re-run under rbw-env so the secrets arrive as environment variables.
 if [[ -z ${OBS_CONFIG_SECRETS:-} ]]; then
   exec env OBS_CONFIG_SECRETS=1 "$HOME/.config/env/bin/rbw-env" obs -- "$0" "$@"
 fi
@@ -42,9 +42,9 @@ strip_local_state() {
 }
 
 do_export() {
-  local tmp f s
+  local f s
   tmp=$(mktemp -d)
-  trap 'rm -rf "$tmp"' RETURN
+  trap 'rm -rf "$tmp"' EXIT
   for f in "${files[@]}"; do
     [[ -f $live/$f ]] || continue
     mkdir -p "$tmp/$(dirname "$f")"

@@ -1,24 +1,22 @@
 #!/bin/bash
 # Re-applies each cloned plugin's local.patch onto Omarchy's updated upstream files, so the clones pick up upstream fixes.
-# A clone is only replaced when every file patches cleanly; otherwise it is left as is and the conflict is reported.
 set -u
 
 plugins="$HOME/.config/omarchy/plugins"
 upstream_root=/usr/share/omarchy/shell/plugins
 
-# clone id, upstream plugin dir relative to upstream_root
+# clone id, upstream plugin dir relative to upstream_root, whether the clone mirrors that whole dir
 clones=(
-  "lkshrk.lock lock"
-  "lkshrk.polkit polkit"
-  "lkshrk.notifications notifications"
-  "lkshrk.workspaces bar/widgets"
+  "lkshrk.lock lock whole"
+  "lkshrk.polkit polkit whole"
+  "lkshrk.notifications notifications whole"
 )
 
 synced=()
 conflicts=()
 
 for entry in "${clones[@]}"; do
-  read -r clone updir <<<"$entry"
+  read -r clone updir scope <<<"$entry"
   dir="$plugins/$clone"
   upstream="$upstream_root/$updir"
   baseline="$dir/upstream.sha256"
@@ -26,17 +24,27 @@ for entry in "${clones[@]}"; do
 
   (cd "$upstream" && sha256sum --quiet --check "$baseline" >/dev/null 2>&1) && continue
 
-  work=$(mktemp -d)
-  mapfile -t files < <(awk '{print $2}' "$baseline")
-  for f in "${files[@]}"; do
-    mkdir -p "$work/$(dirname "$f")"
-    cp "$upstream/$f" "$work/$f"
-  done
+  mapfile -t files < <(awk '{print $2}' "$baseline" | sort)
+  if [[ $scope == whole ]]; then
+    mapfile -t current < <(cd "$upstream" && find . -type f ! -name manifest.json -printf '%P\n' | sort)
+    [[ ${files[*]} == "${current[*]}" ]] || { conflicts+=("$clone (files added or removed)"); continue; }
+  fi
 
-  if (cd "$work" && patch -p1 --quiet --no-backup-if-mismatch <"$dir/local.patch" >/dev/null 2>&1); then
+  work=$(mktemp -d)
+  ok=1
+  for f in "${files[@]}"; do
+    [[ -f $upstream/$f ]] || { ok=0; break; }
+    mkdir -p "$work/new/$(dirname "$f")" "$work/old/$(dirname "$f")"
+    cp "$upstream/$f" "$work/new/$f"
+    cp "$upstream/$f" "$work/old/$f"
+  done
+  ((ok)) && (cd "$work/new" && patch -p1 --fuzz=0 --quiet --no-backup-if-mismatch <"$dir/local.patch" >/dev/null 2>&1) || ok=0
+
+  if ((ok)); then
     for f in "${files[@]}"; do
-      cat "$work/$f" >"$(readlink -f "$dir/$f")"
+      cat "$work/new/$f" >"$(readlink -f "$dir/$f")"
     done
+    (cd "$work" && diff -ru old new | sed -e 's|^--- old/\([^[:space:]]*\).*|--- a/\1|' -e 's|^+++ new/\([^[:space:]]*\).*|+++ b/\1|' -e '/^diff -ru /d') >"$(readlink -f "$dir/local.patch")"
     (cd "$upstream" && sha256sum "${files[@]}") >"$(readlink -f "$baseline")"
     synced+=("$clone")
   else
@@ -45,10 +53,10 @@ for entry in "${clones[@]}"; do
   rm -rf "$work"
 done
 
+# omarchy-update restarts the shell right after the hooks, so the new QML loads then.
 if ((${#synced[@]})); then
-  omarchy restart shell >/dev/null 2>&1
   notify-send "Shell clones updated" "Re-applied local changes onto Omarchy's new version: ${synced[*]}. Review and commit in ~/Dev/dotfiles."
 fi
 if ((${#conflicts[@]})); then
-  notify-send -u critical "Shell clones need a manual re-sync" "Omarchy changed the lines these patch: ${conflicts[*]}. They still run the previous version."
+  notify-send -u critical "Shell clones need a manual re-sync" "Omarchy changed what these patch: ${conflicts[*]}. They still run the previous version."
 fi

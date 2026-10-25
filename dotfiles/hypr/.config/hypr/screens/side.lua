@@ -92,12 +92,17 @@ local settle = hl.timer(restore, { timeout = 1500, type = "oneshot" })
 settle:set_enabled(false)
 local snapshot = hl.timer(remember, { timeout = 5000, type = "repeat" })
 
+-- Re-armed on every event, so a long burst keeps snapshots off until it has been quiet for 4 s.
+local resume = hl.timer(function() snapshot:set_enabled(true) end, { timeout = 4000, type = "oneshot" })
+resume:set_enabled(false)
+
 for _, event in ipairs({ "monitor.added", "monitor.removed", "monitor.layout_changed" }) do
   hl.on(event, function()
     snapshot:set_enabled(false)
     settle:set_timeout(1500)
     settle:set_enabled(true)
-    hl.timer(function() snapshot:set_enabled(true) end, { timeout = 4000, type = "oneshot" })
+    resume:set_timeout(4000)
+    resume:set_enabled(true)
   end)
 end
 

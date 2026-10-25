@@ -1,38 +1,57 @@
 #!/bin/bash
-# The lock and polkit clones replace Omarchy's own; if one stops loading after an update there is no lock screen or password prompt at all.
+# Falls back to Omarchy's stock plugin when a clone stops loading, since nothing else draws locks, prompts or notifications.
 set -u
 
+omarchy_shell() {
+  quickshell list -a -j 2>/dev/null | jq -r --arg since "${1:-}" \
+    '[.[] | select((.config_path | startswith("/usr/share/omarchy/shell/")) and .launch_time >= $since)] | max_by(.launch_time) // empty | .id'
+}
+
 log_of_current_shell() {
-  local dir
-  dir=$(ls -td "${XDG_RUNTIME_DIR}"/quickshell/by-id/*/ 2>/dev/null | head -1)
-  [[ -n $dir ]] && cat "$dir/log.log" 2>/dev/null
+  local id
+  id=$(omarchy_shell) && [[ -n $id ]] && cat "${XDG_RUNTIME_DIR}/quickshell/by-id/$id/log.log" 2>/dev/null
+}
+
+# The notification daemon lives in the shell, so alerts must not depend on it.
+alert() {
+  hyprctl notify 0 15000 "rgb(ff5555)" "$1: $2" >/dev/null 2>&1 || logger -t check-shell-clones "$1: $2"
 }
 
 fall_back() {
   local clone=$1 stock=$2 what=$3
   omarchy plugin disable "$clone" >/dev/null 2>&1
   omarchy plugin enable "$stock" >/dev/null 2>&1
-  notify-send -u critical "$what clone failed to load" "Switched back to Omarchy's $stock. Re-sync $clone, then: omarchy plugin enable $clone"
+  alert "$what clone failed to load" "Switched back to Omarchy's $stock. Re-sync $clone, then: omarchy plugin enable $clone"
 }
 
-# Give a freshly (re)started shell time to load its plugins.
-for _ in $(seq 1 20); do
-  omarchy-shell lock status >/dev/null 2>&1 && break
+enabled() {
+  jq -e --arg id "$1" '.plugins[]? | select(.id == $id)' ~/.config/omarchy/shell.json >/dev/null 2>&1
+}
+
+load_failed() {
+  log_of_current_shell | grep -q "service plugin load failed for $1"
+}
+
+# After an update, wait for the shell that omarchy-update-restart starts, not the one still running the old QML.
+since=${1:-}
+for _ in $(seq 1 ${CHECK_SHELL_WAIT:-20}); do
+  [[ -n $(omarchy_shell "$since") ]] && omarchy-shell lock status >/dev/null 2>&1 && break
   sleep 1
 done
 
-# A shell that is not running says nothing about the clones, and plugin commands would fail anyway.
-if ! pgrep -x quickshell >/dev/null; then
-  notify-send -u critical "Omarchy shell is not running" "No bar, lock screen or notifications. Start it with: omarchy-restart-shell"
+if [[ -z $(omarchy_shell "$since") ]]; then
+  alert "Omarchy shell is not running" "No bar, lock screen or notifications. Start it with: omarchy-restart-shell"
   exit 0
 fi
 
-if jq -e '.plugins[]? | select(.id == "lkshrk.lock")' ~/.config/omarchy/shell.json >/dev/null 2>&1 &&
-  ! omarchy-shell lock status >/dev/null 2>&1; then
+if enabled lkshrk.notifications && load_failed lkshrk.notifications; then
+  fall_back lkshrk.notifications omarchy.notifications "Notifications"
+fi
+
+if enabled lkshrk.lock && ! omarchy-shell lock status >/dev/null 2>&1; then
   fall_back lkshrk.lock omarchy.lock "Lock screen"
 fi
 
-if jq -e '.plugins[]? | select(.id == "lkshrk.polkit")' ~/.config/omarchy/shell.json >/dev/null 2>&1 &&
-  log_of_current_shell | grep -q 'service plugin load failed for lkshrk.polkit'; then
+if enabled lkshrk.polkit && load_failed lkshrk.polkit; then
   fall_back lkshrk.polkit omarchy.polkit "Password prompt"
 fi

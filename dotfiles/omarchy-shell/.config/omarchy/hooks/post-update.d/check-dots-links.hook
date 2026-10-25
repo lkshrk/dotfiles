@@ -3,9 +3,18 @@
 # Migrations rewrite configs through `mv "$tmp" "$file"`, which turns a dotfile symlink into a plain file and silently detaches it from the repo.
 entries='^(hypr|omarchy-shell|keyd|xkb|fcitx5)$'
 
-drift=$(omni dots status --format json 2>/dev/null |
-  jq -r --arg re "$entries" '.entries[]? | select((.name | test($re)) and .state != "synced") | "\(.name) (\(.state))"' |
+# The shell, and with it the notification daemon, may be mid-restart during an update.
+alert() {
+  hyprctl notify 0 15000 "rgb(ff5555)" "$1: $2" >/dev/null 2>&1 || logger -t check-dots-links "$1: $2"
+}
+
+if ! status=$(omni dots status --format json 2>/dev/null); then
+  alert "Dotfile link check failed" "omni dots status exited with an error; run it by hand"
+  exit 0
+fi
+
+drift=$(jq -r --arg re "$entries" '.entries[]? | select((.name | test($re)) and .state != "synced") | "\(.name) (\(.state))"' <<<"$status" |
   paste -sd ', ')
 
 [[ -z $drift ]] ||
-  notify-send -u critical "Omarchy update changed dotfiles" "$drift no longer match the repo; review with: omni dots status"
+  alert "Omarchy update changed dotfiles" "$drift no longer match the repo; review with: omni dots status"

@@ -10,30 +10,18 @@ local function side_of(w)
 end
 
 -- The side each app last took, by class, so windows reopened in any order after a restart return to their half.
-local sides_file = (os.getenv("XDG_STATE_HOME") or (os.getenv("HOME") .. "/.local/state")) .. "/hypr-screens/sides"
-
-local function load_sides()
-  local sides = {}
-  local f = io.open(sides_file, "r")
-  if not f then return sides end
-  for line in f:lines() do
-    local class, side = line:match("^(.-)\t(%a+)$")
-    if class and (side == "left" or side == "right") then sides[class] = side end
-  end
-  f:close()
-  return sides
+local function stored_side(class)
+  local row = U.load_tsv("sides")[class]
+  local side = row and row[1]
+  return (side == "left" or side == "right") and side or nil
 end
 
 local function remember_side(class, side)
   if not class or class == "" then return end
-  local sides = load_sides()
-  if sides[class] == side then return end
-  sides[class] = side
-  -- No mkdir here: blocking on a child process from inside the compositor can stall it. setup creates the directory.
-  local f = io.open(sides_file, "w")
-  if not f then return end
-  for c, s in pairs(sides) do f:write(c, "\t", s, "\n") end
-  f:close()
+  local sides = U.load_tsv("sides")
+  if sides[class] and sides[class][1] == side then return end
+  sides[class] = { side }
+  U.save_tsv("sides", sides)
 end
 
 -- A lone window takes the full width. Windows on the same half end up tabbed by T.join.
@@ -71,7 +59,7 @@ end
 function T.pick_side(w)
   if U.has_tag(w, "col-left") then return "left" end
   if U.has_tag(w, "col-right") then return "right" end
-  local stored = load_sides()[w.class]
+  local stored = stored_side(w.class)
   if stored then return stored end
   local taken = {}
   for _, other in ipairs(tiled_on_top(w)) do taken[side_of(other)] = true end
@@ -81,22 +69,24 @@ function T.pick_side(w)
   return last and last ~= w and side_of(last) or "left"
 end
 
+local function retag(w, side)
+  if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
+  hl.dispatch(hl.dsp.window.tag({ tag = "-col-" .. (side == "left" and "right" or "left"), window = w }))
+  hl.dispatch(hl.dsp.window.tag({ tag = "+col-" .. side, window = w }))
+end
+
 function T.join(w, side)
   remember_side(w.class, side)
   for _, other in ipairs(tiled_on_top(w)) do
     if side_of(other) == side then
       if in_group(other.group, w) then return end
-      if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
-      hl.dispatch(hl.dsp.window.tag({ tag = "-col-" .. (side == "left" and "right" or "left"), window = w }))
-      hl.dispatch(hl.dsp.window.tag({ tag = "+col-" .. side, window = w }))
+      retag(w, side)
       if not other.group then hl.dispatch(hl.dsp.group.toggle({ window = other })) end
       other.group:add(w)
       return
     end
   end
-  if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
-  hl.dispatch(hl.dsp.window.tag({ tag = "-col-" .. (side == "left" and "right" or "left"), window = w }))
-  hl.dispatch(hl.dsp.window.tag({ tag = "+col-" .. side, window = w }))
+  retag(w, side)
   -- A tag change does not re-run the layout, and no layout message does either; leaving and re-entering tiling does.
   hl.dispatch(hl.dsp.window.float({ action = "enable", window = w }))
   hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))

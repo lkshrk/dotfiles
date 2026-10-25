@@ -19,11 +19,22 @@ _omni_ai_run() {
   "$@"
 }
 
-codex() { ( _omni_ai_run command codex "$@" ) }
+codex() {
+  if (( $+commands[rbw] && $+functions[rbw_env] )); then
+    ( _omni_ai_run rbw_env codex -- codex "$@" )
+  else
+    ( _omni_ai_run command codex "$@" )
+  fi
+}
+
 oc() {
-  (
-    local key
-    key=$("${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/bin/llm-gateway-token") || return
-    LITELLM_API_KEY="$key" _omni_ai_run command opencode "$@"
-  )
+  if (( $+commands[rbw] && $+functions[rbw_env] )); then
+    ( _omni_ai_run rbw_env opencode -- opencode "$@" )
+  else
+    (
+      local key
+      key=$("${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/bin/llm-gateway-token") || return
+      LITELLM_API_KEY="$key" _omni_ai_run command opencode "$@"
+    )
+  fi
 }

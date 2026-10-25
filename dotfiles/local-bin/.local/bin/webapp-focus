@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# Chromium names an --app window's class after the URL, the same rule setup-omarchy.sh uses for StartupWMClass.
+# Chromium names an --app window's class after the URL; setup-omarchy.sh reads it via --class for StartupWMClass.
 set -euo pipefail
 
-[ $# -eq 1 ] || { echo "usage: $0 URL" >&2; exit 1; }
+print_class=0
+[[ ${1:-} != --class ]] || { print_class=1; shift; }
+[ $# -eq 1 ] || { echo "usage: $0 [--class] URL" >&2; exit 1; }
 url=$1
 rest="${url#*://}"
 host="${rest%%/*}"
@@ -10,6 +12,7 @@ host="${host%%:*}"
 url_path="/"
 [[ "$rest" != */* ]] || url_path="/${rest#*/}"
 class="chrome-${host}_${url_path//\//_}-Default"
+((print_class == 0)) || { printf '%s\n' "$class"; exit 0; }
 
 # A local app's page that loads before its daemon listens never reconnects, e.g. PipeWeaver during session restore.
 if [[ "$rest" =~ ^localhost:([0-9]+) ]]; then

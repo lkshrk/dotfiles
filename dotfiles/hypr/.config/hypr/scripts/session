@@ -5,25 +5,30 @@ STATE="${XDG_STATE_HOME:-$HOME/.local/state}/hypr-session"
 APPS="$STATE/apps"
 DIRS=("$HOME/.local/share/applications" /usr/share/applications)
 
-# Classes whose desktop entry has a different name.
-declare -A ALIASES=( [steam_app_battlenet]=battlenet )
-
 desktop_for() {
   local class=$1 dir file
   for dir in "${DIRS[@]}"; do
     file=$(grep -lxF "StartupWMClass=$class" "$dir"/*.desktop 2>/dev/null | head -1) || true
     [ -n "$file" ] && { basename "$file" .desktop; return; }
   done
-  for name in "${ALIASES[$class]:-}" "$class"; do
-    [ -n "$name" ] || continue
-    for dir in "${DIRS[@]}"; do
-      [ -f "$dir/$name.desktop" ] && { echo "$name"; return; }
-    done
+  for dir in "${DIRS[@]}"; do
+    [ -f "$dir/$class.desktop" ] && { echo "$class"; return; }
   done
+}
+
+# Apps that start themselves from XDG autostart must not be launched a second time.
+autostarted() {
+  local f
+  for f in "${XDG_CONFIG_HOME:-$HOME/.config}"/autostart/*.desktop; do
+    [ -f "$f" ] && sed -n 's|^Exec=\([^ ]*/\)\?\([^ /]*\).*|\2|p' "$f"
+  done
+  echo
 }
 
 save() {
   local classes tmp
+  # quit-all freezes the list it saved, so closes during shutdown cannot shrink it.
+  [ -z "$(find "$STATE/frozen" -mmin -2 2>/dev/null)" ] || return 0
   classes=$(hyprctl clients -j | jq -r '.[] | select(.mapped and (.tags | index("dialog*") | not)) | .class' | sort -u)
   # Skip saving an empty desktop, so a crash or early save never wipes the list.
   [ -n "$classes" ] || return 0
@@ -31,14 +36,12 @@ save() {
   tmp=$(mktemp "$STATE/apps.XXXXXX")
   while IFS= read -r class; do
     desktop_for "$class" || true
-  done <<<"$classes" | sort -u > "$tmp"
+  done <<<"$classes" | sort -u | grep -vxFf <(autostarted) > "$tmp"
   if [ -s "$tmp" ]; then mv "$tmp" "$APPS"; else rm -f "$tmp"; fi
 }
 
-# busctl's own --timeout does not bound the call (a silent peer still takes the 25 s D-Bus default), so timeout caps it.
 portal_responds() {
-  timeout 3 busctl --user get-property org.freedesktop.portal.Desktop /org/freedesktop/portal/desktop \
-    org.freedesktop.portal.Settings version >/dev/null 2>&1
+  "$(dirname "$0")/portal-ok"
 }
 
 # The frontend keeps answering after a crash while the Hyprland backend still talks to the dead compositor.
@@ -49,8 +52,7 @@ backend_current() {
   tr '\0' '\n' < "/proc/$pid/environ" 2>/dev/null | grep -qxF "HYPRLAND_INSTANCE_SIGNATURE=${HYPRLAND_INSTANCE_SIGNATURE:-}"
 }
 
-# Hyprland's crash restart keeps the graphical session, so the portals stay bound to the dead compositor and every
-# app that registers with them hangs on start; restart them before relaunching anything.
+# After a Hyprland crash the portals stay bound to the dead compositor and apps hang on start, so restart them first.
 ensure_portal() {
   portal_responds && backend_current && return 0
   systemctl --user restart xdg-desktop-portal-hyprland.service xdg-desktop-portal-gtk.service xdg-desktop-portal.service
@@ -62,6 +64,7 @@ ensure_portal() {
 }
 
 restore() {
+  rm -f "$STATE/frozen"
   [ -f "$APPS" ] || return 0
   ensure_portal || true
   local id
@@ -81,7 +84,8 @@ save_later() {
 
 case "${1:-}" in
   save) save ;;
+  freeze) save && touch "$STATE/frozen" ;;
   save-later) save_later ;;
   restore) restore ;;
-  *) echo "usage: $0 save|save-later|restore" >&2; exit 1 ;;
+  *) echo "usage: $0 save|freeze|save-later|restore" >&2; exit 1 ;;
 esac

@@ -6,6 +6,7 @@
 ---@field launch? string Command started through uwsm-app.
 ---@field focus? string Window class to focus instead of launching again (with launch or webapp).
 ---@field webapp? string URL opened as a web app.
+---@field tui? string Command run in a terminal (`omarchy-launch-tui`; with focus, `omarchy-launch-or-focus-tui`).
 
 ---@alias O.Dispatcher string|HL.Dispatcher|fun()|O.CommandSpec
 

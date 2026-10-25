@@ -142,7 +142,7 @@ Item {
   }
 
   Process {
-    command: ["sh", "-c", "src=$(findmnt -n -o SOURCE --target \"$1\" | sed 's/\\[.*//'); dev=$(lsblk -sno NAME,TYPE \"$src\" 2>/dev/null | awk '$2==\"disk\"{ sub(/^[^a-zA-Z0-9]*/, \"\", $1); print $1; exit }'); echo \"${dev:-$(basename \"$src\")}\"", "sh", root.diskMount]
+    command: [Qt.resolvedUrl("stats-detail").toString().replace("file://", ""), "--device", root.diskMount]
     running: true
     stdout: StdioCollector {
       onStreamFinished: root.diskDevice = String(text).trim()
