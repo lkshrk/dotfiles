@@ -422,6 +422,14 @@
       ],
       "git": "https://github.com/BlueM/cliclick"
     },
+    "cloudflared": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "cloudflared"
+        }
+      ]
+    },
     "cmake": {
       "providers": [
         {
@@ -568,6 +576,14 @@
       ],
       "ignore": true
     },
+    "deepfilternet-ladspa": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "deepfilternet-ladspa"
+        }
+      ]
+    },
     "deepwiki-rs": {
       "providers": [
         {
@@ -586,14 +602,6 @@
         }
       ],
       "git": "https://github.com/sopaco/deepwiki-rs"
-    },
-    "deepfilternet-ladspa": {
-      "providers": [
-        {
-          "provider": "pacman",
-          "package": "deepfilternet-ladspa"
-        }
-      ]
     },
     "depflush": {
       "providers": [
@@ -1176,7 +1184,7 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "gomplate_linux-{arch}",
-            "installed_version": "5.3.0"
+            "installed_version": "5.3.1"
           }
         }
       ],
@@ -1835,7 +1843,7 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "minijinja-cli-{arch}.tar.xz",
-            "installed_version": "3.0.1"
+            "installed_version": "3.0.3"
           }
         }
       ],
@@ -2017,6 +2025,14 @@
         {
           "provider": "pacman",
           "package": "obs-studio"
+        }
+      ]
+    },
+    "obs-studio-browser": {
+      "providers": [
+        {
+          "provider": "aur",
+          "package": "obs-studio-browser"
         }
       ]
     },
@@ -2456,7 +2472,7 @@
           "recipe": {
             "type": "github_release_asset",
             "asset_pattern": "rtk-{arch}.tar.gz",
-            "installed_version": "1.0.1"
+            "installed_version": "1.1.0"
           }
         }
       ],
@@ -2617,6 +2633,14 @@
         }
       ],
       "git": "https://github.com/exelban/stats"
+    },
+    "steam": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "steam"
+        }
+      ]
     },
     "stow": {
       "providers": [
@@ -3071,6 +3095,14 @@
           "provider": "brew",
           "package": "wowup-cf"
         },
+        {
+          "provider": "aur",
+          "package": "wowup-cf-bin"
+        }
+      ]
+    },
+    "wowup-cf-bin": {
+      "providers": [
         {
           "provider": "aur",
           "package": "wowup-cf-bin"

@@ -211,7 +211,11 @@
         "ouch",
         "pipeweaver",
         "x42-plugins-lv2",
-        "yazi"
+        "yazi",
+        "cloudflared",
+        "wowup-cf-bin",
+        "steam",
+        "obs-studio-browser"
       ]
     },
     {
@@ -359,8 +363,7 @@
     },
     {
       "name": "towerr",
-      "special": "host",
-      "tools": []
+      "special": "host"
     }
   ]
 }
