@@ -42,10 +42,11 @@ v = macro2(0, 0, C-v)
 # Super stays held here, so Esc reaches Hyprland's alttab submap as Super + Esc and cancels the switcher.
 [cmdtab:M]
 
-# Cmd + Shift + 3/4 screenshots and Cmd + Shift + V clipboard history; Hyprland has them on Super, which no physical key sends anymore.
+# Cmd + Shift + 3/4 screenshots, 5 capture menu and Cmd + Shift + V clipboard history; Hyprland has them on Super, which no physical key sends anymore.
 [cmd+shift]
 3 = macro2(0, 0, M-S-3)
 4 = macro2(0, 0, M-S-4)
+5 = macro2(0, 0, M-S-5)
 v = M-C-v
 
 # Ctrl + Cmd + Space is the macOS emoji picker; Omarchy opens its picker on Super + Ctrl + E.

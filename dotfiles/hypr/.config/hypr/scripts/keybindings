@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Usage: keybindings [--print]; lists bindings.lua by section in the Omarchy picker and runs the chosen one.
+set -euo pipefail
+
+rows=$(hyprctl repl 'return keybinds_list()')
+if [[ $rows != *$'\t'* ]]; then
+  omarchy-notification-send -u low "Keybindings" "bindings.lua did not load; see hyprctl configerrors"
+  exit 1
+fi
+
+declare -A ICONS=(
+  [Apps]=$'\U000f003b' [Windows]=$'' [Workspaces]=$'' [Screens]=$'\U000f0379'
+  [Capture]=$'\U000f0100' [Notifications]=$'\U000f009a' [System]=$''
+)
+
+if [[ ${1:-} == --print ]]; then
+  awk -F '\t' '{ printf "%-15s %-34s %s\n", $2, $3, $4 }' <<<"$rows"
+  exit 0
+fi
+
+ids=() options=()
+while IFS=$'\t' read -r id section keys description _; do
+  ids+=("$id")
+  options+=("${ICONS[$section]:-}"$'\t'"$description"$'\t'"$keys  ·  $section")
+done <<<"$rows"
+
+choice=$(printf '%s\n' "${options[@]}" | omarchy-menu-select 'Keybindings' -- --width 760 --height 620) || exit 0
+
+for i in "${!options[@]}"; do
+  if [[ ${options[$i]#*$'\t'} == "$choice" ]]; then
+    hyprctl eval "keybinds_run(${ids[$i]})" >/dev/null
+    exit 0
+  fi
+done

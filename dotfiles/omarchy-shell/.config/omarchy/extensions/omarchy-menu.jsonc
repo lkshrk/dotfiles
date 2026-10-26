@@ -32,4 +32,7 @@
   "system.logout": {"action":"~/.config/hypr/scripts/power logout"},
   "system.reboot": {"action":"~/.config/hypr/scripts/power reboot"},
   "system.shutdown": {"action":"~/.config/hypr/scripts/power poweroff"},
+
+  // Omarchy's list shows its Super defaults, which keyd leaves no key for; this one lists bindings.lua.
+  "learn.keybindings": {"action":"~/.config/hypr/scripts/keybindings"},
 }
