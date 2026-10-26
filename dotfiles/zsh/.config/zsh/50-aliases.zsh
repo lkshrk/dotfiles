@@ -101,12 +101,3 @@ function fxr {
 # woodpecker
 alias wp='woodpecker-cli '
 
-# agents
-alias cr='coder '
-alias crs='coder ssh '
-alias cru='coder update '
-alias crr='coder restart '
-function crur {
-  coder update "$@"
-  coder restart "$@" --yes
-}

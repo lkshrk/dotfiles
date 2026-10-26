@@ -106,118 +106,6 @@ csh() {
   kubectl run -it --rm --restart=Never --image=busybox "tmp-shell-${USER:-user}-$$" -n "$ns" -- sh
 }
 
-# --- coder: login + create-from-preset + connect -----------------------------
-code() {
-  local -a o_cpu o_mem o_disk o_name o_help
-  # -E -F: options may follow the preset arg, unknown options still fail
-  zparseopts -D -E -F -- c:=o_cpu -cpu:=o_cpu m:=o_mem -memory:=o_mem -ram:=o_mem \
-    d:=o_disk -disk:=o_disk n:=o_name -name:=o_name h=o_help -help=o_help || return 1
-  (( $# > 2 )) && { echo "code: too many arguments (see code --help)" >&2; return 1; }
-  local preset=$1 template=${2:-$CODER_TEMPLATE}
-  local name=${o_name[2]:-$preset}
-  local -a params
-  [[ -n ${o_cpu[2]} ]]  && params+=(--parameter "cpu=${o_cpu[2]}")
-  [[ -n ${o_mem[2]} ]]  && params+=(--parameter "memory=${o_mem[2]}")
-  [[ -n ${o_disk[2]} ]] && params+=(--parameter "disk_size=${o_disk[2]}")
-  if [[ -n $o_help ]] || [[ -z $preset ]]; then
-    cat >&2 <<'EOF'
-Usage: code [options] <preset|template> [template]
-
-Create (if needed) and SSH into a Coder workspace from a template or preset.
-
-Arguments:
-  preset|template Preset or template name (template match is case-insensitive
-                  and wins); also the workspace name unless --name is given.
-  template        Template name. Defaults to $CODER_TEMPLATE, otherwise
-                  auto-detected: first template whose name matches the arg,
-                  then by searching all templates for the preset.
-
-Options:
-  -n, --name NAME   Workspace name. Allows multiple workspaces from the same
-                    preset/template (e.g. code --name api-review backend).
-  -c, --cpu N       Override 'cpu' parameter.
-  -m, --memory N    Override 'memory' parameter (alias: --ram).
-  -d, --disk N      Override 'disk_size' parameter.
-  -h, --help        Show this help.
-
-Examples:
-  code backend                    # workspace 'backend' from preset 'backend'
-  code --name exp1 backend        # second workspace from the same preset
-  code --cpu 8 --memory 16 backend mytemplate
-EOF
-    [[ -n $o_help ]] && return 0 || return 1
-  fi
-  local o v
-  for o v in cpu "${o_cpu[2]}" memory "${o_mem[2]}" disk "${o_disk[2]}"; do
-    [[ -n $v && $v != <-> ]] && { echo "code: --$o must be a positive integer, got '$v'" >&2; return 1; }
-  done
-  (( $+commands[coder] )) || { echo "code: coder not found" >&2; return 127; }
-  coder whoami &>/dev/null || coder login || return
-  if coder show "$name" &>/dev/null; then
-    (( $#params )) && echo "code: workspace '$name' already exists — ignoring parameter overrides (delete it to recreate)" >&2
-  else
-    if [[ -z $template ]]; then
-      local t
-      local -a tnames
-      tnames=($(coder templates list -o json 2>/dev/null | jq -r '.[].Template.name'))
-      # a template named like the arg wins over preset search: create from it directly
-      for t in $tnames; do
-        [[ ${t:l} == ${preset:l} ]] && { template=$t; preset=""; break; }
-      done
-      if [[ -z $template ]]; then
-        for t in $tnames; do
-          if coder templates presets list "$t" -o json 2>/dev/null \
-               | jq -e --arg p "$preset" 'any(.[]; .TemplatePreset.Name == $p)' &>/dev/null; then
-            template=$t
-            break
-          fi
-        done
-      fi
-      [[ -n $template ]] || { echo "code: no template or preset matches '$preset'" >&2; return 1; }
-    fi
-    if [[ -z $preset ]]; then
-      coder create "$name" -t "$template" "${params[@]}" --use-parameter-defaults -y || return
-    elif (( $#params )); then
-      # coder silently ignores --parameter for preset-pinned values, so expand
-      # the preset into explicit --parameter flags and merge overrides on top
-      local -A pmap
-      local line
-      for line in ${(f)"$(coder templates presets list "$template" -o json 2>/dev/null \
-          | jq -r --arg p "$preset" \
-              '.[].TemplatePreset | select(.Name == $p) | .Parameters[] | "\(.Name)=\(.Value)"')"}; do
-        pmap[${line%%=*}]=${line#*=}
-      done
-      (( $#pmap )) || { echo "code: preset '$preset' not found in template '$template'" >&2; return 1; }
-      [[ -n ${o_cpu[2]} ]]  && pmap[cpu]=${o_cpu[2]}
-      [[ -n ${o_mem[2]} ]]  && pmap[memory]=${o_mem[2]}
-      [[ -n ${o_disk[2]} ]] && pmap[disk_size]=${o_disk[2]}
-      local k pv
-      params=()
-      # coder CSV-parses each --parameter value, so quote the field and double inner quotes
-      for k in ${(k)pmap}; do
-        pv=${pmap[$k]//\"/\"\"}
-        params+=(--parameter "\"$k=$pv\"")
-      done
-      coder create "$name" -t "$template" "${params[@]}" --use-parameter-defaults -y || return
-    else
-      coder create "$name" -t "$template" --preset "$preset" --use-parameter-defaults -y || return
-    fi
-  fi
-  # ssh autostarts a stopped workspace but errors while the agent is mid-shutdown,
-  # so wait out transitional builds and start explicitly once stopped
-  local st
-  while :; do
-    st=$(coder list -a -o json 2>/dev/null \
-           | jq -r --arg n "$name" '.[] | select(.name == $n) | .latest_build.status')
-    case $st in
-      stopping|canceling|pending) sleep 2 ;;
-      stopped|failed|canceled)    coder start "$name" || return; break ;;
-      *) break ;;
-    esac
-  done
-  coder ssh "$name"
-}
-
 _dotfiles_omni() {
   local repo="${DOTFILES_DIR:-}"
   if [[ -z "$repo" ]]; then
@@ -318,7 +206,7 @@ ai-clean() {
   local dirs=(
     ~/.claude/{cache,logs,file-history,shell-snapshots,statsig,todos}
     ~/.codex/{tmp,log,cache,sessions,history,artifacts}
-    ~/.cache/{opencode,aider,Cursor,Windsurf,Code}
+    ~/.cache/{aider,Cursor,Windsurf,Code}
   )
   local -a targets=()
   for d in $dirs; do

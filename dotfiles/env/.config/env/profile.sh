@@ -11,9 +11,6 @@ if [ -r "$ENV_DIR/functions/claude" ]; then
   . "$ENV_DIR/functions/claude"
 fi
 
-case "${CODER_OMNI_HOST:-${HOSTNAME:-}}" in
-  coder|coder-*) export OMNI_HOSTNAME="${CODER_OMNI_HOST:-coder}" ;;
-esac
 if [ "${ENV_NEXT_PROFILE_LOADED:-}" = 1 ] && [ "${ENV_NEXT_PROFILE_PATH:-}" = "${PATH:-}" ] && [ "${ENV_NEXT_PROFILE_VERSION:-}" = "$ENV_NEXT_PROFILE_CURRENT_VERSION" ]; then
   unset ENV_NEXT_PROFILE_CURRENT_VERSION
   return 0 2>/dev/null || exit 0
