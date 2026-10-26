@@ -1020,7 +1020,7 @@
         "meter_color": null,
         "meter_invert_color": null,
         "meters_enabled": null,
-        "mute_profile_data": "[true,false]",
+        "mute_profile_data": "[false,false]",
         "mute_profile_index": 0,
         "orientation": null,
         "show_volume": null,
