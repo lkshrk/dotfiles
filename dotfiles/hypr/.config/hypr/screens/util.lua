@@ -33,7 +33,7 @@ function U.layout_placed(w)
   return not w.floating or C.side_workspaces[name] ~= nil or name == C.top_workspace
 end
 
-local roles, opened, settled, role_fns = {}, {}, {}, {}
+local roles, opened, settled, role_fns, generation = {}, {}, {}, {}, {}
 
 function U.role(address) return roles[address] end
 function U.settled(address) return settled[address] == true end
@@ -60,13 +60,16 @@ local function announce(w, role)
 end
 
 -- The first window of an app is decided at open; a window opened beside an older one waits, since the older may be a closing splash.
+-- Addresses are reused after a window closes, so each timer only acts on the open it was started for.
 hl.on("window.open", function(w)
   local address = w.address
-  opened[address] = os.time()
+  local gen = (generation[address] or 0) + 1
+  generation[address], opened[address], settled[address] = gen, os.time(), nil
   if classify(w) == "main" then announce(w, "main") else roles[address] = "pending" end
   hl.timer(function()
+    if generation[address] ~= gen then return end
     local target = hl.get_window("address:" .. address)
-    if not target or not target.mapped or opened[address] == nil then return end
+    if not target or not target.mapped then return end
     settled[address] = true
     if roles[address] == "pending" then announce(target, classify(target)) end
   end, { timeout = C.settle_ms, type = "oneshot" })
@@ -75,11 +78,21 @@ end)
 -- Cleared after the other close handlers have run, so frames.lua can still save the closing window.
 hl.on("window.close", function(w)
   if not w or not w.address then return end
-  local address = w.address
+  local address, gen = w.address, generation[w.address]
   hl.timer(function()
+    if generation[address] ~= gen then return end
     roles[address], opened[address], settled[address] = nil, nil, nil
   end, { timeout = 1, type = "oneshot" })
 end)
+
+-- A config reload starts with empty tables; windows already open count as long settled.
+for _, w in ipairs(hl.get_windows()) do
+  if w.mapped and w.address then
+    generation[w.address], settled[w.address] = 1, true
+    opened[w.address] = os.time() - math.ceil(C.remember_after_ms / 1000)
+    roles[w.address] = classify(w)
+  end
+end
 
 function U.xy(v)
   if type(v) ~= "table" then return 0, 0 end
