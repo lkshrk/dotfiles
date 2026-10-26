@@ -72,9 +72,13 @@ hl.on("window.open", function(w)
   end, { timeout = C.settle_ms, type = "oneshot" })
 end)
 
+-- Cleared after the other close handlers have run, so frames.lua can still save the closing window.
 hl.on("window.close", function(w)
   if not w or not w.address then return end
-  roles[w.address], opened[w.address], settled[w.address] = nil, nil, nil
+  local address = w.address
+  hl.timer(function()
+    roles[address], opened[address], settled[address] = nil, nil, nil
+  end, { timeout = 0, type = "oneshot" })
 end)
 
 function U.xy(v)

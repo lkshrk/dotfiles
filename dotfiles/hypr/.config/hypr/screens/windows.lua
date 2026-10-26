@@ -44,8 +44,11 @@ local function make_extra(w)
 end
 
 -- Settings and other extra windows share the app's class, so class-based slots would give them the main window's place.
+-- Proton games share their class with launchers left open beside them, so fullscreen and gaming windows never become extras.
 U.on_role(function(w, role)
-  if role == "extra" and not U.transient(w) and U.layout_placed(w) then make_extra(w) end
+  if role ~= "extra" or U.transient(w) or not U.layout_placed(w) then return end
+  if (w.fullscreen or 0) ~= 0 or (w.workspace and w.workspace.name == C.gaming_workspace) then return end
+  make_extra(w)
 end)
 
 local function helium_home(w)

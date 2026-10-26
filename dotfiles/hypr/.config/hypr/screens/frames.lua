@@ -10,8 +10,8 @@ local function live(w)
   return w ~= nil and w.address ~= nil
 end
 
-local function in_scope(w)
-  return live(w) and w.mapped and w.floating and (w.fullscreen or 0) == 0 and w.workspace ~= nil
+local function in_scope(w, closing)
+  return live(w) and (closing or w.mapped) and w.floating and (w.fullscreen or 0) == 0 and w.workspace ~= nil
     and not w.workspace.special and w.monitor ~= nil and not U.layout_placed(w) and not U.transient(w)
 end
 
@@ -50,8 +50,8 @@ local function place(w)
   end
 end
 
-local function remember(w)
-  if not in_scope(w) or not U.settled(w.address) then return end
+local function remember(w, closing)
+  if not in_scope(w, closing) or not U.settled(w.address) then return end
   local x, y = U.xy(w.at)
   local width, height = U.xy(w.size)
   if width <= 0 or height <= 0 then return end
@@ -116,7 +116,7 @@ end)
 
 hl.on("window.close", function(w)
   if not live(w) then return end
-  remember(w)
+  remember(w, true)
   applied[w.address], user_moved[w.address], left[w.address] = nil, nil, nil
   if focused == w.address then focused = nil end
 end)
