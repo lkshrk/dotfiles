@@ -65,11 +65,10 @@ assert(title_rule.match.class == "^steam_app_battlenet$")
 assert(title_rule.match.title == "^Battle\\.net$")
 assert(title_rule.size[1] == 1516 and title_rule.size[2] == 934)
 assert(title_rule.move[1] == 1550 and title_rule.move[2] == 238, "move is monitor-local")
-assert(title_rule.suppress_event == "x11configurerequest", "a remembered title frame blocks the app from moving itself")
+assert(title_rule.suppress_event == nil, "ignoring X11 configure requests makes Battle.net grab focus every few seconds")
 assert(title_rule.float == nil, "frame rules never float a window themselves")
 
 local app_rule = D.frame_rule("steam", nil, { x = 1500, y = 1500, w = 800, h = 600 }, monitors[1])
 assert(app_rule.match.title == nil)
-assert(app_rule.suppress_event == nil, "the app-wide frame must not freeze dialogs that size themselves")
 
 print("ok")

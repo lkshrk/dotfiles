@@ -33,7 +33,7 @@ function D.monitor_for(frame, monitors)
   end
 end
 
--- Hyprland applies move/size while mapping, so the window opens at its frame; title frames also stop X11 apps moving themselves.
+-- No x11configurerequest suppression: Battle.net then demands focus every few seconds.
 function D.frame_rule(class, title, frame, monitor)
   local match = { class = "^" .. D.regex_escape(class) .. "$" }
   if title then match.title = "^" .. D.regex_escape(title) .. "$" end
@@ -41,7 +41,6 @@ function D.frame_rule(class, title, frame, monitor)
     match = match,
     size = { frame.w, frame.h },
     move = { frame.x - monitor.x, frame.y - monitor.y },
-    suppress_event = title and "x11configurerequest" or nil,
   }
 end
 
