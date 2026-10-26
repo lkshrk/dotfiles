@@ -5,17 +5,32 @@ rbw_available() {
   rbw config show >/dev/null 2>&1
 }
 
-rbw_can_prompt() {
+rbw_tty_prompt() {
   [[ -o interactive && -t 0 && -t 1 && -r /dev/tty ]]
+}
+
+# Agents have no TTY but can still reach a graphical pinentry.
+rbw_gui_prompt() {
+  [[ -n ${WAYLAND_DISPLAY:-}${DISPLAY:-} ]] || [[ $OSTYPE == darwin* && -z ${SSH_CONNECTION:-} ]]
+}
+
+rbw_can_prompt() {
+  rbw_tty_prompt || rbw_gui_prompt
 }
 
 rbw_unlock_if_needed() {
   rbw_available || return 1
   rbw unlocked >/dev/null 2>&1 && return 0
 
-  if rbw_can_prompt; then
+  if rbw_tty_prompt; then
     print -u2 "rbw: vault locked; unlocking"
     rbw unlock </dev/tty >/dev/tty 2>/dev/tty && rbw unlocked >/dev/null 2>&1
+    return
+  fi
+
+  if rbw_gui_prompt; then
+    print -u2 "rbw: vault locked; unlocking via pinentry"
+    rbw unlock </dev/null >/dev/null && rbw unlocked >/dev/null 2>&1
     return
   fi
 
@@ -35,7 +50,7 @@ rbw_ssh_agent_ready() {
   for attempt in 1 2; do
     rbw_fix_ssh_auth_sock && [[ -S ${SSH_AUTH_SOCK:-} ]] && ssh-add -l >/dev/null 2>&1 && return 0
     (( attempt == 1 )) || break
-    { rbw_available && rbw_can_prompt; } || { print -u2 "rbw: SSH agent unavailable; run 'rbw unlock' in an interactive shell"; return 1; }
+    { rbw_available && rbw_can_prompt; } || { print -u2 "rbw: SSH agent unavailable; run 'rbw unlock'"; return 1; }
     rbw_unlock_if_needed || break
   done
   print -u2 "rbw: SSH agent unreachable at ${SSH_AUTH_SOCK:-<unset>}"; return 1

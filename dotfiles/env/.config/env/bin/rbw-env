@@ -27,6 +27,12 @@ validate_var() {
   esac
 }
 
+# Agents have no TTY but can still reach a graphical pinentry.
+gui_session() {
+  [ -n "${WAYLAND_DISPLAY:-}${DISPLAY:-}" ] && return 0
+  [ "$(uname -s)" = Darwin ] && [ -z "${SSH_CONNECTION:-}" ]
+}
+
 rbw_unlock_checked=false
 rbw_unlocked=false
 
@@ -44,6 +50,12 @@ ensure_rbw_unlocked() {
   if [ -t 0 ] && [ -t 1 ]; then
     printf '%s\n' 'rbw-env: rbw locked; unlocking' >&2
     if rbw unlock </dev/tty >/dev/tty 2>/dev/tty && rbw unlocked >/dev/null 2>&1; then
+      rbw_unlocked=true
+      return 0
+    fi
+  elif gui_session; then
+    printf '%s\n' 'rbw-env: rbw locked; unlocking via pinentry' >&2
+    if rbw unlock </dev/null >/dev/null && rbw unlocked >/dev/null 2>&1; then
       rbw_unlocked=true
       return 0
     fi
