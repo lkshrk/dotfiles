@@ -169,12 +169,20 @@ In OMP, invoke `/skill:<name>`; for example `/skill:upgrade-deps` or
 `/skill:i-have-adhd`. The latter is manual-only and intentionally absent from
 the model's automatic skill list. Start a new OMP session after syncing.
 
-For MCP, the host enables `claude`, `codex`, and `omp`. Per-server `targets`
-keep `codebase-memory-mcp`, `openaiDeveloperDocs`, and `shiplight` on
+For MCP, the host enables `claude`, `codex`, `omp`, and `opencode`. Per-server
+`targets` keep `codebase-memory-mcp`, `openaiDeveloperDocs`, and `shiplight` on
 Claude/Codex; omp receives only the APM-managed `context-mode` plugin and
 `litellm-tools`. The gateway declaration uses `headersHelperKeys` so omp
 extracts its authentication header through the existing helper at connection
 time. No credential is stored in the manifest or native config.
+
+OpenCode receives `context-mode` from APM in `~/.config/opencode/opencode.json`
+and discovers shared skills from `~/.agents/skills` and `~/.claude/skills`;
+APM also copies untargeted packages into `~/.config/opencode/skills`, and
+OpenCode keeps one skill per name. APM's OpenCode adapter cannot render header helpers,
+so `litellm-tools` stays off the `opencode` target and is declared in the
+dotfile-managed `opencode.jsonc` with a `{env:LITELLM_API_KEY}` header. See
+[env](dotfiles/env/.config/env/README.md) for the wrapper and provider layout.
 
 Do not dotfile-manage `~/.omp/agent/mcp.json` or the deployed shared skills.
 APM owns their deployment; omp keeps its local enable/disable controls and

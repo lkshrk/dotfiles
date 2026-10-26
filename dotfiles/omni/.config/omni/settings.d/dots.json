@@ -49,6 +49,17 @@
           ]
         },
         {
+          "name": "opencode",
+          "path": "~/.config/opencode",
+          "ignore": [
+            "*",
+            "!/opencode.jsonc",
+            "!/instructions/",
+            "/instructions/*",
+            "!/instructions/gateway-tools.md"
+          ]
+        },
+        {
           "name": "amp",
           "path": "~/.config/amp",
           "ignored": true

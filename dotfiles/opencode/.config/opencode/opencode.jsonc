@@ -1,0 +1,123 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "local-agents/claude-sonnet-high#high",
+  "agents": {
+    "title": { "model": "local-agents/claude-sonnet" }
+  },
+  "policies": [
+    { "action": "provider.use", "resource": "*", "effect": "deny" },
+    { "action": "provider.use", "resource": "local-agents", "effect": "allow" }
+  ],
+  "instructions": [
+    "~/.config/opencode/instructions/gateway-tools.md",
+    "~/.claude/rules/h-cloud-kubectl.md"
+  ],
+  "providers": {
+    "local-agents": {
+      "name": "Local agents",
+      "env": ["LITELLM_API_KEY"],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://api.ai.h-cloud.lan/v1",
+        // Injected by ~/.config/env/bin/opencode-local-agents; never stored here.
+        "apiKey": "{env:LITELLM_API_KEY}"
+      },
+      "models": {
+        "claude-fable": {
+          "name": "Claude Fable",
+          "package": "@opencode/ai/providers/anthropic",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 1000000, "output": 128000 }
+        },
+        "claude-opus": {
+          "name": "Claude Opus",
+          "package": "@opencode/ai/providers/anthropic",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 1000000, "output": 128000 }
+        },
+        "claude-sonnet": {
+          "name": "Claude Sonnet",
+          "package": "@opencode/ai/providers/anthropic",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 1000000, "output": 128000 }
+        },
+        "claude-sonnet-high": {
+          "name": "Claude Sonnet (high)",
+          "package": "@opencode/ai/providers/anthropic",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 1000000, "output": 128000 }
+        },
+        "claude-haiku": {
+          "name": "Claude Haiku",
+          "package": "@opencode/ai/providers/anthropic",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 200000, "output": 64000 }
+        },
+        "gpt-astra": {
+          "name": "GPT Astra",
+          "package": "@opencode/ai/providers/openai/responses",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "gpt-sol": {
+          "name": "GPT Sol",
+          "package": "@opencode/ai/providers/openai/responses",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "gpt-luna": {
+          "name": "GPT Luna",
+          "package": "@opencode/ai/providers/openai/responses",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "gpt-terra": {
+          "name": "GPT Terra",
+          "package": "@opencode/ai/providers/openai/responses",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "deepseek-flash": {
+          "name": "DeepSeek Flash",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
+          "limit": { "context": 1048576, "output": 393216 }
+        },
+        "glm-flash": {
+          "name": "GLM Flash",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
+          "limit": { "context": 1048576, "output": 131072 }
+        },
+        "qwen-flash": {
+          "name": "Qwen Flash",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
+          "limit": { "context": 1000000, "output": 131072 }
+        },
+        "smart-auto": {
+          "name": "Smart Auto",
+          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "standard-auto": {
+          "name": "Standard Auto",
+          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "frontier-auto": {
+          "name": "Frontier Auto",
+          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
+          "limit": { "context": 922000, "output": 128000 }
+        }
+      }
+    }
+  },
+  "mcp": {
+    "servers": {
+      "litellm-tools": {
+        "type": "remote",
+        "url": "https://api.ai.h-cloud.lan/mcp/",
+        // APM's OpenCode adapter drops header helpers, so the wrapper-injected key is used.
+        "headers": { "x-litellm-api-key": "{env:LITELLM_API_KEY}" }
+      }
+    }
+  }
+}

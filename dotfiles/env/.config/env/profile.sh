@@ -10,6 +10,10 @@ ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 if [ -r "$ENV_DIR/functions/claude" ]; then
   . "$ENV_DIR/functions/claude"
 fi
+# shellcheck source=functions/opencode
+if [ -r "$ENV_DIR/functions/opencode" ]; then
+  . "$ENV_DIR/functions/opencode"
+fi
 
 if [ "${ENV_NEXT_PROFILE_LOADED:-}" = 1 ] && [ "${ENV_NEXT_PROFILE_PATH:-}" = "${PATH:-}" ] && [ "${ENV_NEXT_PROFILE_VERSION:-}" = "$ENV_NEXT_PROFILE_CURRENT_VERSION" ]; then
   unset ENV_NEXT_PROFILE_CURRENT_VERSION

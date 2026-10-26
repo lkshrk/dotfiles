@@ -46,6 +46,37 @@ allowlists only `config.yml`, `models.yml`, and `AGENTS.md` under
 MCP remains APM-owned; generated hooks/extensions, credentials, sessions and
 runtime databases are excluded from dotfile tracking.
 
+`opencode` and `oc` use `~/.local/bin/opencode` → `bin/opencode-local-agents`,
+which injects the same credential as `LITELLM_API_KEY` and executes
+`/usr/bin/opencode` (override with `OPENCODE_BIN`). There is no subscription
+escape hatch: OpenCode holds no subscription credentials here, and the tracked
+config allows only the `local-agents` provider.
+
+OpenCode merges every global config document instead of replacing one with
+another. APM owns `~/.config/opencode/opencode.json` (MCP only, currently
+`context-mode`); dots own `opencode.jsonc` and `instructions/gateway-tools.md`.
+`opencode.jsonc` declares `local-agents` against `https://api.ai.h-cloud.lan/v1`:
+Claude models use `@opencode/ai/providers/anthropic`, GPT models
+`openai/responses`, and the rest `openai-compatible` chat. The default is
+`local-agents/claude-sonnet-high#high` and session titles use
+`local-agents/claude-sonnet`, matching omp's `config.yml`. A `policies` block
+denies every other provider. Add a model by declaring it under `models` with
+its limits; OpenCode does not discover gateway models.
+
+APM's OpenCode adapter drops `headersHelper`, so `litellm-tools` is excluded
+from the `opencode` APM target. `opencode.jsonc` declares it instead, with
+`x-litellm-api-key: {env:LITELLM_API_KEY}`. Global instructions come from
+`instructions/gateway-tools.md` plus the shared
+`~/.claude/rules/h-cloud-kubectl.md`; no `AGENTS.md` is tracked, so APM can
+still generate one.
+
+OpenCode v2 runs one background service that every client attaches to, and it
+inherits the environment of whichever client starts it. Credentials resolve in
+that service, so a service started outside the wrapper (or before the wrapper
+existed) fails gateway authentication. Restart it from a wrapped shell with
+`opencode service stop && opencode service start`, or pass `--standalone` for
+a private server.
+
 This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 `~/.config/env` by Omni/Stow.
 
@@ -65,6 +96,8 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 - `tests/smoke.sh`: shell-mode checks before migration.
 - `tests/linux-smoke.sh`: clean Linux env checks with fake HOME/NVM and
   optional rbw socket coverage.
+- `tests/local-agents-wrappers-smoke.sh`: omp/OpenCode credential injection,
+  `oc`, and the tracked OpenCode provider/MCP config.
 
 ## Stow/Omni Package Shape
 
