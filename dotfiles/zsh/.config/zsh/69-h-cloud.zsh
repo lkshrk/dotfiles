@@ -12,7 +12,8 @@ h_cloud_auth() {
   # Tab completion must never block on an rbw/pinentry prompt.
   (( ${+compstate} )) && return 0
   rbw_unlock_if_needed || { print -u2 "h-cloud: rbw locked"; return 1; }
-  exports=$("$_h_cloud_script" env) || return 1
+  # Literal path: agent shell snapshots keep functions but drop globals like $_h_cloud_script.
+  exports=$("$HOME/Dev/h-cloud/scripts/cluster-auth.sh" env) || return 1
   eval "$exports"
   typeset -g _H_CLOUD_AUTH_AT=$EPOCHSECONDS _H_CLOUD_KUBECONFIG=$KUBECONFIG
   others=${${others//$KUBECONFIG/}##:}
