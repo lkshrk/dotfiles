@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Io
 import qs.Commons
 import qs.Commons as Commons
@@ -13,6 +14,12 @@ BarWidget {
   readonly property string pluginDir: Qt.resolvedUrl(".").toString().replace("file://", "")
   property var detail: null
   property string openModule: ""
+
+  // shell.json "screens": connector names or models to show on (Hyprland passes no serial); empty shows it on every screen.
+  readonly property var screens: setting("screens", [])
+  readonly property var screen: QsWindow.window ? QsWindow.window.screen : null
+  visible: !(screens instanceof Array) || screens.length === 0
+    || (screen !== null && screens.some(function(s) { return s === screen.name || s === screen.model || s === screen.serialNumber }))
 
   QtObject {
     id: fallback
@@ -253,8 +260,8 @@ BarWidget {
     }
   }
 
-  Text { id: percentProbe; visible: false; text: "99%"; font.family: Style.font.family; font.pixelSize: Style.font.body }
-  Text { id: speedProbe; visible: false; text: "999 KB/s"; font.family: Style.font.family; font.pixelSize: Style.font.body }
+  Text { id: percentProbe; visible: false; text: "100%"; font.family: Style.font.family; font.pixelSize: Style.font.body }
+  Text { id: speedProbe; visible: false; text: "99.9 KB/s"; font.family: Style.font.family; font.pixelSize: Style.font.body }
 
   RowLayout {
     id: row

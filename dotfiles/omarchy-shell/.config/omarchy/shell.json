@@ -54,6 +54,9 @@
       ],
       "right": [
         {
+          "id": "omarchy.keyboard-layout"
+        },
+        {
           "id": "lkshrk.tray",
           "pinned": [
             "wine-0x100f0-0"
@@ -61,12 +64,6 @@
           "hidden": [
             "PipeWeaver"
           ]
-        },
-        {
-          "id": "omarchy.keyboard-layout"
-        },
-        {
-          "id": "omarchy.agents"
         },
         {
           "id": "omarchy.bluetooth"
@@ -78,7 +75,106 @@
           "id": "omarchy.power"
         },
         {
-          "id": "lkshrk.stats"
+          "id": "lkshrk.stats",
+          "screens": [
+            "Odyssey G80SH"
+          ]
+        },
+        {
+          "id": "janitorhead.quotatank",
+          "barAccountMode": "chips",
+          "barDisplayMode": "Percentages",
+          "barProviders": [
+            "claude",
+            "codex",
+            "kimi",
+            "opencode",
+            "gemini",
+            "copilot",
+            "cursor",
+            "grok",
+            "kiro",
+            "jetbrains",
+            "nous",
+            "muse",
+            "factory",
+            "amp",
+            "kilo",
+            "codebuff",
+            "huggingface",
+            "zai",
+            "minimax",
+            "synthetic",
+            "chutes",
+            "ollama",
+            "warp",
+            "zenmux",
+            "clinepass",
+            "alibaba",
+            "commandcode",
+            "devpass",
+            "xkiro",
+            "ibmbob",
+            "umans",
+            "neuralwatt",
+            "aixy",
+            "clawrouter",
+            "deepseek",
+            "moonshot",
+            "venice",
+            "deepinfra",
+            "vercel",
+            "poe",
+            "atlascloud",
+            "hyper",
+            "sailresearch",
+            "sofya",
+            "v0",
+            "manus",
+            "typesafe",
+            "mimo",
+            "opencode-go"
+          ],
+          "barShowResets": false,
+          "barWindow": "weekly",
+          "barWindowSecondary": "none",
+          "cliproxyKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-cc43901ae7b64bec8f478966caa6c49d.key",
+          "cliproxyUrl": "https://proxy.ai.h-cloud.lan",
+          "dismissedProviders": [
+            "copilot"
+          ],
+          "enabledProviders": [
+            "claude",
+            "codex",
+            "kimi",
+            "opencode",
+            "antigravity",
+            "gemini",
+            "cursor",
+            "grok",
+            "kiro",
+            "jetbrains",
+            "nous",
+            "muse",
+            "factory",
+            "amp",
+            "kilo",
+            "codebuff",
+            "huggingface",
+            "openrouter"
+          ],
+          "hideExhaustedProviders": true,
+          "openrouterKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-42eee191a4124a3a8d8a1b46261e4d83.key",
+          "providerColors": false,
+          "squareUsageCards": true,
+          "usageSource": "both",
+          "barShowPeriods": false,
+          "cliproxyUnmonitored": "[\"opencode-go\"]",
+          "providerQuotaModes": "{\"claude\":\"Used\",\"openrouter\":\"Remaining\"}",
+          "accountModes": "{\"claude\":\"single\"}",
+          "hiddenAccounts": "{\"codex\":[\"main\"]}",
+          "barMaxChips": 4,
+          "barScreens": "[\"Odyssey G80SH\"]"
         }
       ]
     },
