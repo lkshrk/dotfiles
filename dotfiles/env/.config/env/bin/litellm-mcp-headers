@@ -11,8 +11,8 @@ fi
 if [ -n "${LITELLM_API:-}" ]; then
   token=$LITELLM_API
 elif command -v rbw >/dev/null 2>&1; then
-  token=$(rbw get litellm-api) || {
-    printf '%s\n' 'litellm mcp: unable to read litellm-api from rbw (vault locked?)' >&2
+  token=$(rbw get --folder ENV local-agents) || {
+    printf '%s\n' 'litellm mcp: unable to read ENV/local-agents from rbw (vault locked?)' >&2
     exit 1
   }
 else

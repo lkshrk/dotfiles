@@ -7,21 +7,21 @@ if [ -n "${LITELLM_API_KEY:-}" ]; then
   exit 0
 fi
 
-token_file="${XDG_DATA_HOME:-$HOME/.local/share}/llm-gateway/token"
+token_file="${XDG_DATA_HOME:-$HOME/.local/share}/local-agents/token"
 if [ -e "$token_file" ]; then
   token=$(cat "$token_file") || exit 1
 elif command -v rbw >/dev/null 2>&1; then
-  token=$(rbw get --folder ENV llm-gateway) || {
-    printf '%s\n' 'llm gateway: unable to read gateway key from rbw' >&2
+  token=$(rbw get --folder ENV local-agents) || {
+    printf '%s\n' 'local agents: unable to read gateway key from rbw' >&2
     exit 1
   }
 else
-  printf '%s\n' 'llm gateway: set LITELLM_API_KEY, provision the private token file, or install rbw' >&2
+  printf '%s\n' 'local agents: set LITELLM_API_KEY, provision the private token file, or install rbw' >&2
   exit 1
 fi
 
 if [ -z "$token" ]; then
-  printf '%s\n' 'llm gateway: credential is empty' >&2
+  printf '%s\n' 'local agents: credential is empty' >&2
   exit 1
 fi
 printf '%s\n' "$token"

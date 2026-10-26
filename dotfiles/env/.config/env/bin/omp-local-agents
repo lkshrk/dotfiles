@@ -1,0 +1,7 @@
+#!/bin/sh
+# Keep the gateway credential out of config files and command-line arguments.
+set -eu
+
+LITELLM_API_KEY=$("${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}/bin/local-agents-token")
+export LITELLM_API_KEY
+exec "${OMP_BIN:-${BUN_INSTALL:-$HOME/.bun}/bin/omp}" "$@"

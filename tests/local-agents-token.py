@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-HELPER = ROOT / "dotfiles/env/.config/env/bin/llm-gateway-token"
+HELPER = ROOT / "dotfiles/env/.config/env/bin/local-agents-token"
 
 with tempfile.TemporaryDirectory() as work:
     home = Path(work)
@@ -15,11 +15,11 @@ with tempfile.TemporaryDirectory() as work:
     env = {"HOME": work, "PATH": f"{bin_dir}:{os.environ['PATH']}",
            "XDG_DATA_HOME": str(home / "data"),
            "XDG_CONFIG_HOME": str(home / "config")}
-    installed = home / "config/env/bin/llm-gateway-token"
+    installed = home / "config/env/bin/local-agents-token"
     installed.parent.mkdir(parents=True)
     installed.symlink_to(HELPER)
     rbw = bin_dir / "rbw"
-    rbw.write_text('#!/bin/sh\n[ "$*" = "get --folder ENV llm-gateway" ] || exit 2\nprintf "vault-token\\n"\n')
+    rbw.write_text('#!/bin/sh\n[ "$*" = "get --folder ENV local-agents" ] || exit 2\nprintf "vault-token\\n"\n')
     rbw.chmod(0o755)
 
     def run(script, *args):
@@ -27,7 +27,7 @@ with tempfile.TemporaryDirectory() as work:
                               text=True, capture_output=True)
 
     assert run(HELPER).stdout == "vault-token\n"
-    token_file = home / "data/llm-gateway/token"
+    token_file = home / "data/local-agents/token"
     token_file.parent.mkdir(parents=True)
     token_file.write_text("file-token\n")
     assert run(HELPER).stdout == "file-token\n"
