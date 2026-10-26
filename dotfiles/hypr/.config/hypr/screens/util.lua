@@ -78,7 +78,7 @@ hl.on("window.close", function(w)
   local address = w.address
   hl.timer(function()
     roles[address], opened[address], settled[address] = nil, nil, nil
-  end, { timeout = 0, type = "oneshot" })
+  end, { timeout = 1, type = "oneshot" })
 end)
 
 function U.xy(v)
