@@ -86,6 +86,7 @@
           "barAccountMode": "chips",
           "barDisplayMode": "Percentages",
           "barMaxChips": 4,
+          "barProviderLimits": "{\"codex\":{\"bottom\":\"weekly\"}}",
           "barProviders": [
             "claude",
             "codex",
@@ -143,9 +144,10 @@
           "barWindow": "session",
           "barWindowSecondary": "weekly",
           "cliproxyKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-cc43901ae7b64bec8f478966caa6c49d.key",
-          "cliproxyUnmonitored": "[\"opencode-go\"]",
+          "cliproxyUnmonitored": "[\"opencode-go\",\"antigravity\"]",
           "cliproxyUrl": "https://proxy.ai.h-cloud.lan",
           "dismissedProviders": [
+            "antigravity",
             "copilot"
           ],
           "enabledProviders": [
@@ -153,7 +155,6 @@
             "codex",
             "kimi",
             "opencode",
-            "antigravity",
             "gemini",
             "cursor",
             "grok",
@@ -174,8 +175,7 @@
           "providerColors": false,
           "providerQuotaModes": "{\"claude\":\"Used\",\"openrouter\":\"Remaining\"}",
           "squareUsageCards": true,
-          "usageSource": "both",
-          "barProviderLimits": "{\"codex\":{\"bottom\":\"weekly\"}}"
+          "usageSource": "both"
         }
       ]
     },
