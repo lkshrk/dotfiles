@@ -1013,8 +1013,20 @@
       "settings": {
         "device_id": "01M5FNGW0H56WS9HT27J0GP1CF",
         "device_type": "source",
+        "hardware_device_description": null,
+        "hardware_device_node_id": null,
         "icon_fa": "solid/gamepad",
-        "icon_path": null
+        "icon_path": null,
+        "meter_color": null,
+        "meter_invert_color": null,
+        "meters_enabled": null,
+        "mute_profile_data": "[true,false]",
+        "mute_profile_index": 0,
+        "orientation": null,
+        "show_volume": null,
+        "source_mix": null,
+        "volume_bar_color": null,
+        "volume_step": 0
       },
       "states": [
         {
