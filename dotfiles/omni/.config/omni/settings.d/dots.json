@@ -4,10 +4,6 @@
       "name": "ai",
       "dots": [
         {
-          "name": "free-claude-code",
-          "path": "~/.config/free-claude-code"
-        },
-        {
           "name": "codex",
           "path": "~/.codex",
           "ignore": [
@@ -19,11 +15,6 @@
         {
           "name": "CLAUDE.md",
           "path": "~/.config/CLAUDE.md",
-          "ignored": true
-        },
-        {
-          "name": "cagent",
-          "path": "~/.config/cagent",
           "ignored": true
         },
         {
@@ -51,10 +42,6 @@
           "name": "amp",
           "path": "~/.config/amp",
           "ignored": true
-        },
-        {
-          "name": "opencode",
-          "path": "~/.config/opencode"
         }
       ]
     },
@@ -110,12 +97,7 @@
         },
         {
           "name": "tmux",
-          "path": "~/.config/tmux",
-          "hosts": {
-            "coder-components": {
-              "package": "tmux@coder"
-            }
-          }
+          "path": "~/.config/tmux"
         },
         {
           "name": "vim",

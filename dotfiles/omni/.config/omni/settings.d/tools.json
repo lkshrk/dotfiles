@@ -56,22 +56,6 @@
         }
       ]
     },
-    "anomalyco/tap/opencode-v2": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "anomalyco/tap/opencode-v2"
-        },
-        {
-          "provider": "pacman",
-          "package": "opencode"
-        }
-      ],
-      "git": "https://github.com/anomalyco/opencode",
-      "taps": [
-        "anomalyco/tap"
-      ]
-    },
     "argo": {
       "providers": [
         {
@@ -2053,15 +2037,6 @@
       ],
       "git": "https://github.com/lkshrk/omni"
     },
-    "opencode": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "anomalyco/tap/opencode"
-        }
-      ],
-      "git": "https://github.com/anomalyco/opencode"
-    },
     "openjdk@21": {
       "providers": [
         {
@@ -2153,15 +2128,6 @@
         }
       ],
       "ignore": true
-    },
-    "pilot": {
-      "providers": [
-        {
-          "provider": "brew",
-          "package": "pilot"
-        }
-      ],
-      "git": "https://github.com/qf-studio/pilot"
     },
     "pinentry-mac": {
       "providers": [

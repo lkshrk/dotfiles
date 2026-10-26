@@ -14,6 +14,5 @@ targets:
 # apm marketplace add revfactory/harness --name harness-marketplace
 # apm marketplace add ayghri/i-have-adhd --name i-have-adhd
 # apm marketplace add https://api.ai.h-cloud.lan/claude-code/marketplace.json --name litellm
-# apm marketplace add https://github.com/lkshrk/agent-marketplace.git --name lkshrk
 # apm marketplace add openai/codex-plugin-cc --name openai-codex
 # apm marketplace add https://github.com/DietrichGebert/ponytail.git --name ponytail

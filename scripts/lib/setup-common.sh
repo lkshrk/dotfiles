@@ -13,15 +13,9 @@ warn() { say "${c_yel}!${c_off} $*" >&2; }
 die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 have() { command -v "$1" >/dev/null 2>&1; }
 
-# Call in a subshell: the EXIT trap detaches volatile dots again when that subshell ends.
 omni_bootstrap_dots() {
-  local volatile="$REPO_DIR/scripts/volatile-dots.sh"
-  bash "$volatile" detach || return
-  trap 'bash "$REPO_DIR/scripts/volatile-dots.sh" detach' EXIT
-  bash "$volatile" prepare || return
   step "omni bootstrap"
-  command omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import || return
-  bash "$volatile" detach
+  command omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
 }
 
 # Returns non-zero only when the vault stays locked; a missing LAN CA just warns.

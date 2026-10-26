@@ -17,8 +17,6 @@ Usage:
 Options:
   --macos-defaults      Run scripts/macos-defaults.sh after Omni bootstrap.
   -h, --help            Show this help.
-
-Linux workspaces use ./setup-coder-dots.sh (auto-code-env installs tool stacks separately).
 USAGE
 }
 
@@ -61,7 +59,7 @@ ensure_omni_version() {
 }
 
 OS="$(uname -s)"
-[[ "$OS" == "Darwin" ]] || die "setup.sh is macOS-only; use ./setup-coder-dots.sh for Linux workspaces"
+[[ "$OS" == "Darwin" ]] || die "setup.sh is macOS-only"
 
 warm_admin_session() {
   [[ -t 0 && -t 1 ]] || {
