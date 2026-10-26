@@ -86,7 +86,10 @@ hl.on("window.close", function(w)
 end)
 
 -- A config reload starts with empty tables; windows already open count as long settled.
-for _, w in ipairs(hl.get_windows()) do
+-- Counted, not ipairs: omarchy-menu-keybindings runs this config against a stub whose every index is non-nil.
+local open_windows = hl.get_windows()
+for i = 1, #open_windows do
+  local w = open_windows[i]
   if w.mapped and w.address then
     generation[w.address], settled[w.address] = 1, true
     opened[w.address] = os.time() - math.ceil(C.remember_after_ms / 1000)

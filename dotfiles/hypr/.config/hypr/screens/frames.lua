@@ -19,9 +19,11 @@ local function multi(w)
   return C.multi_window[w.class] == true
 end
 
+-- Counted like util.lua's load-time loop, for the keybinding menu's config scan.
 local function monitors()
-  local list = {}
-  for _, m in ipairs(hl.get_monitors()) do
+  local list, all = {}, hl.get_monitors()
+  for i = 1, #all do
+    local m = all[i]
     local width, height = m.width / m.scale, m.height / m.scale
     if m.transform % 2 == 1 then width, height = height, width end
     list[#list + 1] = { name = m.name, x = m.x, y = m.y, w = width, h = height }
