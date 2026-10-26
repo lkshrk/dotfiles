@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Usage: battlenet focus | launch <exec-command> | exit; tray actions for the Wine Battle.net client.
+set -euo pipefail
+
+PREFIX="$HOME/Games/battlenet"
+CLIENT="$PREFIX/drive_c/Program Files (x86)/Battle.net/Battle.net.exe"
+
+case ${1:-} in
+  focus)
+    address=$(hyprctl clients -j | jq -r 'first(.[] | select(.class == "steam_app_battlenet" and .title == "Battle.net"
+      and .mapped and (.tags | index("tray-menu*") | not)) | .address) // empty')
+    # Focus without warping the pointer away from the bar.
+    [[ -n $address ]] && exec hyprctl eval "hl.config({ cursor = { no_warps = true } })
+      hl.dispatch(hl.dsp.focus({ window = \"address:$address\" }))
+      hl.config({ cursor = { no_warps = $(hyprctl -j getoption cursor:no_warps | jq .bool) } })"
+    # A client hidden in the tray has no window; starting the launcher again brings it back.
+    exec gtk-launch battlenet
+    ;;
+  launch)
+    # A second client hands --exec to the running one and exits.
+    exec env WINEPREFIX="$PREFIX" PROTONPATH=GE-Proton GAMEID=umu-battlenet PROTON_VERB=run PROTON_USE_XALIA=0 \
+      umu-run "$CLIENT" --exec="${2:?exec command required}"
+    ;;
+  exit)
+    exec pkill -f 'Battle\.net\\Battle\.net\.exe'
+    ;;
+  *)
+    echo "Usage: battlenet focus | launch <exec-command> | exit" >&2
+    exit 1
+    ;;
+esac

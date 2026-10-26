@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Usage: tray-context-menu <item-id> calls the SNI ContextMenu method of the tray item with that Id at the cursor.
+set -euo pipefail
+
+id=${1:?item id required}
+
+for item in $(busctl --user -j get-property org.kde.StatusNotifierWatcher /StatusNotifierWatcher \
+  org.kde.StatusNotifierWatcher RegisteredStatusNotifierItems | jq -r '.data[]'); do
+  service=${item%%/*}
+  path=/${item#*/}
+  [[ $(busctl --user -j get-property "$service" "$path" org.kde.StatusNotifierItem Id 2>/dev/null | jq -r .data) == "$id" ]] || continue
+
+  pid=$(busctl --user call org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus \
+    GetConnectionUnixProcessID s "$service" | awk '{print $2}')
+  # The menu opens as a window of the app; Hyprland then keeps it at the cursor instead of the app's rules.
+  hyprctl eval "if tray_menu_expected then tray_menu_expected($pid) end" >/dev/null || true
+  read -r x y < <(hyprctl cursorpos | tr -d ,)
+  exec busctl --user call "$service" "$path" org.kde.StatusNotifierItem ContextMenu ii "$x" "$y"
+done
+
+echo "tray-context-menu: no tray item with id $id" >&2
+exit 1
