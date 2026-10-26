@@ -169,21 +169,22 @@ Item {
   }
 
   // heuristicLookup misses classes that differ from the entry id (helium-browser, web apps, OBS), so StartupWMClass wins.
-  // Launchers share their class with the games they start (Battle.net, Proton), so an entry named like the window wins.
+  // Launchers share their class with the games they start (Battle.net, Proton), so an entry whose id is the
+  // window title (world-of-warcraft.desktop) wins; byId also finds NoDisplay entries, which applications omits.
   function entryFor(cls, title) {
     var lower = cls.toLowerCase()
+    if (title) {
+      var named = DesktopEntries.byId(title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""))
+      if (named && String(named.startupClass || "").toLowerCase() === lower) return named
+    }
     var apps = DesktopEntries.applications.values || []
-    var byClass = null
     var byId = null
     for (var i = 0; i < apps.length; i++) {
       var e = apps[i]
-      if (String(e.startupClass || "").toLowerCase() === lower) {
-        if (title && e.name === title) return e
-        if (!byClass) byClass = e
-      }
+      if (String(e.startupClass || "").toLowerCase() === lower) return e
       if (!byId && String(e.id || "").toLowerCase() === lower) byId = e
     }
-    return byClass || byId || DesktopEntries.heuristicLookup(cls)
+    return byId || DesktopEntries.heuristicLookup(cls)
   }
 
   Component.onCompleted: {
