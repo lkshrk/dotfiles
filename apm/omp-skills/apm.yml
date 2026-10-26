@@ -1,0 +1,4 @@
+name: omp-skills
+version: 1.0.0
+description: Selected debugging, review, and manual response-style skills deployed through Omni's shared agent target.
+# i-have-adhd is vendored unchanged from ayghri/i-have-adhd@1ecea1993b7fce257ffbd686c070948b5e07eda6, without hooks.

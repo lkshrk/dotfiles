@@ -27,6 +27,11 @@ dependencies:
     path: plugins/linear
   - git: lkshrk/agent-stack
     path: plugins/personal
+  - git: lkshrk/agent-stack
+    path: plugins/runner
+  - path: ~/Dev/dotfiles/apm/omp-skills
+    targets:
+    - codex
   - git: mksglu/context-mode
     targets:
     - claude
@@ -48,22 +53,27 @@ dependencies:
     - claude
   mcp:
   - name: codebase-memory-mcp
+    targets: [claude, codex]
     registry: false
     transport: stdio
     command: codebase-memory-mcp
   - name: litellm-tools
+    targets: [claude, codex, omp]
     registry: false
     transport: http
     url: https://api.ai.h-cloud.lan/mcp/
     extra:
       headersHelper: ~/.config/env/bin/litellm-mcp-headers
       http_headers_helper: ~/.config/env/bin/litellm-mcp-headers
+      headersHelperKeys: [x-litellm-api-key]
       required: true
   - name: openaiDeveloperDocs
+    targets: [claude, codex]
     registry: false
     transport: http
     url: https://developers.openai.com/mcp
   - name: shiplight
+    targets: [claude, codex]
     registry: false
     transport: stdio
     command: bunx

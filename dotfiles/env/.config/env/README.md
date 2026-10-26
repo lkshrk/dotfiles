@@ -18,6 +18,34 @@ Claude uses Anthropic Messages, GPT uses OpenAI Responses, and other chat
 models use OpenAI Chat Completions. The default is `local-agents/gpt-astra`.
 For example: `omp --model local-agents/claude-opus`.
 
+OMP's local essentials live in `~/.omp/agent/config.yml`, separately from
+provider definitions in `models.yml`: `default` uses `local-agents/gpt-astra`,
+`smol` uses `local-agents/claude-sonnet:low`, and `slow` uses
+`local-agents/claude-opus:high`. `plan` follows `@slow`, `task` follows
+`@default`, and `commit` follows `@smol`. Bundled agent definitions remain
+unchanged; shared skills load from `~/.agents/skills`.
+Their Omni-managed sources and invocation syntax are documented under
+[Agent skills](../../../../README.md#agent-skills).
+
+APM generates the untracked `~/.omp/agent/mcp.json` from the tracked
+`apm/ai-plugins/apm.yml` declarations. It launches the pinned `context-mode`
+plugin copy and the `litellm-tools` HTTP gateway, preserving both entries'
+`instructions: false`. The gateway exposes Linear, Context7, and SearXNG;
+Context Mode remains local for large-output processing. OMP resolves the
+`x-litellm-api-key` header at connection time by running
+`~/.config/env/bin/litellm-mcp-headers` and extracting that JSON field with
+`jq -er`. This reuses the existing `LITELLM_API`/rbw credential without
+storing it in OMP configuration; it is separate from `LITELLM_API_KEY`.
+
+`~/.omp/agent/AGENTS.md` supplies tool-routing and credential-handling
+guidance. Other clients' MCP configurations are not imported wholesale.
+Run `/mcp reload` in an existing session after changing MCP configuration;
+start a new session to load changed user instructions. Omni's `omp` dots entry
+allowlists only `config.yml`, `models.yml`, and `AGENTS.md` under
+`~/.omp/agent`. Declaring the entry does not adopt or sync those files.
+MCP remains APM-owned; generated hooks/extensions, credentials, sessions and
+runtime databases are excluded from dotfile tracking.
+
 This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 `~/.config/env` by Omni/Stow.
 

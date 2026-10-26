@@ -39,6 +39,16 @@
           ]
         },
         {
+          "name": "omp",
+          "path": "~/.omp/agent",
+          "ignore": [
+            "*",
+            "!/config.yml",
+            "!/models.yml",
+            "!/AGENTS.md"
+          ]
+        },
+        {
           "name": "amp",
           "path": "~/.config/amp",
           "ignored": true

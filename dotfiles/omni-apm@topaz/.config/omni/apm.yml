@@ -6,6 +6,7 @@ dependencies:
 targets:
 - claude
 - codex
+- omp
 
 # apm marketplace add JuliusBrussee/caveman --name caveman
 # apm marketplace add anthropics/claude-plugins-official --name claude-plugins-official
