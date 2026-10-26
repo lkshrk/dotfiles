@@ -2,6 +2,12 @@
 # Print the LiteLLM MCP auth header as JSON for Codex http_headers_helper.
 set -eu
 
+# Codex runs this without XDG_RUNTIME_DIR, and rbw then talks to a fresh, locked agent in /tmp.
+if [ -z "${XDG_RUNTIME_DIR:-}" ] && [ -d "/run/user/$(id -u)" ]; then
+  XDG_RUNTIME_DIR="/run/user/$(id -u)"
+  export XDG_RUNTIME_DIR
+fi
+
 if [ -n "${LITELLM_API:-}" ]; then
   token=$LITELLM_API
 elif command -v rbw >/dev/null 2>&1; then

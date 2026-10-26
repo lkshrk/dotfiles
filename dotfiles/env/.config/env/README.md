@@ -3,13 +3,20 @@
 Shell-neutral environment layout for exported env, PATH, and secret injection.
 
 `claude` and `cc` both launch Claude Code through LiteLLM, using the gateway
-credential from `ENV/llm-gateway`. Override the endpoint with `LITELLM_BASE_URL`.
+credential from `ENV/local-agents`. Override the endpoint with `LITELLM_BASE_URL`.
 Claude uses the system certificate trust without a per-launch CA wrapper; other
 AI clients retain the shared CA helper in `65-ai-certs.zsh` (`OMNI_CA_PATH`).
 
 Codex uses the LiteLLM Responses provider with its existing Astra default.
-Its native token command calls `bin/llm-gateway-token`: an injected
+Its native token command calls `bin/local-agents-token`: an injected
 `LITELLM_API_KEY`, a private token file, or the vault gateway item.
+
+`omp` uses `~/.local/bin/omp` → `bin/omp-local-agents` to inject the same
+`ENV/local-agents` credential as `LITELLM_API_KEY` into the OMP process.
+`~/.omp/agent/models.yml` discovers LiteLLM models under `local-agents`:
+Claude uses Anthropic Messages, GPT uses OpenAI Responses, and other chat
+models use OpenAI Chat Completions. The default is `local-agents/gpt-astra`.
+For example: `omp --model local-agents/claude-opus`.
 
 This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 `~/.config/env` by Omni/Stow.

@@ -179,7 +179,7 @@ chmod +x "$tmpdir/rbw"
 folder_out=$(env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" \
   claude-api \
   -- sh -c 'printf "%s" "$ANTHROPIC_AUTH_TOKEN"')
-if [ "$folder_out" = "args:--folder ENV llm-gateway" ]; then
+if [ "$folder_out" = "args:--folder ENV local-agents" ]; then
   printf '%s\n' 'folder-item=ok'
 else
   printf 'folder-item=unexpected:%s\n' "$folder_out"

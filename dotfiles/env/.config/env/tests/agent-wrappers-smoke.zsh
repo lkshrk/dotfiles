@@ -14,7 +14,7 @@ mkdir -p $bin/norbw $bin/env/bin
 print -r -- '#!/bin/sh
 [ "$*" = "test prompt" ]' > $bin/norbw/codex
 print -r -- '#!/bin/sh
-printf "gateway-key\n"' > $bin/env/bin/llm-gateway-token
+printf "gateway-key\n"' > $bin/env/bin/local-agents-token
 ln -s "$repo/dotfiles/env/.config/env/bin/rbw-env" $bin/env/bin/rbw-env
 ln -s "$repo/dotfiles/env/.config/env/secrets" $bin/env/secrets
 print -r -- '#!/bin/sh
@@ -23,7 +23,7 @@ for a; do :; done
 printf "secret-%s\n" "$a"' > $bin/rbw
 print -r -- '#!/bin/sh
 [ "$*" = "test prompt" ] && [ "$LITELLM_API" = secret-litellm-api ] && [ "${NODE_EXTRA_CA_CERTS:-}" = "$EXPECT_CA" ]' > $bin/codex
-chmod +x $bin/norbw/* $bin/env/bin/llm-gateway-token $bin/rbw $bin/codex
+chmod +x $bin/norbw/* $bin/env/bin/local-agents-token $bin/rbw $bin/codex
 ENV_DIR=$bin/env
 unset HF_TOKEN LITELLM_API CONTEXT7_API_KEY LITELLM_API_KEY
 expect_ca=/test/lan-ca.pem

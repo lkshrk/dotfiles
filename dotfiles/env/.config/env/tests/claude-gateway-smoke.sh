@@ -91,7 +91,7 @@ cat > "$tmpdir/bin/rbw" <<'EOF'
 #!/bin/sh
 case "$1" in
   unlocked) exit 0 ;;
-  get) shift; [ "$*" = '--folder ENV llm-gateway' ] || exit 1; printf test-key ;;
+  get) shift; [ "$*" = '--folder ENV local-agents' ] || exit 1; printf test-key ;;
   *) exit 1 ;;
 esac
 EOF
