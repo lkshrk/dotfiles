@@ -12,13 +12,37 @@ function D.role(win, others, multi)
   return "main"
 end
 
+-- Tabs and newlines would split the key across TSV fields or rows.
 function D.title_key(class, title)
-  if not title or title == "" then return nil end
+  if not class or class == "" or not title or title == "" or title:find("[\t\n]") then return nil end
   return class .. "|" .. title
 end
 
 function D.app_key(class)
+  if not class or class == "" then return nil end
   return class .. "|"
+end
+
+function D.regex_escape(s)
+  return (s:gsub("[%.%(%)%[%]%+%?%*%^%$%|%{%}\\]", "\\%0"))
+end
+
+function D.monitor_for(frame, monitors)
+  for _, m in ipairs(monitors) do
+    if D.fits(frame, m) then return m end
+  end
+end
+
+-- Hyprland applies move/size while mapping, so the window opens at its frame; title frames also stop X11 apps moving themselves.
+function D.frame_rule(class, title, frame, monitor)
+  local match = { class = "^" .. D.regex_escape(class) .. "$" }
+  if title then match.title = "^" .. D.regex_escape(title) .. "$" end
+  return {
+    match = match,
+    size = { frame.w, frame.h },
+    move = { frame.x - monitor.x, frame.y - monitor.y },
+    suppress_event = title and "x11configurerequest" or nil,
+  }
 end
 
 function D.frame(row)

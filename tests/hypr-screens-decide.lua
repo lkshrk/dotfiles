@@ -49,4 +49,27 @@ local pruned = D.prune({ b = { "1", "2", "3", "4", "100" }, c = { "1", "2", "3",
 assert(pruned.b == nil, "prune drops old rows")
 assert(pruned.c ~= nil, "prune keeps recent rows")
 
+assert(D.title_key(nil, "x") == nil, "a window without a class has no key")
+assert(D.app_key(nil) == nil)
+assert(D.title_key("steam", "a\tb") == nil, "tabs would break the TSV row")
+assert(D.title_key("steam", "a\nb") == nil)
+
+assert(D.regex_escape("Battle.net (beta) [x]+?*^$|{}\\") == "Battle\\.net \\(beta\\) \\[x\\]\\+\\?\\*\\^\\$\\|\\{\\}\\\\")
+
+local monitors = { { name = "DP-1", x = 1440, y = 1440, w = 3072, h = 1728 }, { name = "DP-3", x = 1696, y = 0, w = 2560, h = 1440 } }
+assert(D.monitor_for({ x = 2990, y = 1678, w = 1516, h = 934 }, monitors).name == "DP-1")
+assert(D.monitor_for({ x = 9000, y = 9000, w = 10, h = 10 }, monitors) == nil, "a frame on no monitor has no rule")
+
+local title_rule = D.frame_rule("steam_app_battlenet", "Battle.net", { x = 2990, y = 1678, w = 1516, h = 934 }, monitors[1])
+assert(title_rule.match.class == "^steam_app_battlenet$")
+assert(title_rule.match.title == "^Battle\\.net$")
+assert(title_rule.size[1] == 1516 and title_rule.size[2] == 934)
+assert(title_rule.move[1] == 1550 and title_rule.move[2] == 238, "move is monitor-local")
+assert(title_rule.suppress_event == "x11configurerequest", "a remembered title frame blocks the app from moving itself")
+assert(title_rule.float == nil, "frame rules never float a window themselves")
+
+local app_rule = D.frame_rule("steam", nil, { x = 1500, y = 1500, w = 800, h = 600 }, monitors[1])
+assert(app_rule.match.title == nil)
+assert(app_rule.suppress_event == nil, "the app-wide frame must not freeze dialogs that size themselves")
+
 print("ok")
