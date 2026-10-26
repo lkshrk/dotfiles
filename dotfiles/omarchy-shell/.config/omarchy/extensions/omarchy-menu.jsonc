@@ -35,4 +35,7 @@
 
   // Omarchy's list shows its Super defaults, which keyd leaves no key for; this one lists bindings.lua.
   "learn.keybindings": {"action":"~/.config/hypr/scripts/keybindings"},
+
+  // Quotatank is a bar plugin, not an app, so it only appears here through its IPC handler.
+  "quota": {"icon":"󰊚","label":"LLM Quota","description":"Quotatank usage and limits","aliases":["quotatank"],"action":"quickshell ipc -p /usr/share/omarchy/shell call janitorhead.quotatank toggle"},
 }
