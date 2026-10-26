@@ -7,6 +7,7 @@ require("default.hypr.omarchy")
 
 require("hypr.monitors")
 require("hypr.rules")
+require("hypr.traymenu")
 require("hypr.input")
 require("hypr.bindings")
 require("hypr.looknfeel")

@@ -3,6 +3,8 @@ local C = require("hypr.screens.config")
 local U = require("hypr.screens.util")
 local D = require("hypr.screens.decide")
 
+local F = {}
+
 -- After a window closes, Hyprland reports focus with a freed window whose fields are all nil.
 local function live(w)
   return w ~= nil and w.address ~= nil
@@ -123,6 +125,18 @@ end
 
 load_rules()
 
+-- Windows opened meanwhile keep their own size; reloading recreates the dropped rules in app-then-title order.
+function F.suspend(class, ms)
+  local dropped = false
+  for key in pairs(rules) do
+    if split(key) == class then
+      drop(key)
+      dropped = true
+    end
+  end
+  if dropped then hl.timer(load_rules, { timeout = ms, type = "oneshot" }) end
+end
+
 -- A matching rule placed the window, so its row counts as used.
 hl.on("window.open", function(w)
   if not live(w) then return end
@@ -159,3 +173,5 @@ hl.timer(function()
   local w = hl.get_active_window()
   if live(w) then remember(w) end
 end, { timeout = C.frame_snapshot_ms, type = "repeat" })
+
+return F

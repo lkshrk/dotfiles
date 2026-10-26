@@ -24,7 +24,7 @@ end
 
 function U.transient(w)
   return U.has_tag(w, "dialog") or U.has_tag(w, "pip") or U.has_tag(w, "floating-window")
-    or (w.class or ""):match("^org%.omarchy%.") ~= nil or U.has_tag(w, "secondary")
+    or (w.class or ""):match("^org%.omarchy%.") ~= nil or U.has_tag(w, "secondary") or U.has_tag(w, "tray-menu")
 end
 
 -- Workspace layout or slots place these windows; remembered frames are for the rest.
