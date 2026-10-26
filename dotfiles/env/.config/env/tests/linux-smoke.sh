@@ -44,6 +44,7 @@ run_profile_probe() {
     ENV_DIR="$ENV_DIR" \
     ENV_NEXT_OS=linux \
     XDG_RUNTIME_DIR="$runtime" \
+    TMPDIR="$tmpdir" \
     EXPECTED_SSH_AUTH_SOCK="$expected_sock" \
     SSH_AUTH_SOCK="$home/existing-agent.sock" \
     RBW_SSH_AUTH_SOCK="$home/missing-rbw-agent.sock" \

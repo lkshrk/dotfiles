@@ -4,6 +4,8 @@ set -eu
 ENV_DIR="${ENV_DIR:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}"
 export ENV_DIR
 
+[ "$(uname -s)" = Darwin ] || exec sh "$ENV_DIR/tests/linux-smoke.sh"
+
 tmpdir=
 nvm_probe_dir=
 nvm_default_probe_dir=
