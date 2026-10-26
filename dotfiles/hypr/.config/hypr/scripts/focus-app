@@ -58,6 +58,10 @@ if [ -z "$NEXT" ]; then
   exit 0
 fi
 
+# A hidden window goes back to its app's workspace first; focusing it in place would open the scratchpad on whichever screen is active.
+if hyprctl clients -j | jq -e --arg a "$NEXT" 'any(.[]; .address == $a and (.workspace.name | startswith("special:")))' >/dev/null; then
+  hyprctl eval "unhide_window('$NEXT')" >/dev/null
+fi
 hyprctl dispatch "hl.dsp.focus({ window = \"address:$NEXT\" })" >/dev/null
 # Focus alone leaves a floating window behind any it overlaps.
 hyprctl dispatch "hl.dsp.window.alter_zorder({ mode = \"top\", window = \"address:$NEXT\" })" >/dev/null

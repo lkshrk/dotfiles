@@ -96,15 +96,29 @@ hl.on("window.title", function(w)
   if w and w.class == "helium" and w.mapped and w.title == C.helium_main_title then place_helium(w) end
 end)
 
+local function home_of(w)
+  local name = U.app(w)
+  if name == "helium" then return helium_home(w) end
+  return C.homes[name] or (not w.floating and "1" or nil)
+end
+
+-- Called by scripts/focus-app through hyprctl eval when an app key picks a hidden window, like a Dock click on macOS.
+function unhide_window(address)
+  local w = hl.get_window("address:" .. address)
+  if not w or not w.mapped then return end
+  local home = home_of(w) or "1"
+  U.state.placing = true
+  U.move_to(w, home)
+  U.state.placing = false
+  W.arrive(hl.get_window("address:" .. address) or w)
+end
+
 function W.place_all()
   local last = {}
   U.state.placing = true
   for _, w in ipairs(hl.get_windows()) do
     if w.mapped and w.workspace and not w.workspace.special and not U.transient(w) then
-      local name = U.app(w)
-      local home = C.homes[name]
-      if name == "helium" then home = helium_home(w) end
-      if not home and not w.floating then home = "1" end
+      local home = home_of(w)
       if home then
         U.move_to(w, home)
         if not C.floating_workspaces[home] then
