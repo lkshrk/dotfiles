@@ -82,8 +82,10 @@
         },
         {
           "id": "janitorhead.quotatank",
+          "accountModes": "{\"claude\":\"single\"}",
           "barAccountMode": "chips",
           "barDisplayMode": "Percentages",
+          "barMaxChips": 4,
           "barProviders": [
             "claude",
             "codex",
@@ -135,10 +137,13 @@
             "mimo",
             "opencode-go"
           ],
+          "barScreens": "[\"Odyssey G80SH\"]",
+          "barShowPeriods": false,
           "barShowResets": false,
-          "barWindow": "weekly",
-          "barWindowSecondary": "none",
+          "barWindow": "session",
+          "barWindowSecondary": "weekly",
           "cliproxyKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-cc43901ae7b64bec8f478966caa6c49d.key",
+          "cliproxyUnmonitored": "[\"opencode-go\"]",
           "cliproxyUrl": "https://proxy.ai.h-cloud.lan",
           "dismissedProviders": [
             "copilot"
@@ -163,18 +168,13 @@
             "huggingface",
             "openrouter"
           ],
+          "hiddenAccounts": "{\"codex\":[\"main\"]}",
           "hideExhaustedProviders": true,
           "openrouterKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-42eee191a4124a3a8d8a1b46261e4d83.key",
           "providerColors": false,
-          "squareUsageCards": true,
-          "usageSource": "both",
-          "barShowPeriods": false,
-          "cliproxyUnmonitored": "[\"opencode-go\"]",
           "providerQuotaModes": "{\"claude\":\"Used\",\"openrouter\":\"Remaining\"}",
-          "accountModes": "{\"claude\":\"single\"}",
-          "hiddenAccounts": "{\"codex\":[\"main\"]}",
-          "barMaxChips": 4,
-          "barScreens": "[\"Odyssey G80SH\"]"
+          "squareUsageCards": true,
+          "usageSource": "both"
         }
       ]
     },
