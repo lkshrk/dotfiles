@@ -3,16 +3,8 @@
 set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-settings="$repo_dir/dotfiles/omni/.config/omni/settings.json"
 tools="$repo_dir/dotfiles/omni/.config/omni/settings.d/tools.json"
 groups="$repo_dir/dotfiles/omni/.config/omni/settings.d/groups.json"
-
-jq -e '
-  .host_settings."coder-components".provider_priority as $providers
-  | ($providers | index("script")) as $script
-  | ($providers | index("apt")) as $apt
-  | $script != null and $apt != null and $script < $apt
-' "$settings" >/dev/null
 
 jq -e '
   .tools.ffmpeg.providers[]
@@ -65,4 +57,4 @@ jq -e '
     )
 ' "$tools" >/dev/null
 
-printf 'PASS: Coder has static and Linux tool-provider fallbacks\n'
+printf 'PASS: tools have static and Linux provider fallbacks\n'

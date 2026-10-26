@@ -38,9 +38,7 @@ jq -e '
 
 if grep -Eq \
   'agents-skill-lock|plugins/installed_plugins\.json|!dotfiles/claude/\.claude/plugins/|claude/\.claude/(mcp\.json|skills/)|!/mcp\.json' \
-  "$repo_dir/.gitignore" \
-  "$repo_dir/scripts/volatile-dots.txt" \
-  "$repo_dir/setup-coder-dots.sh"; then
+  "$repo_dir/.gitignore"; then
   fail "legacy agent-state sync reference remains"
 fi
 

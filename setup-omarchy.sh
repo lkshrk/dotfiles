@@ -53,18 +53,6 @@ ok "$(command omni --version)"
 
 first_run=0
 [[ -e "$FIRST_RUN_MARKER" ]] || first_run=1
-if ((first_run)); then
-  step "first run: take the repo's configs"
-  stamp=$(date +%Y%m%d%H%M%S)
-  while IFS= read -r entry; do
-    rel="${entry#*/}"
-    target="$HOME/${rel#*/}"
-    if [[ -f "$target" && ! -L "$target" ]]; then
-      mv "$target" "$target.pre-dotfiles.$stamp"
-      ok "kept the default as ${target/#"$HOME"/\~}.pre-dotfiles.$stamp"
-    fi
-  done < <(list_entries "$REPO_DIR/scripts/volatile-dots.txt")
-fi
 
 tools_failed=0
 rc=0
@@ -93,7 +81,6 @@ if ((first_run)); then
   for name in "${conflicts[@]}"; do
     omni --yes dots resolve "$name" --use-repo
   done
-  bash "$REPO_DIR/scripts/volatile-dots.sh" detach
   mkdir -p "$STATE_DIR"
   touch "$FIRST_RUN_MARKER"
 fi

@@ -1,7 +1,0 @@
-# Repo-relative dotfiles modified by workspace setup or their tools. Kept as
-# real copies, not managed by omni; templates/ holds the shared defaults.
-templates/claude/.claude/settings.json
-templates/claude/.claude/CLAUDE.md
-templates/codex/.codex/config.toml
-templates/codex/.codex/rules/default.rules
-templates/codex/.codex/AGENTS.md

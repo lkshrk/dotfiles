@@ -57,10 +57,6 @@ dotfiles/nvim/.config/nvim/lazy-lock.json
 dotfiles/nvim/.config/nvim/LICENSE.md
 dotfiles/nvim/.config/nvim/README.md
 
-# opencode runtime backups
-dotfiles/opencode/.config/opencode/*.backup-*
-dotfiles/opencode/.config/opencode/*.bak.*
-
 # omni runtime; keep tracked settings.json + settings.d fragments
 dotfiles/omni/.config/omni/*
 !dotfiles/omni/.config/omni/settings.json

@@ -141,22 +141,6 @@
       "dots_repo": "~/Developer/priv/dotfiles",
       "dots_disabled": false
     },
-    "coder-components": {
-      "dots_repo": "~/dotfiles",
-      "dots_disabled": false,
-      "disabled_providers": [
-        "brew"
-      ],
-      "provider_priority": [
-        "bun",
-        "uv",
-        "script",
-        "apt",
-        "npm",
-        "pnpm",
-        "pip"
-      ]
-    },
     "towerr": {
       "dots_repo": "~/Dev/dotfiles",
       "dots_disabled": false,

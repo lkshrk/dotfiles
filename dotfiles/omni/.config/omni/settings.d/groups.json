@@ -6,7 +6,6 @@
         "claude-code",
         "coder",
         "@openai/codex",
-        "anomalyco/tap/opencode-v2",
         "obsidian-wiki"
       ]
     },
@@ -299,7 +298,6 @@
       "name": "apm3ljhmvg7xgcf",
       "special": "host",
       "tools": [
-        "opencode",
         "awscli",
         "azure-cli",
         "fzf",
@@ -355,7 +353,6 @@
         "duckdb",
         "duti",
         "osmium-tool",
-        "pilot",
         "prometheus",
         "rclone",
         "sbx",
