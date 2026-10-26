@@ -84,7 +84,9 @@ hyper("P", "Toggle stay on top", function()
   if not w then return end
   if w.pinned then
     hl.dispatch(hl.dsp.window.pin({ window = w }))
-    for _, tag in ipairs(type(w.tags) == "table" and w.tags or {}) do
+    local tags = w.tags
+    if type(tags) ~= "table" then tags = {} end
+    for _, tag in ipairs(tags) do
       if tag == "pinned-tiled" or tag == "pinned-tiled*" then
         hl.dispatch(hl.dsp.window.tag({ tag = "-pinned-tiled", window = w }))
         hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))
