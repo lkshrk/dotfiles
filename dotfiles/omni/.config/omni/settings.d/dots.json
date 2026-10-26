@@ -294,6 +294,7 @@
             "/extensions/*",
             "!/extensions/omarchy-menu.jsonc",
             "!/plugins/",
+            "/plugins/janitorhead.quotatank/",
             "!/scripts/",
             "!/shared/",
             "!/webapp-links/",
