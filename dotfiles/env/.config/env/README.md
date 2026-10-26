@@ -46,6 +46,11 @@ allowlists only `config.yml`, `models.yml`, and `AGENTS.md` under
 MCP remains APM-owned; generated hooks/extensions, credentials, sessions and
 runtime databases are excluded from dotfile tracking.
 
+The `omp` dots entry declares `config.yml`, `models.yml`, and `AGENTS.md` only.
+It remains local-only until an explicit dots adoption/sync action; it never
+tracks APM-generated MCP, extension, hook, credential, session, or database
+state.
+
 `opencode` and `oc` use `~/.local/bin/opencode` → `bin/opencode-local-agents`,
 which injects the same credential as `LITELLM_API_KEY` and executes
 `/usr/bin/opencode` (override with `OPENCODE_BIN`). There is no subscription

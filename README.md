@@ -153,7 +153,7 @@ Manage agent dependencies through `omni agents sync`, not direct APM installs
 or copies into live skill directories. The host template points to
 `apm/ai-plugins/apm.yml`; its `codex` target deploys shared skills into
 `~/.agents/skills`, which OMP also discovers. The native `omp` target manages
-MCP through Omni's pinned APM fork (`0.35.0+omni.2`, based on release v0.35.0).
+MCP through Omni's pinned APM fork (`0.35.0+omni.4`, based on release v0.35.0).
 Existing Claude-targeted packages remain separate.
 
 - `lkshrk/agent-stack` supplies the `linear`, `personal`, and `runner` packages.
@@ -188,6 +188,13 @@ Do not dotfile-manage `~/.omp/agent/mcp.json` or the deployed shared skills.
 APM owns their deployment; omp keeps its local enable/disable controls and
 per-server instruction preferences. Changing an existing unmanaged connection
 requires explicit resolution before APM can adopt it.
+
+Generic omp extensions and portable command hooks are APM-owned runtime output.
+Native package extensions require explicit `extensions` approval and can use
+omp's native ExtensionAPI. Portable hooks deliberately support only the shared
+command-event contract; unsupported lifecycle and native tool shapes fail before
+deployment. Do not add generated `.omp/extensions/`, `.omp/hooks.json`, or
+`.omp/apm-hooks-runtime.json` to dots.
 
 Polly's `investigate`, `cross-review`, and `fanout` bundle is not deployed here:
 it requires the Omnigent server's orchestration tools.
