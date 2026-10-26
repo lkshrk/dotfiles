@@ -26,7 +26,7 @@ local apps = {
   { "dev.zed.Zed", "dev.zed.Zed-Preview", "dev.zed.Zed-Nightly", workspace = "4", multi = true },
   { "chrome-linear.app__-Default", workspace = "5" },
   { "discord", workspace = "6", slot = { row = TOP } },
-  { "chatgpt", workspace = "6", slot = { row = MID } },
+  { "chrome-chatgpt.com__-Default", workspace = "6", slot = { row = MID } },
   { "signal", "org.telegram.desktop", workspace = "6", slot = { row = BOT } },
   { "com.chatterino.chatterino", workspace = "6", slot = { row = BOT, col = 2, cols = 1, above = true } },
   { "chrome-localhost__-Default", workspace = "7", slot = { row = TOP } },
