@@ -20,6 +20,6 @@ Durable = a root cause, a trap, a decision with its reason, a working procedure,
 
 1. Save the evidence as `~/knowledge/raw/sessions/<YYYY-MM-DD>-<repo>-<slug>.md` (what happened, error text, fix, commit or file references).
 2. Edit the matching page (or add one) under `projects/<repo>/<category>/` per the vault's `AGENTS.md`: frontmatter with `repo`, `paths`, `sources`, `lifecycle: draft`; link it from the project overview.
-3. `cd ~/knowledge && obsidian-wiki memory sync INGEST source=<raw path> project=<repo> --vault "$PWD" && git add -A && git commit -m "ingest: <repo> <slug>" && scripts/sync.sh` — straight to `main`; the vault's hooks run the lints and secret scan, and `sync.sh` rebases and pushes.
+3. `cd ~/knowledge && obsidian-wiki memory sync INGEST source=<raw path> project=<repo> --vault "$PWD" && git add <raw path> <pages you wrote or edited> index.md log.md hot.md && git commit -m "ingest: <repo> <slug>" && scripts/sync.sh` — straight to `main`; the vault's hooks run the lints and secret scan, and `sync.sh` rebases and pushes. Stage only your own files (including the project overview if you linked from it): other sessions write to the vault at the same time, and `git add -A` would commit their unfinished work under your message.
 
 Never put secrets, tokens, private hostnames or personal data in the vault. How the user likes to work stays in Claude's own memory, not in the vault.
