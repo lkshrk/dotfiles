@@ -82,7 +82,7 @@
         },
         {
           "id": "janitorhead.quotatank",
-          "accountModes": "{\"claude\":\"single\"}",
+          "accountModes": "{\"claude\":\"single\",\"codex\":\"single\"}",
           "barAccountMode": "chips",
           "barDisplayMode": "Percentages",
           "barMaxChips": 4,
@@ -174,7 +174,8 @@
           "providerColors": false,
           "providerQuotaModes": "{\"claude\":\"Used\",\"openrouter\":\"Remaining\"}",
           "squareUsageCards": true,
-          "usageSource": "both"
+          "usageSource": "both",
+          "barProviderLimits": "{\"codex\":{\"bottom\":\"weekly\"}}"
         }
       ]
     },
