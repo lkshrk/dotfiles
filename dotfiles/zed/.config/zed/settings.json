@@ -7,48 +7,220 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "agent_servers": {
+    "opencode-v2": {
+      "type": "registry"
+    }
+  },
+  "agent": {
+    "default_model": {
+      "provider": "Lite-LLM-Anthropic",
+      "model": "claude-sonnet"
+    },
+    "thread_summary_model": {
+      "provider": "Lite-LLM-Anthropic",
+      "model": "claude-haiku"
+    },
+    "commit_message_model": {
+      "provider": "Lite-LLM-Anthropic",
+      "model": "claude-haiku"
+    },
+    "inline_assistant_model": {
+      "provider": "Lite-LLM-Anthropic",
+      "model": "claude-sonnet"
+    }
+  },
+  "language_models": {
+    "anthropic_compatible": {
+      "Lite-LLM-Anthropic": {
+        "api_url": "https://api.ai.h-cloud.io",
+        "available_models": [
+          {
+            "name": "claude-opus",
+            "max_tokens": 1000000,
+            "max_output_tokens": 128000,
+            "mode": {
+              "type": "adaptive"
+            },
+            "extra_beta_headers": [],
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "prompt_caching": true
+            }
+          },
+          {
+            "name": "claude-fable",
+            "max_tokens": 1000000,
+            "max_output_tokens": 128000,
+            "mode": {
+              "type": "adaptive"
+            },
+            "extra_beta_headers": [],
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "prompt_caching": true
+            }
+          },
+          {
+            "name": "claude-sonnet",
+            "max_tokens": 1000000,
+            "max_output_tokens": 128000,
+            "mode": {
+              "type": "adaptive"
+            },
+            "extra_beta_headers": [],
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "prompt_caching": true
+            }
+          },
+          {
+            "name": "claude-sonnet-high",
+            "max_tokens": 1000000,
+            "max_output_tokens": 128000,
+            "mode": {
+              "type": "adaptive"
+            },
+            "extra_beta_headers": [],
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "prompt_caching": true
+            }
+          },
+          {
+            "name": "claude-haiku",
+            "max_tokens": 200000,
+            "max_output_tokens": 64000,
+            "mode": {
+              "type": "adaptive"
+            },
+            "extra_beta_headers": [],
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "prompt_caching": true
+            }
+          }
+        ]
+      }
+    },
+    "openai_compatible": {
+      "Lite-LLM-OpenAI": {
+        "api_url": "https://api.ai.h-cloud.io/v1",
+        "available_models": [
+          {
+            "name": "gpt-astra",
+            "max_tokens": 922000,
+            "max_output_tokens": 128000,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": true,
+              "prompt_cache_key": true,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false
+            }
+          },
+          {
+            "name": "gpt-sol",
+            "max_tokens": 922000,
+            "max_output_tokens": 128000,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": true,
+              "prompt_cache_key": true,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false
+            }
+          },
+          {
+            "name": "gpt-terra",
+            "max_tokens": 922000,
+            "max_output_tokens": 128000,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": true,
+              "prompt_cache_key": true,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false
+            }
+          },
+          {
+            "name": "gpt-luna",
+            "max_tokens": 922000,
+            "max_output_tokens": 128000,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": true,
+              "prompt_cache_key": true,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false
+            }
+          },
+          {
+            "name": "deepseek-flash",
+            "max_tokens": 1048576,
+            "max_output_tokens": 393216,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": true,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false
+            }
+          },
+          {
+            "name": "glm-flash",
+            "max_tokens": 1048576,
+            "max_output_tokens": 131072,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": true,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false
+            }
+          },
+          {
+            "name": "qwen-flash",
+            "max_tokens": 1000000,
+            "max_output_tokens": 131072,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": true,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false
+            }
+          }
+        ]
+      }
+    },
+    "opencode": {
+      "show_zen_models": false
+    }
+  },
   "edit_predictions": {
     "provider": "zed",
   },
-  "agent_servers": {
-    "mistral-vibe": {
-      "type": "registry"
-    },
-    "codex-acp": {
-      "type": "registry",
-    },
-    "kimi": {
-      "type": "registry",
-    },
-    "opencode": {
-      "favorite_models": ["opencode/big-pickle", "opencode/minimax-m2.5-free"],
-      "type": "registry",
-    },
-  },
   "show_edit_predictions": false,
-  "agent": {
-    "default_profile": "ask",
-    "default_model": {
-      "effort": "low",
-      "provider": "openai-subscribed",
-      "model": "gpt-5.6-sol",
-      "enable_thinking": true,
-    },
-    "favorite_models": [
-      {
-        "provider": "openrouter",
-        "model": "openrouter/hunter-alpha",
-        "enable_thinking": false
-      },
-      {
-        "provider": "openai-subscribed",
-        "model": "gpt-5.6-sol",
-        "enable_thinking": true,
-        "effort": "low"
-      }
-    ],
-    "model_parameters": [],
-  },
   "ssh_connections": [
     {
       "host": "hcloud",
