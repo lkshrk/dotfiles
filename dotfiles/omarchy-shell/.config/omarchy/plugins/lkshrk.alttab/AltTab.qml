@@ -162,23 +162,28 @@ Item {
 
   function iconFor(toplevel) {
     var cls = appClass(toplevel)
-    var entry = cls ? entryFor(cls) : null
+    var entry = cls ? entryFor(cls, toplevel.title || "") : null
     var icon = entry && entry.icon ? entry.icon : cls.toLowerCase()
     if (icon.charAt(0) === "/") return "file://" + icon
     return Quickshell.iconPath(icon, "application-x-executable")
   }
 
   // heuristicLookup misses classes that differ from the entry id (helium-browser, web apps, OBS), so StartupWMClass wins.
-  function entryFor(cls) {
+  // Launchers share their class with the games they start (Battle.net, Proton), so an entry named like the window wins.
+  function entryFor(cls, title) {
     var lower = cls.toLowerCase()
     var apps = DesktopEntries.applications.values || []
+    var byClass = null
     var byId = null
     for (var i = 0; i < apps.length; i++) {
       var e = apps[i]
-      if (String(e.startupClass || "").toLowerCase() === lower) return e
+      if (String(e.startupClass || "").toLowerCase() === lower) {
+        if (title && e.name === title) return e
+        if (!byClass) byClass = e
+      }
       if (!byId && String(e.id || "").toLowerCase() === lower) byId = e
     }
-    return byId || DesktopEntries.heuristicLookup(cls)
+    return byClass || byId || DesktopEntries.heuristicLookup(cls)
   }
 
   Component.onCompleted: {
