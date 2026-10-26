@@ -51,8 +51,14 @@ end
 -- Workspaces whose windows stay floating when put back in place.
 C.floating_workspaces = { ["6"] = true, ["7"] = true, ["9"] = true }
 
--- Update splashes open before the main window under the same class, so they must not count as the primary window.
-C.splash_titles = { discord = "^Discord Updater$" }
+-- A window open this long is no splash; a newer window of a single-window app then counts as an extra.
+C.settle_ms = 1500
+-- Only a window open this long may set its app's frame, so a login box cannot become it.
+C.remember_after_ms = 10000
+C.frame_snapshot_ms = 5000
+-- X11 launchers place themselves just after mapping, so remembered frames wait this long.
+C.frame_open_delay_ms = 500
+C.frame_max_age_days = 60
 
 -- Helium windows look identical; the one named this (Name window…) lives on main, the rest on the portrait screen.
 C.helium_main_title = "Main"

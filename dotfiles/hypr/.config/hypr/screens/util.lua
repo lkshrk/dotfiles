@@ -1,5 +1,6 @@
 -- Window and geometry helpers shared by the screen modules.
 local C = require("hypr.screens.config")
+local D = require("hypr.screens.decide")
 
 local U = {}
 
@@ -21,30 +22,60 @@ function U.has_tag(w, tag)
   return false
 end
 
-local function splash(w)
-  local pattern = C.splash_titles[w.class or ""]
-  return pattern ~= nil and (w.title or ""):match(pattern) ~= nil
-end
-
-local function primary_of(class)
-  local first
-  for _, w in ipairs(hl.get_windows({ class = class })) do
-    if w.mapped and w.class == class and not splash(w) and (not first or w.stable_id < first.stable_id) then first = w end
-  end
-  return first
-end
-
-function U.secondary(w)
-  if U.has_tag(w, "secondary") then return true end
-  if C.multi_window[w.class] or splash(w) then return false end
-  local first = primary_of(w.class)
-  return first ~= nil and first ~= w
-end
-
 function U.transient(w)
   return U.has_tag(w, "dialog") or U.has_tag(w, "pip") or U.has_tag(w, "floating-window")
     or (w.class or ""):match("^org%.omarchy%.") ~= nil or U.has_tag(w, "secondary")
 end
+
+-- Workspace layout or slots place these windows; remembered frames are for the rest.
+function U.layout_placed(w)
+  local name = w.workspace and w.workspace.name
+  return not w.floating or C.side_workspaces[name] ~= nil or name == C.top_workspace
+end
+
+local roles, opened, settled, role_fns = {}, {}, {}, {}
+
+function U.role(address) return roles[address] end
+function U.settled(address) return settled[address] == true end
+function U.on_role(fn) role_fns[#role_fns + 1] = fn end
+
+function U.age_ms(address)
+  local t = opened[address]
+  return t and (os.time() - t) * 1000 or nil
+end
+
+local function classify(w)
+  local others = {}
+  for _, o in ipairs(hl.get_windows()) do
+    if o.mapped and o.address ~= w.address then
+      others[#others + 1] = { address = o.address, class = o.class, stable_id = o.stable_id, transient = U.transient(o) }
+    end
+  end
+  return D.role(w, others, C.multi_window[w.class])
+end
+
+local function announce(w, role)
+  roles[w.address] = role
+  for _, fn in ipairs(role_fns) do fn(w, role) end
+end
+
+-- The first window of an app is decided at open; a window opened beside an older one waits, since the older may be a closing splash.
+hl.on("window.open", function(w)
+  local address = w.address
+  opened[address] = os.time()
+  if classify(w) == "main" then announce(w, "main") else roles[address] = "pending" end
+  hl.timer(function()
+    local target = hl.get_window("address:" .. address)
+    if not target or not target.mapped or opened[address] == nil then return end
+    settled[address] = true
+    if roles[address] == "pending" then announce(target, classify(target)) end
+  end, { timeout = C.settle_ms, type = "oneshot" })
+end)
+
+hl.on("window.close", function(w)
+  if not w or not w.address then return end
+  roles[w.address], opened[w.address], settled[w.address] = nil, nil, nil
+end)
 
 function U.xy(v)
   if type(v) ~= "table" then return 0, 0 end

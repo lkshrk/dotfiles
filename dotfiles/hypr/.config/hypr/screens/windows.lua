@@ -35,6 +35,19 @@ local function focus_soon(w)
   end, { timeout = 150, type = "oneshot" })
 end
 
+local function make_extra(w)
+  hl.dispatch(hl.dsp.window.tag({ tag = "+secondary", window = w }))
+  if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
+  hl.dispatch(hl.dsp.window.float({ action = "enable", window = w }))
+  U.frame(w, dialog_box(U.area(w.monitor)))
+  focus_soon(w)
+end
+
+-- Settings and other extra windows share the app's class, so class-based slots would give them the main window's place.
+U.on_role(function(w, role)
+  if role == "extra" and not U.transient(w) and U.layout_placed(w) then make_extra(w) end
+end)
+
 local function helium_home(w)
   return w.title == C.helium_main_title and C.helium_main_workspace or "6"
 end
@@ -63,17 +76,8 @@ hl.on("window.open", function(w)
     hl.dispatch(hl.dsp.window.center({ window = w }))
     return
   end
-  -- Gaming windows keep the frame they were last left at (frames.lua), so they skip slots and the dialog box.
-  if w.workspace and w.workspace.name == C.gaming_workspace then return end
-  -- Settings and other extra windows share the app's class, so class-based slots would give them the main window's place.
-  if not U.transient(w) and U.secondary(w) then
-    hl.dispatch(hl.dsp.window.tag({ tag = "+secondary", window = w }))
-    if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
-    hl.dispatch(hl.dsp.window.float({ action = "enable", window = w }))
-    U.frame(w, dialog_box(U.area(w.monitor)))
-    focus_soon(w)
-    return
-  end
+  -- Free floating windows keep the frame they were last left at (frames.lua), so they skip slots and the dialog box.
+  if w.floating and not U.layout_placed(w) then return end
   if w.class == "helium" then
     place_helium(w)
     focus_soon(w)
