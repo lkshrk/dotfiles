@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Native messaging host for ~/.config/omarchy/webapp-links: one length-prefixed JSON message in, one reply out.
+set -euo pipefail
+
+length=$(head -c4 | od -An -tu4 | tr -d ' ')
+url=$(head -c "${length:-0}" | jq -r '.url // empty')
+printf '\x02\x00\x00\x00{}'
+[[ $url =~ ^https?:// ]] || exit 0
+
+# Helium opens a URL in its most recently active window, so activate the window named "Main" first.
+main=$(hyprctl clients -j 2>/dev/null | jq -r '[.[] | select(.class == "helium" and .title == "Main")][0].address // empty' || true)
+if [[ -n $main ]]; then
+  hyprctl dispatch focuswindow "address:$main" >/dev/null
+  sleep 0.2
+fi
+setsid -f xdg-open "$url" </dev/null >/dev/null 2>&1

@@ -296,6 +296,7 @@
             "!/plugins/",
             "!/scripts/",
             "!/shared/",
+            "!/webapp-links/",
             "!/hooks/",
             "/hooks/*",
             "!/hooks/post-boot.d/",

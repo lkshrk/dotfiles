@@ -1,0 +1,8 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Chromium extension public key that pins the webapp-links extension ID; not a secret"
+condition = "AND"
+paths = ['''(^|/)webapp-links/manifest\.json$''']
+regexes = ['''^MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA''']
