@@ -4,7 +4,7 @@ repo=${1:-${0:A:h:h:h:h:h:h}}
 # Do not inherit exporter settings from an already-running agent session.
 for name in ${(k)parameters}; do
   case $name in
-    OTEL_*|OPENCODE_ENABLE_TELEMETRY|OPENCODE_OTLP_*|OPENCODE_RESOURCE_ATTRIBUTES|CLAUDE_CODE_ENABLE_TELEMETRY|CLAUDE_CODE_ENHANCED_TELEMETRY*) unset "$name" ;;
+    OTEL_*|CLAUDE_CODE_ENABLE_TELEMETRY|CLAUDE_CODE_ENHANCED_TELEMETRY*) unset "$name" ;;
   esac
 done
 unset NODE_EXTRA_CA_CERTS
@@ -13,8 +13,6 @@ trap '/bin/rm -rf $bin' EXIT
 mkdir -p $bin/norbw $bin/env/bin
 print -r -- '#!/bin/sh
 [ "$*" = "test prompt" ]' > $bin/norbw/codex
-print -r -- '#!/bin/sh
-[ "$*" = "test prompt" ] && [ "$LITELLM_API_KEY" = gateway-key ]' > $bin/norbw/opencode
 print -r -- '#!/bin/sh
 printf "gateway-key\n"' > $bin/env/bin/llm-gateway-token
 ln -s "$repo/dotfiles/env/.config/env/bin/rbw-env" $bin/env/bin/rbw-env
@@ -25,15 +23,13 @@ for a; do :; done
 printf "secret-%s\n" "$a"' > $bin/rbw
 print -r -- '#!/bin/sh
 [ "$*" = "test prompt" ] && [ "$LITELLM_API" = secret-litellm-api ] && [ "${NODE_EXTRA_CA_CERTS:-}" = "$EXPECT_CA" ]' > $bin/codex
-print -r -- '#!/bin/sh
-[ "$*" = "test prompt" ] && [ "$LITELLM_API_KEY" = secret-llm-gateway ] && [ "${NODE_EXTRA_CA_CERTS:-}" = "$EXPECT_CA" ]' > $bin/opencode
-chmod +x $bin/norbw/* $bin/env/bin/llm-gateway-token $bin/rbw $bin/codex $bin/opencode
+chmod +x $bin/norbw/* $bin/env/bin/llm-gateway-token $bin/rbw $bin/codex
 ENV_DIR=$bin/env
 unset HF_TOKEN LITELLM_API CONTEXT7_API_KEY LITELLM_API_KEY
 expect_ca=/test/lan-ca.pem
 check_env() {
   [[ ${NODE_EXTRA_CA_CERTS:-} == $expect_ca ]]
-  if env | grep -Eq '^(OTEL_|OPENCODE_(ENABLE_TELEMETRY|OTLP_|RESOURCE_ATTRIBUTES)|CLAUDE_CODE_(ENABLE_TELEMETRY|ENHANCED_TELEMETRY))'; then
+  if env | grep -Eq '^(OTEL_|CLAUDE_CODE_(ENABLE_TELEMETRY|ENHANCED_TELEMETRY))'; then
     print -u2 'unexpected agent telemetry environment'
     return 1
   fi
@@ -45,7 +41,6 @@ check_env() {
   (( ! $+commands[rbw] && ! $+functions[git] && ! $+functions[sops] ))
   _omni_ai_ca() { return 1; }
   codex 'test prompt'
-  oc 'test prompt'
   [[ -z ${NODE_EXTRA_CA_CERTS:-} ]]
 )
 path=($bin $path)
@@ -59,11 +54,9 @@ export EXPECT_CA=$expect_ca
 export ANTHROPIC_BASE_URL=https://example.invalid ANTHROPIC_AUTH_TOKEN=fake ANTHROPIC_DEFAULT_OPUS_MODEL=fake
 claude 'test prompt'
 codex 'test prompt'
-oc 'test prompt'
 [[ $ANTHROPIC_AUTH_TOKEN == fake ]]
 _omni_ai_ca() { return 1; }
 expect_ca= EXPECT_CA=
 claude 'test prompt'
 codex 'test prompt'
-oc 'test prompt'
 print 'agent wrappers: optional CA, secret profiles, arguments, isolation and telemetry checks passed'

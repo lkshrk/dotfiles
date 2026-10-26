@@ -28,7 +28,7 @@ jq -e '
       .options.install? != null
       and (.options.check? != null or .options.check_path? != null or .options.detect? != null))
   and all([
-      "bun", "cargo", "coder", "deepwiki-rs", "golangci-lint", "gopls",
+      "bun", "cargo", "deepwiki-rs", "golangci-lint", "gopls",
       "hermes", "just", "lazydocker", "nvm", "uv",
       "actionlint", "ffmpeg", "gitleaks", "glow", "lazygit", "ttyd", "vhs", "yamlfmt"
     ][];
@@ -58,7 +58,7 @@ jq -e '
       ((.options.install // "") | test("curl[^;|]*\\|[[:space:]]*(sh|bash)") | not))
   and all($scripts[];
       ((.options.uninstall // "") | test("rm[[:space:]][^;]*[[:space:]]\\$HOME") | not))
-  and all(["bun", "cargo", "claude-code", "coder", "golangci-lint", "hermes", "just"][];
+  and all(["bun", "cargo", "claude-code", "golangci-lint", "hermes", "just"][];
       . as $name
       | any($scripts[];
           .logical_name == $name

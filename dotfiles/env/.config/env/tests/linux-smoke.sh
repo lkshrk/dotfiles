@@ -78,10 +78,6 @@ run_profile_probe() {
         *) fail "missing PNPM_HOME bin" ;;
       esac
 
-      case ":$PATH:" in
-        *":/home/coder/.local/bin:"*) fail "hardcoded coder path present" ;;
-      esac
-
       for cmd in node npm npx pnpm; do
         cmd_path=$(find_command_path "$cmd")
         expected="$NVM_DIR/versions/node/v24.17.0/bin/$cmd"

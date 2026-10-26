@@ -4,7 +4,6 @@
       "name": "ai",
       "tools": [
         "claude-code",
-        "coder",
         "@openai/codex",
         "obsidian-wiki"
       ]
