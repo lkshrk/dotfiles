@@ -6,13 +6,10 @@ gui:
   screenMode: half
   sidePanelWidth: 0.25
   portraitMode: never
-
 git:
-  pagers:
-    - pager: delta --dark --paging=never
-    - {}
-
+  diffRenderers:
+    - command: delta --dark --paging=never
+    - type: rawGit
 update:
   method: never
-
 disableStartupPopups: true
