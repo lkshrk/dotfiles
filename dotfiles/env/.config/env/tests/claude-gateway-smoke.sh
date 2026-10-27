@@ -64,9 +64,9 @@ default_base=$(
 [ "$output" = "base=https://gateway.example
 token=test-key
 discovery=1
-custom_model=free-auto
-custom_model_name=Free Auto
-custom_model_description=Ordered free-provider failover
+custom_model=
+custom_model_name=
+custom_model_description=
 args=--model gateway-model prompt" ]
 [ -z "${ANTHROPIC_BASE_URL:-}" ]
 [ -z "${ANTHROPIC_AUTH_TOKEN:-}" ]
