@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# omarchy-capture-region freezes the screen with `hyprpicker -r -z`; skip that flash but stay alive so its kill still works.
+[[ $* == "-r -z" ]] && exec sleep infinity
+exec /usr/bin/hyprpicker "$@"

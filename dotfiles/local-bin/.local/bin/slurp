@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Keep a lighter tint on the hovered/selected area instead of clearing it, so no screen looks un-overlaid.
+exec /usr/bin/slurp -s '#FFFFFF20' "$@"
