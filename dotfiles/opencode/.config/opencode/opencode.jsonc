@@ -1,8 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "local-agents/claude-sonnet-high#high",
+  "model": "local-agents/anthropic/claude-sonnet#high",
   "agents": {
-    "title": { "model": "local-agents/claude-sonnet" }
+    "title": { "model": "local-agents/anthropic/claude-sonnet" }
   },
   "policies": [
     { "action": "provider.use", "resource": "*", "effect": "deny" },
@@ -23,89 +23,93 @@
         "apiKey": "{env:LITELLM_API_KEY}"
       },
       "models": {
-        "claude-fable": {
-          "name": "Claude Fable",
+        "anthropic-auto": {
+          "name": "anthropic-auto",
+          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
+          "limit": { "context": 1000000, "output": 128000 }
+        },
+        "anthropic/claude-fable": {
+          "name": "anthropic/claude-fable",
           "package": "@opencode/ai/providers/anthropic",
           "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
           "limit": { "context": 1000000, "output": 128000 }
         },
-        "claude-opus": {
-          "name": "Claude Opus",
-          "package": "@opencode/ai/providers/anthropic",
-          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
-          "limit": { "context": 1000000, "output": 128000 }
-        },
-        "claude-sonnet": {
-          "name": "Claude Sonnet",
-          "package": "@opencode/ai/providers/anthropic",
-          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
-          "limit": { "context": 1000000, "output": 128000 }
-        },
-        "claude-sonnet-high": {
-          "name": "Claude Sonnet (high)",
-          "package": "@opencode/ai/providers/anthropic",
-          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
-          "limit": { "context": 1000000, "output": 128000 }
-        },
-        "claude-haiku": {
-          "name": "Claude Haiku",
+        "anthropic/claude-haiku": {
+          "name": "anthropic/claude-haiku",
           "package": "@opencode/ai/providers/anthropic",
           "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
           "limit": { "context": 200000, "output": 64000 }
         },
-        "gpt-astra": {
-          "name": "GPT Astra",
-          "package": "@opencode/ai/providers/openai/responses",
+        "anthropic/claude-opus": {
+          "name": "anthropic/claude-opus",
+          "package": "@opencode/ai/providers/anthropic",
           "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
-          "limit": { "context": 922000, "output": 128000 }
+          "limit": { "context": 1000000, "output": 128000 }
         },
-        "gpt-sol": {
-          "name": "GPT Sol",
-          "package": "@opencode/ai/providers/openai/responses",
+        "anthropic/claude-sonnet": {
+          "name": "anthropic/claude-sonnet",
+          "package": "@opencode/ai/providers/anthropic",
           "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
-          "limit": { "context": 922000, "output": 128000 }
+          "limit": { "context": 1000000, "output": 128000 }
         },
-        "gpt-luna": {
-          "name": "GPT Luna",
-          "package": "@opencode/ai/providers/openai/responses",
-          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
-          "limit": { "context": 922000, "output": 128000 }
+        "auto": {
+          "name": "auto",
+          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
+          "limit": { "context": 1000000, "output": 128000 }
         },
-        "gpt-terra": {
-          "name": "GPT Terra",
-          "package": "@opencode/ai/providers/openai/responses",
-          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
-          "limit": { "context": 922000, "output": 128000 }
-        },
-        "deepseek-flash": {
-          "name": "DeepSeek Flash",
-          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
-          "limit": { "context": 1048576, "output": 393216 }
-        },
-        "glm-flash": {
-          "name": "GLM Flash",
+        "moonshot/kimi": {
+          "name": "moonshot/kimi",
           "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
           "limit": { "context": 1048576, "output": 131072 }
         },
-        "qwen-flash": {
-          "name": "Qwen Flash",
+        "openai-auto": {
+          "name": "openai-auto",
+          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "openai/gpt-astra": {
+          "name": "openai/gpt-astra",
+          "package": "@opencode/ai/providers/openai/responses",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "openai/gpt-luna": {
+          "name": "openai/gpt-luna",
+          "package": "@opencode/ai/providers/openai/responses",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "openai/gpt-sol": {
+          "name": "openai/gpt-sol",
+          "package": "@opencode/ai/providers/openai/responses",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "openai/gpt-terra": {
+          "name": "openai/gpt-terra",
+          "package": "@opencode/ai/providers/openai/responses",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"], "reasoning": { "supported": true, "effort": ["low", "medium", "high"] } },
+          "limit": { "context": 922000, "output": 128000 }
+        },
+        "opencode/deepseek": {
+          "name": "opencode/deepseek",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
+          "limit": { "context": 1000000, "output": 384000 }
+        },
+        "opencode/glm": {
+          "name": "opencode/glm",
           "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
           "limit": { "context": 1000000, "output": 131072 }
         },
-        "smart-auto": {
-          "name": "Smart Auto",
-          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
-          "limit": { "context": 922000, "output": 128000 }
+        "opencode/minimax": {
+          "name": "opencode/minimax",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
+          "limit": { "context": 1000000, "output": 131072 }
         },
-        "standard-auto": {
-          "name": "Standard Auto",
-          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
-          "limit": { "context": 922000, "output": 128000 }
-        },
-        "frontier-auto": {
-          "name": "Frontier Auto",
-          "capabilities": { "tools": true, "input": ["text"], "output": ["text"] },
-          "limit": { "context": 922000, "output": 128000 }
+        "opencode/qwen": {
+          "name": "opencode/qwen",
+          "capabilities": { "tools": true, "input": ["text", "image"], "output": ["text"] },
+          "limit": { "context": 1000000, "output": 131072 }
         }
       }
     }
