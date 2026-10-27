@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Web App Links",
-  "version": "2.0",
-  "description": "Open links followed in Chromium web apps in the default browser",
+  "version": "2.1",
+  "description": "Open links followed in web apps in the default browser",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAulm/dl2c/9tilXRDZbP//grse3t/q7z3LXq7iyG07SDMsYNdaXwMg3GHz/uST2sTkNpsMvDZPSK3AhX3UqPwky9XlzF3kYg2JHL8MFBMV1d64vJ5DN1jqYKT18HnyhgaCP8Cc4Ibkj+dA2PVGz/Hpv6sEGe9oima61gXdO1cvCdQ0RtgACs39/caf9OvBe3g/FU127th8PvJTz6LzliKgmD2dUeeAmvhsyFET9mGZNP8JjQ2n9hQs/lsE850bc7E8AjgTzum+EvE2CWDGs0wmXVQK8EGm+r4toFL6ztspofwScooaCC4dQudFDBg/iunVRUAZXOJqbNb7tEGN/MDBQIDAQAB",
-  "permissions": ["nativeMessaging", "tabs"],
+  "permissions": ["nativeMessaging", "tabs", "webNavigation"],
   "background": {
     "service_worker": "background.js"
   }

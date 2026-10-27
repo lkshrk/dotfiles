@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Chromium names an --app window's class after the URL; setup-omarchy.sh reads it via --class for StartupWMClass.
+# Helium names an --app window's class after the URL; setup-omarchy.sh reads it via --class for StartupWMClass.
 set -euo pipefail
 
 print_class=0
@@ -23,4 +23,21 @@ if [[ "$rest" =~ ^localhost:([0-9]+) ]]; then
   done
 fi
 
-exec "$HOME/.config/hypr/scripts/focus-app" "^${class//./\\.}\$" chromium --app="$url"
+# Each app is its own Helium instance, so logins stay apart; its browser windows (class webapp-*) are hidden by hypr/rules.lua.
+app_id="${host}${url_path%/}"
+app_id="${app_id//\//_}"
+profile="${XDG_DATA_HOME:-$HOME/.local/share}/webapps/$app_id"
+mkdir -p "$profile/NativeMessagingHosts"
+cat >"$profile/NativeMessagingHosts/com.lkshrk.open_url.json" <<EOF
+{
+  "name": "com.lkshrk.open_url",
+  "description": "Open links from web apps in the default browser",
+  "path": "$HOME/.local/bin/webapp-open-url",
+  "type": "stdio",
+  "allowed_origins": ["chrome-extension://kgmaedigpgooacompmffkjeipjpgiakj/"]
+}
+EOF
+
+exec "$HOME/.config/hypr/scripts/focus-app" "^${class//./\\.}\$" helium-browser \
+  --user-data-dir="$profile" --class="webapp-$app_id" --no-first-run --no-default-browser-check \
+  --load-extension="$HOME/.config/omarchy/webapp-links" --app="$url"

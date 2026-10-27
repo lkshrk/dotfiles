@@ -10,7 +10,11 @@ printf '\x02\x00\x00\x00{}'
 # Helium opens a URL in its most recently active window, so activate the window named "Main" first.
 main=$(hyprctl clients -j 2>/dev/null | jq -r '[.[] | select(.class == "helium" and .title == "Main")][0].address // empty' || true)
 if [[ -n $main ]]; then
-  hyprctl dispatch focuswindow "address:$main" >/dev/null
-  sleep 0.2
+  hyprctl dispatch "hl.dsp.focus({ window = \"address:$main\" })" >/dev/null
+  for _ in {1..20}; do
+    [[ $(hyprctl activewindow -j | jq -r .address) == "$main" ]] && break
+    sleep 0.01
+  done
 fi
-setsid -f xdg-open "$url" </dev/null >/dev/null 2>&1
+# xdg-open would reach Helium through omarchy-launch-browser's systemd-run fallback, which is far slower.
+setsid -f helium-browser "$url" </dev/null >/dev/null 2>&1

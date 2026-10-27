@@ -43,6 +43,8 @@ o.window({ tag = "floating-window" }, { workspace = "unset" })
 o.window("^(org\\.omarchy\\..*|omacalc|dev\\.tensaku\\.Tensaku|WebcamOverlay-.*|localsend|Share|Hermes)$", { workspace = "unset" })
 -- Re-applied because the collector rule above overrides Omarchy's earlier one.
 o.window({ title = ".*is sharing.*" }, { workspace = "special silent" })
+-- A web app's own browser window only exists until webapp-links hands its tab to the default browser.
+o.window("^webapp-.*$", { workspace = "special:webapp-links silent" })
 -- Password managers block screen capture, so they get a tiled workspace to themselves; tag rules apply last, so drop Omarchy's floating-window tag.
 o.window("^(Bitwarden|1[pP]assword)$", { tag = "-floating-window", tile = true, workspace = C.homes.Bitwarden })
 -- Omarchy only catches Chrome's class for the Bitwarden extension popup; Brave prefixes it "brave-".

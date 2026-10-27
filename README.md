@@ -82,7 +82,7 @@ The setup flow:
    machine without OBS scenes, applies `templates/obs/` with `obs-config`.
 8. Enables Docker with sudoless access, makes Helium the default browser and
    File Roller the archive handler, and installs the web apps in
-   `omarchy/chromium.webapps` as Chromium app windows.
+   `omarchy/webapps` as app windows, each its own Helium instance.
 9. Configures rbw (asking for the Bitwarden email and server once), unlocks it
    (which starts the SSH agent used for git signing) and writes the LAN root
    CA from the vault, trusted system-wide (`scripts/lan-ca.sh`).
@@ -219,7 +219,7 @@ omarchy/                  # files setup-omarchy.sh installs outside $HOME
   keyd/                   # Mac keymap per keyboard, installed to /etc/keyd
   systemd/, fstab.mounts  # STUFF and NAS mounts, cloudflared drop-in
   default/irqbalance      # /etc/default/irqbalance
-  chromium.webapps        # web apps setup installs to open in Chromium
+  webapps                 # web apps setup installs, each its own Helium instance
   remove.packages         # Omarchy preinstalls setup removes
   remove.webapps          # Omarchy web apps setup removes
 templates/                # copied, not linked: opendeck-images/, obs/

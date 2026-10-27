@@ -13,3 +13,7 @@ async function redirect(tab, url) {
 chrome.tabs.onCreated.addListener((tab) => redirect(tab, tab.pendingUrl || tab.url));
 chrome.tabs.onUpdated.addListener((_id, info, tab) => redirect(tab, info.url));
 chrome.tabs.onRemoved.addListener((id) => handled.delete(id));
+// Fires as the navigation starts, well before the tab events report its URL.
+chrome.webNavigation.onBeforeNavigate.addListener(({ tabId, frameId, url }) => {
+  if (frameId === 0) chrome.tabs.get(tabId).then((tab) => redirect(tab, url), () => {});
+});

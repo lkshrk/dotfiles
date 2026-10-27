@@ -1,0 +1,7 @@
+# Web apps that setup-omarchy.sh installs, as name|url|icon. Each runs as its own Helium
+# instance with separate logins; its links open in the main Helium. An empty icon fetches the site's favicon.
+ChatGPT|https://chatgpt.com/|
+Figma|https://figma.com/|
+GitHub|https://github.com/|
+Linear|https://linear.app/|
+PipeWeaver|http://localhost:14565|pipeweaver

@@ -243,27 +243,6 @@ fi
 
 # Own absolute Exec: omarchy-launch-webapp uses the default browser and gtk-launch expands neither ~ nor $HOME.
 step "web apps"
-webapp_links="$HOME/.config/omarchy/webapp-links"
-mkdir -p "$HOME/.config/chromium/NativeMessagingHosts"
-cat >"$HOME/.config/chromium/NativeMessagingHosts/com.lkshrk.open_url.json" <<EOF
-{
-  "name": "com.lkshrk.open_url",
-  "description": "Open links from Chromium web apps in the default browser",
-  "path": "$HOME/.local/bin/webapp-open-url",
-  "type": "stdio",
-  "allowed_origins": ["chrome-extension://kgmaedigpgooacompmffkjeipjpgiakj/"]
-}
-EOF
-chromium_flags="$HOME/.config/chromium-flags.conf"
-[[ -f $chromium_flags ]] || cp /usr/share/omarchy/config/chromium-flags.conf "$chromium_flags"
-if ! grep -q -- "$webapp_links" "$chromium_flags"; then
-  if grep -q '^--load-extension=' "$chromium_flags"; then
-    sed -i --follow-symlinks "s|^--load-extension=.*|&,$webapp_links|" "$chromium_flags"
-  else
-    printf -- '--load-extension=%s\n' "$webapp_links" >>"$chromium_flags"
-  fi
-fi
-ok "links from web apps open in the default browser"
 while IFS='|' read -r name url icon; do
   exec_cmd="$HOME/.local/bin/webapp-focus $url"
   exec_line="Exec=$exec_cmd"
@@ -276,8 +255,8 @@ while IFS='|' read -r name url icon; do
     fi
     printf '%s\n' "$wm_class_line" >>"$desktop"
   fi
-  ok "web app $name opens in Chromium"
-done < <(list_entries "$REPO_DIR/omarchy/chromium.webapps")
+  ok "web app $name opens in its own Helium instance"
+done < <(list_entries "$REPO_DIR/omarchy/webapps")
 
 if have rbw; then
   step "rbw"
