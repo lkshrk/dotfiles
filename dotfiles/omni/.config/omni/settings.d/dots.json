@@ -271,6 +271,7 @@
             "!/rules.lua",
             "!/screens.lua",
             "!/screens/",
+            "!/traymenu.lua",
             "!/xdph.conf",
             "!/scripts/",
             "!/.luarc.json"
@@ -388,9 +389,12 @@
             "*",
             "!/brave-media",
             "!/chatgpt",
+            "!/hyprpicker",
             "!/obs-config",
             "!/pipeweaver-app",
-            "!/webapp-focus"
+            "!/slurp",
+            "!/webapp-focus",
+            "!/webapp-open-url"
           ]
         },
         {
@@ -399,7 +403,8 @@
           "ignore": [
             "*",
             "!/battlenet.desktop",
-            "!/pipeweaver.desktop"
+            "!/pipeweaver.desktop",
+            "!/world-of-warcraft.desktop"
           ]
         }
       ]
