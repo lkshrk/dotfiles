@@ -5,7 +5,8 @@
       "tools": [
         "claude-code",
         "@openai/codex",
-        "obsidian-wiki"
+        "obsidian-wiki",
+        "@oh-my-pi/pi-coding-agent"
       ]
     },
     {

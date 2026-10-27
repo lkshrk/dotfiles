@@ -558,6 +558,12 @@
     },
     {
       "name": "towerr",
+      "tools": [
+        "mbedtls",
+        "uthash",
+        "wimlib",
+        "@devcontainers/cli"
+      ],
       "dots": [
         {
           "name": "QtProject.conf",
