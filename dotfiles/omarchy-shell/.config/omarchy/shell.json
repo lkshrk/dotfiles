@@ -4,10 +4,10 @@
     "layout": {
       "left": [
         {
-          "id": "omarchy.menu"
+          "id": "lkshrk.workspaces"
         },
         {
-          "id": "lkshrk.workspaces"
+          "id": "omarchy.menu"
         }
       ],
       "center": [
@@ -144,7 +144,7 @@
           "barWindow": "session",
           "barWindowSecondary": "weekly",
           "cliproxyKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-cc43901ae7b64bec8f478966caa6c49d.key",
-          "cliproxyUnmonitored": "[\"opencode-go\",\"antigravity\"]",
+          "cliproxyUnmonitored": "[\"antigravity\",\"opencode-go\",\"kimi-ai\"]",
           "cliproxyUrl": "https://proxy.ai.h-cloud.lan",
           "dismissedProviders": [
             "antigravity",
