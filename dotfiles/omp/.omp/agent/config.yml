@@ -1,0 +1,9 @@
+setupVersion: 2
+modelRoles:
+  default: local-agents/claude-sonnet-high:high
+  slow: local-agents/claude-opus:high
+  plan: "@slow"
+  task: "@default"
+  commit: "@smol"
+dev:
+  autoqaConsent: granted
