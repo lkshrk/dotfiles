@@ -12,6 +12,19 @@ function D.role(win, others, multi)
   return "main"
 end
 
+-- After a window of `class` closes, the address of the extra that is now the app's main window, if any.
+-- A splash that outlives the settle time turns the real window into an extra; this undoes that once the splash is gone.
+function D.promote(class, windows)
+  local oldest
+  for _, w in ipairs(windows) do
+    if w.class == class then
+      if not w.extra and not w.transient then return nil end
+      if w.extra and (not oldest or w.stable_id < oldest.stable_id) then oldest = w end
+    end
+  end
+  return oldest and oldest.address
+end
+
 -- Tabs and newlines would split the key across TSV fields or rows.
 function D.title_key(class, title)
   if not class or class == "" or not title or title == "" or title:find("[\t\n]") then return nil end

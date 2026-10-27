@@ -11,6 +11,25 @@ assert(D.role(second, {}, false) == "main", "the only window of an app is main")
 assert(D.role(second, { { address = "c", class = "discord", stable_id = 1, transient = false } }, false) == "main",
   "windows of another app do not count")
 
+local splash_closed = {
+  { address = "m", class = "discord", stable_id = 9, extra = true },
+  { address = "s", class = "signal", stable_id = 2, extra = false },
+}
+assert(D.promote("discord", splash_closed) == "m", "an extra left without its older window becomes the app's main window")
+assert(D.promote("discord", {
+  { address = "m", class = "discord", stable_id = 5, extra = false },
+  { address = "x", class = "discord", stable_id = 9, extra = true },
+}) == nil, "an extra stays one while the main window is open")
+assert(D.promote("discord", {
+  { address = "a", class = "discord", stable_id = 4, transient = true, extra = false },
+  { address = "x", class = "discord", stable_id = 9, extra = true },
+}) == "x", "a remaining dialog does not keep the extra from becoming main")
+assert(D.promote("obs", {
+  { address = "late", class = "obs", stable_id = 9, extra = true },
+  { address = "early", class = "obs", stable_id = 6, extra = true },
+}) == "early", "only the oldest of several extras is promoted")
+assert(D.promote("discord", {}) == nil)
+
 assert(D.title_key("steam", "") == nil)
 assert(D.title_key("steam", nil) == nil)
 assert(D.title_key("steam", "Friends List") == "steam|Friends List")

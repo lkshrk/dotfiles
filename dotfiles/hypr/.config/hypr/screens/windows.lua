@@ -45,7 +45,12 @@ end
 
 -- Settings and other extra windows share the app's class, so class-based slots would give them the main window's place.
 -- Proton games share their class with launchers left open beside them, so fullscreen and gaming windows never become extras.
-U.on_role(function(w, role)
+U.on_role(function(w, role, promoted)
+  if promoted then
+    hl.dispatch(hl.dsp.window.tag({ tag = "-secondary", window = w }))
+    W.arrive(hl.get_window("address:" .. w.address) or w)
+    return
+  end
   if role ~= "extra" or U.transient(w) or not U.layout_placed(w) then return end
   if (w.fullscreen or 0) ~= 0 or (w.workspace and w.workspace.name == C.gaming_workspace) then return end
   make_extra(w)

@@ -54,9 +54,22 @@ local function classify(w)
   return D.role(w, others, C.multi_window[w.class])
 end
 
-local function announce(w, role)
+local function announce(w, role, promoted)
   roles[w.address] = role
-  for _, fn in ipairs(role_fns) do fn(w, role) end
+  for _, fn in ipairs(role_fns) do fn(w, role, promoted) end
+end
+
+local function promote_after_close(class)
+  local windows = {}
+  for _, o in ipairs(hl.get_windows()) do
+    if o.mapped and o.class == class then
+      windows[#windows + 1] = { address = o.address, class = o.class, stable_id = o.stable_id,
+        transient = U.transient(o), extra = roles[o.address] == "extra" }
+    end
+  end
+  local address = D.promote(class, windows)
+  local w = address and hl.get_window("address:" .. address)
+  if w then announce(w, "main", true) end
 end
 
 -- The first window of an app is decided at open; a window opened beside an older one waits, since the older may be a closing splash.
@@ -78,10 +91,11 @@ end)
 -- Cleared after the other close handlers have run, so frames.lua can still save the closing window.
 hl.on("window.close", function(w)
   if not w or not w.address then return end
-  local address, gen = w.address, generation[w.address]
+  local address, gen, class = w.address, generation[w.address], w.class
   hl.timer(function()
     if generation[address] ~= gen then return end
     roles[address], opened[address], settled[address] = nil, nil, nil
+    if class then promote_after_close(class) end
   end, { timeout = 1, type = "oneshot" })
 end)
 
