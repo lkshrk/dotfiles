@@ -869,6 +869,51 @@
           "name": "user-dirs.dirs",
           "path": "~/.config/user-dirs.dirs",
           "ignored": true
+        },
+        {
+          "name": "Bitwarden CLI",
+          "path": "~/.config/Bitwarden CLI",
+          "ignored": true
+        },
+        {
+          "name": "astro",
+          "path": "~/.config/astro",
+          "ignored": true
+        },
+        {
+          "name": "chatgpt",
+          "path": "~/.config/chatgpt",
+          "ignored": true
+        },
+        {
+          "name": "com.pake.acbf4ff",
+          "path": "~/.config/com.pake.acbf4ff",
+          "ignored": true
+        },
+        {
+          "name": "configstore",
+          "path": "~/.config/configstore",
+          "ignored": true
+        },
+        {
+          "name": "enchant",
+          "path": "~/.config/enchant",
+          "ignored": true
+        },
+        {
+          "name": "google-chrome-for-testing",
+          "path": "~/.config/google-chrome-for-testing",
+          "ignored": true
+        },
+        {
+          "name": "nextjs-nodejs",
+          "path": "~/.config/nextjs-nodejs",
+          "ignored": true
+        },
+        {
+          "name": "org.gnome.Epiphany.WebApp_linear",
+          "path": "~/.config/org.gnome.Epiphany.WebApp_linear",
+          "ignored": true
         }
       ]
     }

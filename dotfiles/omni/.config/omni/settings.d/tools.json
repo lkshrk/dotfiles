@@ -11,7 +11,7 @@
     "@devcontainers/cli": {
       "providers": [
         {
-          "provider": "npm",
+          "provider": "bun",
           "package": "@devcontainers/cli"
         }
       ]
