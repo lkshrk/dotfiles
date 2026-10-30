@@ -258,6 +258,24 @@ while IFS='|' read -r name url icon; do
   ok "web app $name opens in its own Helium instance"
 done < <(list_entries "$REPO_DIR/omarchy/webapps")
 
+step "shell plugins"
+# Linked, not in the omarchy-shell package: plugin files there make omni replace the link with a folder.
+mkdir -p "$HOME/.config/omarchy/plugins"
+while IFS='|' read -r id url; do
+  checkout="$HOME/Dev/$(basename "$url" .git)"
+  if [[ ! -d $checkout/.git ]] && ! git clone -q "$url" "$checkout"; then
+    warn "could not clone $url; rerun setup once it is reachable"
+    continue
+  fi
+  link="$HOME/.config/omarchy/plugins/$id"
+  if [[ -e $link && ! -L $link ]]; then
+    warn "$link is a folder, not a link; move it away and rerun to use $checkout"
+    continue
+  fi
+  ln -sfn "$checkout" "$link"
+  ok "$id linked to $checkout"
+done < <(list_entries "$REPO_DIR/omarchy/plugins")
+
 if have rbw; then
   step "rbw"
   if [[ -z "$(rbw config show 2>/dev/null | jq -r '.email // empty')" ]]; then

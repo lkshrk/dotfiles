@@ -78,7 +78,10 @@
           "id": "lkshrk.stats",
           "screens": [
             "Odyssey G80SH"
-          ]
+          ],
+          "publicIp": true,
+          "items": "net,cpu,ram,disk,gpu",
+          "charts": "net"
         },
         {
           "id": "janitorhead.quotatank",

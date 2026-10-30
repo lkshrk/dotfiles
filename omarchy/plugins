@@ -1,0 +1,2 @@
+# Third-party shell plugins that setup-omarchy.sh clones into ~/Dev and links into ~/.config/omarchy/plugins, as id|git-url.
+lkshrk.stats|https://github.com/lkshrk/omarchy-stats
