@@ -85,7 +85,7 @@
         },
         {
           "id": "janitorhead.quotatank",
-          "accountModes": "{\"claude\":\"single\",\"codex\":\"single\"}",
+          "accountModes": "{\"claude\":\"together\",\"codex\":\"single\"}",
           "barAccountMode": "chips",
           "barDisplayMode": "Percentages",
           "barMaxChips": 4,
@@ -148,14 +148,8 @@
           "barWindowSecondary": "weekly",
           "dismissedProviders": [
             "antigravity",
-            "copilot"
-          ],
-          "enabledProviders": [
-            "claude",
-            "codex",
-            "kimi",
-            "opencode",
             "gemini",
+            "copilot",
             "cursor",
             "grok",
             "kiro",
@@ -166,18 +160,25 @@
             "amp",
             "kilo",
             "codebuff",
-            "huggingface",
+            "huggingface"
+          ],
+          "enabledProviders": [
+            "claude",
+            "codex",
+            "kimi",
+            "opencode",
             "openrouter"
           ],
           "hiddenAccounts": "{\"codex\":[\"main\"]}",
           "hideExhaustedProviders": true,
+          "hintsDismissed": "[\"accounts\",\"forecast\"]",
           "openrouterKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-42eee191a4124a3a8d8a1b46261e4d83.key",
           "providerColors": false,
           "providerQuotaModes": "{\"claude\":\"Used\",\"openrouter\":\"Remaining\"}",
-          "squareUsageCards": true,
-          "sourcesVersion": 1,
           "setupDone": true,
-          "sources": "[{\"id\":\"p-c52c028e\",\"kind\":\"proxy\",\"on\":true,\"url\":\"https://proxy.ai.h-cloud.lan\",\"keyFile\":\"/home/lkshrk/.config/omarchy/quotatank/management-keys/key-cc43901ae7b64bec8f478966caa6c49d.key\",\"keeperUrl\":\"\",\"keeperPasswordFile\":\"\"}]"
+          "sources": "[{\"id\":\"p-c52c028e\",\"kind\":\"proxy\",\"on\":true,\"url\":\"https://proxy.ai.h-cloud.lan\",\"keyFile\":\"/home/lkshrk/.config/omarchy/quotatank/management-keys/key-cc43901ae7b64bec8f478966caa6c49d.key\",\"keeperUrl\":\"\",\"keeperPasswordFile\":\"\"}]",
+          "sourcesVersion": 1,
+          "squareUsageCards": true
         }
       ]
     },
