@@ -7,6 +7,8 @@ globs: **/*
 
 `~/knowledge` is the shared knowledge vault (git repository `lkshrk/knowledge`, Obsidian vault) for every repository under `~/Dev`. Its `AGENTS.md` is the schema; follow it when writing.
 
+Clone a repository you'll commit to, fork, open a PR on or write vault pages about into `~/Dev/<name>`: the vault keys pages by that directory name and lints `paths` against that checkout. Throwaway or untrusted downloads (AUR build checkouts, one-off source fetches, extracted archives) go in a fresh `mktemp -d` directory, never in `~/Dev`.
+
 ## Before working in a repository
 
 - `~/knowledge/scripts/sync.sh` once per session (a SessionStart hook usually does it already). Exit 1 means uncommitted changes, 2 a rebase conflict: resolve before relying on the vault. Offline (exit 3) is fine.
