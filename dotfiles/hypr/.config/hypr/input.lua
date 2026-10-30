@@ -7,5 +7,7 @@ hl.config({
     -- Focus changes only on click or a focus shortcut; hovering still scrolls the window under the cursor.
     follow_mouse = 2,
     float_switch_override_focus = 0,
+    sensitivity = -0.35,
+    accel_profile = "flat",
   },
 })
