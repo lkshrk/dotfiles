@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Switches Obsidian's command line interface, the agents' way into the vault, on or off.
+# Obsidian keeps the setting in memory, so "off" asks the running app and "on" needs a restart.
+set -euo pipefail
+
+config="${XDG_CONFIG_HOME:-$HOME/.config}/obsidian/obsidian.json"
+app=/usr/lib/obsidian/app.asar
+
+main_pid() { pgrep -f "electron.* ${app}\$" | head -1; }
+
+saved() { [ "$(jq -r '.cli // false' "$config")" = true ]; }
+
+set_saved() {
+  local tmp
+  tmp=$(mktemp "$config.XXXXXX")
+  if [ "$1" = true ]; then jq '.cli = true' "$config" >"$tmp"; else jq 'del(.cli)' "$config" >"$tmp"; fi
+  mv "$tmp" "$config"
+}
+
+status() {
+  if [ -n "$(main_pid)" ]; then
+    [ "$(obsidian eval code="require('electron').ipcRenderer.sendSync('cli')" 2>/dev/null)" = "=> true" ]
+  else
+    saved
+  fi
+}
+
+case "${1:-status}" in
+status)
+  if status; then echo on; else echo off; fi
+  ;;
+off)
+  if [ -n "$(main_pid)" ]; then
+    status && obsidian eval code="require('electron').ipcRenderer.sendSync('cli', false)" >/dev/null 2>&1
+  else
+    set_saved false
+  fi
+  echo off
+  ;;
+on)
+  status && { echo on; exit 0; }
+  pid=$(main_pid)
+  if [ -n "$pid" ]; then
+    kill -TERM "$pid"
+    for _ in $(seq 100); do kill -0 "$pid" 2>/dev/null || break; sleep 0.1; done
+    ! kill -0 "$pid" 2>/dev/null || { echo "Obsidian did not quit; setting left unchanged" >&2; exit 1; }
+    set_saved true
+    setsid -f uwsm-app -- obsidian >/dev/null 2>&1
+  else
+    set_saved true
+  fi
+  echo on
+  ;;
+toggle)
+  if status; then exec "$0" off; else exec "$0" on; fi
+  ;;
+*)
+  echo "usage: ${0##*/} [status|on|off|toggle]" >&2
+  exit 2
+  ;;
+esac
