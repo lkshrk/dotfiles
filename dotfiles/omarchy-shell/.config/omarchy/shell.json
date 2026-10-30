@@ -143,9 +143,6 @@
           "barShowResets": false,
           "barWindow": "session",
           "barWindowSecondary": "weekly",
-          "cliproxyKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-cc43901ae7b64bec8f478966caa6c49d.key",
-          "cliproxyUnmonitored": "[\"antigravity\",\"opencode-go\",\"kimi-ai\"]",
-          "cliproxyUrl": "https://proxy.ai.h-cloud.lan",
           "dismissedProviders": [
             "antigravity",
             "copilot"
@@ -175,7 +172,9 @@
           "providerColors": false,
           "providerQuotaModes": "{\"claude\":\"Used\",\"openrouter\":\"Remaining\"}",
           "squareUsageCards": true,
-          "usageSource": "both"
+          "sourcesVersion": 1,
+          "setupDone": true,
+          "sources": "[{\"id\":\"p-c52c028e\",\"kind\":\"proxy\",\"on\":true,\"url\":\"https://proxy.ai.h-cloud.lan\",\"keyFile\":\"/home/lkshrk/.config/omarchy/quotatank/management-keys/key-cc43901ae7b64bec8f478966caa6c49d.key\",\"keeperUrl\":\"\",\"keeperPasswordFile\":\"\"}]"
         }
       ]
     },
