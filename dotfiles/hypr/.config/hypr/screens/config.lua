@@ -25,7 +25,7 @@ local apps = {
   { "helium", workspace = "3", slot = { row = MID }, multi = true },
   { "dev.zed.Zed", "dev.zed.Zed-Preview", "dev.zed.Zed-Nightly", workspace = "4", multi = true },
   { "chrome-linear.app__-Default", workspace = "5" },
-  { "discord", workspace = "6", slot = { row = TOP } },
+  { "brave-browser", workspace = "6", slot = { row = TOP } },
   { "chrome-chatgpt.com__-Default", workspace = "6", slot = { row = MID } },
   { "signal", "org.telegram.desktop", workspace = "6", slot = { row = BOT } },
   { "com.chatterino.chatterino", workspace = "6", slot = { row = BOT, col = 2, cols = 1, above = true } },
@@ -35,7 +35,7 @@ local apps = {
   { "Bitwarden", "1password", "1Password", workspace = "8" },
   { "steam", "gamescope", "com.moonlight_stream.Moonlight", "wowupcf", workspace = "9" },
   { "steam_app_battlenet", workspace = "9", multi = true },
-  { "brave-browser", "md.obsidian.Obsidian", workspace = "10" },
+  { "discord", "md.obsidian.Obsidian", workspace = "10" },
 }
 
 C.apps = apps
