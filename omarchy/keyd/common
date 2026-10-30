@@ -20,6 +20,19 @@ right = C-right
 backspace = C-backspace
 delete = C-delete
 
+# Composites drop the held modifiers, so these restate the plain behaviour for app.conf to override in terminals.
+[control+option]
+left = C-left
+right = C-right
+
+[option+shift]
+left = C-S-left
+right = C-S-right
+
+[control+option+shift]
+left = C-S-left
+right = C-S-right
+
 # Cmd sends Ctrl so app shortcuts match macOS; the system ones Hyprland keeps on Super are mapped across.
 [cmd:C]
 # Repeat off where holding the key would close, open or capture again and again (macOS fires these once).
