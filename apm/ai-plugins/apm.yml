@@ -20,6 +20,10 @@ dependencies:
     path: plugins/code-simplifier
     targets:
     - claude
+  - git: anthropics/claude-plugins-official
+    path: plugins/plugin-dev
+    targets:
+    - claude
   - git: ayghri/i-have-adhd
     targets:
     - claude

@@ -133,6 +133,13 @@
         "kind": "plugin",
         "id": "visualize@openai-bundled",
         "reason": "Bundled and managed by the ChatGPT desktop app"
+      },
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "plugin",
+        "id": "clangd-lsp@claude-plugins-official",
+        "reason": "Official LSP plugin; APM cannot package LSP-only plugins yet"
       }
     ]
   },
