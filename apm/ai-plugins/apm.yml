@@ -3,9 +3,6 @@ version: 1.0.0
 description: Shared Omni agent dependencies (plugins, MCP servers) for every apm-managed host.
 dependencies:
   apm:
-  - git: DietrichGebert/ponytail
-    targets:
-    - codex
   - git: ShiplightAI/agent-skills-v2
     path: shiplight
   - git: anthropics/claude-plugins-official

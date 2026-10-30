@@ -183,7 +183,7 @@
       ]
     },
     "position": "top",
-    "transparent": false
+    "transparent": true
   },
   "dock": {
     "pinned": [
