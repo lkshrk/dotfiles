@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Chromium-based browsers whose binary the update replaced fail to spawn new renderers, so relaunch them.
+browsers='^/opt/(helium-browser-bin/helium|brave-bin/brave)$|^/usr/lib/chromium/chromium$'
+
+declare -A stale
+for pid in $(pgrep -x 'helium|brave|chromium'); do
+  exe=$(readlink "/proc/$pid/exe" 2>/dev/null) || continue
+  [[ $exe == *" (deleted)" && ${exe% (deleted)} =~ $browsers ]] || continue
+  # Chromium rewrites its process title, so cmdline is one space-joined string rather than NUL-separated args.
+  read -r -a args <<<"$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null)"
+  ((${#args[@]})) || continue
+  [[ " ${args[*]} " == *" --type="* ]] && continue
+  keep=()
+  for arg in "${args[@]}"; do
+    [[ $arg == --restore-last-session ]] || keep+=("$arg")
+  done
+  stale[$pid]="${keep[*]}"
+done
+
+((${#stale[@]})) || exit 0
+
+echo -e "\e[32m\nRestarting updated browsers\e[0m"
+kill -TERM "${!stale[@]}" 2>/dev/null
+for _ in {1..50}; do
+  alive=0
+  for pid in "${!stale[@]}"; do kill -0 "$pid" 2>/dev/null && alive=1; done
+  ((alive)) || break
+  sleep 0.2
+done
+
+for pid in "${!stale[@]}"; do
+  read -r -a args <<<"${stale[$pid]}"
+  echo "  ${args[0]##*/} ${args[*]:1:2}"
+  setsid uwsm-app -- "${args[@]}" --restore-last-session >/dev/null 2>&1 &
+done

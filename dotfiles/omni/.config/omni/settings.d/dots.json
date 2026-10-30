@@ -296,6 +296,7 @@
             "!/extensions/omarchy-menu.jsonc",
             "!/plugins/",
             "/plugins/janitorhead.quotatank/",
+            "/plugins/lkshrk.stats/",
             "!/scripts/",
             "!/shared/",
             "!/webapp-links/",
@@ -310,7 +311,8 @@
             "!/hooks/post-update.d/a-sync-shell-clones.hook",
             "!/hooks/post-update.d/check-dots-links.hook",
             "!/hooks/post-update.d/check-shell-clones.hook",
-            "!/hooks/post-update.d/check-system-health.hook"
+            "!/hooks/post-update.d/check-system-health.hook",
+            "!/hooks/post-update.d/restart-stale-browsers.hook"
           ]
         },
         {
