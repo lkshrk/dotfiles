@@ -33,8 +33,8 @@ o.window({
 
 o.window({ modal = true }, { tag = "+dialog" })
 o.window("^(xdg-desktop-portal-gtk|zenity)$", { tag = "+dialog" })
--- pinentry-gnome3 prompts through gcr-prompter; neither is modal to any window.
-o.window("^(gcr-prompter|[Pp]inentry.*)$", { tag = "+dialog" })
+-- pinentry-gnome3 prompts through gcr-prompter; neither is modal to any window, so pin them to stay on the visible workspace.
+o.window("^(gcr-prompter|[Pp]inentry.*)$", { tag = "+dialog", pin = true })
 o.window({ tag = "dialog" }, { float = true, center = true })
 -- Dialogs, PiP and Omarchy's floating tools open where they were triggered, not in the collector.
 o.window({ tag = "dialog" }, { workspace = "unset" })
