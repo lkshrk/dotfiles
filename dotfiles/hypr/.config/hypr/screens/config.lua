@@ -34,7 +34,7 @@ local apps = {
   { "opendeck", workspace = "7", slot = { row = BOT } },
   { "Bitwarden", "1password", "1Password", workspace = "8" },
   { "steam", "gamescope", "com.moonlight_stream.Moonlight", "wowupcf", workspace = "9" },
-  { "steam_app_battlenet", workspace = "9", multi = true },
+  { "steam_app_battlenet", "battle.net.exe", workspace = "9", multi = true },
   { "discord", "md.obsidian.Obsidian", workspace = "10" },
 }
 
