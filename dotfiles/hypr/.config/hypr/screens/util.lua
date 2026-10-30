@@ -116,14 +116,17 @@ function U.xy(v)
   return v.x or v[1] or 0, v.y or v[2] or 0
 end
 
-function U.area(monitor)
+function U.bounds(monitor)
   local w, h = monitor.width, monitor.height
   if monitor.transform % 2 == 1 then w, h = h, w end
-  w, h = w / monitor.scale, h / monitor.scale
-  local r = monitor.reserved
+  return { x = monitor.x, y = monitor.y, w = w / monitor.scale, h = h / monitor.scale }
+end
+
+function U.area(monitor)
+  local b, r = U.bounds(monitor), monitor.reserved
   return {
-    x = monitor.x + r.left, y = monitor.y + r.top,
-    w = w - r.left - r.right, h = h - r.top - r.bottom,
+    x = b.x + r.left, y = b.y + r.top,
+    w = b.w - r.left - r.right, h = b.h - r.top - r.bottom,
   }
 end
 

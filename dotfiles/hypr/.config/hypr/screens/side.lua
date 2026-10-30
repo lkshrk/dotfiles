@@ -1,4 +1,4 @@
--- Portrait screen: app slots, halves and thirds, and restoring frames after the monitors wake.
+-- Portrait screen: app slots, halves and thirds.
 local C = require("hypr.screens.config")
 local U = require("hypr.screens.util")
 
@@ -55,55 +55,6 @@ function S.step(w, dir)
   end
   U.frame(w, box)
   hl.dispatch(hl.dsp.window.alter_zorder({ mode = "top", window = w }))
-end
-
--- Waking from DPMS re-adds the portrait screen unrotated for a moment, which shoves its floating windows around.
-local side_frames = {}
-
-local function remember()
-  local side = hl.get_monitor(C.side)
-  if not side or side.transform % 2 == 0 then return end
-  local frames = {}
-  for _, w in ipairs(hl.get_windows()) do
-    if w.mapped and w.floating and w.monitor == side then
-      local x, y = U.xy(w.at)
-      local width, height = U.xy(w.size)
-      frames[w.address] = { x = x, y = y, w = width, h = height }
-    end
-  end
-  side_frames = frames
-end
-
-local function restore()
-  local side = hl.get_monitor(C.side)
-  if not side or side.transform % 2 == 0 then return end
-  U.state.placing = true
-  for _, w in ipairs(hl.get_windows()) do
-    local f = side_frames[w.address]
-    if f and w.mapped and w.floating then
-      hl.dispatch(hl.dsp.window.resize({ x = f.w, y = f.h, window = w }))
-      hl.dispatch(hl.dsp.window.move({ x = f.x, y = f.y, window = w }))
-    end
-  end
-  U.state.placing = false
-end
-
-local settle = hl.timer(restore, { timeout = 1500, type = "oneshot" })
-settle:set_enabled(false)
-local snapshot = hl.timer(remember, { timeout = 5000, type = "repeat" })
-
--- Re-armed on every event, so a long burst keeps snapshots off until it has been quiet for 4 s.
-local resume = hl.timer(function() snapshot:set_enabled(true) end, { timeout = 4000, type = "oneshot" })
-resume:set_enabled(false)
-
-for _, event in ipairs({ "monitor.added", "monitor.removed", "monitor.layout_changed" }) do
-  hl.on(event, function()
-    snapshot:set_enabled(false)
-    settle:set_timeout(1500)
-    settle:set_enabled(true)
-    resume:set_timeout(4000)
-    resume:set_enabled(true)
-  end)
 end
 
 return S

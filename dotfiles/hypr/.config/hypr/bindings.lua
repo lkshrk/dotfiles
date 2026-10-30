@@ -3,6 +3,7 @@ local C = require("hypr.screens.config")
 local M, W = require("hypr.screens.move"), require("hypr.screens.windows")
 require("hypr.screens.fullscreen")
 require("hypr.screens.frames")
+require("hypr.screens.wake")
 if type(M.arrow) ~= "function" or type(W.place_all) ~= "function" then
   local noop = function() return function() end end
   M = { arrow = noop, send = noop, send_to = noop, menu = function() hl.exec_cmd("omarchy-menu toggle") end }
