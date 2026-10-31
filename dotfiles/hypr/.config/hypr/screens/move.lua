@@ -9,14 +9,22 @@ local M = {}
 function M.arrow(dir)
   return function()
     local w = hl.get_active_window()
-    if not w then return end
-    if U.on_side(w) then
-      S.step(w, dir)
-    elseif w.workspace and w.workspace.name == C.top_workspace and not w.floating and (dir == "left" or dir == "right") then
-      T.join(w, dir)
-    else
-      hl.dispatch(hl.dsp.window.move({ direction = dir, window = w }))
+    if not w or not w.monitor or (w.fullscreen or 0) ~= 0 then return end
+    -- Snap only the selected tab, leaving the rest of its group tiled.
+    if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
+    S.step(w, dir)
+  end
+end
+
+function M.column(side)
+  return function()
+    local w = hl.get_active_window()
+    if not w or (w.fullscreen or 0) ~= 0 or not w.workspace or w.workspace.name ~= C.top_workspace then return end
+    if w.floating then
+      if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
+      hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))
     end
+    T.join(w, side)
   end
 end
 

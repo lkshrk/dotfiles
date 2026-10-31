@@ -6,7 +6,7 @@ require("hypr.screens.frames")
 require("hypr.screens.wake")
 if type(M.arrow) ~= "function" or type(W.place_all) ~= "function" then
   local noop = function() return function() end end
-  M = { arrow = noop, send = noop, send_to = noop, menu = function() hl.exec_cmd("omarchy-menu toggle") end }
+  M = { arrow = noop, column = noop, send = noop, send_to = noop, menu = function() hl.exec_cmd("omarchy-menu toggle") end }
   W = { place_all = function() end }
 end
 
@@ -140,16 +140,36 @@ end)
 hyper("Windows", "SHIFT + P", "Pop window out (float and pin)", "omarchy-hyprland-window-pop")
 -- keyd sends Cmd + H / Cmd + M here (see omarchy/keyd/common); hidden windows come back from the bar, the menu or Hyper + Shift + H.
 bind("Windows", "SUPER + SHIFT + H", "Hide window", hl.dsp.window.move({ workspace = "special:scratchpad", follow = false }))
--- Arrows position the window (portrait: halves and thirds, top screen: column); Shift sends it to the screen that way.
+-- Arrows snap the selected window on its current screen, floating it out of tiling/groups.
+local snap_labels = {
+  left = "Snap left half / full width",
+  right = "Snap right half / full width",
+  up = "Snap up through thirds / full height",
+  down = "Snap down through thirds / full height",
+}
 for _, dir in ipairs({ "left", "right", "up", "down" }) do
-  hyper(nil, dir:upper(), "Move window " .. dir, M.arrow(dir))
+  hyper("Windows", dir:upper(), snap_labels[dir], M.arrow(dir))
   hyper(nil, "SHIFT + " .. dir:upper(), "Send window to the screen " .. dir, M.send(dir))
 end
-note("Windows", HYPER .. " + ARROWS", "Move window within its screen (halves, thirds, columns)")
+note("Windows", HYPER .. " + ARROWS", "Snapping floats the selected window; fullscreen is protected; Hyper + J tiles it again")
+hyper("Windows", "HOME", "Put window in the top screen's left column (tile/group)", M.column("left"))
+hyper("Windows", "END", "Put window in the top screen's right column (tile/group)", M.column("right"))
 hyper("Windows", "SHIFT + L", "Put every window back in its place", W.place_all)
 -- keyd leaves no key sending plain Super, so Omarchy's Super+drag is unreachable; Wine title bars cannot be dragged at all.
-bind("Windows", HYPER .. " + mouse:272", "Move window", hl.dsp.window.drag(), { mouse = true })
-bind("Windows", HYPER .. " + mouse:273", "Resize window", hl.dsp.window.resize(), { mouse = true })
+local function windowed_mouse(dispatcher)
+  return function()
+    -- Mouse actions target the pointer before click focus changes, so check its workspace.
+    -- Hyprland ends mouse drags before callbacks, so rejected releases need no extra state.
+    local monitor = hl.get_monitor_at_cursor()
+    if not monitor then return end
+    local workspace, special = monitor.active_workspace, monitor.active_special_workspace
+    if (workspace and workspace.has_fullscreen) or (special and special.has_fullscreen) then return end
+    hl.dispatch(dispatcher)
+  end
+end
+
+bind("Windows", HYPER .. " + mouse:272", "Move window", windowed_mouse(hl.dsp.window.drag()), { mouse = true })
+bind("Windows", HYPER .. " + mouse:273", "Resize window", windowed_mouse(hl.dsp.window.resize()), { mouse = true })
 
 -- Ctrl stays Ctrl for apps, so window management lives on Hyper as with skhd on the Mac; digits use keycodes so Shift does not turn them into symbols.
 -- 7 and 9 are the sound and gaming workspaces, reached by U and G instead.

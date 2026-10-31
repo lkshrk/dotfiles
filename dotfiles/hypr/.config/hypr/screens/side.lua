@@ -1,4 +1,4 @@
--- Portrait screen: app slots, halves and thirds.
+-- Portrait app slots, plus halves/thirds snapping on any monitor.
 local C = require("hypr.screens.config")
 local U = require("hypr.screens.util")
 
@@ -25,10 +25,12 @@ end
 
 -- Left/right takes that half; pressing toward the half the window already sits on fills the width again.
 function S.step(w, dir)
-  local a = U.area(hl.get_monitor(C.side))
+  if not w.monitor then return end
+  local a = U.area(w.monitor)
   local x, y = U.xy(w.at)
   local width, height = U.xy(w.size)
   local row, rows = snap(y - a.y, a.h / 3, 2), math.max(1, snap(height, a.h / 3, 3))
+  row = math.min(row, 3 - rows)
   local half = width < a.w * 0.75 and (x - a.x < a.w / 4 and "left" or "right") or nil
   if dir == "up" or dir == "down" then
     local i = stop_index(row, rows)
