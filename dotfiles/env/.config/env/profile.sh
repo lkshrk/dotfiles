@@ -1,7 +1,7 @@
 # POSIX-safe env entrypoint.
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
-ENV_NEXT_PROFILE_CURRENT_VERSION=7
+ENV_NEXT_PROFILE_CURRENT_VERSION=8
 ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 
 # Functions are cheap to reload and may have been added after the guarded env
@@ -38,6 +38,11 @@ fi
 # shellcheck source=lib/rbw-sock.sh
 if [ -r "$ENV_DIR/lib/rbw-sock.sh" ]; then
   . "$ENV_DIR/lib/rbw-sock.sh"
+fi
+
+# shellcheck source=lib/dev-cache.sh
+if [ -r "$ENV_DIR/lib/dev-cache.sh" ]; then
+  . "$ENV_DIR/lib/dev-cache.sh"
 fi
 
 export EDITOR="${EDITOR:-nvim}"

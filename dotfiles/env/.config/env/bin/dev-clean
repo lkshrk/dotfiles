@@ -1,0 +1,208 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: dev-clean [--apply] [--fetch] [--no-docker] [caches|repos|worktrees ...]
+
+Dry run by default; --apply deletes.
+  caches     clear tool caches with each tool's own command (Docker included unless --no-docker)
+  repos      remove git-ignored caches in repositories under $DEV_CLEAN_ROOT (default ~/Dev);
+             Cargo target dirs keep only their most recently built profile
+  worktrees  remove clean, unlocked secondary worktrees whose branch is merged
+             (including squash merges) into the default branch; branches are kept
+--fetch     fetch origin before checking whether worktrees are merged
+EOF
+}
+
+apply=0 fetch=0 docker=1 stages=()
+for arg in "$@"; do
+  case "$arg" in
+    --apply) apply=1 ;;
+    --fetch) fetch=1 ;;
+    --no-docker) docker=0 ;;
+    caches|repos|worktrees) stages+=("$arg") ;;
+    -h|--help) usage; exit 0 ;;
+    *) usage >&2; exit 2 ;;
+  esac
+done
+[ ${#stages[@]} -gt 0 ] || stages=(caches repos worktrees)
+
+root="${DEV_CLEAN_ROOT:-$HOME/Dev}"
+cache_home="${DEV_CACHE_HOME:-${XDG_CACHE_HOME:-$HOME/.cache}/dev}"
+failed=0
+
+have() { command -v "$1" >/dev/null 2>&1; }
+size() { du -sh "$1" 2>/dev/null | cut -f1; }
+section() { printf '\n== %s\n' "$1"; }
+
+run() {
+  printf '  %s\n' "$*"
+  [ "$apply" = 1 ] || return 0
+  "$@" >/dev/null || { printf '    failed (%s)\n' "$?" >&2; failed=1; }
+}
+
+remove() {
+  local path
+  for path in "$@"; do
+    [ -e "$path" ] || continue
+    printf '  rm %s (%s)\n' "$path" "$(size "$path")"
+    [ "$apply" = 1 ] || continue
+    rm -rf -- "$path" || failed=1
+  done
+}
+
+clean_caches() {
+  section "tool caches ($cache_home: $(size "$cache_home"))"
+  have go && run go clean -cache -testcache -fuzzcache -modcache
+  have golangci-lint && run golangci-lint cache clean
+  have npm && run npm cache clean --force
+  have pnpm && run pnpm store prune
+  remove "${pnpm_config_cache_dir:-$cache_home/pnpm/cache}"
+  remove "${BUN_INSTALL_CACHE_DIR:-$cache_home/bun}"
+  have uv && run uv cache clean
+  have pip && run pip cache purge
+  remove "${POETRY_CACHE_DIR:-$cache_home/poetry}/cache" "${POETRY_CACHE_DIR:-$cache_home/poetry}/artifacts"
+  have deno && run deno clean
+  have mise && run mise cache clear
+  remove "${HELM_CACHE_HOME:-$cache_home/helm}/repository"
+  local cargo_home="${CARGO_HOME:-$HOME/.cargo}" build
+  remove "$cargo_home/registry/cache" "$cargo_home/registry/src" "$cargo_home/git/checkouts"
+  for build in "$cargo_home"/build/*/*/; do clean_cargo_target "${build%/}"; done
+  remove "${CPM_SOURCE_CACHE:-$cache_home/cpm}"
+  remove "$HOME"/.cache/yay/*/ "$HOME"/.cache/paru/clone/*/
+  if [ "$docker" = 1 ] && have docker && docker info >/dev/null 2>&1; then
+    run docker builder prune --all --force
+    run docker image prune --all --force
+  fi
+}
+
+ignored() { git -C "$1" check-ignore -q --no-index -- "$2" 2>/dev/null; }
+
+clean_cargo_target() {
+  local target=$1 newest="" newest_time=0 profile t
+  [ -f "$target/CACHEDIR.TAG" ] || return 0
+  for profile in "$target"/*/ "$target"/*/*/; do
+    [ -d "$profile/.fingerprint" ] || continue
+    t=$(stat -c %Y "$profile/.fingerprint")
+    if [ "$t" -gt "$newest_time" ]; then newest=$profile newest_time=$t; fi
+  done
+  for profile in "$target"/*/ "$target"/*/*/; do
+    [ -d "$profile/.fingerprint" ] || continue
+    if [ "$profile" = "$newest" ]; then
+      remove "${profile}incremental"
+    else
+      remove "${profile%/}"
+    fi
+  done
+}
+
+clean_repo() {
+  local repo=$1 path paths=()
+  while IFS= read -r -d '' path; do
+    ignored "$repo" "$path" || continue
+    case "${path##*/}" in
+      target) clean_cargo_target "$path" ;;
+      node_modules)
+        [ ! -e "$path/.cache" ] || paths+=("$path/.cache")
+        [ ! -e "$path/.vite" ] || paths+=("$path/.vite")
+        ;;
+      *) paths+=("$path") ;;
+    esac
+  done < <(find "$repo" -mindepth 1 \( -name .git -o -name .venv -o -name venv -o -path '*/.claude/worktrees' \) -prune -o \
+    -type d \( -name node_modules -o -name __pycache__ -o -name .pytest_cache -o -name .mypy_cache -o -name .ruff_cache \
+      -o -name .turbo -o -name .parcel-cache -o -name .gradle -o -name target \) -prune -print0 -o \
+    -type d -path '*/.next/cache' -prune -print0 -o \
+    -type f -name .eslintcache -print0 2>/dev/null)
+  [ ${#paths[@]} -gt 0 ] || return 0
+  printf '  %s: %d cache paths (%s)\n' "$repo" ${#paths[@]} "$(du -csh "${paths[@]}" 2>/dev/null | tail -1 | cut -f1)"
+  [ "$apply" = 1 ] || return 0
+  rm -rf -- "${paths[@]}" || failed=1
+}
+
+repos() {
+  find "$root" -maxdepth 4 \( -name node_modules -o -name .venv \) -prune -o -name .git -print 2>/dev/null |
+    sed 's|/\.git$||' | sort -u
+}
+
+clean_repos() {
+  section "repository caches under $root"
+  local repo
+  while IFS= read -r repo; do clean_repo "$repo"; done < <(repos)
+}
+
+base_refs() {
+  local repo=$1 ref
+  ref=$(git -C "$repo" symbolic-ref -q --short refs/remotes/origin/HEAD) && printf '%s\n' "$ref"
+  for ref in main master; do
+    git -C "$repo" rev-parse -q --verify "refs/heads/$ref" >/dev/null && printf '%s\n' "$ref"
+  done
+}
+
+merged_into() {
+  local repo=$1 head=$2 base=$3 mb squash
+  git -C "$repo" merge-base --is-ancestor "$head" "$base" && return 0
+  mb=$(git -C "$repo" merge-base "$base" "$head") || return 1
+  squash=$(git -C "$repo" commit-tree "$head^{tree}" -p "$mb" -m squash) || return 1
+  [ "$(git -C "$repo" cherry "$base" "$squash")" = "- $squash" ]
+}
+
+in_use() {
+  local cwd dir
+  for cwd in /proc/[0-9]*/cwd; do
+    dir=$(readlink "$cwd" 2>/dev/null) || continue
+    case "$dir" in "$1" | "$1"/*) return 0 ;; esac
+  done
+  return 1
+}
+
+created_recently() {
+  local gitdir
+  gitdir=$(git -C "$1" rev-parse --absolute-git-dir 2>/dev/null) || return 1
+  [ $(($(date +%s) - $(stat -c %Y "$gitdir/commondir"))) -lt 172800 ]
+}
+
+clean_worktrees() {
+  section "merged worktrees under $root"
+  local repo wt head branch locked base merged
+  while IFS= read -r repo; do
+    [ -d "$repo/.git" ] || continue
+    if [ "$fetch" = 1 ]; then git -C "$repo" fetch --quiet --prune origin 2>/dev/null; fi
+    git -C "$repo" worktree prune
+    while IFS=$'\t' read -r wt head branch locked; do
+      [ "$wt" != "$repo" ] && [ -d "$wt" ] || continue
+      merged=""
+      while IFS= read -r base; do
+        merged_into "$repo" "$head" "$base" && { merged=$base; break; }
+      done < <(base_refs "$repo")
+      [ -n "$merged" ] || continue
+      # A fresh worktree with no commits yet looks merged too.
+      if git -C "$repo" merge-base --is-ancestor "$head" "$merged" && created_recently "$wt"; then
+        printf '  keep %s: created in the last two days\n' "$wt"; continue
+      fi
+      if [ -n "$locked" ]; then printf '  keep %s: locked\n' "$wt"; continue; fi
+      if in_use "$wt"; then printf '  keep %s: a process is running in it\n' "$wt"; continue; fi
+      if [ -n "$(git -C "$wt" status --porcelain 2>/dev/null)" ]; then
+        printf '  keep %s: merged into %s but has local changes\n' "$wt" "$merged"; continue
+      fi
+      printf '  worktree remove %s (%s, %s merged into %s)\n' "$wt" "$(size "$wt")" "${branch:-detached}" "$merged"
+      [ "$apply" = 1 ] || continue
+      git -C "$repo" worktree remove "$wt" || failed=1
+    done < <(git -C "$repo" worktree list --porcelain | awk '
+      /^worktree /{wt=substr($0,10); head=""; br=""; lk=""}
+      /^HEAD /{head=$2}
+      /^branch /{br=substr($2,12)}
+      /^locked/{lk="locked"}
+      /^$/{print wt "\t" head "\t" br "\t" lk; wt=""}
+      END{if (wt!="") print wt "\t" head "\t" br "\t" lk}')
+  done < <(repos)
+}
+
+[ "$apply" = 1 ] || echo "Dry run; rerun with --apply to delete."
+before=$(df -k --output=avail "$HOME" | tail -1)
+for stage in "${stages[@]}"; do "clean_$stage"; done
+if [ "$apply" = 1 ]; then
+  after=$(df -k --output=avail "$HOME" | tail -1)
+  printf '\nfreed %s\n' "$(numfmt --to=iec --from-unit=1024 $((after > before ? after - before : 0)))"
+fi
+exit "$failed"

@@ -89,6 +89,24 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 
 - `profile.sh`: POSIX-safe entrypoint for exported base env and PATH.
 - `lib/path.sh`: POSIX-safe path helpers.
+- `lib/dev-cache.sh`: points package-manager and build-tool caches (Go, npm,
+  pnpm, Bun, Deno, uv, pip, Poetry and its virtualenvs, golangci-lint,
+  Playwright, Helm, CPM.cmake, ccache, sccache) at `DEV_CACHE_HOME`
+  (`~/.cache/dev`). On Linux that directory is its own Btrfs subvolume
+  (`btrfs subvolume create ~/.cache/dev`), so no snapshot includes it.
+  `~/.cargo` is a symlink to `~/.cache/dev/cargo`, because Omni and `.profile`
+  hardcode that path. Cargo's `build-dir` puts intermediates in
+  `~/.cargo/build/<workspace hash>`; `target/` keeps only final artifacts.
+  On Linux, `/var/lib/docker` and `/var/lib/containerd` are mounted from the
+  top-level subvolumes `@docker` and `@containerd` (`/etc/fstab`, like `@pkg`),
+  so snapper snapshots and rollbacks of `@` leave them alone.
+- `bin/dev-clean`: manual cleanup, dry run unless `--apply`. Clears tool caches
+  with each tool's own command plus Docker build cache and unused images;
+  removes git-ignored caches in repositories under `~/Dev`, and in each Cargo
+  build dir and `target/` keeps only the most recently built profile; removes clean,
+  unlocked worktrees merged (or squash-merged) into the default branch, unless
+  a process runs inside one or it has no commits and is under two days old.
+  Branches are kept.
 - `os/<name>.sh`: OS-specific env and PATH facts.
 - `machine/<name>.sh`: machine-specific env and PATH facts.
 - `bin/rbw-env`: shell-neutral secret injection wrapper for agents, zsh
