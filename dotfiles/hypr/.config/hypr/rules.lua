@@ -49,3 +49,6 @@ o.window("^webapp-.*$", { workspace = "special:webapp-links silent" })
 o.window("^(Bitwarden|1[pP]assword)$", { tag = "-floating-window", tile = true, workspace = C.homes.Bitwarden })
 -- Omarchy only catches Chrome's class for the Bitwarden extension popup; Brave prefixes it "brave-".
 o.window("^.+-nngceckbapebfimnlniiiahkandclblb-Default$", { no_screen_share = true, tag = "+floating-window" })
+
+-- The screenshot freeze would otherwise animate in and out over the live screen, showing as a flash.
+hl.layer_rule({ match = { namespace = "hyprpicker" }, no_anim = true, animation = "none" })
