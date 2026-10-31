@@ -86,9 +86,9 @@
         {
           "id": "janitorhead.quotatank",
           "accountModes": "{\"claude\":\"together\",\"codex\":\"single\"}",
-          "barAccountMode": "chips",
+          "barAccountMode": "dots",
           "barDisplayMode": "Percentages",
-          "barMaxChips": 4,
+          "barMaxChips": 6,
           "barProviderLimits": "{\"codex\":{\"bottom\":\"weekly\"}}",
           "barProviders": [
             "claude",
@@ -170,7 +170,7 @@
             "openrouter"
           ],
           "hiddenAccounts": "{\"codex\":[\"main\"]}",
-          "hideExhaustedProviders": true,
+          "hideExhaustedProviders": false,
           "hintsDismissed": "[\"accounts\",\"forecast\"]",
           "openrouterKeyFile": "/home/lkshrk/.config/omarchy/quotatank/management-keys/key-42eee191a4124a3a8d8a1b46261e4d83.key",
           "providerColors": false,
