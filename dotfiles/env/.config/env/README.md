@@ -102,8 +102,12 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
   so snapper snapshots and rollbacks of `@` leave them alone.
 - `bin/dev-clean`: manual cleanup, dry run unless `--apply`. Clears tool caches
   with each tool's own command plus Docker build cache and unused images;
-  removes git-ignored caches in repositories under `~/Dev`, and in each Cargo
-  build dir and `target/` keeps only the most recently built profile; removes clean,
+  removes git-ignored caches in repositories under `~/Dev`; in each Cargo
+  build dir and `target/` keeps only the most recently built profile (newest
+  `.fingerprint`, or for artifact-only `target/` dirs the newest profile
+  directory), drops that profile's `incremental/`, and skips any profile whose
+  lock a running build holds; `git worktree prune` runs only with `--apply`
+  (a dry run lists what it would prune); removes clean,
   unlocked worktrees merged (or squash-merged) into the default branch, unless
   a process runs inside one or it has no commits and is under two days old.
   Branches are kept.

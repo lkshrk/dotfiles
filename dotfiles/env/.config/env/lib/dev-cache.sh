@@ -1,5 +1,4 @@
-# Package-manager and build-tool caches, all under one directory.
-# On Linux DEV_CACHE_HOME is its own Btrfs subvolume, so no snapshot ever includes it.
+# Tool caches under one directory, a Btrfs subvolume on Linux so snapshots skip it.
 
 export DEV_CACHE_HOME="${DEV_CACHE_HOME:-${XDG_CACHE_HOME:-$HOME/.cache}/dev}"
 
