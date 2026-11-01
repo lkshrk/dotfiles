@@ -14,13 +14,20 @@ url_path="/"
 class="chrome-${host}_${url_path//\//_}-Default"
 ((print_class == 0)) || { printf '%s\n' "$class"; exit 0; }
 
-# A local app's page that loads before its daemon listens never reconnects, e.g. PipeWeaver during session restore.
+# A local app's page that loads before its daemon is ready never reconnects, e.g. PipeWeaver during session restore.
 if [[ "$rest" =~ ^localhost:([0-9]+) ]]; then
   port=${BASH_REMATCH[1]}
   for _ in $(seq 30); do
     (exec 3<>"/dev/tcp/127.0.0.1/$port") 2>/dev/null && break
     sleep 0.5
   done
+  # PipeWeaver's server listens before its PipeWire manager is up; this answers 503 until then.
+  if [[ $port == 14565 ]]; then
+    for _ in $(seq 60); do
+      curl -sfo /dev/null -m 1 "http://127.0.0.1:$port/api/get-devices" && break
+      sleep 0.5
+    done
+  fi
 fi
 
 # Each app is its own Helium instance, so logins stay apart; its browser windows (class webapp-*) are hidden by hypr/rules.lua.
