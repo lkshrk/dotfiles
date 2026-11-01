@@ -11,27 +11,31 @@ interval=${VRAM_INTERVAL:-10}
 level=0
 card_id=0
 
+smi() { timeout 5 nvidia-smi "$@" 2>/dev/null; }
+
 top_users() {
-  nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader,nounits 2>/dev/null |
-    sort -t, -k2 -nr | head -3 |
-    while IFS=', ' read -r pid mib; do
+  smi pmon -c 1 -s m | awk '!/^#/ && $4 ~ /^[0-9]+$/ { print $2, $4 }' |
+    sort -k2 -nr | head -3 |
+    while read -r pid mib; do
       name=$(ps -o comm= -p "$pid" 2>/dev/null)
       printf '%s %s MB\n' "${name:-pid $pid}" "$mib"
     done
 }
 
 notify() {
-  local summary=$1 body=$2 out
+  local out
   out=$(notify-send --app-name="VRAM" --icon=video-display --print-id \
-    ${card_id:+--replace-id="$card_id"} "$summary" "$body" 2>/dev/null) && card_id=$out
+    --replace-id="$card_id" "$@" 2>/dev/null) && card_id=$out
 }
 
 while true; do
-  if ! read -r used total < <(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits 2>/dev/null | tr -d ','); then
-    echo "nvidia-smi unavailable; retrying in 60s" >&2
+  if [[ ! $(smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits) =~ ^([0-9]+),\ ([0-9]+)$ ]]; then
+    echo "nvidia-smi unavailable" >&2
+    [[ ${1:-} == --once ]] && exit 1
     sleep 60
     continue
   fi
+  used=${BASH_REMATCH[1]} total=${BASH_REMATCH[2]}
 
   if [[ ${1:-} == --once ]]; then
     printf 'VRAM %s / %s MB\n' "$used" "$total"
@@ -48,7 +52,7 @@ while true; do
   if (( new > level )); then
     users=$(top_users | sed 's/^/• /')
     if (( new == 2 )); then
-      notify "VRAM critical: ${used} / ${total} MB" "Stop the stream and close apps now.
+      notify -u critical "VRAM critical: ${used} / ${total} MB" "Stop the stream and close apps now.
 ${users}"
     else
       notify "VRAM almost full: ${used} / ${total} MB" "Close apps or lower WoW textures.
