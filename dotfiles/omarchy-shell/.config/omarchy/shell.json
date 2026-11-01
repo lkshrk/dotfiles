@@ -213,6 +213,9 @@
     },
     {
       "id": "lkshrk.notifications"
+    },
+    {
+      "id": "lkshrk.confirm"
     }
   ],
   "version": 1,

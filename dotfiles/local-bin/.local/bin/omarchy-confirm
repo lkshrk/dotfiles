@@ -1,0 +1,45 @@
+#!/bin/bash
+# Yes/no in the lkshrk.confirm shell plugin's dialog; exits 0 when confirmed.
+
+set -euo pipefail
+
+usage() {
+  echo "usage: omarchy-confirm <message> [--title t] [--icon glyph] [--confirm label] [--confirm-icon glyph] [--cancel label] [--default-confirm]" >&2
+  exit 2
+}
+
+(( $# >= 1 )) || usage
+
+message=$1
+shift
+title="" icon="" confirm_text=Confirm confirm_icon="" cancel_text=Cancel default_confirm=false
+while (( $# > 0 )); do
+  case "$1" in
+    --title) title=$2; shift 2 ;;
+    --icon) icon=$2; shift 2 ;;
+    --confirm) confirm_text=$2; shift 2 ;;
+    --confirm-icon) confirm_icon=$2; shift 2 ;;
+    --cancel) cancel_text=$2; shift 2 ;;
+    --default-confirm) default_confirm=true; shift ;;
+    *) usage ;;
+  esac
+done
+
+result_file=$(mktemp)
+done_file=$(mktemp)
+rm -f "$done_file"
+trap 'rm -f "$result_file" "$done_file"' EXIT
+
+payload=$(jq -cn --arg m "$message" --arg t "$title" --arg i "$icon" --arg c "$confirm_text" \
+  --arg ci "$confirm_icon" --arg x "$cancel_text" --arg r "$result_file" --arg d "$done_file" \
+  --argjson dc "$default_confirm" \
+  '{message: $m, title: $t, icon: $i, confirmText: $c, confirmIcon: $ci, cancelText: $x,
+    resultFile: $r, doneFile: $d, defaultConfirm: $dc}')
+
+omarchy-shell shell summon lkshrk.confirm "$payload" >/dev/null
+
+while [[ ! -e $done_file ]]; do
+  sleep 0.05
+done
+
+[[ $(cat "$result_file") == yes ]]

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "lkshrk.confirm",
+  "name": "Confirm Dialog",
+  "version": "1.0.0",
+  "author": "lkshrk",
+  "description": "Omarchy's confirm dialog on demand for scripts (omarchy-confirm)",
+  "kinds": [
+    "overlay"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "overlay": "Confirm.qml"
+  }
+}
