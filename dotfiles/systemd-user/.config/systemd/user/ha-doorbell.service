@@ -4,9 +4,9 @@ After=graphical-session.target
 PartOf=graphical-session.target
 
 [Service]
-# Never prompts: waits silently until rbw is unlocked, then reads the token without loading the shell profile.
+# Waits silently for rbw to unlock so rbw-env never has to prompt.
 ExecStartPre=/usr/bin/bash -c 'until rbw unlocked >/dev/null 2>&1; do sleep 30; done'
-ExecStart=/usr/bin/bash -c 'HASS_TOKEN=$(rbw get --folder ENV linux-doorbell) || exit 75; export HASS_TOKEN; exec %h/.local/bin/ha-doorbell'
+ExecStart=%h/.config/env/bin/rbw-env hass-cli -- %h/.local/bin/ha-doorbell
 TimeoutStartSec=infinity
 Restart=always
 RestartSec=60

@@ -269,7 +269,6 @@
             "!/looknfeel.lua",
             "!/monitors.lua",
             "!/rules.lua",
-            "!/screens.lua",
             "!/screens/",
             "!/traymenu.lua",
             "!/xdph.conf",
@@ -316,7 +315,7 @@
           ]
         },
         {
-          "name": "knowledge-sync-systemd",
+          "name": "systemd-user",
           "path": "~/.config/systemd/user",
           "ignore": [
             "*",
@@ -324,7 +323,6 @@
             "!/knowledge-sync.timer",
             "!/ha-doorbell.service",
             "!/pipeweaver.service",
-            "!/pipewire-boost.service",
             "!/vram-watch.service"
           ]
         },
@@ -348,6 +346,10 @@
         {
           "name": "deck-icons",
           "path": "~/.local/share/deck-icons"
+        },
+        {
+          "name": "ha-doorbell",
+          "path": "~/.local/share/ha-doorbell"
         },
         {
           "name": "opendeck",
@@ -399,11 +401,9 @@
             "!/brave-media",
             "!/chatgpt",
             "!/ha-doorbell",
-            "!/hyprpicker",
             "!/obs-config",
             "!/omarchy-confirm",
             "!/pipeweaver-app",
-            "!/pipewire-boost",
             "!/slurp",
             "!/vram-watch",
             "!/webapp-focus",

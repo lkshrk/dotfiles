@@ -1,12 +1,12 @@
 [Unit]
 Description=PipeWeaver audio mixer daemon
-# Started right after PipeWire it got "start node error -22" for every channel; wait for a real output first.
+# Started before any output existed it got "start node error -22" for every channel.
 After=pipewire.service pipewire-pulse.service wireplumber.service graphical-session.target
 Wants=wireplumber.service
-PartOf=graphical-session.target
+PartOf=pipewire.service graphical-session.target
 
 [Service]
-ExecStartPre=-/usr/bin/timeout 30 /usr/bin/sh -c 'until pactl list short sinks | grep -q alsa_output; do sleep 1; done; sleep 2'
+ExecStartPre=-/usr/bin/timeout 10 /usr/bin/sh -c 'until pactl list short sinks | grep -qv pipeweaver_; do sleep 1; done; sleep 1'
 ExecStart=/usr/bin/pipeweaver-daemon --background
 Restart=on-failure
 RestartSec=5
