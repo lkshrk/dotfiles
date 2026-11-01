@@ -17,10 +17,13 @@ desktop_for() {
 }
 
 # Apps that start themselves from XDG autostart must not be launched a second time.
+# An entry's file name is usually its desktop ID; its Exec name covers wrappers like electron.
 autostarted() {
   local f
   for f in "${XDG_CONFIG_HOME:-$HOME/.config}"/autostart/*.desktop; do
-    [ -f "$f" ] && sed -n 's|^Exec=\([^ ]*/\)\?\([^ /]*\).*|\2|p' "$f"
+    [ -f "$f" ] && ! grep -qxF Hidden=true "$f" || continue
+    basename "$f" .desktop
+    sed -n 's|^Exec=\([^ ]*/\)\?\([^ /]*\).*|\2|p' "$f"
   done
   echo
 }
@@ -70,7 +73,7 @@ restore() {
   local id
   while IFS= read -r id; do
     [ -n "$id" ] && setsid -f gtk-launch "$id" >/dev/null 2>&1 || true
-  done < "$APPS"
+  done < <(grep -vxFf <(autostarted) "$APPS")
 }
 
 # Each call replaces the pending one, so a burst of closes saves once, and only if it settles.
