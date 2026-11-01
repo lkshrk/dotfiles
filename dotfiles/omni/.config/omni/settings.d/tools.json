@@ -2709,6 +2709,18 @@
       ],
       "git": "https://github.com/tldr-pages/tldr-c-client"
     },
+    "tmux-plugins": {
+      "providers": [
+        {
+          "provider": "script",
+          "options": {
+            "check": "D=\"${XDG_DATA_HOME:-$HOME/.local/share}/tmux/plugins\"; test -f \"$D/tmux-resurrect/resurrect.tmux\" && test -f \"$D/tmux-continuum/continuum.tmux\"",
+            "install": "set -eu; D=\"${XDG_DATA_HOME:-$HOME/.local/share}/tmux/plugins\"; mkdir -p \"$D\"; for p in tmux-resurrect tmux-continuum; do [ -d \"$D/$p/.git\" ] || git clone --depth=1 \"https://github.com/tmux-plugins/$p\" \"$D/$p\"; done",
+            "upgrade": "D=\"${XDG_DATA_HOME:-$HOME/.local/share}/tmux/plugins\"; for p in tmux-resurrect tmux-continuum; do git -C \"$D/$p\" pull --ff-only; done"
+          }
+        }
+      ]
+    },
     "tmux": {
       "providers": [
         {

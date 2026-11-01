@@ -56,6 +56,7 @@
         "stow",
         "thefuck",
         "tmux",
+        "tmux-plugins",
         "tree",
         "tree-sitter-cli",
         "wget",
