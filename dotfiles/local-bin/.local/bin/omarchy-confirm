@@ -1,10 +1,10 @@
 #!/bin/bash
-# Yes/no in the lkshrk.confirm shell plugin's dialog; exits 0 when confirmed.
+# Yes/no in the lkshrk.confirm shell plugin's dialog; exits 0 when confirmed, 1 when cancelled, timed out or not shown.
 
 set -euo pipefail
 
 usage() {
-  echo "usage: omarchy-confirm <message> [--title t] [--icon glyph] [--confirm label] [--confirm-icon glyph] [--cancel label] [--default-confirm]" >&2
+  echo "usage: omarchy-confirm <message> [--title t] [--icon glyph] [--confirm label] [--confirm-icon glyph] [--cancel label] [--default-confirm] [--wiggle] [--timeout seconds]" >&2
   exit 2
 }
 
@@ -12,34 +12,65 @@ usage() {
 
 message=$1
 shift
-title="" icon="" confirm_text=Confirm confirm_icon="" cancel_text=Cancel default_confirm=false
+title="" icon="" confirm_text=Confirm confirm_icon="" cancel_text=Cancel default_confirm=false wiggle=false timeout=0
 while (( $# > 0 )); do
   case "$1" in
-    --title) title=$2; shift 2 ;;
-    --icon) icon=$2; shift 2 ;;
-    --confirm) confirm_text=$2; shift 2 ;;
-    --confirm-icon) confirm_icon=$2; shift 2 ;;
-    --cancel) cancel_text=$2; shift 2 ;;
+    --title | --icon | --confirm | --confirm-icon | --cancel | --timeout)
+      (( $# >= 2 )) || usage
+      case "$1" in
+        --title) title=$2 ;;
+        --icon) icon=$2 ;;
+        --confirm) confirm_text=$2 ;;
+        --confirm-icon) confirm_icon=$2 ;;
+        --cancel) cancel_text=$2 ;;
+        --timeout) [[ $2 =~ ^[0-9]+$ ]] || usage; timeout=$((10#$2)) ;;
+      esac
+      shift 2
+      ;;
     --default-confirm) default_confirm=true; shift ;;
+    --wiggle) wiggle=true; shift ;;
     *) usage ;;
   esac
 done
 
-result_file=$(mktemp)
-done_file=$(mktemp)
-rm -f "$done_file"
-trap 'rm -f "$result_file" "$done_file"' EXIT
+grace_us=5000000
+now_us() { now=${EPOCHREALTIME/[.,]/}; }
+
+now_us
+started=$now
+token="$$-$RANDOM-$started"
+open_window=$grace_us
+(( timeout == 0 || timeout * 1000000 >= grace_us )) || open_window=$((timeout * 1000000))
+
+pending=false
+cleanup() {
+  if $pending; then
+    omarchy-shell -q shell call lkshrk.confirm dismiss "$token" >/dev/null
+  fi
+}
+trap cleanup EXIT
+trap 'exit 1' INT TERM HUP
 
 payload=$(jq -cn --arg m "$message" --arg t "$title" --arg i "$icon" --arg c "$confirm_text" \
-  --arg ci "$confirm_icon" --arg x "$cancel_text" --arg r "$result_file" --arg d "$done_file" \
-  --argjson dc "$default_confirm" \
+  --arg ci "$confirm_icon" --arg x "$cancel_text" --arg tk "$token" \
+  --argjson ob "$(( (started + open_window) / 1000 ))" \
+  --argjson dc "$default_confirm" --argjson w "$wiggle" \
   '{message: $m, title: $t, icon: $i, confirmText: $c, confirmIcon: $ci, cancelText: $x,
-    resultFile: $r, doneFile: $d, defaultConfirm: $dc}')
+    token: $tk, openBy: $ob, defaultConfirm: $dc, wiggle: $w}')
 
-omarchy-shell shell summon lkshrk.confirm "$payload" >/dev/null
+pending=true
+[[ $(omarchy-shell shell summon lkshrk.confirm "$payload" 2>/dev/null) == ok ]] || exit 1
 
-while [[ ! -e $done_file ]]; do
-  sleep 0.05
+while :; do
+  state=$(omarchy-shell shell call lkshrk.confirm state "$token" 2>/dev/null) || exit 1
+  now_us
+  case $state in
+    yes) pending=false; exit 0 ;;
+    no | gone) pending=false; exit 1 ;;
+    open) ;;
+    unknown) (( now - started < grace_us )) || exit 1 ;;
+    *) exit 1 ;;
+  esac
+  (( timeout == 0 || now - started < timeout * 1000000 )) || exit 1
+  sleep 0.25
 done
-
-[[ $(cat "$result_file") == yes ]]
