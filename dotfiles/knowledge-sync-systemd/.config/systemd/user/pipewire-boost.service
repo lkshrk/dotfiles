@@ -1,0 +1,12 @@
+[Unit]
+Description=Keep PipeWire's DeepFilterNet worker at audio priority
+After=pipewire.service
+PartOf=pipewire.service
+
+[Service]
+ExecStart=%h/.local/bin/pipewire-boost
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=pipewire.service

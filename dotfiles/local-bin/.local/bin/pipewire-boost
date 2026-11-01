@@ -1,0 +1,27 @@
+#!/bin/bash
+# DeepFilterNet's worker thread starts at nice 0 and underruns under load; RTKit lifts it without root (--once: one pass).
+set -u
+
+nice_level=${PIPEWIRE_BOOST_NICE:--11}
+
+boost() {
+  local pid tid ni
+  for pid in $(pgrep -x -u "$(id -u)" pipewire); do
+    for task in /proc/"$pid"/task/*; do
+      tid=${task##*/}
+      ni=$(awk '{print $19}' "$task/stat" 2>/dev/null) || continue
+      # Real-time threads report nice 0 too; leave them alone.
+      [[ $(awk '{print $41}' "$task/stat" 2>/dev/null) == 0 ]] || continue
+      (( ni > nice_level )) || continue
+      busctl --system call org.freedesktop.RealtimeKit1 /org/freedesktop/RealtimeKit1 \
+        org.freedesktop.RealtimeKit1 MakeThreadHighPriorityWithPID tti "$pid" "$tid" -- "$nice_level" >/dev/null 2>&1 &&
+        echo "pipewire $pid thread $tid ($(cat "$task/comm" 2>/dev/null)): nice $ni -> $nice_level"
+    done
+  done
+}
+
+[[ ${1:-} == --once ]] && { boost; exit 0; }
+while true; do
+  boost
+  sleep 10
+done

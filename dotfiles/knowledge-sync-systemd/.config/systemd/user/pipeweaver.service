@@ -1,0 +1,17 @@
+[Unit]
+Description=PipeWeaver audio mixer daemon
+# Started right after PipeWire it got "start node error -22" for every channel; wait for a real output first.
+After=pipewire.service pipewire-pulse.service wireplumber.service graphical-session.target
+Wants=wireplumber.service
+PartOf=graphical-session.target
+
+[Service]
+ExecStartPre=-/usr/bin/timeout 30 /usr/bin/sh -c 'until pactl list short sinks | grep -q alsa_output; do sleep 1; done; sleep 2'
+ExecStart=/usr/bin/pipeweaver-daemon --background
+Restart=on-failure
+RestartSec=5
+# It hangs on SIGTERM once PipeWire is gone.
+TimeoutStopSec=5
+
+[Install]
+WantedBy=graphical-session.target

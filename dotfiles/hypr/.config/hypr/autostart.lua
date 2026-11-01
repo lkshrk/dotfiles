@@ -1,5 +1,3 @@
--- Without --background the daemon opens its UI in the default browser on every start.
-o.launch_on_start("pipeweaver-daemon --background")
 -- Terminal-specific Cmd mappings from ~/.config/keyd/app.conf; needs the keyd group.
 o.exec_on_start("keyd-application-mapper -d")
 

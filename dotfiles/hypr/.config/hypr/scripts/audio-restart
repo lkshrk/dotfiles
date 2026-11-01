@@ -1,33 +1,39 @@
 #!/usr/bin/env bash
-# Restarts PipeWire and what does not reconnect; with CANDIDATE, trials that mic-filtered.conf and rolls back on failure.
+# Restarts PipeWire and what does not reconnect; with CANDIDATE, trials that mic chain alone and rolls back on failure.
 set -u
 
-conf="$HOME/.config/pipewire/pipewire.conf.d/mic-filtered.conf"
+conf="$HOME/.config/pipewire/filter-chain.conf.d/mic-filtered.conf"
 candidate=${1:-}
-units=(pipewire.socket pipewire-pulse.socket pipewire.service pipewire-pulse.service wireplumber.service)
+units=(pipewire.socket pipewire-pulse.socket pipewire.service pipewire-pulse.service wireplumber.service filter-chain.service)
 
 say() { printf '%s\n' "$*"; }
 
 # A crash-looping PipeWire trips systemd's start limit on the socket too, so both are reset.
 restart_stack() {
-  systemctl --user stop wireplumber.service pipewire-pulse.service pipewire.service pipewire-pulse.socket pipewire.socket
+  systemctl --user stop filter-chain.service wireplumber.service pipewire-pulse.service pipewire.service pipewire-pulse.socket pipewire.socket
   systemctl --user reset-failed "${units[@]}" 2>/dev/null
   systemctl --user start pipewire.socket pipewire-pulse.socket
-  systemctl --user start pipewire.service pipewire-pulse.service wireplumber.service
+  systemctl --user start pipewire.service pipewire-pulse.service wireplumber.service filter-chain.service
   sleep 4
 }
 
-healthy() {
-  [ "$(systemctl --user is-active pipewire)" = active ] || return 1
-  pw-dump 2>/dev/null | jq -e '.[] | select(.info.props."node.name"? == "mic_filtered")' >/dev/null || return 1
-  ! journalctl --user --since "$1" -u pipewire -o cat --no-pager | grep -qE 'No space left on device|core-dump'
+restart_chain() {
+  systemctl --user reset-failed filter-chain.service 2>/dev/null
+  systemctl --user restart filter-chain.service
+  sleep 3
 }
 
-restart_pipeweaver() {
-  pkill -f '^/usr/bin/pipeweaver-daemon'
-  sleep 1
-  pkill -9 -f '^/usr/bin/pipeweaver-daemon' 2>/dev/null
-  setsid -f uwsm-app -- pipeweaver-daemon --background >/dev/null 2>&1
+# Only the new instance counts: PipeWire 1.6.9 can segfault while the old chain shuts down (combine-stream teardown race).
+chain_healthy() {
+  local inv
+  [ "$(systemctl --user is-active filter-chain)" = active ] || return 1
+  pw-dump 2>/dev/null | jq -e '.[] | select(.info.props."node.name"? == "mic_filtered")' >/dev/null || return 1
+  inv=$(systemctl --user show filter-chain.service -p InvocationID --value)
+  ! journalctl --user _SYSTEMD_INVOCATION_ID="$inv" -o cat --no-pager | grep -qiE 'error|core-dump|failed'
+}
+
+start_pipeweaver() {
+  systemctl --user start pipeweaver.service
   local n
   for _ in $(seq 20); do
     n=$(pw-dump 2>/dev/null | jq '[.[] | select((.info.props."node.name"? // "") | test("^pipeweaver_"))] | length' 2>/dev/null || echo 0)
@@ -51,10 +57,14 @@ restart_portals() {
 # These keep a dead PipeWire connection and need their own restart (OBS: reload the capture source instead).
 stale_apps() {
   local found=()
-  for app in Discord obs signal-desktop brave helium; do
+  for app in Discord equibop obs signal-desktop brave helium; do
     pgrep -x "$app" >/dev/null 2>&1 && found+=("$app")
   done
   ((${#found[@]})) && say "reconnect these by hand: ${found[*]} (OBS: open the capture source and pick it again)"
+}
+
+default_mic() {
+  say "default mic: $(wpctl inspect @DEFAULT_AUDIO_SOURCE@ 2>/dev/null | sed -n 's/.*node.name = "\(.*\)"/\1/p' | head -1)"
 }
 
 if [ -n "$candidate" ]; then
@@ -64,29 +74,32 @@ if [ -n "$candidate" ]; then
   # An interrupted trial must not leave the candidate in the tracked config.
   trap 'cp "$good" "$(readlink -f "$conf")"; rm -f "$good"' EXIT
   cp "$candidate" "$(readlink -f "$conf")"
-fi
-
-since=$(date '+%Y-%m-%d %H:%M:%S')
-restart_stack
-kept=1
-if [ -n "$candidate" ] && ! healthy "$since"; then
-  kept=0
-  say "candidate failed live, restoring the previous config:"
-  journalctl --user --since "$since" -u pipewire -o cat --no-pager | grep -iE 'error|unknown|can.t|space|core' | sort | uniq -c | head -4
-  cp "$good" "$(readlink -f "$conf")"
-  restart_stack
-fi
-if [ -n "$candidate" ]; then
+  since=$(date '+%Y-%m-%d %H:%M:%S')
+  restart_chain
+  if chain_healthy "$since"; then
+    say "candidate kept: $(readlink -f "$conf") now differs from git"
+  else
+    say "candidate failed live, restoring the previous config:"
+    journalctl --user --since "$since" -u filter-chain -o cat --no-pager | grep -iE 'error|failed|can.t' | sort | uniq -c | head -4
+    cp "$good" "$(readlink -f "$conf")"
+    restart_chain
+  fi
   trap - EXIT
   rm -f "$good"
-  ((kept)) && say "candidate kept: $(readlink -f "$conf") now differs from git"
+  say "mic chain: $(systemctl --user is-active filter-chain)"
+  default_mic
+  exit 0
 fi
 
+# Stopped while PipeWire still runs: once PipeWire is gone the daemon no longer exits cleanly.
+systemctl --user stop pipeweaver.service
+restart_stack
 if [ "$(systemctl --user is-active pipewire)" != active ]; then
   say "PipeWire is DOWN"
   exit 2
 fi
-restart_pipeweaver
+say "mic chain: $(systemctl --user is-active filter-chain)"
+start_pipeweaver
 restart_portals
-say "default mic: $(wpctl inspect @DEFAULT_AUDIO_SOURCE@ 2>/dev/null | sed -n 's/.*node.name = "\(.*\)"/\1/p' | head -1)"
+default_mic
 stale_apps
