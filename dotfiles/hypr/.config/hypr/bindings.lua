@@ -181,7 +181,15 @@ for workspace = 1, 10 do
 end
 note("Workspaces", HYPER .. " + 1…6, 8, 0", "Go to workspace 1–6, 8, 10")
 note("Workspaces", HYPER .. " + SHIFT + 1…6, 8, 0", "Send window to workspace 1–6, 8, 10")
-hyper("Workspaces", "G", "Go to the gaming workspace (9)", hl.dsp.focus({ workspace = C.gaming_workspace }))
+hyper("Workspaces", "G", "Go to the gaming workspace (9)", function()
+  hl.dispatch(hl.dsp.focus({ workspace = C.gaming_workspace }))
+  local window = hl.get_active_window()
+  if not window or not window.at or not window.size then return end
+  hl.dispatch(hl.dsp.cursor.move({
+    x = window.at.x + math.floor(window.size.x / 2),
+    y = window.at.y + math.floor(window.size.y / 2),
+  }))
+end)
 hyper("Workspaces", "SHIFT + G", "Send window to the gaming workspace", M.send_to(C.gaming_workspace))
 hyper("Workspaces", "U", "Go to the sound workspace (7)", hl.dsp.focus({ workspace = C.homes.opendeck }))
 hyper("Workspaces", "SHIFT + U", "Send window to the sound workspace", M.send_to(C.homes.opendeck))

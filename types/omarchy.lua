@@ -30,6 +30,30 @@ omarchy_preinstalled_bindings = nil
 ---@type boolean?
 omarchy_default_bindings = nil
 
+---@class HL.Window
+---@field at HL.Vec2
+---@field size HL.Vec2
+
+---@class HL.DspNamespace
+---@field focus fun(options?: {window?: HL.WindowSelector, workspace?: HL.WorkspaceSelector, monitor?: HL.MonitorSelector, direction?: string}): HL.Dispatcher
+---@field submap fun(name: string): HL.Dispatcher
+
+---@class HL.DspCursorNamespace
+---@field move fun(position: HL.Vec2Like): HL.Dispatcher
+---@field move_to_corner fun(options?: {window?: HL.WindowSelector, corner?: integer}): HL.Dispatcher
+
+---@class HL.DspWindowNamespace
+---@field alter_zorder fun(options: {mode: string, window?: HL.WindowSelector}): HL.Dispatcher
+---@field close fun(options?: {window?: HL.WindowSelector}): HL.Dispatcher
+---@field drag fun(): HL.Dispatcher
+---@field float fun(options?: {action?: string, window?: HL.WindowSelector}): HL.Dispatcher
+---@field fullscreen fun(options?: {mode?: string, window?: HL.WindowSelector}): HL.Dispatcher
+---@field fullscreen_state fun(options: {internal: integer, client: integer, window?: HL.WindowSelector}): HL.Dispatcher
+---@field move fun(options?: {workspace?: HL.WorkspaceSelector, out_of_group?: boolean, window?: HL.WindowSelector}): HL.Dispatcher
+---@field pin fun(options?: {window?: HL.WindowSelector}): HL.Dispatcher
+---@field resize fun(): HL.Dispatcher
+---@field tag fun(options: {tag: string, window?: HL.WindowSelector}): HL.Dispatcher
+
 ---@class O
 o = {}
 
