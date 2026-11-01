@@ -19,9 +19,9 @@ o.window("^io\\.missioncenter\\.MissionCenter$", {
   size = { "(monitor_w*0.6)", "(monitor_h*0.7)" },
 })
 
--- Launchers float (screens/frames.lua restores their frame); games sharing Battle.net's class match their own titles below.
-o.window("^wowupcf$", { float = true })
-o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true })
+-- Launchers float (screens/frames.lua restores their frame) and never take focus on their own, which would raise them over the fullscreen game.
+o.window("^wowupcf$", { float = true, suppress_event = "maximize activatefocus" })
+o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true, suppress_event = "maximize activatefocus" })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them.
 o.window("^(steam_app_[0-9]+|gamescope|wow\\.exe)$", { fullscreen = true, idle_inhibit = "fullscreen" })
 -- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.
