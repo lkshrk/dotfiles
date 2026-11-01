@@ -1,0 +1,29 @@
+#!/bin/sh
+# One pinentry for racing callers: waiters reuse its result, and a cancel holds off new prompts for a minute.
+set -u
+
+rbw unlocked >/dev/null 2>&1 && exit 0
+
+dir=${XDG_RUNTIME_DIR:-/tmp}
+cancelled="$dir/rbw-unlock.cancelled"
+
+unlock() {
+  if [ -n "$(find "$cancelled" -mmin -1 2>/dev/null)" ]; then
+    exit 1
+  fi
+  if rbw unlock </dev/null >/dev/null 2>&1 && rbw unlocked >/dev/null 2>&1; then
+    rm -f "$cancelled"
+    exit 0
+  fi
+  : > "$cancelled"
+  exit 1
+}
+
+if ! command -v flock >/dev/null 2>&1; then
+  unlock
+fi
+
+exec 9>"$dir/rbw-unlock.lock"
+flock 9
+rbw unlocked >/dev/null 2>&1 && exit 0
+unlock

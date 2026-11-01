@@ -11,7 +11,7 @@ fi
 if [ -n "${LITELLM_API:-}" ]; then
   token=$LITELLM_API
 elif command -v rbw >/dev/null 2>&1; then
-  token=$(rbw get --folder ENV local-agents) || {
+  "$(dirname "$0")/rbw-unlock-once" && token=$(rbw get --folder ENV local-agents) || {
     printf '%s\n' 'litellm mcp: unable to read ENV/local-agents from rbw (vault locked?)' >&2
     exit 1
   }

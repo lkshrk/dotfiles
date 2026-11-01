@@ -55,7 +55,7 @@ ensure_rbw_unlocked() {
     fi
   elif gui_session; then
     printf '%s\n' 'rbw-env: rbw locked; unlocking via pinentry' >&2
-    if rbw unlock </dev/null >/dev/null && rbw unlocked >/dev/null 2>&1; then
+    if "$ENV_DIR/bin/rbw-unlock-once"; then
       rbw_unlocked=true
       return 0
     fi
