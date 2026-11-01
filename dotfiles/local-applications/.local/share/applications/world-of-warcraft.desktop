@@ -2,7 +2,7 @@
 Type=Application
 Name=World of Warcraft
 Comment=Gives WoW its own icon; the game shares Battle.net's window class
-Exec=omarchy-launch-battlenet
+Exec=battlenet
 Icon=world-of-warcraft
 Terminal=false
 NoDisplay=true

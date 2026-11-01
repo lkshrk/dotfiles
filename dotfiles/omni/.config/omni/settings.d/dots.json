@@ -399,6 +399,7 @@
           "path": "~/.local/bin",
           "ignore": [
             "*",
+            "!/battlenet",
             "!/brave-media",
             "!/chatgpt",
             "!/ha-doorbell",

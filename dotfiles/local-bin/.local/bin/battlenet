@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Battle.net with the Wine/DXVK flags every launch path needs (raw access chains off: NVIDIA open-gpu-kernel-modules#1409).
+export PROTON_USE_XALIA=0
+export WINEDLLOVERRIDES="winealsa.drv=d${WINEDLLOVERRIDES:+;$WINEDLLOVERRIDES}"
+export PULSE_LATENCY_MSEC=60
+export DXVK_CONFIG="dxvk.enableNvRawAccessChains=False${DXVK_CONFIG:+;$DXVK_CONFIG}"
+export OBS_VKCAPTURE=1
+exec omarchy-launch-battlenet "$@"
