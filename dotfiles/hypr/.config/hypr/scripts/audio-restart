@@ -1,46 +1,42 @@
 #!/usr/bin/env bash
-# Restarts PipeWire and what does not reconnect; with CANDIDATE, trials that mic chain alone and rolls back on failure.
+# Restarts the mic chain; CANDIDATE trials a chain config and rolls back on failure; --full restarts PipeWire and what does not reconnect.
 set -u
 
 conf="$HOME/.config/pipewire/filter-chain.conf.d/mic-filtered.conf"
 candidate=${1:-}
-units=(pipewire.socket pipewire-pulse.socket pipewire.service pipewire-pulse.service wireplumber.service filter-chain.service)
+units=(pipewire.socket pipewire-pulse.socket pipewire.service pipewire-pulse.service wireplumber.service filter-chain.service pipeweaver.service)
 
 say() { printf '%s\n' "$*"; }
 
 # A crash-looping PipeWire trips systemd's start limit on the socket too, so both are reset.
 restart_stack() {
-  systemctl --user stop filter-chain.service wireplumber.service pipewire-pulse.service pipewire.service pipewire-pulse.socket pipewire.socket
+  systemctl --user stop wireplumber.service pipewire-pulse.service pipewire.service pipewire-pulse.socket pipewire.socket
   systemctl --user reset-failed "${units[@]}" 2>/dev/null
   systemctl --user start pipewire.socket pipewire-pulse.socket
-  systemctl --user start pipewire.service pipewire-pulse.service wireplumber.service filter-chain.service
+  systemctl --user start pipewire.service pipewire-pulse.service wireplumber.service filter-chain.service pipeweaver.service
   sleep 4
 }
+
+chain_invocation() { systemctl --user show filter-chain.service -p InvocationID --value; }
 
 restart_chain() {
   systemctl --user reset-failed filter-chain.service 2>/dev/null
   systemctl --user restart filter-chain.service
+  inv=$(chain_invocation)
   sleep 3
 }
 
 # Only the new instance counts: PipeWire 1.6.9 can segfault while the old chain shuts down (combine-stream teardown race).
-chain_healthy() {
-  local inv
-  [ "$(systemctl --user is-active filter-chain)" = active ] || return 1
-  pw-dump 2>/dev/null | jq -e '.[] | select(.info.props."node.name"? == "mic_filtered")' >/dev/null || return 1
-  inv=$(systemctl --user show filter-chain.service -p InvocationID --value)
-  ! journalctl --user _SYSTEMD_INVOCATION_ID="$inv" -o cat --no-pager | grep -qiE 'error|core-dump|failed'
+load_failures() {
+  journalctl --user _SYSTEMD_INVOCATION_ID="$inv" + USER_INVOCATION_ID="$inv" -o cat --no-pager |
+    grep -iE "can't (load|create|find|make|start|open|parse|link)|cannot (create|find)|could not open|config file error|syntax error|failed to load|core-dump|dumped core"
 }
 
-start_pipeweaver() {
-  systemctl --user start pipeweaver.service
-  local n
-  for _ in $(seq 20); do
-    n=$(pw-dump 2>/dev/null | jq '[.[] | select((.info.props."node.name"? // "") | test("^pipeweaver_"))] | length' 2>/dev/null || echo 0)
-    [ "${n:-0}" -ge 6 ] && break
-    sleep 1
-  done
-  say "pipeweaver channels: ${n:-0}"
+chain_healthy() {
+  [ "$(systemctl --user is-active filter-chain)" = active ] || return 1
+  [ "$(chain_invocation)" = "$inv" ] || return 1
+  pw-dump 2>/dev/null | jq -e '.[] | select(.info.props."node.name"? == "mic_filtered")' >/dev/null || return 1
+  ! load_failures >/dev/null
 }
 
 # Portals give up on PipeWire after repeated failures and never retry, which breaks screen sharing until they restart.
@@ -67,20 +63,31 @@ default_mic() {
   say "default mic: $(wpctl inspect @DEFAULT_AUDIO_SOURCE@ 2>/dev/null | sed -n 's/.*node.name = "\(.*\)"/\1/p' | head -1)"
 }
 
-if [ -n "$candidate" ]; then
+if [ -z "$candidate" ]; then
+  restart_chain
+  if chain_healthy; then
+    say "mic chain: healthy"
+  else
+    say "mic chain: NOT healthy"
+    load_failures | sort | uniq -c | head -4
+  fi
+  default_mic
+  exit 0
+fi
+
+if [ "$candidate" != --full ]; then
   [ -f "$candidate" ] || { say "no such file: $candidate"; exit 1; }
   good=$(mktemp)
   cp "$(readlink -f "$conf")" "$good"
-  # An interrupted trial must not leave the candidate in the tracked config.
-  trap 'cp "$good" "$(readlink -f "$conf")"; rm -f "$good"' EXIT
+  trap 'cp "$good" "$(readlink -f "$conf")"; rm -f "$good"; restart_chain' EXIT
+  trap 'exit 130' INT TERM HUP
   cp "$candidate" "$(readlink -f "$conf")"
-  since=$(date '+%Y-%m-%d %H:%M:%S')
   restart_chain
-  if chain_healthy "$since"; then
+  if chain_healthy; then
     say "candidate kept: $(readlink -f "$conf") now differs from git"
   else
     say "candidate failed live, restoring the previous config:"
-    journalctl --user --since "$since" -u filter-chain -o cat --no-pager | grep -iE 'error|failed|can.t' | sort | uniq -c | head -4
+    load_failures | sort | uniq -c | head -4
     cp "$good" "$(readlink -f "$conf")"
     restart_chain
   fi
@@ -91,15 +98,13 @@ if [ -n "$candidate" ]; then
   exit 0
 fi
 
-# Stopped while PipeWire still runs: once PipeWire is gone the daemon no longer exits cleanly.
-systemctl --user stop pipeweaver.service
 restart_stack
 if [ "$(systemctl --user is-active pipewire)" != active ]; then
   say "PipeWire is DOWN"
   exit 2
 fi
 say "mic chain: $(systemctl --user is-active filter-chain)"
-start_pipeweaver
+say "pipeweaver: $(systemctl --user is-active pipeweaver)"
 restart_portals
 default_mic
 stale_apps
