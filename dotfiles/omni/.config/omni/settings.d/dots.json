@@ -421,6 +421,18 @@
             "!/pipeweaver.desktop",
             "!/world-of-warcraft.desktop"
           ]
+        },
+        {
+          "name": "nautilus",
+          "path": "~/.config/nautilus",
+          "ignore": [
+            "*",
+            "!/scripts-accels"
+          ]
+        },
+        {
+          "name": "nautilus-scripts",
+          "path": "~/.local/share/nautilus/scripts"
         }
       ]
     },
@@ -753,11 +765,6 @@
         {
           "name": "mise",
           "path": "~/.config/mise",
-          "ignored": true
-        },
-        {
-          "name": "nautilus",
-          "path": "~/.config/nautilus",
           "ignored": true
         },
         {

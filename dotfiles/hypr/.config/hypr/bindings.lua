@@ -104,6 +104,7 @@ app("S", "Signal and Telegram", "signal", focus("'^(signal|org\\.telegram\\.desk
 app("C", "Chatterino", "com.chatterino.chatterino", focus("chatterino chatterino"))
 app("O", "OBS", "com.obsproject.Studio", focus("obsproject obs"))
 app("SLASH", "Bitwarden", "Bitwarden", focus("'^bitwarden$' bitwarden-desktop"))
+hyper("Apps", "R", "Files (Nautilus)", focus("'^org\\.gnome\\.Nautilus$' omarchy-launch-nautilus"))
 note("Apps", HYPER .. " + app key, again", "Next window of the same app")
 note("Apps", HYPER .. " + SHIFT + app key", "Send window to that app's workspace")
 
@@ -218,7 +219,6 @@ local from_omarchy = {
   ["SUPER + CTRL + TAB"] = { "Workspaces", HYPER .. " + TAB", "Back to the previous workspace" },
   ["CTRL + ALT + TAB"] = { "Screens", nil, "Focus next screen" },
   ["CTRL + ALT + SHIFT + TAB"] = { "Screens", nil, "Focus previous screen" },
-  ["SUPER + SHIFT + F"] = { "Apps", HYPER .. " + R", "Files (Nautilus)" },
   ["PRINT"] = { "Capture", nil, "Screenshot (pick region, window or screen)" },
   ["ALT + PRINT"] = { "Capture", nil, "Start or stop screen recording" },
   -- keyd sends Cmd + Shift + 5 here, the macOS capture menu key.

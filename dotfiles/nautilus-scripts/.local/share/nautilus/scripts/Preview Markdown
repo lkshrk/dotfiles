@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+for file in "$@"; do
+  case "${file,,}" in
+    *.md|*.markdown|*.mdx) exec omarchy-launch-tui --app-id=org.omarchy.markdown glow --tui "$file" ;;
+  esac
+done

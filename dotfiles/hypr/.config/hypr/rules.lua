@@ -19,6 +19,19 @@ o.window("^io\\.missioncenter\\.MissionCenter$", {
   size = { "(monitor_w*0.6)", "(monitor_h*0.7)" },
 })
 
+o.window("^org\\.gnome\\.Nautilus$", {
+  workspace = "unset",
+  float = true,
+  center = true,
+  size = { "(monitor_w*0.5)", "(monitor_h*0.6)" },
+})
+
+o.window("^org\\.omarchy\\.markdown$", {
+  float = true,
+  center = true,
+  size = { "(monitor_w*0.4)", "(monitor_h*0.75)" },
+})
+
 -- Launchers float (screens/frames.lua restores their frame) and never take focus on their own, which would raise them over the fullscreen game.
 o.window("^wowupcf$", { float = true, suppress_event = "maximize activatefocus" })
 o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true, suppress_event = "maximize activatefocus" })
