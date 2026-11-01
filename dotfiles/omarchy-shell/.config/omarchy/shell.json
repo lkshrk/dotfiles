@@ -81,7 +81,8 @@
           ],
           "publicIp": true,
           "items": "net,cpu,ram,disk,gpu",
-          "charts": "net"
+          "charts": "net",
+          "gpuBar": "vram"
         },
         {
           "id": "janitorhead.quotatank",
