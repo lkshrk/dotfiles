@@ -1,0 +1,64 @@
+#!/bin/bash
+# Warn before the NVIDIA open driver's VA-space bug hits a nearly full card (open-gpu-kernel-modules #1453).
+
+set -uo pipefail
+
+warn=${VRAM_WARN_MIB:-9000}
+crit=${VRAM_CRIT_MIB:-9600}
+rearm=${VRAM_REARM_MIB:-8500}
+interval=${VRAM_INTERVAL:-10}
+
+level=0
+card_id=0
+
+top_users() {
+  nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader,nounits 2>/dev/null |
+    sort -t, -k2 -nr | head -3 |
+    while IFS=', ' read -r pid mib; do
+      name=$(ps -o comm= -p "$pid" 2>/dev/null)
+      printf '%s %s MB\n' "${name:-pid $pid}" "$mib"
+    done
+}
+
+notify() {
+  local summary=$1 body=$2 out
+  out=$(notify-send --app-name="VRAM" --icon=video-display --print-id \
+    ${card_id:+--replace-id="$card_id"} "$summary" "$body" 2>/dev/null) && card_id=$out
+}
+
+while true; do
+  if ! read -r used total < <(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits 2>/dev/null | tr -d ','); then
+    echo "nvidia-smi unavailable; retrying in 60s" >&2
+    sleep 60
+    continue
+  fi
+
+  if [[ ${1:-} == --once ]]; then
+    printf 'VRAM %s / %s MB\n' "$used" "$total"
+    top_users
+    exit 0
+  fi
+
+  new=$level
+  if (( used >= crit )); then new=2
+  elif (( used >= warn )); then (( level < 1 )) && new=1
+  elif (( used < rearm )); then new=0
+  fi
+
+  if (( new > level )); then
+    users=$(top_users | sed 's/^/• /')
+    if (( new == 2 )); then
+      notify "VRAM critical: ${used} / ${total} MB" "Stop the stream and close apps now.
+${users}"
+    else
+      notify "VRAM almost full: ${used} / ${total} MB" "Close apps or lower WoW textures.
+${users}"
+    fi
+    echo "level $new at ${used} MB" >&2
+  elif (( new == 0 && level > 0 )); then
+    echo "back to normal at ${used} MB" >&2
+    card_id=0
+  fi
+  level=$new
+  sleep "$interval"
+done

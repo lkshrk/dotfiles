@@ -1,0 +1,13 @@
+[Unit]
+Description=Warn when NVIDIA VRAM is nearly full
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/bin/vram-watch
+Restart=on-failure
+RestartSec=30
+Nice=10
+
+[Install]
+WantedBy=graphical-session.target
