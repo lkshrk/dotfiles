@@ -114,7 +114,8 @@
     {
       "name": "gaming",
       "tools": [
-        "discord"
+        "discord",
+        "equibop"
       ]
     },
     {
@@ -289,6 +290,7 @@
     {
       "name": "utils",
       "tools": [
+        "homeassistant-cli",
         "plantuml",
         "sshpass",
         "witr"

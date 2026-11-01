@@ -610,6 +610,14 @@
         }
       ]
     },
+    "equibop": {
+      "providers": [
+        {
+          "provider": "aur",
+          "package": "equibop-bin"
+        }
+      ]
+    },
     "docker": {
       "providers": [
         {
@@ -1243,6 +1251,14 @@
         }
       ],
       "git": "https://github.com/helmfile/helmfile"
+    },
+    "homeassistant-cli": {
+      "providers": [
+        {
+          "provider": "uv",
+          "package": "homeassistant-cli"
+        }
+      ]
     },
     "hermes": {
       "providers": [

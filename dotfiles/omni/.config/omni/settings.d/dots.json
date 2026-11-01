@@ -321,7 +321,11 @@
           "ignore": [
             "*",
             "!/knowledge-sync.service",
-            "!/knowledge-sync.timer"
+            "!/knowledge-sync.timer",
+            "!/ha-doorbell.service",
+            "!/pipeweaver.service",
+            "!/pipewire-boost.service",
+            "!/vram-watch.service"
           ]
         },
         {
@@ -362,8 +366,10 @@
             "*",
             "!/pipewire.conf.d/",
             "/pipewire.conf.d/*",
-            "!/pipewire.conf.d/mic-filtered.conf",
-            "!/pipewire.conf.d/min-quantum.conf"
+            "!/pipewire.conf.d/min-quantum.conf",
+            "!/filter-chain.conf.d/",
+            "/filter-chain.conf.d/*",
+            "!/filter-chain.conf.d/mic-filtered.conf"
           ]
         },
         {
@@ -373,7 +379,8 @@
             "*",
             "!/wireplumber.conf.d/",
             "/wireplumber.conf.d/*",
-            "!/wireplumber.conf.d/hide-devices.conf"
+            "!/wireplumber.conf.d/hide-devices.conf",
+            "!/wireplumber.conf.d/headset-mic-headroom.conf"
           ]
         },
         {
@@ -391,10 +398,14 @@
             "*",
             "!/brave-media",
             "!/chatgpt",
+            "!/ha-doorbell",
             "!/hyprpicker",
             "!/obs-config",
+            "!/omarchy-confirm",
             "!/pipeweaver-app",
+            "!/pipewire-boost",
             "!/slurp",
+            "!/vram-watch",
             "!/webapp-focus",
             "!/webapp-open-url"
           ]
