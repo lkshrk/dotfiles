@@ -25,6 +25,34 @@ done < <(jq -r --arg pp "$per_process" ".[] | select(.pid > 0) | \"\(.pid)\t\($a
 windows=$(jq -r --arg pp "$per_process" --arg app "$app" \
   ".[] | select(($app_of) == \$app) | \"\(.pid)\t\(.xwayland)\t\(.address)\"" <<<"$clients")
 
+wine_prefix() {
+  { tr '\0' '\n' <"/proc/$1/environ"; } 2>/dev/null | sed -n 's/^WINEPREFIX=//p'
+}
+
+# Wine leaves its agents, services and wineserver behind when one exe ends, so the last window takes the whole prefix.
+quit_prefix() {
+  local p server
+  for p in $(pgrep -x wineserver); do
+    [[ $(wine_prefix "$p") == "$1" ]] && server=$(readlink "/proc/$p/exe")
+  done
+  [[ -n ${server:-} ]] && WINEPREFIX="$1" "$server" -k 2>/dev/null
+  sleep 3
+  for p in $(pgrep -u "$UID"); do
+    [[ $(wine_prefix "$p") == "$1" ]] && kill -KILL "$p" 2>/dev/null
+  done
+  return 0
+}
+
+prefix=$(wine_prefix "${windows%%$'\t'*}")
+if [[ -n $prefix ]]; then
+  own=$(cut -f1 <<<"$windows")
+  others=0
+  while read -r p; do
+    [[ $(wine_prefix "$p") == "$prefix" ]] && ! grep -qxF "$p" <<<"$own" && others=1
+  done < <(jq -r '.[] | select(.pid > 0) | .pid' <<<"$clients")
+  ((others)) || { quit_prefix "$prefix"; exit 0; }
+fi
+
 declare -A done_units=()
 leftover=0
 while IFS=$'\t' read -r pid _ _; do
