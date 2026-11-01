@@ -949,11 +949,10 @@ Item {
   // keyboard focus — popups are passive surfaces and must never steal input
   // from the focused application.
 
-  MainScreen { id: mainScreen }
+  FocusedScreen { id: focusedScreen; hold: popupModel.count > 0 }
 
-  // Toasts show on the main monitor only; every screen still gets them if it is not connected.
   Variants {
-    model: mainScreen.screen ? [mainScreen.screen] : Quickshell.screens
+    model: focusedScreen.screen ? [focusedScreen.screen] : []
 
     PanelWindow {
       id: popupWindow

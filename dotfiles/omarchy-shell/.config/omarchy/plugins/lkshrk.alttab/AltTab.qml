@@ -24,7 +24,7 @@ Item {
   // Escape ends the session; the release commit that follows must neither focus nor arm the next open.
   property bool cancelled: false
 
-  MainScreen { id: mainScreen }
+  FocusedScreen { id: focusedScreen; hold: root.opened }
   property string focusTarget: ""
   // Omarchy sets no_screen_share on these, so their capture comes back blank.
   readonly property var protectedClass: /^(Bitwarden|1[pP]assword|chrome-nngceckbapebfimnlniiiahkandclblb-Default)$/
@@ -222,13 +222,7 @@ Item {
   PanelWindow {
     id: panel
     visible: root.opened
-    screen: {
-      if (mainScreen.screen) return mainScreen.screen
-      var screens = Quickshell.screens
-      var name = Hyprland.focusedMonitor ? Hyprland.focusedMonitor.name : ""
-      for (var j = 0; j < screens.length; j++) if (screens[j].name === name) return screens[j]
-      return screens.length > 0 ? screens[0] : null
-    }
+    screen: focusedScreen.screen
     anchors { top: true; bottom: true; left: true; right: true }
     color: "transparent"
     WlrLayershell.namespace: "lkshrk-alttab"

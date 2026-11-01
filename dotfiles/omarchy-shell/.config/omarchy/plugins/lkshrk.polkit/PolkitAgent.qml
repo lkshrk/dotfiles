@@ -219,13 +219,12 @@ Item {
     }
   }
 
-  MainScreen { id: mainScreen }
+  FocusedScreen { id: focusedScreen; hold: root.dialogVisible }
 
   PanelWindow {
     id: panel
     visible: root.dialogVisible
-    // Password prompts always open on the main monitor, whichever screen asked; without it the shell picks the focused one.
-    screen: mainScreen.screen
+    screen: focusedScreen.screen
     anchors { top: true; bottom: true; left: true; right: true }
     color: "transparent"
     WlrLayershell.namespace: "omarchy-polkit"

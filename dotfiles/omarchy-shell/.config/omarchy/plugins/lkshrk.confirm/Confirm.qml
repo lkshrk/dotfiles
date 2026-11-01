@@ -91,12 +91,12 @@ Item {
     root.token = ""
   }
 
-  MainScreen { id: mainScreen }
+  FocusedScreen { id: focusedScreen; hold: root.opened }
 
   PanelWindow {
     id: panel
     visible: root.opened
-    screen: mainScreen.screen
+    screen: focusedScreen.screen
     anchors { top: true; bottom: true; left: true; right: true }
     color: "transparent"
     WlrLayershell.namespace: "omarchy-confirm"
