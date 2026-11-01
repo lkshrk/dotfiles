@@ -1,17 +1,29 @@
 #!/bin/bash
-# Warn before the NVIDIA open driver's VA-space bug hits a nearly full card (open-gpu-kernel-modules #1453).
+# Warn before the NVIDIA open driver's VA-space bugs hit (open-gpu-kernel-modules #1453, #1396): VRAM, BAR1, NVRM/Xid errors.
 
 set -uo pipefail
 
 warn=${VRAM_WARN_MIB:-9000}
 crit=${VRAM_CRIT_MIB:-9600}
 rearm=${VRAM_REARM_MIB:-8500}
+bar_warn=${BAR1_WARN_PCT:-85}
+bar_crit=${BAR1_CRIT_PCT:-95}
+bar_rearm=${BAR1_REARM_PCT:-80}
 interval=${VRAM_INTERVAL:-10}
 
+vram_level=0
+bar_level=0
 level=0
 card_id=0
 
 smi() { timeout 5 nvidia-smi "$@" 2>/dev/null; }
+
+memory() {
+  smi -q -d MEMORY | awk '
+    /FB Memory Usage/ { s = "fb" } /BAR1 Memory Usage/ { s = "bar" } /Conf Compute/ { s = "" }
+    s && $1 == "Total" { t[s] = $3 } s && $1 == "Used" { u[s] = $3 }
+    END { if (t["fb"] && t["bar"]) print u["fb"], t["fb"], u["bar"], t["bar"] }'
+}
 
 top_users() {
   smi pmon -c 1 -s m | awk '!/^#/ && $4 ~ /^[0-9]+$/ { print $2, $4 }' |
@@ -28,39 +40,66 @@ notify() {
     --replace-id="$card_id" "$@" 2>/dev/null) && card_id=$out
 }
 
+# value warn crit rearm current -> new level, with hysteresis between rearm and warn.
+level_for() {
+  if (( $1 >= $3 )); then echo 2
+  elif (( $1 >= $2 )); then echo $(( $5 < 1 ? 1 : $5 ))
+  elif (( $1 < $4 )); then echo 0
+  else echo "$5"
+  fi
+}
+
+# NVRM VA errors precede the BAR1 lockup by minutes; an Xid at least names what just happened.
+watch_kernel() {
+  local id=0 last=-60 out
+  journalctl -k -f -n 0 -o cat --grep='Xid|NVRM: (?!loading NVIDIA)' 2>/dev/null |
+    while IFS= read -r line; do
+      echo "kernel: $line" >&2
+      (( SECONDS - last < 60 )) && continue
+      last=$SECONDS
+      out=$(notify-send --app-name="VRAM" --icon=dialog-warning -u critical --print-id --replace-id="$id" \
+        "NVIDIA driver error" "${line}
+Save your work: a GPU lockup may follow." 2>/dev/null) && id=$out
+    done
+}
+
+[[ ${1:-} == --once ]] || watch_kernel &
+
 while true; do
-  if [[ ! $(smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits) =~ ^([0-9]+),\ ([0-9]+)$ ]]; then
+  read -r used total bar_used bar_total < <(memory)
+  if [[ ! "${used:-}${total:-}${bar_used:-}${bar_total:-}" =~ ^[0-9]+$ ]]; then
     echo "nvidia-smi unavailable" >&2
     [[ ${1:-} == --once ]] && exit 1
     sleep 60
     continue
   fi
-  used=${BASH_REMATCH[1]} total=${BASH_REMATCH[2]}
+  bar_pct=$(( bar_used * 100 / bar_total ))
 
   if [[ ${1:-} == --once ]]; then
-    printf 'VRAM %s / %s MB\n' "$used" "$total"
+    printf 'VRAM %s / %s MB, BAR1 %s / %s MB (%s%%)\n' "$used" "$total" "$bar_used" "$bar_total" "$bar_pct"
     top_users
     exit 0
   fi
 
-  new=$level
-  if (( used >= crit )); then new=2
-  elif (( used >= warn )); then (( level < 1 )) && new=1
-  elif (( used < rearm )); then new=0
-  fi
+  vram_level=$(level_for "$used" "$warn" "$crit" "$rearm" "$vram_level")
+  bar_level=$(level_for "$bar_pct" "$bar_warn" "$bar_crit" "$bar_rearm" "$bar_level")
+  new=$(( vram_level > bar_level ? vram_level : bar_level ))
+  state="VRAM ${used} / ${total} MB, BAR1 ${bar_pct}%"
 
   if (( new > level )); then
     users=$(top_users | sed 's/^/• /')
     if (( new == 2 )); then
-      notify -u critical "VRAM critical: ${used} / ${total} MB" "Stop the stream and close apps now.
+      notify -u critical "GPU memory critical" "${state}
+Stop the stream and close apps now.
 ${users}"
     else
-      notify "VRAM almost full: ${used} / ${total} MB" "Close apps or lower WoW textures.
+      notify "GPU memory almost full" "${state}
+Close apps or lower WoW textures.
 ${users}"
     fi
-    echo "level $new at ${used} MB" >&2
+    echo "level $new: $state" >&2
   elif (( new == 0 && level > 0 )); then
-    echo "back to normal at ${used} MB" >&2
+    echo "back to normal: $state" >&2
     card_id=0
   fi
   level=$new
