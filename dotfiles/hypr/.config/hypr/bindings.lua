@@ -99,7 +99,7 @@ app("E", "Editor (Zed)", "dev.zed.Zed", focus("--order stable --title '\\.nvim\\
 app("N", "Obsidian", "md.obsidian.Obsidian", focus("--exclude-title '^Settings - ' '^md\\.obsidian\\.Obsidian$' obsidian"))
 app("K", "Linear", "chrome-linear.app__-Default", os.getenv("HOME") .. "/.local/bin/webapp-focus https://linear.app")
 app("A", "ChatGPT", "chrome-chatgpt.com__-Default", os.getenv("HOME") .. "/.local/bin/webapp-focus https://chatgpt.com/")
-app("D", "Discord", "discord", focus("discord discord"))
+app("D", "Equibop (Discord)", "equibop", focus("equibop equibop"))
 app("S", "Signal and Telegram", "signal", focus("'^(signal|org\\.telegram\\.desktop)$' signal-desktop"))
 app("C", "Chatterino", "com.chatterino.chatterino", focus("chatterino chatterino"))
 app("O", "OBS", "com.obsproject.Studio", focus("obsproject obs"))

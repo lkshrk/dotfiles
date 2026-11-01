@@ -35,7 +35,7 @@ local apps = {
   { "Bitwarden", "1password", "1Password", workspace = "8" },
   { "steam", "gamescope", "com.moonlight_stream.Moonlight", "wowupcf", workspace = "9" },
   { "steam_app_battlenet", "battle.net.exe", "wow.exe", workspace = "9", multi = true },
-  { "discord", "md.obsidian.Obsidian", workspace = "10" },
+  { "discord", "equibop", "md.obsidian.Obsidian", workspace = "10" },
 }
 
 C.apps = apps

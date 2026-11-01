@@ -1,7 +1,6 @@
 local C = require("hypr.screens.config")
 
--- One tiled workspace per main app; workspace 1 collects every app without its own rule.
-o.window(".*", { workspace = "1" })
+-- One tiled workspace per main app; screens/windows.lua collects tiled apps without a home onto workspace 1.
 for _, app in ipairs(C.apps) do
   local classes = {}
   for i, class in ipairs(app) do classes[i] = class:gsub("%.", "\\.") end
@@ -21,8 +20,8 @@ o.window("^io\\.missioncenter\\.MissionCenter$", {
 })
 
 -- Launchers float (screens/frames.lua restores their frame); games sharing Battle.net's class match their own titles below.
-o.window("^wowupcf$", { float = true })
-o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true })
+o.window("^wowupcf$", { float = true, workspace = "1" })
+o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true, workspace = "1" })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them.
 o.window("^(steam_app_[0-9]+|gamescope|wow\\.exe)$", { fullscreen = true, idle_inhibit = "fullscreen" })
 -- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.

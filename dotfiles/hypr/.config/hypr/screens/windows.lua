@@ -74,14 +74,40 @@ local function place_helium(w)
   end
 end
 
+-- Popups and prompts always ask on the main screen's current workspace, whichever screen opened them.
+local function to_main(w)
+  local main = hl.get_monitor(C.main)
+  local target = main and main.active_workspace
+  if target and (not w.workspace or w.workspace.name ~= target.name) then
+    hl.dispatch(hl.dsp.window.move({ workspace = target.name, window = w }))
+  end
+  hl.dispatch(hl.dsp.window.center({ window = w }))
+end
+
+-- Workspace 1 collects tiled apps without a home; floating ones are popups and go to the main screen.
+local function collect(w)
+  if (w.fullscreen or 0) ~= 0 or not w.workspace or w.workspace.special then return end
+  if w.floating or U.has_tag(w, "dialog") then
+    to_main(w)
+    focus_soon(w)
+    return
+  end
+  if U.transient(w) or w.workspace.name == "1" then return end
+  hl.dispatch(hl.dsp.window.move({ workspace = "1", window = w, follow = true }))
+end
+
+-- Hyprland floats popups (share picker, fixed-size windows) only after window.open on some layouts, so decide once it has.
+local function collect_soon(w)
+  local address = w.address
+  hl.timer(function()
+    local now = hl.get_window("address:" .. address)
+    if now and now.mapped then collect(now) end
+  end, { timeout = 120, type = "oneshot" })
+end
+
 hl.on("window.open", function(w)
   if C.password_prompt[w.class] then
-    local main = hl.get_monitor(C.main)
-    local target = main and main.active_workspace
-    if target and w.workspace ~= target then
-      hl.dispatch(hl.dsp.window.move({ workspace = target.name, window = w }))
-    end
-    hl.dispatch(hl.dsp.window.center({ window = w }))
+    to_main(w)
     return
   end
   -- Free floating windows keep the frame they were last left at (frames.lua), so they skip slots and the dialog box.
@@ -89,6 +115,18 @@ hl.on("window.open", function(w)
   if w.class == "helium" then
     place_helium(w)
     focus_soon(w)
+    return
+  end
+  -- Only an app that lives on this workspace takes a slot or column; anything else is a popup or gets collected.
+  if not w.workspace or C.homes[U.app(w)] ~= w.workspace.name then
+    -- The columns layout tiles everything, so Hyprland never floats a popup there on its own.
+    if w.workspace and w.workspace.name == C.top_workspace then
+      hl.dispatch(hl.dsp.window.float({ action = "enable", window = w }))
+      to_main(w)
+      focus_soon(w)
+    else
+      collect_soon(w)
+    end
     return
   end
   W.arrive(w)
