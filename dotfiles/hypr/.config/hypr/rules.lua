@@ -20,13 +20,13 @@ o.window("^io\\.missioncenter\\.MissionCenter$", {
 })
 
 -- Launchers float (screens/frames.lua restores their frame); games sharing Battle.net's class match their own titles below.
-o.window("^wowupcf$", { float = true, workspace = "1" })
-o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true, workspace = "1" })
+o.window("^wowupcf$", { float = true })
+o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them.
 o.window("^(steam_app_[0-9]+|gamescope|wow\\.exe)$", { fullscreen = true, idle_inhibit = "fullscreen" })
 -- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.
 o.window({
-  class = "^steam_app_battlenet$",
+  class = "^(steam_app_battlenet|battle\\.net\\.exe)$",
   title = "^(World of Warcraft|Diablo IV|Diablo II: Resurrected|Warcraft III|Hearthstone|Overwatch|StarCraft.*)$",
 }, { fullscreen = true, idle_inhibit = "fullscreen" })
 
@@ -40,7 +40,7 @@ o.window({ tag = "dialog" }, { workspace = "unset" })
 o.window({ tag = "pip" }, { workspace = "unset" })
 o.window({ tag = "floating-window" }, { workspace = "unset" })
 o.window("^(org\\.omarchy\\..*|omacalc|dev\\.tensaku\\.Tensaku|WebcamOverlay-.*|localsend|Share|Hermes)$", { workspace = "unset" })
--- Re-applied because the collector rule above overrides Omarchy's earlier one.
+-- Re-applied because the per-app workspace rules above override Omarchy's for browser windows.
 o.window({ title = ".*is sharing.*" }, { workspace = "special silent" })
 -- A web app's own browser window only exists until webapp-links hands its tab to the default browser.
 o.window("^webapp-.*$", { workspace = "special:webapp-links silent" })
@@ -50,4 +50,4 @@ o.window("^(Bitwarden|1[pP]assword)$", { tag = "-floating-window", tile = true, 
 o.window("^.+-nngceckbapebfimnlniiiahkandclblb-Default$", { no_screen_share = true, tag = "+floating-window" })
 
 -- The screenshot freeze would otherwise animate in and out over the live screen, showing as a flash.
-hl.layer_rule({ match = { namespace = "hyprpicker" }, no_anim = true, animation = "none" })
+hl.layer_rule({ match = { namespace = "hyprpicker" }, no_anim = true })

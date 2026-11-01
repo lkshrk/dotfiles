@@ -93,7 +93,9 @@ local function collect(w)
     return
   end
   if U.transient(w) or w.workspace.name == "1" then return end
-  hl.dispatch(hl.dsp.window.move({ workspace = "1", window = w, follow = true }))
+  local active = hl.get_active_workspace()
+  local follow = active ~= nil and active.name == w.workspace.name
+  hl.dispatch(hl.dsp.window.move({ workspace = "1", window = w, follow = follow }))
 end
 
 -- Hyprland floats popups (share picker, fixed-size windows) only after window.open on some layouts, so decide once it has.

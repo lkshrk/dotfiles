@@ -158,12 +158,11 @@ hyper("Windows", "SHIFT + L", "Put every window back in its place", W.place_all)
 -- keyd leaves no key sending plain Super, so Omarchy's Super+drag is unreachable; Wine title bars cannot be dragged at all.
 local function windowed_mouse(dispatcher)
   return function()
-    -- Mouse actions target the pointer before click focus changes, so check its workspace.
-    -- Hyprland ends mouse drags before callbacks, so rejected releases need no extra state.
+    -- Mouse actions target the pointer before click focus changes, so check the workspace under it.
     local monitor = hl.get_monitor_at_cursor()
     if not monitor then return end
-    local workspace, special = monitor.active_workspace, monitor.active_special_workspace
-    if (workspace and workspace.has_fullscreen) or (special and special.has_fullscreen) then return end
+    local workspace = monitor.active_special_workspace or monitor.active_workspace
+    if workspace and (workspace.fullscreen_mode or 0) >= 2 then return end
     hl.dispatch(dispatcher)
   end
 end

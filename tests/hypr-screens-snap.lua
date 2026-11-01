@@ -1,6 +1,6 @@
 package.path = "dotfiles/hypr/.config/?.lua;" .. package.path
 
-local active, calls, joins = nil, {}, {}
+local active, calls, joins, handlers = nil, {}, {}, {}
 local monitors = {
   { name = "main", x = -1920, y = 100, width = 1920, height = 1200, scale = 1, transform = 0 },
   { name = "portrait", x = 0, y = 0, width = 2560, height = 1440, scale = 1.25, transform = 1 },
@@ -15,7 +15,7 @@ local function dispatcher(kind)
 end
 
 hl = {
-  on = function() end,
+  on = function(event, fn) handlers[event] = fn end,
   timer = function() end,
   get_windows = function() return {} end,
   get_active_window = function() return active end,
@@ -26,26 +26,35 @@ hl = {
   dsp = { window = {
     move = dispatcher("move"), float = dispatcher("float"),
     resize = dispatcher("resize"), alter_zorder = dispatcher("zorder"),
+    fullscreen_state = dispatcher("fullscreen_state"), center = dispatcher("center"),
   } },
   dispatch = function(command)
     calls[#calls + 1] = command
-    local args, w = command.args, command.args.window
-    if command.kind == "float" then w.floating = args.action == "enable"
+    local args, w = command.args, command.args.window or active
+    if command.kind == "fullscreen_state" then w.fullscreen = args.internal
+    elseif command.kind == "float" then w.floating = args.action == "enable"
     elseif command.kind == "resize" then w.size = { x = args.x, y = args.y }
     elseif command.kind == "move" then
       if args.out_of_group then w.group = nil
+      elseif args.workspace then w.workspace = { name = args.workspace }
       else w.at = { x = args.x, y = args.y } end
     end
   end,
 }
 
-package.loaded["hypr.screens.config"] = { side = "portrait", top_workspace = "10" }
+monitors[1].active_workspace = { name = "3" }
+package.loaded["hypr.screens.config"] = {
+  side = "portrait", main = "main", top_workspace = "10",
+  homes = { kitty = "10" }, password_prompt = {}, side_workspaces = {},
+}
 package.loaded["hypr.screens.top"] = {
   join = function(w, side)
     assert(not w.floating, "column entry must tile the window before joining a group")
     joins[#joins + 1] = { window = w, side = side }
   end,
+  pick_side = function() return "left" end,
 }
+package.loaded["hypr.screens.side"] = {}
 local U = require("hypr.screens.util")
 local M = require("hypr.screens.move")
 
@@ -99,11 +108,16 @@ M.arrow("left")()
 assert(calls[1].kind == "move" and calls[1].args.out_of_group, "detach selected tab before floating")
 assert(active.group == nil and active.floating and not peer.floating, "other group members stay tiled")
 
-for _, mode in ipairs({ 1, 2 }) do
+for _, mode in ipairs({ 2, 3 }) do
   active = window(monitors[1]); active.fullscreen, active.group = mode, {}
   calls = {}; M.arrow("left")()
-  assert(#calls == 0 and active.group ~= nil, "fullscreen/maximized windows are untouched")
+  assert(#calls == 0 and active.group ~= nil, "fullscreen windows are untouched")
 end
+active = window(monitors[1]); active.fullscreen = 1
+calls = {}; M.arrow("left")()
+assert(calls[1].kind == "fullscreen_state" and active.fullscreen == 0, "maximized windows leave maximize first")
+assert(active.floating, "maximized windows snap after leaving maximize")
+
 active = window(monitors[1]); active.monitor = nil
 calls = {}; M.arrow("left")(); assert(#calls == 0, "missing monitor is harmless")
 active = nil; M.arrow("left")(); assert(#calls == 0, "missing focused window is harmless")
@@ -124,5 +138,18 @@ assert(#calls == 0 and #joins == before, "column shortcuts ignore other workspac
 active = window(monitors[3], "10"); active.fullscreen = 2
 M.column("right")()
 assert(#calls == 0 and #joins == before, "column shortcuts protect fullscreen")
+active = window(monitors[3], "10"); active.fullscreen = 1
+calls = {}; M.column("right")()
+assert(calls[1].kind == "fullscreen_state" and calls[1].args.window == active, "column leaves maximize first")
+assert(active.fullscreen == 0 and #joins == before + 1 and joins[#joins].side == "right", "maximized window joins column")
 
-print("ok: snapping on three monitor geometries, vertical cycles, groups, fullscreen, and columns")
+require("hypr.screens.windows")
+local popup = window(monitors[3], "10"); popup.class, popup.address = "popup", "0x1"
+calls = {}; handlers["window.open"](popup)
+assert(popup.floating and popup.workspace.name == "3", "top-screen popup floats onto main's active workspace")
+assert(calls[#calls].kind == "center" and calls[#calls].args.window == popup, "popup is centered on main")
+local app = window(monitors[3], "10"); app.class = "kitty"
+before = #joins; handlers["window.open"](app)
+assert(not app.floating and #joins == before + 1, "homed app on the top screen keeps its column")
+
+print("ok: snapping on three monitor geometries, vertical cycles, groups, fullscreen, maximize, columns, and top-screen popups")

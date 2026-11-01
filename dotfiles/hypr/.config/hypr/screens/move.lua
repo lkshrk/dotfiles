@@ -2,14 +2,21 @@
 local C = require("hypr.screens.config")
 local U = require("hypr.screens.util")
 local T = require("hypr.screens.top")
-local S = require("hypr.screens.side")
+local S = require("hypr.screens.snap")
 
 local M = {}
+
+local function unmaximize(w)
+  local mode = w.fullscreen or 0
+  if mode >= 2 then return false end
+  if mode ~= 0 then hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = w })) end
+  return true
+end
 
 function M.arrow(dir)
   return function()
     local w = hl.get_active_window()
-    if not w or not w.monitor or (w.fullscreen or 0) ~= 0 then return end
+    if not w or not w.monitor or not unmaximize(w) then return end
     -- Snap only the selected tab, leaving the rest of its group tiled.
     if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
     S.step(w, dir)
@@ -19,7 +26,7 @@ end
 function M.column(side)
   return function()
     local w = hl.get_active_window()
-    if not w or (w.fullscreen or 0) ~= 0 or not w.workspace or w.workspace.name ~= C.top_workspace then return end
+    if not w or not w.workspace or w.workspace.name ~= C.top_workspace or not unmaximize(w) then return end
     if w.floating then
       if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
       hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))
