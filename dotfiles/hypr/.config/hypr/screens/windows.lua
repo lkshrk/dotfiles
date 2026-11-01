@@ -17,13 +17,6 @@ function W.arrive(w)
   end
 end
 
--- Dialog shape follows the screen width, so it stays landscape on the portrait screen too.
-local function dialog_box(a)
-  local width = math.floor(a.w * (a.w > a.h and 0.6 or 0.9))
-  local height = math.floor(math.min(a.h * 0.8, width * 0.85))
-  return { x = math.floor(a.x + (a.w - width) / 2), y = math.floor(a.y + (a.h - height) / 2), w = width, h = height }
-end
-
 -- Hyprland settles focus after window.open handlers run, so focusing from inside them can be undone; focus once it has.
 local function focus_soon(w)
   local address = w.address
@@ -39,7 +32,7 @@ local function make_extra(w)
   hl.dispatch(hl.dsp.window.tag({ tag = "+secondary", window = w }))
   if w.group then hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w })) end
   hl.dispatch(hl.dsp.window.float({ action = "enable", window = w }))
-  U.frame(w, dialog_box(U.area(w.monitor)))
+  hl.dispatch(hl.dsp.window.center({ window = w }))
   focus_soon(w)
 end
 
