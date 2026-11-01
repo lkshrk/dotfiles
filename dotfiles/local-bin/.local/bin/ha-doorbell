@@ -1,0 +1,226 @@
+#!/usr/bin/env -S uv run --quiet --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["websockets>=13"]
+# ///
+"""Chime and notify when the Home Assistant doorbell rings; `--test [rings]` fires it without connecting."""
+
+import asyncio
+import json
+import math
+import os
+import struct
+import sys
+import time
+import urllib.request
+import wave
+
+import websockets
+
+HASS_URL = os.environ.get("HASS_URL", "https://hass.h-cloud.io").rstrip("/")
+ENTITY = os.environ.get("DOORBELL_ENTITY", "binary_sensor.haustur_offner_ring_action")
+SOUND = os.environ.get("DOORBELL_SOUND", "")
+RATE = 44100
+OPENER = os.environ.get("DOORBELL_OPENER", "lock.haustur_offner")
+SINK = os.environ.get("DOORBELL_SINK", "pipeweaver_music")
+
+
+def log(msg: str) -> None:
+    print(msg, file=sys.stderr, flush=True)
+
+
+ICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#ffc857"/><stop offset="1" stop-color="#f0782d"/></linearGradient></defs>
+<rect width="128" height="128" rx="30" fill="url(#g)"/>
+<g transform="rotate(-14 64 64)" fill="#fff">
+<path d="M64 26c-3.3 0-6 2.7-6 6v2.6C45.6 37.2 37 48 37 61v19l-8 9v4h70v-4l-8-9V61c0-13-8.6-23.8-21-26.4V32c0-3.3-2.7-6-6-6z"/>
+<circle cx="64" cy="102" r="9"/></g>
+<g fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".85">
+<path d="M22 44c-4 6-6 13-6 20"/><path d="M106 44c4 6 6 13 6 20"/></g>
+</svg>"""
+
+ring_count = 0
+ring_card_id = 0
+last_ring = 0.0
+waiter: asyncio.subprocess.Process | None = None
+
+
+def icon_path() -> str:
+    path = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "ha-doorbell-icon.svg")
+    if not os.path.exists(path):
+        with open(path, "w") as f:
+            f.write(ICON_SVG)
+    return path
+
+
+async def notify() -> None:
+    global ring_count, ring_card_id, last_ring, waiter
+    now = time.monotonic()
+    ring_count = ring_count + 1 if now - last_ring < 120 else 1
+    last_ring = now
+    summary = "Ding-Dong! Es klingelt" if ring_count == 1 else f"Ding-Dong! Schon {ring_count}× geklingelt"
+    body = (
+        f"<b>Haustür</b> · {time.strftime('%H:%M')} Uhr<br/>"
+        "<i>Klicken zum Öffnen der Tür</i>"
+    )
+    replace = [f"--replace-id={ring_card_id}"] if ring_count > 1 and ring_card_id else []
+    if waiter and waiter.returncode is None:
+        waiter.terminate()
+    proc = waiter = await asyncio.create_subprocess_exec(
+        "notify-send", "--app-name=Türklingel", "--urgency=normal",
+        f"--icon={icon_path()}", "--print-id", *replace, "--action=default=Öffnen",
+        summary, body,
+        stdout=asyncio.subprocess.PIPE,
+    )
+    assert proc.stdout
+    first = (await proc.stdout.readline()).strip()
+    if first.isdigit():
+        ring_card_id = int(first)
+    out, _ = await proc.communicate()
+    if out.strip() == b"default":
+        await door_dialog()
+
+
+def call_service(domain: str, service: str, data: dict) -> None:
+    req = urllib.request.Request(
+        f"{HASS_URL}/api/services/{domain}/{service}",
+        data=json.dumps(data).encode(),
+        headers={"Authorization": f"Bearer {os.environ['HASS_TOKEN']}", "Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=10):
+        pass
+
+
+async def toast(summary: str, body: str = "") -> None:
+    await asyncio.create_subprocess_exec(
+        "notify-send", "--app-name=Türklingel", f"--icon={icon_path()}", summary, body,
+    )
+
+
+async def door_dialog() -> None:
+    proc = await asyncio.create_subprocess_exec(
+        "omarchy-confirm", "Jemand steht an der Haustür. Soll ich öffnen?",
+        "--title", "Ding-Dong!", "--icon", "\U000F009E",
+        "--confirm", "Öffnen", "--confirm-icon", "\U000F081C", "--cancel", "Abbrechen",
+    )
+    if await proc.wait() != 0:
+        return
+    try:
+        await asyncio.to_thread(call_service, "lock", "open", {"entity_id": OPENER})
+        log("door opened")
+        await toast("Tür wird geöffnet")
+    except Exception as err:
+        log(f"opening the door failed: {err}")
+        await toast("Tür konnte nicht geöffnet werden", str(err))
+
+
+BELL_PARTIALS = [(1.0, 1.0), (2.0, 0.45), (2.76, 0.3), (5.4, 0.12)]
+
+
+def bell(freq_at, dur: float, decay: float, vol: float) -> list[float]:
+    out, phases = [], [0.0] * len(BELL_PARTIALS)
+    for i in range(int(dur * RATE)):
+        t = i / RATE
+        f = freq_at(t)
+        s = 0.0
+        for k, (ratio, amp) in enumerate(BELL_PARTIALS):
+            phases[k] += f * ratio / RATE
+            s += amp * math.exp(-decay * ratio * t) * math.sin(2 * math.pi * phases[k])
+        out.append(s * min(1.0, t / 0.004) * min(1.0, (dur - t) / 0.05) * vol)
+    return out
+
+
+def boing(dur: float = 0.6, vol: float = 0.4) -> list[float]:
+    out, phase = [], 0.0
+    for i in range(int(dur * RATE)):
+        t = i / RATE
+        phase += (160 * (1 + 0.6 * math.exp(-4 * t) * math.sin(2 * math.pi * 11 * t)) + 90 * t) / RATE
+        s = (2 * (phase % 1.0) - 1) * 0.5 + 0.5 * math.sin(2 * math.pi * phase)
+        out.append(s * math.exp(-3.5 * t) * min(1.0, t / 0.005) * min(1.0, (dur - t) / 0.05) * vol)
+    return out
+
+
+def jingle_path() -> str:
+    """A ding, a dong that droops as it fades, then a boing."""
+    path = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "ha-doorbell-dingdong.wav")
+    if os.path.exists(path):
+        return path
+    samples = bell(lambda _t: 784, 0.55, 2.2, 0.32)
+    samples += bell(lambda t: 523 * (1 - 0.32 * (t / 1.4) ** 1.8) * (1 + 0.025 * t * math.sin(2 * math.pi * 5 * t)), 1.4, 1.1, 0.34)
+    samples += [0.0] * int(0.05 * RATE) + boing()
+    with wave.open(path, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(RATE)
+        w.writeframes(b"".join(struct.pack("<h", int(max(-1.0, min(1.0, s)) * 32767)) for s in samples))
+    return path
+
+
+async def chime() -> None:
+    target = ["--target", SINK] if SINK else []
+    sound = SOUND or jingle_path()
+    proc = await asyncio.create_subprocess_exec("pw-play", *target, sound)
+    await proc.wait()
+
+
+async def alert() -> None:
+    await asyncio.gather(notify(), chime(), return_exceptions=True)
+
+
+async def listen(token: str) -> None:
+    ws_url = HASS_URL.replace("http", "ws", 1) + "/api/websocket"
+    async with websockets.connect(ws_url, ping_interval=30, ping_timeout=20) as ws:
+        await ws.recv()
+        await ws.send(json.dumps({"type": "auth", "access_token": token}))
+        reply = json.loads(await ws.recv())
+        if reply.get("type") != "auth_ok":
+            raise PermissionError(f"auth failed: {reply.get('message', reply.get('type'))}")
+        await ws.send(json.dumps({
+            "id": 1,
+            "type": "subscribe_trigger",
+            "trigger": {"trigger": "state", "entity_id": ENTITY, "from": "off", "to": "on"},
+        }))
+        log(f"connected to {HASS_URL}, watching {ENTITY}")
+        pending: set[asyncio.Task] = set()
+        async for raw in ws:
+            msg = json.loads(raw)
+            if msg.get("type") == "result" and not msg.get("success"):
+                raise RuntimeError(f"subscribe failed: {msg.get('error')}")
+            if msg.get("type") == "event":
+                log("ring")
+                task = asyncio.create_task(alert())
+                pending.add(task)
+                task.add_done_callback(pending.discard)
+
+
+async def main() -> int:
+    if "--test" in sys.argv:
+        rings = int(sys.argv[-1]) if sys.argv[-1].isdigit() else 1
+        for n in range(rings):
+            if n:
+                await asyncio.sleep(4)
+            task = asyncio.create_task(alert())
+        await task
+        return 0
+    token = os.environ.get("HASS_TOKEN")
+    if not token:
+        log("HASS_TOKEN is not set")
+        return 2
+    delay = 5
+    while True:
+        try:
+            await listen(token)
+            delay = 5
+        except PermissionError as err:
+            delay = 300
+            log(f"{err}; retrying in {delay}s")
+        except Exception as err:
+            log(f"Home Assistant unreachable ({type(err).__name__}: {err}); retrying in {delay}s")
+        await asyncio.sleep(delay)
+        delay = min(delay * 2, 300)
+
+
+if __name__ == "__main__":
+    sys.exit(asyncio.run(main()))

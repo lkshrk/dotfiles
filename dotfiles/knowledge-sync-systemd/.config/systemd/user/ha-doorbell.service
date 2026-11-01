@@ -1,0 +1,15 @@
+[Unit]
+Description=Doorbell chime and notification from Home Assistant
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+# Never prompts: waits silently until rbw is unlocked, then reads the token without loading the shell profile.
+ExecStartPre=/usr/bin/bash -c 'until rbw unlocked >/dev/null 2>&1; do sleep 30; done'
+ExecStart=/usr/bin/bash -c 'HASS_TOKEN=$(rbw get --folder ENV linux-doorbell) || exit 75; export HASS_TOKEN; exec %h/.local/bin/ha-doorbell'
+TimeoutStartSec=infinity
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=graphical-session.target
