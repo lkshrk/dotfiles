@@ -423,6 +423,10 @@
           ]
         },
         {
+          "name": "signal-desktop-flags",
+          "path": "~/.config/signal-desktop-flags.conf"
+        },
+        {
           "name": "nautilus",
           "path": "~/.config/nautilus",
           "ignore": [

@@ -45,6 +45,10 @@ cat >"$profile/NativeMessagingHosts/com.lkshrk.open_url.json" <<EOF
 }
 EOF
 
+# Software rendering keeps these off the 10 GiB card's VRAM; Figma needs WebGL.
+gpu_flags=(--disable-gpu)
+[[ $host != *figma.com ]] || gpu_flags=()
+
 exec "$HOME/.config/hypr/scripts/focus-app" "^${class//./\\.}\$" helium-browser \
-  --user-data-dir="$profile" --class="webapp-$app_id" --no-first-run --no-default-browser-check \
+  --user-data-dir="$profile" --class="webapp-$app_id" --no-first-run --no-default-browser-check "${gpu_flags[@]}" \
   --load-extension="$HOME/.config/omarchy/webapp-links" --app="$url"
