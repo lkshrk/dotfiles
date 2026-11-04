@@ -1,0 +1,81 @@
+#!/bin/bash
+# Snapshot a frozen desktop, e.g. over SSH from another machine. Usage: freeze-capture [--report]
+set -uo pipefail
+
+stacks() {
+  local pid t
+  for pid in "$@"; do
+    [[ -d /proc/$pid ]] || continue
+    for t in /proc/"$pid"/task/*; do
+      printf '== pid %s tid %s %s state=%s\n' "$pid" "${t##*/}" "$(cat "$t/comm")" "$(awk '{print $3}' "$t/stat")"
+      cat "$t/stack"
+    done
+  done
+}
+
+if [[ ${1:-} == --root ]]; then
+  out=$2 report=$3 hypr=$4 shell=$5
+  shift 5
+  stacks "$hypr" "$shell" "$@" >"$out/kernel-stacks.txt" 2>&1
+  mapfile -t blocked < <(ps -eLo pid=,stat= | awk '$2 ~ /^D/ {print $1}' | sort -u)
+  stacks "${blocked[@]}" >"$out/kernel-stacks-dstate.txt" 2>&1
+  echo w >/proc/sysrq-trigger
+  sleep 1
+  dmesg | tail -n 600 >"$out/dmesg-blocked-tasks.txt"
+  for pid in "$hypr" "$shell"; do
+    [[ -n $pid ]] || continue
+    timeout -k 5 60 gdb -nx -q -batch -iex 'set debuginfod enabled off' -p "$pid" \
+      -ex 'thread apply all bt 40' -ex detach >"$out/gdb-$pid.txt" 2>&1
+  done
+  if [[ $report == 1 ]]; then
+    (cd "$out" && timeout -k 5 300 nvidia-bug-report.sh --safe-mode --output-file "$out/nvidia-bug-report.log" >/dev/null 2>&1)
+  fi
+  chown -R "${PKEXEC_UID:-0}" "$out"
+  exit 0
+fi
+
+report=0
+[[ ${1:-} != --report ]] || report=1
+
+out="${XDG_STATE_HOME:-$HOME/.local/state}/freeze-captures/$(date +%F_%H%M%S)"
+mkdir -p "$out"
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/$UID}
+if [[ -z ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+  sig=$(ls -t "$XDG_RUNTIME_DIR/hypr" 2>/dev/null | head -1)
+  [[ -z $sig ]] || export HYPRLAND_INSTANCE_SIGNATURE=$sig
+fi
+
+run() {
+  local name=$1
+  shift
+  { printf '$ %s\n' "$*"; timeout -k 2 15 "$@"; echo "[exit $?]"; } >"$out/$name.txt" 2>&1
+}
+
+hypr=$(pgrep -u "$UID" -xo Hyprland)
+shell=$(pgrep -u "$UID" -xo quickshell)
+mapfile -t games < <(pgrep -u "$UID" -f 'WoW\.exe')
+echo "saving to $out"
+
+run threads ps -L -o pid,tid,stat,wchan:32,pcpu,comm -p "${hypr:-1},${shell:-1}"
+run dstate sh -c "ps -eLo pid,tid,stat,wchan:32,comm | awk 'NR==1 || \$3 ~ /^D/'"
+
+echo "root part (kernel stacks, gdb backtraces, blocked tasks) needs your password:"
+pkexec "$(readlink -f "$0")" --root "$out" "$report" "${hypr:-}" "${shell:-}" "${games[@]}" ||
+  echo "root part skipped" | tee "$out/root-skipped.txt"
+
+run hyprctl-monitors hyprctl -j monitors
+run hyprctl-clients hyprctl -j clients
+log=$(ls -t "$XDG_RUNTIME_DIR"/hypr/*/hyprland.log 2>/dev/null | head -1)
+[[ -z $log ]] || tail -n 1000 "$log" >"$out/hyprland-log-tail.txt"
+run journal-kernel journalctl -k -b --since=-30min --no-pager -o short-iso
+run journal-all journalctl -b --since=-10min --no-pager -o short-iso
+run vram-watch journalctl --user -u vram-watch -b --since=-2h --no-pager -o short-iso
+run coredumps coredumpctl list --since=-2h --no-pager
+run pressure sh -c 'free -m; for f in /proc/pressure/*; do echo "== $f"; cat "$f"; done'
+run gpu-mappings sh -c 'for p in /proc/[0-9]*; do n=$(grep -cE "/dev/nvidia" "$p/maps" 2>/dev/null); [ "${n:-0}" -gt 0 ] && echo "$n ${p#/proc/} $(cut -c1-80 "$p/cmdline" | tr "\0" " ")"; done | sort -rn'
+# nvidia-smi can block in the driver on a wedged GPU, so it runs last.
+run nvidia-memory nvidia-smi -q -d MEMORY
+run nvidia-pmon nvidia-smi pmon -c 1 -s m
+run nvidia-smi nvidia-smi
+
+echo "done: $out"
