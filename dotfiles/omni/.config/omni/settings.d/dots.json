@@ -383,7 +383,8 @@
             "/wireplumber.conf.d/*",
             "!/wireplumber.conf.d/hide-devices.conf",
             "!/wireplumber.conf.d/headset-mic-headroom.conf",
-            "!/wireplumber.conf.d/pipeweaver-no-restore.conf"
+            "!/wireplumber.conf.d/pipeweaver-no-restore.conf",
+            "!/wireplumber.conf.d/usb-mic-quantum.conf"
           ]
         },
         {
