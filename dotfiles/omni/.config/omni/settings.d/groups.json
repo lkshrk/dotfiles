@@ -291,6 +291,7 @@
     {
       "name": "utils",
       "tools": [
+        "bind",
         "homeassistant-cli",
         "plantuml",
         "sshpass",

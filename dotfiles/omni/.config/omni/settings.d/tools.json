@@ -220,6 +220,14 @@
       ],
       "git": "https://github.com/waydabber/BetterDisplay"
     },
+    "bind": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "bind"
+        }
+      ]
+    },
     "brave-browser": {
       "providers": [
         {
