@@ -30,7 +30,8 @@ if [[ ${1:-} == --root ]]; then
   if [[ $report == 1 ]]; then
     (cd "$out" && timeout -k 5 300 nvidia-bug-report.sh --safe-mode --output-file "$out/nvidia-bug-report.log" >/dev/null 2>&1)
   fi
-  chown -R "${PKEXEC_UID:-0}" "$out"
+  chown -R "${PKEXEC_UID:-${SUDO_UID:-0}}" "$out"
+  sync -f "$out"
   exit 0
 fi
 
@@ -49,6 +50,20 @@ run() {
   local name=$1
   shift
   { printf '$ %s\n' "$*"; timeout -k 2 15 "$@"; echo "[exit $?]"; } >"$out/$name.txt" 2>&1
+  # A frozen desktop usually ends in a hard reset, which drops unflushed writes.
+  sync "$out/$name.txt"
+}
+
+as_root() {
+  # pkexec's text agent fails over SSH with "No session for cookie".
+  if [[ -z ${SSH_CONNECTION:-} ]] && pkexec "$@"; then
+    return 0
+  fi
+  if [[ ! -t 0 ]]; then
+    echo "no terminal for a sudo prompt; reconnect with ssh -t" >&2
+    return 1
+  fi
+  sudo "$@"
 }
 
 hypr=$(pgrep -u "$UID" -xo Hyprland)
@@ -58,15 +73,17 @@ echo "saving to $out"
 
 run threads ps -L -o pid,tid,stat,wchan:32,pcpu,comm -p "${hypr:-1},${shell:-1}"
 run dstate sh -c "ps -eLo pid,tid,stat,wchan:32,comm | awk 'NR==1 || \$3 ~ /^D/'"
+log=$(ls -t "$XDG_RUNTIME_DIR"/hypr/*/hyprland.log 2>/dev/null | head -1)
+[[ -z $log ]] || run hyprland-log-tail tail -n 1000 "$log"
 
 echo "root part (kernel stacks, gdb backtraces, blocked tasks) needs your password:"
-pkexec "$(readlink -f "$0")" --root "$out" "$report" "${hypr:-}" "${shell:-}" "${games[@]}" ||
+if ! as_root "$(readlink -f "$0")" --root "$out" "$report" "${hypr:-}" "${shell:-}" "${games[@]}"; then
   echo "root part skipped" | tee "$out/root-skipped.txt"
+  sync "$out/root-skipped.txt"
+fi
 
 run hyprctl-monitors hyprctl -j monitors
 run hyprctl-clients hyprctl -j clients
-log=$(ls -t "$XDG_RUNTIME_DIR"/hypr/*/hyprland.log 2>/dev/null | head -1)
-[[ -z $log ]] || tail -n 1000 "$log" >"$out/hyprland-log-tail.txt"
 run journal-kernel journalctl -k -b --since=-30min --no-pager -o short-iso
 run journal-all journalctl -b --since=-10min --no-pager -o short-iso
 run vram-watch journalctl --user -u vram-watch -b --since=-2h --no-pager -o short-iso
