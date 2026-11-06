@@ -462,35 +462,19 @@
         "controllers": [
           "Keypad"
         ],
-        "disable_automatic_states": true,
+        "disable_automatic_states": false,
         "encoder": null,
-        "icon": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_0.svg",
-        "name": "Toggle Mute",
-        "plugin": "me.amankhanna.oadiscord.sdPlugin",
-        "property_inspector": "plugins/me.amankhanna.oadiscord.sdPlugin/pi/simple.html",
+        "icon": "opendeck/toggle-action.png",
+        "name": "Toggle Action",
+        "plugin": "opendeck",
+        "property_inspector": "",
         "states": [
           {
             "alignment": "middle",
             "background_colour": "#000000",
             "colour": "#FFFFFF",
             "family": "Liberation Sans",
-            "image": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_0.svg",
-            "image_scale": 100,
-            "name": "",
-            "show": true,
-            "size": 16,
-            "stroke_colour": "#000000",
-            "stroke_size": 3,
-            "style": "Regular",
-            "text": "",
-            "underline": false
-          },
-          {
-            "alignment": "middle",
-            "background_colour": "#000000",
-            "colour": "#FFFFFF",
-            "family": "Liberation Sans",
-            "image": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_1.svg",
+            "image": "opendeck/toggle-action.png",
             "image_scale": 100,
             "name": "",
             "show": true,
@@ -502,12 +486,141 @@
             "underline": false
           }
         ],
-        "supported_in_multi_actions": true,
-        "tooltip": "Mute and unmute yourself",
-        "uuid": "me.amankhanna.oadiscord.togglemute",
+        "supported_in_multi_actions": false,
+        "tooltip": "Cycle through multiple actions",
+        "uuid": "opendeck.toggleaction",
         "visible_in_action_list": true
       },
-      "children": null,
+      "children": [
+        {
+          "action": {
+            "controllers": [
+              "Keypad",
+              "Encoder"
+            ],
+            "disable_automatic_states": false,
+            "encoder": null,
+            "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+            "name": "Run Command",
+            "plugin": "com.amansprojects.starterpack.sdPlugin",
+            "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+            "states": [
+              {
+                "alignment": "bottom",
+                "background_colour": "#000000",
+                "colour": "#FFFFFF",
+                "family": "Liberation Sans",
+                "image": "0.svg",
+                "image_scale": 100,
+                "name": "",
+                "show": false,
+                "size": 11,
+                "stroke_colour": "#000000",
+                "stroke_size": 3,
+                "style": "Regular",
+                "text": "",
+                "underline": false
+              }
+            ],
+            "supported_in_multi_actions": true,
+            "tooltip": "Run a command",
+            "uuid": "com.amansprojects.starterpack.runcommand",
+            "visible_in_action_list": true
+          },
+          "children": null,
+          "context": "Keypad.4.1",
+          "current_state": 0,
+          "settings": {
+            "down": "/usr/bin/equibop --toggle-mic",
+            "file": "",
+            "rotate": "",
+            "show": false,
+            "up": ""
+          },
+          "states": [
+            {
+              "alignment": "bottom",
+              "background_colour": "#000000",
+              "colour": "#FFFFFF",
+              "family": "Liberation Sans",
+              "image": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_0.svg",
+              "image_scale": 100,
+              "name": "",
+              "show": false,
+              "size": 11,
+              "stroke_colour": "#000000",
+              "stroke_size": 3,
+              "style": "Regular",
+              "text": "",
+              "underline": false
+            }
+          ]
+        },
+        {
+          "action": {
+            "controllers": [
+              "Keypad",
+              "Encoder"
+            ],
+            "disable_automatic_states": false,
+            "encoder": null,
+            "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+            "name": "Run Command",
+            "plugin": "com.amansprojects.starterpack.sdPlugin",
+            "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+            "states": [
+              {
+                "alignment": "bottom",
+                "background_colour": "#000000",
+                "colour": "#FFFFFF",
+                "family": "Liberation Sans",
+                "image": "0.svg",
+                "image_scale": 100,
+                "name": "",
+                "show": false,
+                "size": 11,
+                "stroke_colour": "#000000",
+                "stroke_size": 3,
+                "style": "Regular",
+                "text": "",
+                "underline": false
+              }
+            ],
+            "supported_in_multi_actions": true,
+            "tooltip": "Run a command",
+            "uuid": "com.amansprojects.starterpack.runcommand",
+            "visible_in_action_list": true
+          },
+          "children": null,
+          "context": "Keypad.4.2",
+          "current_state": 0,
+          "settings": {
+            "down": "/usr/bin/equibop --toggle-mic",
+            "file": "",
+            "rotate": "",
+            "show": false,
+            "up": ""
+          },
+          "states": [
+            {
+              "alignment": "bottom",
+              "background_colour": "#000000",
+              "colour": "#FFFFFF",
+              "family": "Liberation Sans",
+              "image": "plugins/me.amankhanna.oadiscord.sdPlugin/actions/mute_1.svg",
+              "image_scale": 100,
+              "name": "",
+              "show": false,
+              "size": 11,
+              "stroke_colour": "#000000",
+              "stroke_size": 3,
+              "style": "Regular",
+              "text": "",
+              "underline": false
+            }
+          ]
+        }
+      ],
       "context": "Keypad.4.0",
       "current_state": 0,
       "settings": {},
@@ -624,7 +737,7 @@
           "background_colour": "#000000",
           "colour": "#FFFFFF",
           "family": "Liberation Sans",
-          "image": "0.svg",
+          "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/replay.svg",
           "image_scale": 100,
           "name": "",
           "show": true,
@@ -640,7 +753,7 @@
           "background_colour": "#000000",
           "colour": "#FFFFFF",
           "family": "Liberation Sans",
-          "image": "1.svg",
+          "image": "plugins/de.felitendo.obs-tools.sdPlugin/images/keys/replay-on.svg",
           "image_scale": 100,
           "name": "",
           "show": true,
@@ -777,7 +890,7 @@
         "meter_invert_color": null,
         "meters_enabled": null,
         "mute_profile_data": "[false,false]",
-        "mute_profile_index": 0,
+        "mute_profile_index": 1,
         "orientation": null,
         "show_volume": null,
         "source_mix": null,
@@ -935,7 +1048,7 @@
         "meter_color": null,
         "meter_invert_color": null,
         "meters_enabled": true,
-        "mute_profile_data": "[true,false]",
+        "mute_profile_data": "[false,false]",
         "mute_profile_index": 0,
         "orientation": null,
         "show_volume": true,
@@ -1020,7 +1133,7 @@
         "meter_color": null,
         "meter_invert_color": null,
         "meters_enabled": null,
-        "mute_profile_data": "[false,true]",
+        "mute_profile_data": "[false,false]",
         "mute_profile_index": 1,
         "orientation": null,
         "show_volume": null,
