@@ -52,8 +52,6 @@ Item {
     root.wiggleIcon = payload.wiggle === true
     root.selectedIndex = payload.defaultConfirm ? 1 : 0
     root.opened = true
-    intro.restart()
-    if (root.icon && root.wiggleIcon) wiggle.restart()
     Qt.callLater(function() { keyCatcher.forceActiveFocus() })
   }
 
@@ -91,18 +89,16 @@ Item {
     root.token = ""
   }
 
-  FocusedScreen { id: focusedScreen; hold: root.opened }
-
-  PanelWindow {
+  OverlayWindow {
     id: panel
-    visible: root.opened
-    screen: focusedScreen.screen
-    anchors { top: true; bottom: true; left: true; right: true }
-    color: "transparent"
+    shown: root.opened
     WlrLayershell.namespace: "omarchy-confirm"
-    WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-    exclusionMode: ExclusionMode.Ignore
+
+    onContentRevealedChanged: {
+      if (!contentRevealed) return
+      intro.restart()
+      if (root.icon && root.wiggleIcon) wiggle.restart()
+    }
 
     Rectangle {
       id: scrimRect

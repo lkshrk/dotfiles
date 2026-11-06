@@ -23,7 +23,7 @@ function U.has_tag(w, tag)
 end
 
 function U.transient(w)
-  return U.has_tag(w, "dialog") or U.has_tag(w, "pip") or U.has_tag(w, "floating-window")
+  return U.has_tag(w, "dialog") or U.has_tag(w, "pip") or U.has_tag(w, "floating-window") or U.has_tag(w, "bitwarden-popup")
     or (w.class or ""):match("^org%.omarchy%.") ~= nil or U.has_tag(w, "secondary") or U.has_tag(w, "tray-menu")
 end
 

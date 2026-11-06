@@ -16,5 +16,14 @@ fi
 drift=$(jq -r --arg re "$entries" '.entries[]? | select((.name | test($re)) and .state != "synced") | "\(.name) (\(.state))"' <<<"$status" |
   paste -sd ', ')
 
-[[ -z $drift ]] ||
-  alert "Omarchy update changed dotfiles" "$drift no longer match the repo; review with: omni dots status"
+# Migrations that edit in place write through the symlinks into the repo instead.
+edited=$(git -C "$HOME/Dev/dotfiles" status --porcelain -- dotfiles 2>/dev/null | wc -l)
+
+changes=()
+[[ -z $drift ]] || changes+=("$drift no longer match the repo; review with: omni dots status")
+((edited == 0)) || changes+=("$edited uncommitted files under ~/Dev/dotfiles/dotfiles; review with: git -C ~/Dev/dotfiles status")
+
+if ((${#changes[@]})); then
+  message=$(printf '%s; ' "${changes[@]}")
+  alert "Omarchy update changed dotfiles" "${message%; }"
+fi

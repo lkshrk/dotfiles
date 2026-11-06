@@ -52,15 +52,30 @@ o.window({ tag = "dialog" }, { float = true, center = true })
 o.window({ tag = "dialog" }, { workspace = "unset" })
 o.window({ tag = "pip" }, { workspace = "unset" })
 o.window({ tag = "floating-window" }, { workspace = "unset" })
-o.window("^(org\\.omarchy\\..*|omacalc|dev\\.tensaku\\.Tensaku|WebcamOverlay-.*|localsend|Share|Hermes)$", { workspace = "unset" })
+o.window("^(org\\.omarchy\\..*|omacalc|dev\\.tensaku\\.Tensaku|WebcamOverlay-.*|(org\\.localsend\\.)?localsend(_app)?|Share|Hermes)$", { workspace = "unset" })
+o.window("^org\\.omarchy\\.screensaver$", { workspace = "special:screensaver silent" })
 -- Re-applied because the per-app workspace rules above override Omarchy's for browser windows.
 o.window({ title = ".*is sharing.*" }, { workspace = "special silent" })
 -- A web app's own browser window only exists until webapp-links hands its tab to the default browser.
 o.window("^webapp-.*$", { workspace = "special:webapp-links silent" })
 -- Password managers block screen capture, so they get a tiled workspace to themselves; tag rules apply last, so drop Omarchy's floating-window tag.
-o.window("^(Bitwarden|1[pP]assword)$", { tag = "-floating-window", tile = true, workspace = C.homes.Bitwarden })
--- Omarchy only catches Chrome's class for the Bitwarden extension popup; Brave prefixes it "brave-".
-o.window("^.+-nngceckbapebfimnlniiiahkandclblb-Default$", { no_screen_share = true, tag = "+floating-window" })
+o.window("^(Bitwarden|1[pP]assword|com\\.onepassword\\.OnePassword)$", { tag = "-floating-window", tile = true, workspace = C.homes.Bitwarden })
+-- The Bitwarden extension popout opens where it was triggered; screens/util.lua leaves it alone like a dialog.
+o.window(".*nngceckbapebfimnlniiiahkandclblb.*", { tag = "+bitwarden-popup", workspace = "unset" })
+
+-- Every window slightly translucent, browsers only when unfocused, and media, games and overlays opaque.
+o.transparent_window(".*")
+o.window({ tag = "chromium-based-browser" }, { opacity = "1.0 0.985" })
+o.window({ tag = "firefox-based-browser" }, { opacity = "1.0 0.985" })
+for _, match in ipairs({
+  "(.*[Rr]esolve.*|qemu|com\\.libretro\\.RetroArch|steam.*|zoom|vlc|mpv|org\\.kde\\.kdenlive|com\\.obsproject\\.Studio|com\\.github\\.PintaProject\\.Pinta|imv|org\\.gnome\\.NautilusPreviewer|.+-youtube\\.com__.*|.+-app\\.zoom\\.us__wc_home.*)",
+  { tag = "pip" },
+  { tag = "chromium-based-browser", title = "^Meet - .+" },
+  { class = "^Hermes$", title = "^Hermes HUD$" },
+  { class = "^WebcamOverlay-(small|medium|large)$", title = "^WebcamOverlay$" },
+}) do
+  o.window(match, { opacity = "1 1" })
+end
 
 -- The screenshot freeze would otherwise animate in and out over the live screen, showing as a flash.
 hl.layer_rule({ match = { namespace = "hyprpicker" }, no_anim = true })

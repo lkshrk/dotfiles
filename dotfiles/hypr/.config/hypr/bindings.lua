@@ -34,7 +34,7 @@ local function hyper(section, keys, description, dispatcher, opts)
 end
 
 local KEY_LABELS = {
-  comma = ",", period = ".", SLASH = "/", ["code:20"] = "-", ["code:21"] = "=",
+  comma = ",", period = ".", semicolon = ";", SLASH = "/", ["code:20"] = "-", ["code:21"] = "=",
   ["mouse:272"] = "LEFT DRAG", ["mouse:273"] = "RIGHT DRAG",
   XF86PowerOff = "POWER", XF86Calculator = "CALCULATOR",
 }
@@ -69,14 +69,22 @@ function keybinds_list()
   return table.concat(rows, "\n")
 end
 
+-- The commands Omarchy's o.bind falls back to for its table dispatchers.
+local function command(d)
+  if d.omarchy then return "omarchy-launch-" .. d.omarchy end
+  if d.menu then return "omarchy-menu toggle " .. o.shell_quote(d.menu) end
+  if d.panel then return "omarchy-shell shell toggle " .. o.shell_quote(d.panel) end
+  local target, method = (d.ipc or ""):match("^([^.]+)%.(.+)$")
+  if target then return "omarchy-shell " .. o.shell_quote(target) .. " " .. o.shell_quote(method) end
+end
+
 function keybinds_run(i)
   local d = registry[i] and registry[i].dispatcher
+  if type(d) == "table" then d = command(d) or d end
   if type(d) == "function" then
     d()
   elseif type(d) == "string" then
     hl.exec_cmd(d)
-  elseif type(d) == "table" and d.omarchy then
-    hl.exec_cmd("omarchy-launch-" .. d.omarchy)
   elseif d then
     hl.dispatch(d)
   end
@@ -207,44 +215,60 @@ bind("System", "SUPER + SPACE", "Omarchy menu", M.menu)
 hyper("System", "H", "Keybindings (this list)", scripts .. "/keybindings")
 -- The Keychron sends Ctrl + Super + Q for Fn + L, the Mac lock key.
 bind("System", "SUPER + CTRL + Q", "Lock and turn off screens (Fn + L)", "omarchy-system-lock && sleep 1 && omarchy-brightness-display off")
+bind("System", "XF86Calculator", "Calculator", "omacalc")
 
 -- Omarchy's defaults sit on plain Super, which keyd leaves no key for (hyprland.lua turns them off);
--- these are loaded from its files onto keys that exist: { section, new keys or same, better description }.
+-- these are loaded from its files onto keys that exist: { section, new keys or same, better description, its description }.
 local from_omarchy = {
-  ["SUPER + code:20"] = { "Windows", HYPER .. " + code:20", "Make window narrower" },
-  ["SUPER + code:21"] = { "Windows", HYPER .. " + code:21", "Make window wider" },
-  ["SUPER + SHIFT + code:20"] = { "Windows", HYPER .. " + SHIFT + code:20", "Make window shorter" },
-  ["SUPER + SHIFT + code:21"] = { "Windows", HYPER .. " + SHIFT + code:21", "Make window taller" },
-  ["SUPER + S"] = { "Windows", HYPER .. " + SHIFT + H", "Show or hide hidden windows (scratchpad)" },
-  ["SUPER + CTRL + TAB"] = { "Workspaces", HYPER .. " + TAB", "Back to the previous workspace" },
-  ["CTRL + ALT + TAB"] = { "Screens", nil, "Focus next screen" },
-  ["CTRL + ALT + SHIFT + TAB"] = { "Screens", nil, "Focus previous screen" },
-  ["PRINT"] = { "Capture", nil, "Screenshot (pick region, window or screen)" },
-  ["ALT + PRINT"] = { "Capture", nil, "Start or stop screen recording" },
+  ["SUPER + code:20"] = { "Windows", HYPER .. " + code:20", "Make window narrower", "Expand window left" },
+  ["SUPER + code:21"] = { "Windows", HYPER .. " + code:21", "Make window wider", "Shrink window left" },
+  ["SUPER + SHIFT + code:20"] = { "Windows", HYPER .. " + SHIFT + code:20", "Make window shorter", "Shrink window up" },
+  ["SUPER + SHIFT + code:21"] = { "Windows", HYPER .. " + SHIFT + code:21", "Make window taller", "Expand window down" },
+  ["SUPER + S"] = { "Windows", HYPER .. " + SHIFT + H", "Show or hide hidden windows (scratchpad)", "Toggle scratchpad" },
+  ["SUPER + CTRL + TAB"] = { "Workspaces", HYPER .. " + TAB", "Back to the previous workspace", "Former workspace" },
+  ["CTRL + ALT + TAB"] = { "Screens", nil, "Focus next screen", "Focus on next monitor" },
+  ["CTRL + ALT + SHIFT + TAB"] = { "Screens", nil, "Focus previous screen", "Focus on previous monitor" },
+  ["PRINT"] = { "Capture", nil, "Screenshot (pick region, window or screen)", "Screenshot" },
+  ["ALT + PRINT"] = { "Capture", nil, "Start or stop screen recording", "Screenrecording" },
   -- keyd sends Cmd + Shift + 5 here, the macOS capture menu key.
-  ["SUPER + CTRL + C"] = { "Capture", "SUPER + SHIFT + code:14", "Capture menu (screenshot, recording, color picker, OCR)" },
-  ["SUPER + comma"] = { "Notifications", HYPER .. " + comma", "Dismiss the latest notification" },
-  ["SUPER + SHIFT + comma"] = { "Notifications", HYPER .. " + SHIFT + comma", "Dismiss all notifications" },
-  ["SUPER + SHIFT + ALT + comma"] = { "Notifications", HYPER .. " + period", "Notification history" },
-  ["SUPER + CTRL + comma"] = { "Notifications", HYPER .. " + SHIFT + period", "Do not disturb on/off" },
-  ["SUPER + ESCAPE"] = { "System", HYPER .. " + ESCAPE", "System menu (lock, suspend, restart, shut down)" },
-  ["SUPER + CTRL + O"] = { "System", HYPER .. " + X", "Toggle menu (nightlight, idle lock, bar, gaps)" },
-  ["SUPER + CTRL + V"] = { "System", nil, "Clipboard history" },
-  ["SUPER + CTRL + E"] = { "System", nil, "Emoji picker" },
-  ["XF86Calculator"] = { "System", nil, "Calculator" },
-  ["XF86PowerOff"] = { "System", nil, "System menu" },
+  ["SUPER + CTRL + C"] = { "Capture", "SUPER + SHIFT + code:14", "Capture menu (screenshot, recording, color picker, OCR)", "Capture menu" },
+  ["SUPER + comma"] = { "Notifications", HYPER .. " + comma", "Dismiss, open or focus the latest notification", "Dismiss, invoke, or focus last notification" },
+  ["SUPER + SHIFT + comma"] = { "Notifications", HYPER .. " + SHIFT + comma", "Dismiss all notifications", "Dismiss all notifications" },
+  ["SUPER + CTRL + comma"] = { "Notifications", HYPER .. " + semicolon", "Control notifications with the keyboard", "Control notifications with the keyboard" },
+  ["SUPER + SHIFT + ALT + comma"] = { "Notifications", HYPER .. " + period", "Notification history", "Open notification history" },
+  ["SUPER + CTRL + ALT + comma"] = { "Notifications", HYPER .. " + SHIFT + period", "Do not disturb on/off", "Toggle silencing notifications" },
+  ["SUPER + ESCAPE"] = { "System", HYPER .. " + ESCAPE", "System menu (lock, suspend, restart, shut down)", "System menu" },
+  ["SUPER + CTRL + O"] = { "System", HYPER .. " + X", "Toggle menu (nightlight, idle lock, bar, gaps)", "Toggle menu" },
+  ["SUPER + CTRL + V"] = { "System", nil, "Clipboard history", "Clipboard manager" },
+  ["SUPER + CTRL + E"] = { "System", nil, "Emoji picker", "Emojis" },
+  ["XF86PowerOff"] = { "System", nil, "System menu", "Power menu" },
 }
 
+-- Keys import only while Omarchy still describes them the same, so a key it repurposes cannot change meaning here unnoticed.
+local imported = {}
 ---@diagnostic disable-next-line: duplicate-set-field
 o.bind = function(keys, description, dispatcher, opts)
   local import = from_omarchy[keys]
-  if import then bind(import[1], import[2] or keys, import[3] or description, dispatcher, opts) end
+  if import and import[4] == description then
+    imported[keys] = true
+    bind(import[1], import[2] or keys, import[3], dispatcher, opts)
+  end
 end
 -- utilities also adds the region picker's own keys while a selection is on screen.
-for _, file in ipairs({ "clipboard", "tiling", "utilities", "applications" }) do
+for _, file in ipairs({ "clipboard", "tiling", "utilities" }) do
   require("default.hypr.bindings." .. file)
 end
 o.bind = omarchy_bind
+
+local stale = {}
+for keys in pairs(from_omarchy) do
+  if not imported[keys] then stale[#stale + 1] = keys end
+end
+if #stale > 0 then
+  table.sort(stale)
+  hl.exec_cmd("omarchy-notification-send -u critical 'Omarchy key bindings changed' "
+    .. o.shell_quote(table.concat(stale, "; ") .. ": no longer bound as from_omarchy in bindings.lua expects"))
+end
 
 -- Cmd + Tab arrives as Super + Tab (keyd's cmdtab layer); the submap keeps Super + Esc from opening the system menu.
 local switching = false
