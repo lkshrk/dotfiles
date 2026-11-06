@@ -25,7 +25,7 @@ Item {
 
   property string focusTarget: ""
   // Omarchy sets no_screen_share on these, so their capture comes back blank.
-  readonly property var protectedClass: /^(Bitwarden|1[pP]assword|chrome-nngceckbapebfimnlniiiahkandclblb-Default)$/
+  readonly property var protectedClass: /^(Bitwarden|1[pP]assword|com\.onepassword\.OnePassword|.*nngceckbapebfimnlniiiahkandclblb.*)$/
 
   property color background: Commons.Color.menu.background
   property color foreground: Commons.Color.menu.text

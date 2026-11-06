@@ -266,8 +266,11 @@ for keys in pairs(from_omarchy) do
 end
 if #stale > 0 then
   table.sort(stale)
-  hl.exec_cmd("omarchy-notification-send -u critical 'Omarchy key bindings changed' "
-    .. o.shell_quote(table.concat(stale, "; ") .. ": no longer bound as from_omarchy in bindings.lua expects"))
+  local message = o.shell_quote(table.concat(stale, "; ") .. ": no longer bound as from_omarchy in bindings.lua expects")
+  -- At login the notification daemon starts after the config loads.
+  hl.timer(function()
+    hl.exec_cmd("omarchy-notification-send -u critical 'Omarchy key bindings changed' " .. message)
+  end, { type = "oneshot", timeout = 15000 })
 end
 
 -- Cmd + Tab arrives as Super + Tab (keyd's cmdtab layer); the submap keeps Super + Esc from opening the system menu.
