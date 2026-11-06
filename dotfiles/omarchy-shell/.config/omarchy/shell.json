@@ -214,22 +214,17 @@
       "id": "lkshrk.polkit"
     },
     {
-      "id": "lkshrk.notifications"
-    },
-    {
       "id": "lkshrk.confirm"
     }
   ],
   "version": 1,
   "disabledPlugins": [
     "omarchy.lock",
-    "omarchy.polkit",
-    "omarchy.notifications"
+    "omarchy.polkit"
   ],
   "cloneSourceRestores": [
     "lkshrk.lock",
-    "lkshrk.polkit",
-    "lkshrk.notifications"
+    "lkshrk.polkit"
   ],
   "mainScreen": "Odyssey G80SH"
 }

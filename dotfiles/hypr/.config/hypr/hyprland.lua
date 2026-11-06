@@ -5,6 +5,7 @@ omarchy_preinstalled_bindings = false
 -- Its defaults sit on plain Super, which keyd leaves no key for; bindings.lua loads the useful ones onto Hyper.
 omarchy_default_bindings = false
 
+package.loaded["default.hypr.monitor-workspaces"] = require("hypr.screens.workspaces")
 require("default.hypr.omarchy")
 
 require("hypr.monitors")

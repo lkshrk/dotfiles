@@ -44,10 +44,6 @@ if [[ -z $(omarchy_shell "$since") ]]; then
   exit 0
 fi
 
-if enabled lkshrk.notifications && load_failed lkshrk.notifications; then
-  fall_back lkshrk.notifications omarchy.notifications "Notifications"
-fi
-
 if enabled lkshrk.lock && ! omarchy-shell lock status >/dev/null 2>&1; then
   fall_back lkshrk.lock omarchy.lock "Lock screen"
 fi

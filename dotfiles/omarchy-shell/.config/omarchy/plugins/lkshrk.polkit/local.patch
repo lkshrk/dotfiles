@@ -1,6 +1,6 @@
 --- a/PolkitAgent.qml
 +++ b/PolkitAgent.qml
-@@ -219,9 +219,12 @@
+@@ -219,8 +219,11 @@
      }
    }
  
@@ -8,8 +8,7 @@
 +
    PanelWindow {
      id: panel
-     visible: root.dialogVisible
 +    screen: focusedScreen.screen
-     anchors { top: true; bottom: true; left: true; right: true }
-     color: "transparent"
-     WlrLayershell.namespace: "omarchy-polkit"
+     // Right-to-left languages read this window mirrored.
+     Binding { target: panel.contentItem; property: "LayoutMirroring.enabled"; value: Commons.I18n.rightToLeft }
+     Binding { target: panel.contentItem; property: "LayoutMirroring.childrenInherit"; value: true }

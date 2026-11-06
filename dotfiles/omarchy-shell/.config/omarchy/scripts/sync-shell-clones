@@ -9,7 +9,6 @@ upstream_root=/usr/share/omarchy/shell/plugins
 clones=(
   "lkshrk.lock lock whole"
   "lkshrk.polkit polkit whole"
-  "lkshrk.notifications notifications whole"
 )
 
 synced=()
