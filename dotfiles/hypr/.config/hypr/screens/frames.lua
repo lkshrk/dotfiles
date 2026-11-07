@@ -12,7 +12,7 @@ end
 
 local function in_scope(w, closing)
   return live(w) and (closing or w.mapped) and w.floating and (w.fullscreen or 0) == 0 and w.workspace ~= nil
-    and not w.workspace.special and not U.layout_placed(w) and not U.transient(w)
+    and not w.workspace.special and not U.layout_placed(w) and not U.transient(w) and not U.has_tag(w, "game")
 end
 
 local function multi(w)
