@@ -32,7 +32,7 @@ local apps = {
   { "chrome-localhost__-Default", workspace = "7", slot = { row = TOP } },
   { "com.obsproject.Studio", workspace = "7", slot = { row = MID } },
   { "opendeck", workspace = "7", slot = { row = BOT } },
-  { "Bitwarden", "1password", "1Password", workspace = "8" },
+  { "Bitwarden", "1password", "1Password", "com.onepassword.OnePassword", workspace = "8" },
   { "steam", "gamescope", "com.moonlight_stream.Moonlight", "wowupcf", workspace = "9" },
   { "steam_app_battlenet", "battle.net.exe", "wow.exe", workspace = "9", multi = true },
   { "discord", "equibop", "md.obsidian.Obsidian", workspace = "10" },

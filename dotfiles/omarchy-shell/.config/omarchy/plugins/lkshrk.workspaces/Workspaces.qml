@@ -55,7 +55,13 @@ BarWidget {
   Connections {
     target: Hyprland
     function onRawEvent(event) {
-      if (event && event.name === "configreloaded" && !rulesProc.running) rulesProc.running = true
+      var name = event ? String(event.name) : ""
+      if (name === "configreloaded" && !rulesProc.running) rulesProc.running = true
+      // Quickshell credits every workspace switch to the focused monitor, so ask Hyprland which one switched.
+      if ((name === "workspacev2" && root.monitor !== null && root.monitor.focused) || name === "moveworkspacev2" || name === "changeworkspaceid") {
+        Hyprland.refreshMonitors()
+        Hyprland.refreshWorkspaces()
+      }
     }
   }
 
@@ -94,6 +100,7 @@ BarWidget {
       model: root.workspaceIds()
 
       WidgetButton {
+        id: button
         required property int modelData
 
         readonly property bool focused: root.monitor && root.monitor.activeWorkspace ? root.monitor.activeWorkspace.id === modelData : false
@@ -108,7 +115,20 @@ BarWidget {
         verticalPadding: 6
         fixedWidth: root.vertical ? root.barSize : Style.space(20)
         fixedHeight: root.barSize
+        // The built-in label scales a lone icon glyph up to Style.bar.iconSize.
+        labelVisible: false
         onPressed: function() { root.focusWorkspace(modelData) }
+
+        Text {
+          anchors.centerIn: parent
+          textFormat: Text.PlainText
+          text: button.text
+          color: button.foreground
+          font.family: button.fontFamily
+          font.pixelSize: button.fontSize
+          renderType: Text.NativeRendering
+          scale: button.pressScale
+        }
       }
     }
   }

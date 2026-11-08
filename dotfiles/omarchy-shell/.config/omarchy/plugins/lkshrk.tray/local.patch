@@ -1,0 +1,98 @@
+--- a/TrayModel.js
++++ b/TrayModel.js
+@@ -9,6 +9,20 @@
+     || text(item.tooltipTitle).indexOf(name) !== -1
+ }
+ 
++// Wine names its items wine-0x<window>-<n>, which changes every launch; the title is stable.
++function isBattleNet(item) {
++  return !!item && text(item.id).indexOf("wine-") === 0 && text(item.title) === "battle.net"
++}
++
++// The games Battle.net's own tray menu lists, in its order; icons live in icons/<icon>.png.
++var battleNetGames = [
++  { text: "WoW: Forever", exec: "launch_uid wowf", icon: "wow" },
++  { text: "World of Warcraft", exec: "launch WoW", icon: "wow" },
++  { text: "Warcraft III", exec: "launch W3", icon: "warcraft-iii" },
++  { text: "Diablo IV", exec: "launch Fen", icon: "diablo-iv" },
++  { text: "Hearthstone", exec: "launch WTCG", icon: "hearthstone" }
++]
++
+ function entryId(entry) {
+   if (typeof entry === "string") return entry
+   if (entry && typeof entry === "object") {
+--- a/Tray.qml
++++ b/Tray.qml
+@@ -15,6 +15,8 @@
+   property bool expanded: false
+   property bool managePopupOpen: false
+   property bool trayMenuOpen: false
++  // Rows for items whose menu the shell builds itself; same fields as a QsMenuEntry.
++  property var customMenu: null
+   property var activeTrayItem: null
+   property var activeTrayAnchor: null
+   readonly property color foreground: bar ? bar.foreground : Commons.Color.foreground
+@@ -74,7 +76,8 @@
+   property var submenuStack: []
+   readonly property int submenuDepth: submenuStack.length
+   readonly property string currentTitle: submenuDepth > 0 ? submenuStack[submenuDepth - 1].title : ""
+-  readonly property var currentChildren: submenuDepth > 0
++  readonly property var currentChildren: customMenu ? customMenu
++    : submenuDepth > 0
+     ? submenuStack[submenuDepth - 1].opener.children
+     : trayMenuOpener.children
+ 
+@@ -141,10 +144,42 @@
+     trayMenuOpen = false
+   }
+ 
++  function battleNet(args) {
++    Quickshell.execDetached([Qt.resolvedUrl("battlenet").toString().replace("file://", "")].concat(args))
++  }
++
++  function customRow(text, icon, action) {
++    return {
++      text: text, icon: Qt.resolvedUrl("icons/" + icon + ".png"), enabled: true, isSeparator: false,
++      hasChildren: false, buttonType: QsMenuButtonType.None, checkState: Qt.Unchecked,
++      triggered: action
++    }
++  }
++
++  // Battle.net's own Wine menu only opens the client, even for a game entry.
++  function battleNetMenu() {
++    var rows = TrayModel.battleNetGames.map(function(game) {
++      return customRow(game.text, game.icon, function() { root.battleNet(["launch", game.exec]) })
++    })
++    rows.push({ isSeparator: true, enabled: true, text: "" })
++    rows.push(customRow("Exit Battle.net", "battle-net", function() { root.battleNet(["exit"]) }))
++    return rows
++  }
++
+   function openTrayMenu(item, anchorItem, mouse) {
++    if (TrayModel.isBattleNet(item)) {
++      resetTrayMenu()
++      customMenu = battleNetMenu()
++      activeTrayItem = item
++      activeTrayAnchor = anchorItem
++      trayMenuOpen = true
++      return
++    }
++    customMenu = null
++
++    // Quickshell's display() only knows D-Bus menus; Wine items offer just the SNI ContextMenu method.
+     if (!item || !item.menu) {
+-      var point = anchorItem.QsWindow.contentItem.mapFromItem(anchorItem, mouse.x, mouse.y)
+-      item.display(anchorItem.QsWindow.window, point.x, point.y)
++      if (item) Quickshell.execDetached([Qt.resolvedUrl("tray-context-menu").toString().replace("file://", ""), item.id])
+       return
+     }
+ 
+@@ -913,6 +948,8 @@
+           trayItemRoot.modelData.secondaryActivate()
+         } else if (trayItemRoot.modelData.onlyMenu) {
+           trayItemRoot.displayMenu(mouse)
++        } else if (TrayModel.isBattleNet(trayItemRoot.modelData)) {
++          root.battleNet(["focus"])
+         } else {
+           trayItemRoot.modelData.activate()
+         }

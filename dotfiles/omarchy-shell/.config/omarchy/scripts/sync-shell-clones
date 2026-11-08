@@ -5,11 +5,10 @@ set -u
 plugins="$HOME/.config/omarchy/plugins"
 upstream_root=/usr/share/omarchy/shell/plugins
 
-# clone id, upstream plugin dir relative to upstream_root, whether the clone mirrors that whole dir
+# clone id, upstream plugin dir relative to upstream_root, scope: whole (mirrors the dir) or files (only those in upstream.sha256)
 clones=(
   "lkshrk.lock lock whole"
-  "lkshrk.polkit polkit whole"
-  "lkshrk.notifications notifications whole"
+  "lkshrk.tray bar/widgets files"
 )
 
 synced=()

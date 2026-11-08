@@ -1,6 +1,5 @@
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import qs.Commons
@@ -24,10 +23,9 @@ Item {
   // Escape ends the session; the release commit that follows must neither focus nor arm the next open.
   property bool cancelled: false
 
-  FocusedScreen { id: focusedScreen; hold: root.opened }
   property string focusTarget: ""
   // Omarchy sets no_screen_share on these, so their capture comes back blank.
-  readonly property var protectedClass: /^(Bitwarden|1[pP]assword|chrome-nngceckbapebfimnlniiiahkandclblb-Default)$/
+  readonly property var protectedClass: /^(Bitwarden|1[pP]assword|com\.onepassword\.OnePassword|.*nngceckbapebfimnlniiiahkandclblb.*)$/
 
   property color background: Commons.Color.menu.background
   property color foreground: Commons.Color.menu.text
@@ -211,7 +209,7 @@ Item {
     onTriggered: root.focusSelected()
   }
 
-  IpcHandler {
+  ShellIpc {
     target: "alttab"
     function next(): void { root.open(1) }
     function prev(): void { root.open(-1) }
@@ -219,16 +217,10 @@ Item {
     function cancel(): void { root.cancel() }
   }
 
-  PanelWindow {
+  OverlayWindow {
     id: panel
-    visible: root.opened
-    screen: focusedScreen.screen
-    anchors { top: true; bottom: true; left: true; right: true }
-    color: "transparent"
+    shown: root.opened
     WlrLayershell.namespace: "lkshrk-alttab"
-    WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-    exclusionMode: ExclusionMode.Ignore
 
     Rectangle {
       anchors.fill: parent
