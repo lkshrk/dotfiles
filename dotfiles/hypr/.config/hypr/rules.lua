@@ -36,12 +36,13 @@ o.window("^org\\.omarchy\\.markdown$", {
 o.window("^wowupcf$", { float = true, suppress_event = "maximize activatefocus" })
 o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true, suppress_event = "maximize activatefocus" })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them; their own (un)fullscreen requests are ignored so Hyprland alone decides.
-o.window("^(steam_app_[0-9]+|gamescope|wow\\.exe)$", { fullscreen = true, idle_inhibit = "fullscreen", tag = "+game", suppress_event = "fullscreen maximize" })
+o.window("^(steam_app_[0-9]+|gamescope|wow\\.exe)$", { fullscreen = true, idle_inhibit = "fullscreen", tag = "+game", suppress_event = "fullscreen maximize", render_unfocused = true })
 -- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.
+-- render_unfocused keeps frame callbacks coming on a hidden workspace, so a vsynced game never stalls and has to ramp back up.
 o.window({
   class = "^(steam_app_battlenet|battle\\.net\\.exe)$",
   title = "^(World of Warcraft|Diablo IV|Diablo II: Resurrected|Warcraft III|Hearthstone|Overwatch|StarCraft.*)$",
-}, { fullscreen = true, idle_inhibit = "fullscreen", tag = "+game", suppress_event = "fullscreen maximize" })
+}, { fullscreen = true, idle_inhibit = "fullscreen", tag = "+game", suppress_event = "fullscreen maximize", render_unfocused = true })
 
 o.window({ modal = true }, { tag = "+dialog" })
 o.window("^(xdg-desktop-portal-gtk|zenity)$", { tag = "+dialog" })
