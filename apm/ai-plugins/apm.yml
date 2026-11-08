@@ -38,7 +38,7 @@ dependencies:
     - claude
     - codex
   - git: obra/superpowers
-    ref: 2ce8aa15d05bd57213e6f746f953aafb7ded7a8b
+    ref: 22f0b463e7a5e579904dd6211a520321035526f7
     targets:
     - claude
   - git: openai/codex-plugin-cc
