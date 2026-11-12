@@ -129,9 +129,8 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 ## Stow/Omni Package Shape
 
 - `zsh`: generic interactive zsh modules.
-- `zsh@darwin`: macOS-only interactive zsh modules, including direnv, Docker
-  completions, Homebrew-backed lazy tool loaders, rbw-backed CA lookup, and
-  AI CLI secret wrappers.
+- `zsh/.config/zsh/macos/`: macOS-only interactive modules (Homebrew-backed
+  lazy tool loaders and functions), sourced by `.zshrc` only on darwin.
 - `zshenv` sources `profile.sh` directly (covers every zsh shell, login
   included). `zprofile` carries only login-only behavior, if any.
 
@@ -157,9 +156,10 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 - `KUBECONFIG` is machine-specific, not macOS-specific.
 - `SSH_AUTH_SOCK` preserves existing agents by default. macOS points launchd
   shells at the rbw socket path; Linux adopts an existing rbw socket when one is
-  present but does not require or invoke rbw.
+  present, otherwise points GUI sessions at `$XDG_RUNTIME_DIR/rbw/ssh-agent-socket`
+  when rbw is installed and no agent is set.
 - Maestro is project-local via direnv `.envrc`, not global env.
-- Rust/Cargo is not included until Rust is actually installed.
+- `~/.cargo/bin` is on PATH.
 - `~/.local/bin` wins over package-manager binaries.
-- direnv shell hooks are explicit macOS interactive zsh overlay behavior, not base env.
+- direnv hooks load in every interactive zsh (`zsh/35-direnv.zsh`), not base env.
 - rbw secret injection is profile-based: `rbw-env <profile> -- <command>`.
