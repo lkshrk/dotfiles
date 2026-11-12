@@ -70,13 +70,17 @@ o.window({ tag = "chromium-based-browser" }, { opacity = "1.0 0.985" })
 o.window({ tag = "firefox-based-browser" }, { opacity = "1.0 0.985" })
 for _, match in ipairs({
   "(.*[Rr]esolve.*|qemu|com\\.libretro\\.RetroArch|steam.*|zoom|vlc|mpv|org\\.kde\\.kdenlive|com\\.obsproject\\.Studio|com\\.github\\.PintaProject\\.Pinta|imv|org\\.gnome\\.NautilusPreviewer|.+-youtube\\.com__.*|.+-app\\.zoom\\.us__wc_home.*)",
+  "^(equibop|[Ee]quicord)$",
   { tag = "pip" },
+  { tag = "game" },
   { tag = "chromium-based-browser", title = "^Meet - .+" },
   { class = "^Hermes$", title = "^Hermes HUD$" },
   { class = "^WebcamOverlay-(small|medium|large)$", title = "^WebcamOverlay$" },
 }) do
-  o.window(match, { opacity = "1 1" })
+  o.window(match, { tag = "+opaque" })
 end
+-- Tag rules apply last, so this wins over any opacity rule; opt an app out of translucency with tag "+opaque".
+o.window({ tag = "opaque" }, { opacity = "1 1" })
 
 -- The screenshot freeze would otherwise animate in and out over the live screen, showing as a flash.
 hl.layer_rule({ match = { namespace = "hyprpicker" }, no_anim = true })
