@@ -156,8 +156,8 @@ or copies into live skill directories. The host template points to
 MCP through Omni's pinned APM fork (`0.35.0+omni.4`, based on release v0.35.0).
 Existing Claude-targeted packages remain separate.
 
-- `lkshrk/agent-stack` supplies the `linear`, `personal`, and `runner` packages.
-  Runner adds `upgrade-deps`, `project-tool-allowlist`, and `ai-context-generator`.
+- `lkshrk/useful-skills` supplies the `linear-*`, `wow-*`, `upgrade-deps`,
+  `project-tool-allowlist`, `ai-context-generator` and other personal skills.
 - `apm/omp-skills` supplies adapted `systematic-debugging` and
   `receiving-code-review` skills from obra/superpowers at
   `2ce8aa15d05bd57213e6f746f953aafb7ded7a8b`, with their MIT licenses.

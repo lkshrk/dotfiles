@@ -24,12 +24,7 @@ dependencies:
   - git: ayghri/i-have-adhd
     targets:
     - claude
-  - git: lkshrk/agent-stack
-    path: plugins/linear
-  - git: lkshrk/agent-stack
-    path: plugins/personal
-  - git: lkshrk/agent-stack
-    path: plugins/runner
+  - git: lkshrk/useful-skills
   - path: ~/Dev/dotfiles/apm/omp-skills
     targets:
     - codex
