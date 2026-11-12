@@ -14,7 +14,7 @@ bun() {
   bun "$@"
 }
 
-_env_next_load_nvm() {
+env_next_load_nvm() {
   [[ -n "${_ENV_NEXT_NVM_LOADED:-}" ]] && return 0
 
   export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
@@ -26,7 +26,7 @@ _env_next_load_nvm() {
 }
 
 nvm() {
-  _env_next_load_nvm || return
+  env_next_load_nvm || return
   nvm "$@"
 }
 
@@ -68,7 +68,6 @@ _env_next_set_node_bin() {
   [[ -x "$node_bin/node" ]] || return 1
 
   path=("$node_bin" "${(@)path:#$NVM_DIR/versions/node/*/bin}")
-  typeset -U path
   export PATH
   export NVM_BIN="$node_bin"
   export NVM_INC="${node_bin:h}/include/node"
@@ -94,7 +93,7 @@ _env_next_use_nvmrc() {
 
   if ! nvmrc="$(_env_next_find_nvmrc)"; then
     _env_next_use_node_fast default || {
-      _env_next_load_nvm && nvm use --silent default >/dev/null 2>&1
+      env_next_load_nvm && nvm use --silent default >/dev/null 2>&1
     }
     unset _ENV_NEXT_NVMRC_ACTIVE
     return 0
@@ -109,7 +108,7 @@ _env_next_use_nvmrc() {
     return 0
   fi
 
-  _env_next_load_nvm || return 0
+  env_next_load_nvm || return 0
 
   resolved="$(nvm version "$wanted" 2>/dev/null || true)"
   if [[ -z "$resolved" || "$resolved" == "N/A" ]]; then

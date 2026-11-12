@@ -132,7 +132,7 @@ else
     exit 2
   }
 
-  while IFS=' 	' read -r item var extra || [ -n "${item:-}" ]; do
+  while IFS=' 	' read -r item var extra <&3 || [ -n "${item:-}" ]; do
     case "${item:-}" in
       ''|'#'*) continue ;;
     esac
@@ -141,7 +141,7 @@ else
       exit 2
     }
     inject_secret "$item" "$var"
-  done < "$map_file"
+  done 3< "$map_file"
 fi
 
 [ "${1:-}" = "--" ] || { usage; exit 2; }

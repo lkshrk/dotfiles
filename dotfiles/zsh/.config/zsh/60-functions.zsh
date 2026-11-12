@@ -106,7 +106,7 @@ csh() {
   kubectl run -it --rm --restart=Never --image=busybox "tmp-shell-${USER:-user}-$$" -n "$ns" -- sh
 }
 
-_dotfiles_omni() {
+dotfiles_omni() {
   local repo="${DOTFILES_DIR:-}"
   if [[ -z "$repo" ]]; then
     if [[ -d "$HOME/Dev/dotfiles" ]]; then
@@ -125,18 +125,18 @@ _dotfiles_omni() {
 
 # Sync tools, upgrades, dotfile links, and dotfile commits.
 dotsync() {
-  _dotfiles_omni reconcile "$@"
+  dotfiles_omni reconcile "$@"
 }
 
 # Show dotfile symlink health and repo status.
 dotcheck() {
-  _dotfiles_omni dots status "$@"
+  dotfiles_omni dots status "$@"
 }
 
 # Start tracking a local path by adopting it into Omni dots management.
 # Usage: dottrack ~/.config/aerospace/aerospace.toml [--name aerospace]
 dottrack() {
-  _dotfiles_omni dots add --adopt "$@"
+  dotfiles_omni dots add --adopt "$@"
 }
 
 vaulttoken() {

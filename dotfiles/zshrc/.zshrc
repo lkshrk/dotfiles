@@ -4,6 +4,8 @@
 # Optional profiler — uncomment top + bottom block to debug startup time
 # zmodload zsh/zprof
 
+typeset -gU path fpath
+
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
 
 if [[ -d "$HOME/.config/zsh" ]]; then

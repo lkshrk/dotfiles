@@ -39,7 +39,7 @@ check_env() {
   source "$repo/dotfiles/zsh/.config/zsh/65-ai-certs.zsh"
   source "$repo/dotfiles/zsh/.config/zsh/68-rbw.zsh"
   (( ! $+commands[rbw] && ! $+functions[git] && ! $+functions[sops] ))
-  _omni_ai_ca() { return 1; }
+  omni_ai_ca() { return 1; }
   codex 'test prompt'
   [[ -z ${NODE_EXTRA_CA_CERTS:-} ]]
 )
@@ -48,14 +48,14 @@ path=($bin $path)
 claude() { [[ $* == 'test prompt' ]]; }
 source "$repo/dotfiles/zsh/.config/zsh/65-ai-certs.zsh"
 source "$repo/dotfiles/zsh/.config/zsh/68-rbw.zsh"
-_omni_ai_ca() { print -r -- /test/lan-ca.pem; }
+omni_ai_ca() { print -r -- /test/lan-ca.pem; }
 export EXPECT_CA=$expect_ca
-(_omni_ai_run check_env)
+(omni_ai_run check_env)
 export ANTHROPIC_BASE_URL=https://example.invalid ANTHROPIC_AUTH_TOKEN=fake ANTHROPIC_DEFAULT_OPUS_MODEL=fake
 claude 'test prompt'
 codex 'test prompt'
 [[ $ANTHROPIC_AUTH_TOKEN == fake ]]
-_omni_ai_ca() { return 1; }
+omni_ai_ca() { return 1; }
 expect_ca= EXPECT_CA=
 claude 'test prompt'
 codex 'test prompt'
