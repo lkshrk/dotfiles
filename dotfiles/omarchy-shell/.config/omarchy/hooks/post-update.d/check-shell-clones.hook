@@ -1,4 +1,4 @@
 #!/bin/bash
 
-# omarchy-update restarts the shell after the hooks, so the check waits for a shell newer than this hook.
-CHECK_SHELL_WAIT=900 setsid -f "$HOME/.config/omarchy/scripts/check-shell-clones" "$(date +%Y-%m-%dT%H:%M:%S)" >/dev/null 2>&1
+# Backgrounded: sync-shell-clones may have just restarted the shell, and the check waits for it to load.
+setsid -f "$HOME/.config/omarchy/scripts/check-shell-clones" >/dev/null 2>&1

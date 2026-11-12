@@ -11,6 +11,11 @@ clones=(
   "lkshrk.tray bar/widgets files"
 )
 
+# The notification daemon lives in the shell, which this script may restart.
+alert() {
+  hyprctl notify "$1" 15000 "$2" "$3: $4" >/dev/null 2>&1 || logger -t sync-shell-clones "$3: $4"
+}
+
 synced=()
 conflicts=()
 
@@ -19,7 +24,8 @@ for entry in "${clones[@]}"; do
   dir="$plugins/$clone"
   upstream="$upstream_root/$updir"
   baseline="$dir/upstream.sha256"
-  [[ -f $baseline && -f $dir/local.patch && -d $upstream ]] || continue
+  [[ -f $baseline && -f $dir/local.patch ]] || continue
+  [[ -d $upstream ]] || { conflicts+=("$clone (upstream $updir is gone)"); continue; }
 
   (cd "$upstream" && sha256sum --quiet --check "$baseline" >/dev/null 2>&1) && continue
 
@@ -52,10 +58,11 @@ for entry in "${clones[@]}"; do
   rm -rf "$work"
 done
 
-# omarchy-update restarts the shell right after the hooks, so the new QML loads then.
+# omarchy-update restarts the shell before the post-update hooks, so re-synced clones need another restart to load.
 if ((${#synced[@]})); then
-  notify-send "Shell clones updated" "Re-applied local changes onto Omarchy's new version: ${synced[*]}. Review and commit in ~/Dev/dotfiles."
+  omarchy-restart-shell >/dev/null 2>&1
+  alert 1 "rgb(88c0d0)" "Shell clones updated" "Re-applied local changes onto Omarchy's new version: ${synced[*]}. Review and commit in ~/Dev/dotfiles."
 fi
 if ((${#conflicts[@]})); then
-  notify-send -u critical "Shell clones need a manual re-sync" "Omarchy changed what these patch: ${conflicts[*]}. They still run the previous version."
+  alert 0 "rgb(ff5555)" "Shell clones need a manual re-sync" "Omarchy changed what these patch: ${conflicts[*]}. They still run the previous version."
 fi

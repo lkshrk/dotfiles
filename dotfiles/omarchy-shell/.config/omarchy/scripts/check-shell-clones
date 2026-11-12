@@ -1,10 +1,10 @@
 #!/bin/bash
-# Falls back to Omarchy's stock plugin when a clone stops loading, since nothing else draws locks, prompts or notifications.
+# Falls back to Omarchy's stock plugin when a clone stops loading, since nothing else draws the lock screen or password prompts.
 set -u
 
 omarchy_shell() {
-  quickshell list -a -j 2>/dev/null | jq -r --arg since "${1:-}" \
-    '[.[] | select((.config_path | startswith("/usr/share/omarchy/shell/")) and .launch_time >= $since)] | max_by(.launch_time) // empty | .id'
+  quickshell list -a -j 2>/dev/null | jq -r \
+    '[.[] | select(.config_path | startswith("/usr/share/omarchy/shell/"))] | max_by(.launch_time) // empty | .id'
 }
 
 log_of_current_shell() {
@@ -32,19 +32,26 @@ load_failed() {
   log_of_current_shell | grep -q "service plugin load failed for $1"
 }
 
-# After an update, wait for the shell that omarchy-update-restart starts, not the one still running the old QML.
-since=${1:-}
-for _ in $(seq 1 ${CHECK_SHELL_WAIT:-20}); do
-  [[ -n $(omarchy_shell "$since") ]] && omarchy-shell lock status >/dev/null 2>&1 && break
+for _ in $(seq 1 20); do
+  [[ -n $(omarchy_shell) ]] && break
   sleep 1
 done
 
-if [[ -z $(omarchy_shell "$since") ]]; then
+if [[ -z $(omarchy_shell) ]]; then
   alert "Omarchy shell is not running" "No bar, lock screen or notifications. Start it with: omarchy-restart-shell"
   exit 0
 fi
 
-if enabled lkshrk.lock && ! omarchy-shell lock status >/dev/null 2>&1; then
+# The shell answers IPC a moment after it starts, so the lock gets a few seconds before it counts as broken.
+lock_answers() {
+  for _ in 1 2 3 4 5; do
+    omarchy-shell lock status >/dev/null 2>&1 && return 0
+    sleep 1
+  done
+  return 1
+}
+
+if enabled lkshrk.lock && ! lock_answers; then
   fall_back lkshrk.lock omarchy.lock "Lock screen"
 fi
 
