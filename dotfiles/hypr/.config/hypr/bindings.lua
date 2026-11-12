@@ -74,6 +74,8 @@ local function command(d)
   if d.omarchy then return "omarchy-launch-" .. d.omarchy end
   if d.menu then return "omarchy-menu toggle " .. o.shell_quote(d.menu) end
   if d.panel then return "omarchy-shell shell toggle " .. o.shell_quote(d.panel) end
+  if d.audio then return "omarchy-audio-output-volume " .. o.shell_quote(d.audio) end
+  if d.brightness then return "omarchy-brightness-display " .. (d.brightness == "raise" and "+5%" or "5%-") end
   local target, method = (d.ipc or ""):match("^([^.]+)%.(.+)$")
   if target then return "omarchy-shell " .. o.shell_quote(target) .. " " .. o.shell_quote(method) end
 end
@@ -259,6 +261,7 @@ for _, file in ipairs({ "clipboard", "tiling", "utilities" }) do
   require("default.hypr.bindings." .. file)
 end
 o.bind = omarchy_bind
+require("default.hypr.bindings.media")
 
 local stale = {}
 for keys in pairs(from_omarchy) do

@@ -65,7 +65,8 @@ function T.pick_side(w)
   for _, other in ipairs(tiled_on_top(w)) do taken[side_of(other)] = true end
   if not taken.left then return "left" end
   if not taken.right then return "right" end
-  local last = hl.get_workspace(C.top_workspace).last_window
+  local top = hl.get_workspace(C.top_workspace)
+  local last = top and top.last_window
   return last and last ~= w and side_of(last) or "left"
 end
 

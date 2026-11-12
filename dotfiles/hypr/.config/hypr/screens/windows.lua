@@ -101,7 +101,7 @@ local function collect_soon(w)
 end
 
 hl.on("window.open", function(w)
-  if C.password_prompt[w.class] then
+  if C.password_prompt(w.class) then
     to_main(w)
     return
   end

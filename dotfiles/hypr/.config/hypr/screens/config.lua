@@ -56,8 +56,6 @@ C.settle_ms = 1500
 -- Only a window open this long may set its app's frame, so a login box cannot become it.
 C.remember_after_ms = 10000
 C.frame_snapshot_ms = 5000
--- X11 launchers place themselves just after mapping, so remembered frames wait this long.
-C.frame_open_delay_ms = 500
 C.frame_max_age_days = 60
 
 -- Helium windows look identical; the one named this (Name window…) lives on main, the rest on the portrait screen.
@@ -65,6 +63,9 @@ C.helium_main_title = "Main"
 C.helium_main_workspace = "3"
 
 -- Passphrase prompts (SSH keys, keyrings) are app-independent, so they always ask on the main monitor.
-C.password_prompt = { ["gcr-prompter"] = true, pinentry = true, ["pinentry-gtk"] = true, ["pinentry-qt"] = true, ["Pinentry-gtk"] = true }
+C.password_prompt_rule = "^(gcr-prompter|[Pp]inentry.*)$"
+function C.password_prompt(class)
+  return class == "gcr-prompter" or (class or ""):match("^[Pp]inentry") ~= nil
+end
 
 return C
