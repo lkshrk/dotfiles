@@ -88,6 +88,10 @@ fi
 step "omarchy defaults"
 mapfile -t drop < <(list_entries "$REPO_DIR/omarchy/remove.packages")
 ((${#drop[@]} == 0)) || omarchy pkg drop "${drop[@]}"
+# Package removal leaves the user launcher behind, so it would stay in the app menu.
+for pkg in "${drop[@]}"; do
+  pacman -Q "$pkg" >/dev/null 2>&1 || rm -f "$HOME/.local/share/applications/$pkg.desktop"
+done
 while IFS= read -r webapp; do
   OMARCHY_REMOVE_NOTIFY=false omarchy-webapp-remove "$webapp"
 done < <(list_entries "$REPO_DIR/omarchy/remove.webapps")
@@ -313,6 +317,13 @@ if [[ -d "$vault/.git" ]]; then
   fi
 fi
 
+step "user services"
+if systemctl --user daemon-reload && systemctl --user enable pipeweaver.service ha-doorbell.service vram-watch.service; then
+  ok "PipeWeaver, doorbell and VRAM watch start with the desktop"
+else
+  warn "could not enable the user services (no user systemd bus?); rerun setup from a desktop session"
+fi
+
 if have lefthook; then
   step "lefthook"
   install_lefthook "$REPO_DIR" "$HOME/knowledge"
@@ -323,12 +334,12 @@ step "hyprland"
 mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/hypr-screens"
 if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
   hyprctl reload >/dev/null
+  errors="$(hyprctl configerrors)"
+  [[ -z "${errors//[[:space:]]/}" ]] || die "$errors"
+  ok "config loads cleanly"
 else
   warn "not inside Hyprland; it picks the config up at next login"
 fi
-errors="$(hyprctl configerrors)"
-[[ -z "${errors//[[:space:]]/}" ]] || die "$errors"
-ok "config loads cleanly"
 
 if ((tools_failed)); then
   warn "setup finished, but some tools failed to install (listed above under omni tools)"

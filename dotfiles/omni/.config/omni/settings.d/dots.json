@@ -296,6 +296,7 @@
             "!/plugins/",
             "/plugins/janitorhead.quotatank/",
             "/plugins/lkshrk.stats/",
+            "/plugins/superwhisper-panel/",
             "!/scripts/",
             "!/shared/",
             "!/webapp-links/",
@@ -382,7 +383,6 @@
             "!/wireplumber.conf.d/",
             "/wireplumber.conf.d/*",
             "!/wireplumber.conf.d/hide-devices.conf",
-            "!/wireplumber.conf.d/headset-mic-headroom.conf",
             "!/wireplumber.conf.d/pipeweaver-no-restore.conf",
             "!/wireplumber.conf.d/usb-mic-quantum.conf"
           ]
@@ -402,7 +402,6 @@
             "*",
             "!/battlenet",
             "!/brave-media",
-            "!/chatgpt",
             "!/freeze-capture",
             "!/ha-doorbell",
             "!/obs-config",
