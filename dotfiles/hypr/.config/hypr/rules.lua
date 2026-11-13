@@ -35,6 +35,8 @@ o.window("^org\\.omarchy\\.markdown$", {
 -- Launchers float (screens/frames.lua restores their frame) and never take focus on their own, which would raise them over the fullscreen game.
 o.window("^wowupcf$", { float = true, suppress_event = "maximize activatefocus" })
 o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net$" }, { float = true, suppress_event = "maximize activatefocus" })
+-- Wine sends no keys to a window whose activation was refused, so the launcher's other windows (chat) only float.
+o.window({ class = "^(steam_app_battlenet|battle\\.net\\.exe)$", title = "^Battle\\.net ." }, { float = true })
 -- Games run borderless at monitor size without requesting fullscreen, which leaves the bar above them; their own (un)fullscreen requests are ignored so Hyprland alone decides.
 o.window("^(steam_app_[0-9]+|gamescope|wow\\.exe)$", { fullscreen = true, idle_inhibit = "fullscreen", tag = "+game", suppress_event = "fullscreen maximize", render_unfocused = true })
 -- Battle.net games share the launcher's class, so only known game titles go fullscreen; launcher dialogs stay windowed.
