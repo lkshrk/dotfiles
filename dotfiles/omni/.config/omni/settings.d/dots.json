@@ -941,6 +941,51 @@
           "name": "org.gnome.Epiphany.WebApp_linear",
           "path": "~/.config/org.gnome.Epiphany.WebApp_linear",
           "ignored": true
+        },
+        {
+          "name": "Omacom",
+          "path": "~/.config/Omacom",
+          "ignored": true
+        },
+        {
+          "name": "Pinta",
+          "path": "~/.config/Pinta",
+          "ignored": true
+        },
+        {
+          "name": "chromium-headless",
+          "path": "~/.config/chromium-headless",
+          "ignored": true
+        },
+        {
+          "name": "dstreamy",
+          "path": "~/.config/dstreamy",
+          "ignored": true
+        },
+        {
+          "name": "equibop",
+          "path": "~/.config/equibop",
+          "ignored": true
+        },
+        {
+          "name": "glow",
+          "path": "~/.config/glow",
+          "ignored": true
+        },
+        {
+          "name": "pypoetry",
+          "path": "~/.config/pypoetry",
+          "ignored": true
+        },
+        {
+          "name": "superwhisper",
+          "path": "~/.config/superwhisper",
+          "ignored": true
+        },
+        {
+          "name": "vesktop",
+          "path": "~/.config/vesktop",
+          "ignored": true
         }
       ]
     }
