@@ -18,6 +18,7 @@
         "deepwiki-rs",
         "oh-my-codex",
         "rtk",
+        "rustup",
         "codebase-memory-mcp"
       ]
     },

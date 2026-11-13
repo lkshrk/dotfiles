@@ -294,8 +294,8 @@
         {
           "provider": "script",
           "options": {
-            "check": "command -v cargo || test -x \"$HOME/.cargo/bin/cargo\"",
-            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://sh.rustup.rs -o \"$tmp/rustup-init.sh\"; sh \"$tmp/rustup-init.sh\" -y --no-modify-path",
+            "check": "PATH=\"$HOME/.cargo/bin:$PATH\" rustup default >/dev/null 2>&1",
+            "install": "PATH=\"$HOME/.cargo/bin:$PATH\" rustup default stable",
             "latest": "curl -fsSL --proto-redir '=https' https://static.rust-lang.org/dist/channel-rust-stable.toml | grep -Eo 'cargo-[0-9]+\\.[0-9]+\\.[0-9]+-' | head -1 | sed 's/^cargo-//; s/-$//'",
             "upgrade": "PATH=\"$HOME/.cargo/bin:$PATH\" rustup update stable",
             "version": "PATH=\"$HOME/.cargo/bin:$PATH\" cargo --version | awk '{print $2}'"
@@ -2423,6 +2423,29 @@
         }
       ],
       "git": "https://github.com/rust-lang/rust-analyzer"
+    },
+    "rustup": {
+      "providers": [
+        {
+          "provider": "pacman",
+          "package": "rustup"
+        },
+        {
+          "provider": "brew",
+          "package": "rustup"
+        },
+        {
+          "provider": "script",
+          "bin": "rustup",
+          "options": {
+            "check": "test -x \"$HOME/.cargo/bin/rustup\"",
+            "install": "set -eu; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; curl -fsSL --proto-redir '=https' https://sh.rustup.rs -o \"$tmp/rustup-init.sh\"; sh \"$tmp/rustup-init.sh\" -y --no-modify-path",
+            "upgrade": "\"$HOME/.cargo/bin/rustup\" self update",
+            "version": "\"$HOME/.cargo/bin/rustup\" --version 2>/dev/null | awk '{print $2}'"
+          }
+        }
+      ],
+      "git": "https://github.com/rust-lang/rustup"
     },
     "sblim-sfcc": {
       "providers": [
