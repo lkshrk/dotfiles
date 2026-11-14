@@ -1,6 +1,4 @@
 # yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
-# yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
-# yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
 # Lefthook config for the dotfiles repo.
 # chezmoi runs lefthook install when this file changes.
 
@@ -12,4 +10,37 @@ pre-commit:
       run: gitleaks protect --staged --redact
 
 pre-push:
-  commands: {}
+  parallel: true
+  commands:
+    agent-run-smoke:
+      run: sh tests/agent-run-smoke.sh
+    check-agent-paths:
+      run: python3 tests/check-agent-paths.py
+    env-smoke:
+      run: sh tests/env-smoke.sh
+    gii-union:
+      run: bash tests/gii-union.sh
+    hypr-focus-app:
+      run: bash tests/hypr-focus-app.sh
+    hypr-screens-decide:
+      run: lua tests/hypr-screens-decide.lua
+    hypr-screens-snap:
+      run: lua tests/hypr-screens-snap.lua
+    local-agents-token:
+      run: python3 tests/local-agents-token.py
+    opencode-config-smoke:
+      run: sh tests/opencode-config-smoke.sh
+    package-lists:
+      run: bash tests/package-lists.sh
+    render-hosts:
+      run: bash tests/render-hosts.sh
+    repository-git-hooks:
+      run: python3 tests/repository-git-hooks.py
+    yabai-focus-app:
+      run: bash tests/yabai-focus-app.sh
+    yabai-obsidian-layout:
+      run: bash tests/yabai-obsidian-layout.sh
+    yabai-pip-placement:
+      run: bash tests/yabai-pip-placement.sh
+    yabai-window-created:
+      run: bash tests/yabai-window-created.sh
