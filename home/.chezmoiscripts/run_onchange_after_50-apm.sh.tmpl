@@ -1,12 +1,12 @@
 {{- $groups := index .hosts .host | default (list) -}}
 {{- if has "ai" $groups -}}
 #!/bin/bash
-# Installs the pinned APM fork (user-scope MCP secrets stay references), then the global agent manifest.
+# Installs the pinned patched APM build (lkshrk/apm, branch lk: MCP secrets stay references), then the global agent manifest.
 # inputs: {{ include "dot_apm/apm.yml.tmpl" | sha256sum }} {{ include "../apm/ai-plugins/apm.yml" | sha256sum }}
 set -euo pipefail
-version="0.35.1+omni.2"
-url="https://github.com/lkshrk/omni/releases/download/apm-cli-0.35.1-omni.2/apm_cli-0.35.1%2Bomni.2-py3-none-any.whl"
-sha256="d596cf2ba617ba69de2a21c2ef7d84406973a127af375a742b1814147d2dffb6"
+version="0.35.1+lk.1"
+url="https://github.com/lkshrk/apm/releases/download/v0.35.1%2Blk.1/apm_cli-0.35.1%2Blk.1-py3-none-any.whl"
+sha256="c6e39dcb0465fa7363b48af5c164c9f607b70f6e4c1a193070aa2db1e7018e62"
 
 installed=$(apm --version 2>/dev/null | awk '{print $NF}' || true)
 if [ "$installed" != "$version" ]; then

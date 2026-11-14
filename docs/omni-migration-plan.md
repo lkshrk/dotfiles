@@ -344,7 +344,7 @@ today's groups.
 
 ## APM: upstream tested, fork stays
 
-Tested 2026-11-14 with `tests/apm-secret-references.sh`:
+Tested 2026-11-14 with the secret-reference test (now `tests/secret-references.sh` on the fork's `lk` branch):
 - a throwaway `HOME`;
 - fake values in the environment and no terminal;
 - one HTTP header reference, one `Bearer ${VAR}` header and one stdio env reference, targeting Claude and
@@ -355,15 +355,19 @@ Tested 2026-11-14 with `tests/apm-secret-references.sh`:
 | upstream `apm-cli` 0.35.1 | **all three values written in plain text** | headers stay references; **stdio env value written in plain text** |
 | fork 0.35.1+omni.2 | `${VAR}` everywhere | `env_http_headers`, `bearer_token_env_var`, `env_vars`; no values |
 
-So the fork stays:
+So the patches stay, now built by a pipeline in the fork (2026-11-14):
 
-- Install it with `uv tool install` of the pinned wheel (version + sha256), from a chezmoi script.
-- The wheel is published in the **omni** repo's releases (`apm-cli-0.35.1-omni.2`). Before omni is
-  archived, republish it in `lkshrk/apm` and point the pin there. Archived repos keep their releases,
-  but the wheel belongs with the fork.
-- Offer the patches upstream as the user-scope counterpart of #3406. Rerun the test script against each
-  new upstream release (`tests/apm-secret-references.sh 'apm-cli==<version>'`) and drop the fork once
-  it passes.
+- `lkshrk/apm`, default branch `lk`: a builder like talos-rpi5. The `Makefile` pins the upstream release,
+  `patches/` holds 13 patches (omp target and ownership work, MCP secrets as references, `apm outdated
+  --json`), authored on `lk-patches/v<version>` (upstream tag + one commit per patch; no version, changelog or
+  README edits, so they survive upstream releases).
+- CI checks out the tag, applies the patches, runs upstream's unit suite as upstream's release workflow does,
+  builds a reproducible wheel, runs the secret-reference test against it, and releases `v<version>+lk.<n>`
+  with `SHA256SUMS` (first: `v0.35.1+lk.1`). Renovate bumps the pin; patch releases merge on their own,
+  minors wait for review. When a patch stops applying: rebase the patch branch, `make refresh-patches`.
+- dotfiles' APM script pins that release (version + sha256) and installs it with `uv tool install`.
+- Offer the secret patches upstream as the user-scope counterpart of #3406; drop each patch once upstream
+  carries it.
 
 ## Migration order
 
@@ -371,7 +375,7 @@ So the fork stays:
    - No new omni features.
    - On each host save `omni tools status`, `brew leaves` / `brew list --cask`, `pacman -Qqe`, `mise ls`,
      `uv tool list` and `bun pm ls -g` to diff against later.
-2. **Move the fork wheel** to `lkshrk/apm` releases and update the pin.
+2. **APM builds** come from the fork's `lk` pipeline (done: `v0.35.1+lk.1`).
 3. **Convert the repo, on a branch:**
    - `chezmoi add` each managed file from towerr into `home/`, and turn host variants into templates;
    - generate the package lists and `mise/<group>.toml` from `tools.json` / `groups.json` with a one-off jq
