@@ -2,8 +2,6 @@
 
 zmodload -F zsh/datetime p:EPOCHSECONDS
 
-_h_cloud_script="$HOME/Dev/h-cloud/scripts/cluster-auth.sh"
-
 h_cloud_auth() {
   local exports others=${KUBECONFIG:-} kube=${_H_CLOUD_KUBECONFIG:-}
   # Re-run the script (which renews expiring certs) at most hourly per shell.
@@ -16,7 +14,6 @@ h_cloud_auth() {
     export TALOSCONFIG=$dir/talosconfig KUBECONFIG=$dir/kubeconfig
   else
     rbw_unlock_if_needed || { print -u2 "h-cloud: rbw locked"; return 1; }
-    # Literal path: agent shell snapshots keep functions but drop globals like $_h_cloud_script.
     exports=$("$HOME/Dev/h-cloud/scripts/cluster-auth.sh" env) || return 1
     eval "$exports"
     typeset -g _H_CLOUD_AUTH_AT=$EPOCHSECONDS
@@ -27,7 +24,7 @@ h_cloud_auth() {
   [[ -z $others ]] || export KUBECONFIG="$KUBECONFIG:$others"
 }
 
-if [[ -x $_h_cloud_script ]]; then
+if [[ -x $HOME/Dev/h-cloud/scripts/cluster-auth.sh ]]; then
   # A failed auth only warns, so contexts outside h-cloud keep working.
   for _cmd in talosctl kubectl flux helm helmfile k9s; do
     (( $+commands[$_cmd] )) || continue

@@ -27,42 +27,20 @@ validate_var() {
   esac
 }
 
-# Agents have no TTY but can still reach a graphical pinentry.
-gui_session() {
-  [ -n "${WAYLAND_DISPLAY:-}${DISPLAY:-}" ] && return 0
-  [ "$(uname -s)" = Darwin ] && [ -z "${SSH_CONNECTION:-}" ]
-}
-
 rbw_unlock_checked=false
 rbw_unlocked=false
 
 ensure_rbw_unlocked() {
-  [ "$rbw_unlock_checked" = true ] && [ "$rbw_unlocked" = true ] && return 0
-  [ "$rbw_unlock_checked" = true ] && return 1
-
-  rbw_unlock_checked=true
-
-  if rbw unlocked >/dev/null 2>&1; then
-    rbw_unlocked=true
-    return 0
-  fi
-
-  if [ -t 0 ] && [ -t 1 ]; then
-    printf '%s\n' 'rbw-env: rbw locked; unlocking' >&2
-    if rbw unlock </dev/tty >/dev/tty 2>/dev/tty && rbw unlocked >/dev/null 2>&1; then
+  if [ "$rbw_unlock_checked" = false ]; then
+    rbw_unlock_checked=true
+    if rbw unlocked >/dev/null 2>&1; then
       rbw_unlocked=true
-      return 0
-    fi
-  elif gui_session; then
-    printf '%s\n' 'rbw-env: rbw locked; unlocking via pinentry' >&2
-    if "$ENV_DIR/bin/rbw-unlock-once"; then
-      rbw_unlocked=true
-      return 0
+    else
+      printf '%s\n' 'rbw-env: rbw locked; unlocking' >&2
+      "$ENV_DIR/bin/rbw-unlock-once" && rbw_unlocked=true
     fi
   fi
-
-  rbw_unlocked=false
-  return 1
+  [ "$rbw_unlocked" = true ]
 }
 
 missing_secret=false
