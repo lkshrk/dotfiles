@@ -1,4 +1,3 @@
-# ls
 alias la='ls -lah'
 alias lh=la
 alias ll='ls -lh'
@@ -11,9 +10,8 @@ if ! command -v terraform >/dev/null 2>&1 && command -v tofu >/dev/null 2>&1; th
   alias terraform='tofu'
 fi
 
-#github
 alias gh="GITHUB_TOKEN= command gh"
-# git
+
 ga() { git add "${@:-.}"; }
 
 alias gcm='git commit -m'
@@ -32,7 +30,6 @@ alias gu='git fetch && git pull'
 
 alias lg='lazygit'
 
-# kubernetes
 alias k='kubectl '
 alias ke='kubectl edit '
 alias kecm='kubectl edit configmap '
@@ -61,25 +58,21 @@ alias kdln='kubectl delete nodes '
 alias kl='kubectl logs -f '
 alias ktx='kubectx '
 
-# flux kustomize/helm
 alias kdk='kubectl describe kustomizations.kustomize.toolkit.fluxcd.io '
 alias kdh='kubectl describe helmreleases.helm.toolkit.fluxcd.io '
 alias kgk='kubectl get kustomizations.kustomize.toolkit.fluxcd.io '
 alias kgh='kubectl get helmreleases.helm.toolkit.fluxcd.io '
 
-# talos
 alias tc='talosctl '
 alias tcg='talosctl get '
 function tcd {
   talosctl -n "k8s-$1" dashboard
 }
 
-# flux
 alias fx='flux '
 function fxr {
   flux reconcile "$@" --with-source
 }
 
-# woodpecker
 alias wp='woodpecker-cli '
 

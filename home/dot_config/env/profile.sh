@@ -1,11 +1,7 @@
-# POSIX-safe env entrypoint.
-# Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
-
 ENV_PROFILE_CURRENT_VERSION=12
 ENV_DIR="${ENV_DIR:-$HOME/.config/env}"
 
-# Functions are cheap to reload and may have been added after the guarded env
-# setup ran in this shell.
+# Functions load before the guard: the guarded env may predate them.
 # shellcheck source=functions/agents
 if [ -r "$ENV_DIR/functions/agents" ]; then
   . "$ENV_DIR/functions/agents"

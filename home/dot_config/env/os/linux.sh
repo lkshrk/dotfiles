@@ -1,5 +1,3 @@
-# Linux-specific env and PATH facts.
-
 env_path_prepend "$HOME/.local/bin"
 
 # Standalone pnpm refuses `pnpm ls -g` unless its bin dir is on PATH.

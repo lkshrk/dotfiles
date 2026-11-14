@@ -1,5 +1,3 @@
-# POSIX-safe PATH helpers.
-
 env_path_remove() {
   [ -n "${1:-}" ] || return 0
 

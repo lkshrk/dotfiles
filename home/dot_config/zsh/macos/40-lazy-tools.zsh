@@ -1,5 +1,4 @@
-# Lazy Homebrew OpenJDK link. Homebrew installs Java outside macOS' java_home
-# registry unless linked globally; keep shell startup light and avoid sudo symlinks.
+# Homebrew's OpenJDK sits outside java_home unless linked with sudo, so it is put on PATH at first use.
 _load_homebrew_openjdk() {
   local _homebrew_prefix="${HOMEBREW_PREFIX:-}"
   [[ -n "$_homebrew_prefix" ]] || return 127

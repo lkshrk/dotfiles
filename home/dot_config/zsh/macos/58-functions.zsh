@@ -1,9 +1,6 @@
-# macOS-only interactive helpers.
-
 alias bu='brew update && brew upgrade'
 
-# Refresh yabai's sudoers entry after Homebrew actions that can replace the
-# yabai binary. The script is idempotent and quiet when the hash is current.
+# Homebrew can replace the yabai binary, which invalidates the hash in its sudoers entry.
 brew() {
   command brew "$@"
   local rc=$?
@@ -37,8 +34,7 @@ _secure_input_pid() {
     | sed -n 's/.*"kCGSSessionSecureInputPID"=\([0-9]*\).*/\1/p' | head -1
 }
 
-# A macOS update invalidates the event tap of a running skhd without killing it,
-# so restarting the services is the fix far more often than the logout below.
+# A macOS update breaks a running skhd's event tap without killing it; a restart fixes that more often than logging out.
 fix-hotkeys() {
   emulate -L zsh
 

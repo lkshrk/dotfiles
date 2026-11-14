@@ -1,4 +1,3 @@
-# --- git --------------------------------------------------------------------
 gupf() {
   [[ -n $1 ]] || { echo "Usage: gupf <commit-message>" >&2; return 1; }
   git add -A && git commit --amend -m "$1" && git push --force-with-lease
@@ -9,9 +8,6 @@ gup() {
   git add -A && git commit --amend -m "$1"
 }
 
-# release <major|minor|patch|vX.Y.Z>
-#   1. if uncommitted changes -> prompt to stage+commit
-#   2. tag (bumped from latest semver tag, or explicit), push branch + tag
 release() {
   emulate -L zsh
   setopt local_options err_return pipe_fail
@@ -33,7 +29,6 @@ release() {
     return 1
   }
 
-  # 1. uncommitted check
   if [[ -n "$(git status --porcelain)" ]]; then
     git status --short
     printf 'Uncommitted changes. Commit them now? [y/N] '
@@ -46,7 +41,6 @@ release() {
     git commit -m "$msg"
   fi
 
-  # 2. determine new version
   local last new
   git fetch --tags --quiet
   last=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
@@ -79,15 +73,12 @@ release() {
   echo "release: pushed $new on $branch"
 }
 
-# --- k8s helpers ------------------------------------------------------------
 kgpn() {
   [[ -n $1 ]] || { echo "Usage: kgpn <node-name>" >&2; return 1; }
   (( $+commands[kubectl] )) || { echo "kgpn: kubectl not found" >&2; return 127; }
   kubectl get pods --all-namespaces --field-selector spec.nodeName="$1"
 }
 
-# kubectl exec into a pod by label
-# Usage: ksh <namespace> <app-label>
 ksh() {
   local ns=$1 app=$2
   [[ -n $ns && -n $app ]] || { echo "Usage: ksh <namespace> <app-label>" >&2; return 1; }
@@ -98,7 +89,6 @@ ksh() {
   kubectl exec -it -n "$ns" "$pod" -- sh -c "bash || sh"
 }
 
-# temporary busybox shell in a namespace
 csh() {
   local ns=$1
   [[ -n $ns ]] || { echo "Usage: csh <namespace>" >&2; return 1; }
@@ -124,7 +114,6 @@ vaulttoken() {
   (umask 077 && print -rn -- "$token" > "$HOME/.vault-token")
 }
 
-# --- tmux dev layout --------------------------------------------------------
 tdl() {
   [[ -z $1 ]] && { echo "Usage: tdl <ai> [<second_ai>]"; return 1; }
   (( $+commands[tmux] )) || { echo "tdl: tmux not found" >&2; return 127; }
@@ -147,7 +136,6 @@ tdl() {
   tmux select-pane -t "$editor_pane"
 }
 
-# --- moshi: attach-or-create tmux session for a project dir -----------------
 moshi() {
   (( $+commands[tmux] )) || { echo "moshi: tmux not found" >&2; return 127; }
 
@@ -170,7 +158,6 @@ moshi() {
   tmux attach -t "$session"
 }
 
-# --- ai-clean: wipe coding-agent caches, show freed space -----------------
 ai-clean() {
   local confirm=0
   [[ "${1:-}" == "--yes" ]] && confirm=1
@@ -203,8 +190,6 @@ ai-clean() {
   print "ai-clean: freed ${freed}MB"
 }
 
-
-# --- Default gitignore init ---------------------------------------------
 gii() {
   local template="$HOME/.config/zsh/templates/default.gitignore"
   [[ -r "$template" ]] || { echo "gii: template not found: $template" >&2; return 1; }
