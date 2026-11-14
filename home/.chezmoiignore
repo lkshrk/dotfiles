@@ -12,6 +12,17 @@ Library
 .local/bin/opencode
 .omp
 {{- end }}
+{{- if not (has "audio" $groups) }}
+.config/env/functions/audio
+.config/hypr/scripts/audio-restart
+.config/pipewire
+.config/systemd/user/graphical-session.target.wants/pipeweaver.service
+.config/systemd/user/pipeweaver.service
+.config/systemd/user/pipewire.service.d
+.config/wireplumber
+.local/bin/pipeweaver-app
+.local/share/applications/pipeweaver.desktop
+{{- end }}
 {{- if not (has "desktop" $groups) }}
 .config/zed
 {{- end }}
@@ -33,10 +44,8 @@ Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 .config/nautilus
 .config/omarchy
 .config/opendeck
-.config/pipewire
 .config/signal-desktop-flags.conf
 .config/systemd
-.config/wireplumber
 .config/xkb
 .local/bin/battlenet
 .local/bin/brave-media
@@ -44,7 +53,6 @@ Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 .local/bin/ha-doorbell
 .local/bin/obs-config
 .local/bin/omarchy-confirm
-.local/bin/pipeweaver-app
 .local/bin/slurp
 .local/bin/vram-watch
 .local/bin/webapp-focus

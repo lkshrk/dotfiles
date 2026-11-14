@@ -1,4 +1,4 @@
 hosts:
   topaz: [base, personal, dev, node, python, go, rust, lua, infra, ai, desktop, media, gaming, macos]
-  towerr: [base, personal, dev, node, python, go, rust, lua, infra, ai, desktop, media, gaming, omarchy]
+  towerr: [base, personal, dev, node, python, go, rust, lua, infra, ai, desktop, media, gaming, audio, omarchy]
   apm3ljhmvg7xgcf: [base, dev, node, python, jvm, work]

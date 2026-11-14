@@ -53,7 +53,7 @@ claude doctor
 
 `towerr` runs [Omarchy](https://omarchy.org/) (Arch Linux + Hyprland). It has
 the same role groups as `topaz` except `macos`, plus `omarchy`
-(keyd, Hyprland and Omarchy shell config); see `home/.chezmoidata/hosts.yaml`.
+(keyd, Hyprland and Omarchy shell config) and `audio`; see `home/.chezmoidata/hosts.yaml`.
 The shell plugins `~/Dev/omarchy-stats` and `~/Dev/omarchy-quotatank` are
 cloned if missing by `run_after_62-omarchy-user` (working copies, never pulled);
 the Stream Deck images are `create_` files, written once and then left to OpenDeck.
@@ -63,6 +63,24 @@ on refresh. chezmoi writes only the files the repo tracks (`bindings.lua`,
 `rules.lua`, `shell.json`, `plugins/`, ...) and leaves the rest alone. After an
 Omarchy update, the `check-dots-links` hook reports managed files that changed;
 `chezmoi diff` shows them and `chezmoi re-add` takes a change into the repo.
+
+### Audio
+
+The `audio` group (one block in `home/.chezmoiignore`) holds the USB mic and
+PipeWire setup. The files sit where each program reads them:
+
+| File | Purpose |
+|---|---|
+| `pipewire/pipewire.conf.d/mic-clock.conf` | Always-present timer that clocks the mic graph, so a USB replug doesn't stall it |
+| `pipewire/pipewire.conf.d/min-quantum.conf` | Graph quantum floor of 512 at 48 kHz (lower makes PipeWeaver xrun) |
+| `pipewire/filter-chain.conf.d/mic-filtered.conf` | "Mic (filtered)": the RODE, or the Razer headset when out of the RODE's range |
+| `wireplumber/wireplumber.conf.d/usb-mic-quantum.conf` | USB mic: fixed quantum, joins the `mic-clock` group |
+| `wireplumber/wireplumber.conf.d/hide-devices.conf` | Hides GPU HDMI audio, the RODE headphone jack and the raw RODE source |
+| `wireplumber/wireplumber.conf.d/pipeweaver-no-restore.conf` | No mute restore for PipeWeaver nodes (avoids a mute/unmute loop) |
+| `systemd/user/pipewire.service.d/log-xruns.conf` | Logs xruns and ALSA resyncs to the journal |
+| `systemd/user/pipeweaver.service` (+ `graphical-session.target.wants` link) | Pipeweaver mixer daemon |
+| `~/.local/bin/pipeweaver-app`, `pipeweaver.desktop` | Pipeweaver UI launcher |
+| `hypr/scripts/audio-restart` | Restarts the audio stack; `audio-restart` / `mic-reset` (`env/functions/audio`) |
 
 ## Dotfiles (chezmoi)
 
