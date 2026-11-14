@@ -1,0 +1,17 @@
+#compdef just
+# just's own (dynamic) completion escapes ~ in paths and stops; recipes and module recipes first, then plain file completion.
+local -a recipes modules sub
+if [[ $words[2] != -* ]] && (( CURRENT <= 3 )); then
+  recipes=(${=${(f)"$(just --summary 2>/dev/null)"}})
+  if (( CURRENT == 2 )); then
+    modules=(${(u)${(M)recipes:#*::*}%%::*})
+    _describe -t recipes 'recipe' recipes -- modules
+    return
+  fi
+  sub=(${${(M)recipes:#$words[2]::*}#$words[2]::})
+  if (( ${#sub} )); then
+    _describe -t recipes "$words[2] recipe" sub
+    return
+  fi
+fi
+_files

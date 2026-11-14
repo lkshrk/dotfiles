@@ -24,7 +24,6 @@ gen gitleaks gitleaks completion zsh
 gen golangci-lint golangci-lint completion zsh
 gen helm helm completion zsh
 gen helmfile helmfile completion zsh
-gen just just --completions zsh
 gen kustomize kustomize completion zsh
 gen lefthook lefthook completion zsh
 gen rclone rclone completion zsh -
