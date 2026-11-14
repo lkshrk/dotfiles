@@ -28,7 +28,6 @@ Library
 {{- end }}
 {{- if not (has "macos" $groups) }}
 .config/cmux
-.config/com.corsair
 .config/ghostty
 .config/linearmouse
 .config/skhd
