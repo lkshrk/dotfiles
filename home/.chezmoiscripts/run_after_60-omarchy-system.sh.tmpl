@@ -1,0 +1,147 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "omarchy" $groups -}}
+#!/bin/bash
+# Compares /etc with omarchy/ on every apply and calls pkexec once, only when something differs.
+set -euo pipefail
+repo={{ .chezmoi.workingTree | quote }}
+user=$(id -un)
+pem="$HOME/.local/share/certs/lan-ca.pem"
+anchor=/etc/ca-certificates/trust-source/anchors/lan-ca.crt
+ufw_rule='-A ufw-before-input -p igmp -d 224.0.0.1 -j DROP'
+ufw_after='-d 224.0.0.251 --dport 5353 -j ACCEPT'
+have() { command -v "$1" >/dev/null 2>&1; }
+in_group() { id -nG "$user" | tr ' ' '\n' | grep -qx "$1"; }
+differs() { ! cmp -s "$1" "$2"; }
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+todo=() stale=()
+
+if have keyd; then
+  for src in "$repo"/omarchy/keyd/*; do
+    differs "$src" "/etc/keyd/${src##*/}" && todo+=(keyd)
+  done
+  for dst in /etc/keyd/*.conf; do
+    [ ! -e "$dst" ] || [ -e "$repo/omarchy/keyd/${dst##*/}" ] || stale+=("$dst")
+  done
+  ((${#stale[@]} == 0)) || todo+=(keyd)
+  systemctl is-enabled --quiet keyd && systemctl is-active --quiet keyd || todo+=(keyd)
+  in_group keyd || todo+=(keyd-group)
+fi
+
+awk -v mounts="$repo/omarchy/fstab.mounts" '
+  function block(line) {
+    print "# BEGIN dotfiles mounts"
+    while ((getline line < mounts) > 0) print line
+    print "# END dotfiles mounts"
+    placed = 1
+  }
+  $0 == "# BEGIN dotfiles mounts" { block(); skip = 1; next }
+  $0 == "# END dotfiles mounts" { skip = 0; next }
+  skip { next }
+  $2 == "/mnt/stuff" || $2 == "/mnt/games" || $2 == "/mnt/gaming" { next }
+  # The ESP holds the random seed, so it must not be world-readable (bootctl warns at every boot).
+  $2 == "/boot" && $3 == "vfat" { sub(/fmask=0022/, "fmask=0077"); sub(/dmask=0022/, "dmask=0077") }
+  { print }
+  END { if (!placed) block() }
+' /etc/fstab >"$work/fstab"
+differs "$work/fstab" /etc/fstab && todo+=(fstab)
+for unit in ntfsfix-stuff.service mnt-stuff.mount.d/ntfsfix.conf; do
+  differs "$repo/omarchy/systemd/$unit" "/etc/systemd/system/$unit" && todo+=(units)
+done
+
+if have cloudflared; then
+  differs "$repo/omarchy/systemd/cloudflared.service.d/wait-dns.conf" /etc/systemd/system/cloudflared.service.d/wait-dns.conf && todo+=(cloudflared)
+fi
+if have irqbalance; then
+  differs "$repo/omarchy/default/irqbalance" /etc/default/irqbalance && todo+=(irqbalance)
+fi
+# ufw owns before.rules, so only this one rule is added rather than shipping the whole file.
+if have ufw && ! grep -qxF -- "$ufw_rule" /etc/ufw/before.rules; then
+  if grep -qF -- "$ufw_after" /etc/ufw/before.rules; then
+    todo+=(ufw)
+  else
+    echo "system: /etc/ufw/before.rules has no mDNS rule to add the IGMP rule after; skipping" >&2
+  fi
+fi
+if [ -r "$pem" ]; then
+  differs "$pem" "$anchor" && todo+=(ca)
+fi
+if have docker; then
+  in_group docker || todo+=(docker-group)
+fi
+zsh_path=$(command -v zsh || true)
+if [ -n "$zsh_path" ] && [ "$(getent passwd "$user" | cut -d: -f7)" != "$zsh_path" ]; then
+  todo+=(shell)
+fi
+
+((${#todo[@]})) || exit 0
+mapfile -t todo < <(printf '%s\n' "${todo[@]}" | sort -u)
+echo "system: updating ${todo[*]} (pkexec)"
+pkexec /usr/bin/env TODO=" ${todo[*]} " REPO="$repo" WORK="$work" USER_NAME="$user" STALE="${stale[*]-}" \
+  PEM="$pem" ANCHOR="$anchor" UFW_RULE="$ufw_rule" UFW_AFTER="$ufw_after" ZSH_PATH="$zsh_path" /bin/bash -s <<'ROOT'
+set -euo pipefail
+want() { [[ $TODO == *" $1 "* ]]; }
+reload=0 mounts=0
+if want keyd; then
+  install -Dm644 -t /etc/keyd "$REPO"/omarchy/keyd/*
+  # shellcheck disable=SC2086
+  [ -z "$STALE" ] || rm -f $STALE
+  systemctl enable keyd
+  # Restart rather than `keyd reload`: right after the first start the socket isn't up yet.
+  systemctl restart keyd
+fi
+if want fstab; then
+  cp /etc/fstab "/etc/fstab.bak-dotfiles.$(date +%Y%m%d%H%M%S)"
+  install -m644 "$WORK/fstab" /etc/fstab
+  mkdir -p /mnt/stuff /mnt/gaming
+  mounts=1
+fi
+if want units; then
+  for unit in ntfsfix-stuff.service mnt-stuff.mount.d/ntfsfix.conf; do
+    install -Dm644 "$REPO/omarchy/systemd/$unit" "/etc/systemd/system/$unit"
+  done
+  mounts=1
+fi
+if want cloudflared; then
+  install -Dm644 "$REPO/omarchy/systemd/cloudflared.service.d/wait-dns.conf" /etc/systemd/system/cloudflared.service.d/wait-dns.conf
+  reload=1
+fi
+if ((reload || mounts)); then
+  systemctl daemon-reload
+fi
+if ((mounts)); then
+  systemctl start mnt-stuff.mount mnt-gaming.automount || echo "system: a mount did not come up; it retries at next boot" >&2
+fi
+if want irqbalance; then
+  install -Dm644 "$REPO/omarchy/default/irqbalance" /etc/default/irqbalance
+  systemctl try-restart irqbalance
+fi
+if want ufw; then
+  sed -i "/$UFW_AFTER/a\\
+\\
+# drop the router's IGMP membership queries without logging them\\
+$UFW_RULE" /etc/ufw/before.rules
+  ufw reload >/dev/null
+fi
+if want ca; then
+  install -Dm644 "$PEM" "$ANCHOR"
+  update-ca-trust
+fi
+if want keyd-group; then
+  usermod -aG keyd "$USER_NAME"
+fi
+if want docker-group; then
+  usermod -aG docker "$USER_NAME"
+fi
+if want shell; then
+  usermod -s "$ZSH_PATH" "$USER_NAME"
+fi
+ROOT
+if [[ " ${todo[*]} " == *" keyd-group "* ]]; then
+  echo "system: added $user to keyd; log out and back in for terminal Cmd + C/V"
+fi
+if [[ " ${todo[*]} " == *" docker-group "* ]]; then
+  omarchy-state set reboot-required 2>/dev/null || true
+  echo "system: added $user to docker; reboot to use docker without sudo"
+fi
+{{- end }}

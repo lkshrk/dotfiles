@@ -1,0 +1,21 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "personal" $groups -}}
+#!/bin/bash
+# Writes the vault's LAN root CA once rbw is unlocked; runs on every apply, so it waits for the first unlock.
+set -euo pipefail
+command -v rbw >/dev/null 2>&1 && rbw unlocked >/dev/null 2>&1 || exit 0
+pem="$HOME/.local/share/certs/lan-ca.pem"
+raw=$(rbw get --field username root-CA 2>/dev/null) && [ -n "$raw" ] ||
+  { echo "lan-ca: no root-CA in the vault; LAN hosts (litellm) will fail TLS" >&2; exit 0; }
+body=$(printf '%s\n' "$raw" | sed -e 's/-----BEGIN CERTIFICATE-----//' -e 's/-----END CERTIFICATE-----//' | tr -d '[:space:]')
+mkdir -p "${pem%/*}"
+tmp=$(mktemp "$pem.XXXXXX")
+trap 'rm -f "$tmp"' EXIT
+{ echo "-----BEGIN CERTIFICATE-----"; printf '%s\n' "$body" | fold -w64; echo "-----END CERTIFICATE-----"; } >"$tmp"
+openssl x509 -in "$tmp" -noout 2>/dev/null ||
+  { echo "lan-ca: vault item root-CA is not a valid certificate" >&2; exit 0; }
+cmp -s "$tmp" "$pem" && exit 0
+chmod 0644 "$tmp"
+mv "$tmp" "$pem"
+echo "lan-ca: wrote ~/.local/share/certs/lan-ca.pem"
+{{- end }}
