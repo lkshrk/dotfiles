@@ -1,6 +1,0 @@
-{
-  "runtime.version": "Lua 5.4",
-  "workspace.library": ["~/Dev/lua-annotations/hammerspoon"],
-  "workspace.checkThirdParty": false,
-  "diagnostics.globals": ["hs"]
-}

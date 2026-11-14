@@ -63,7 +63,6 @@
 .config/linearmouse
 .config/skhd
 .config/yabai
-.hammerspoon
 .profile
 Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 {{- end }}
@@ -104,6 +103,7 @@ Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 Library/LaunchAgents/com.lkshrk.knowledge-sync.plist
 {{- end }}
 {{- if not (has "work" $groups) }}
+.hammerspoon
 .config/nvim/lua/plugins/plantuml.lua
 {{- end }}
 {{- if not (or (eq .host "topaz") (eq .host "towerr")) }}
