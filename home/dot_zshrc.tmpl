@@ -4,7 +4,7 @@
 # Optional profiler — uncomment top + bottom block to debug startup time
 # zmodload zsh/zprof
 
-{{ if eq .host "topaz" -}}
+{{ if eq .chezmoi.os "darwin" -}}
 {{/* Again after /etc/zprofile: macOS path_helper reorders PATH behind system dirs in login shells. */ -}}
 : "${ENV_DIR:=${ENV_NEXT_DIR:-$HOME/.config/env}}"
 [[ -r "$ENV_DIR/profile.sh" ]] && source "$ENV_DIR/profile.sh"
