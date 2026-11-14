@@ -49,3 +49,7 @@ docs/superpowers/
 
 # Leftovers of the old Stow layout on hosts not yet migrated (e.g. an untracked gh hosts.yml).
 /dotfiles/
+
+# Local agent workspaces
+/.superpowers/
+/.worktrees/
