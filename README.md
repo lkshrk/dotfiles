@@ -46,7 +46,7 @@ claude doctor
 ## Omarchy
 
 `towerr` runs [Omarchy](https://omarchy.org/) (Arch Linux + Hyprland). It has
-the same role groups as `topaz` except `macos` and `apple-dev`, plus `omarchy`
+the same role groups as `topaz` except `macos`, plus `omarchy`
 (keyd, Hyprland and Omarchy shell config); see `home/.chezmoidata/hosts.yaml`.
 
 On a fresh Omarchy install:

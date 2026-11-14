@@ -1,7 +1,6 @@
 cmake
 make
 ninja
-plantuml
 python-protobuf
 rust-analyzer
 skopeo

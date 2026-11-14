@@ -1,4 +1,8 @@
 {{- $groups := index .hosts .host | default (list) -}}
+{{- if ne .chezmoi.os "darwin" }}
+.config/zsh/macos
+Library
+{{- end }}
 {{- if not (has "ai" $groups) }}
 .apm
 .claude
@@ -8,65 +12,19 @@
 .local/bin/opencode
 .omp
 {{- end }}
-{{- if not (has "base" $groups) }}
-.bashrc
-.config/env/README.md
-.config/env/bin
-.config/env/functions
-.config/env/lib
-.config/env/machine
-.config/env/os
-.config/env/profile.sh
-.config/env/tests
-.config/gh
-.config/git
-.config/lazygit
-.config/nvim/.github
-.config/nvim/.luarc.json
-.config/nvim/.stylua.toml
-.config/nvim/LICENSE.md
-.config/nvim/README.md
-.config/nvim/doc
-.config/nvim/init.lua
-.config/nvim/lua/config
-.config/nvim/lua/custom
-.config/nvim/lua/plugins/cmp.lua
-.config/nvim/lua/plugins/colorscheme.lua
-.config/nvim/lua/plugins/conform.lua
-.config/nvim/lua/plugins/gitsigns.lua
-.config/nvim/lua/plugins/grug-far.lua
-.config/nvim/lua/plugins/indent-blankline.lua
-.config/nvim/lua/plugins/lazygit.lua
-.config/nvim/lua/plugins/lsp.lua
-.config/nvim/lua/plugins/mini.lua
-.config/nvim/lua/plugins/misc.lua
-.config/nvim/lua/plugins/neo-tree.lua
-.config/nvim/lua/plugins/telescope.lua
-.config/nvim/lua/plugins/treesitter.lua
-.config/nvim/lua/plugins/which-key.lua
-.config/tmux
-.config/zsh
-.vim
-.zshenv
-.zshrc
-{{- end }}
 {{- if not (has "desktop" $groups) }}
-.config/ghostty
 .config/zed
-{{- end }}
-{{- if not (has "gaming" $groups) }}
-.config/com.corsair
 {{- end }}
 {{- if not (has "macos" $groups) }}
 .config/cmux
+.config/com.corsair
+.config/ghostty
 .config/linearmouse
 .config/skhd
 .config/yabai
 Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 {{- end }}
 {{- if not (has "omarchy" $groups) }}
-.config/opendeck
-.local/share/deck-icons
 .config/fcitx5
 .config/foot
 .config/gtk-3.0
@@ -74,6 +32,7 @@ Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 .config/keyd
 .config/nautilus
 .config/omarchy
+.config/opendeck
 .config/pipewire
 .config/signal-desktop-flags.conf
 .config/systemd
@@ -97,48 +56,16 @@ Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 {{- end }}
 {{- if not (has "personal" $groups) }}
 .config/env/secrets
+.config/git/allowed_signers
+.config/git/config.local
 .ssh
 Library/LaunchAgents/com.lkshrk.knowledge-sync.plist
 {{- end }}
 {{- if not (has "work" $groups) }}
-.hammerspoon
 .config/nvim/lua/plugins/plantuml.lua
+.hammerspoon
 {{- end }}
-{{- if not (or (eq .host "topaz") (eq .host "towerr")) }}
-.config/git/allowed_signers
-{{- end }}
-{{- if not (or (eq .host "topaz") (eq .host "towerr")) }}
-.config/git/config.local
-{{- end }}
-{{- if ne .chezmoi.os "darwin" }}
-Library
-.config/com.corsair
-.config/ghostty
-{{- end }}
-{{- if not (has "base" $groups) }}
-.config/mise/conf.d/base.toml
-{{- end }}
-{{- if not (has "dev" $groups) }}
-.config/mise/conf.d/dev.toml
-{{- end }}
-{{- if not (has "node" $groups) }}
-.config/mise/conf.d/node.toml
-{{- end }}
-{{- if not (has "python" $groups) }}
-.config/mise/conf.d/python.toml
-{{- end }}
-{{- if not (has "go" $groups) }}
-.config/mise/conf.d/go.toml
-{{- end }}
-{{- if not (has "lua" $groups) }}
-.config/mise/conf.d/lua.toml
-{{- end }}
-{{- if not (has "infra" $groups) }}
-.config/mise/conf.d/infra.toml
-{{- end }}
-{{- if not (has "ai" $groups) }}
-.config/mise/conf.d/ai.toml
-{{- end }}
-{{- if not (has "jvm" $groups) }}
-.config/mise/conf.d/jvm.toml
+.config/mise/conf.d/*.toml
+{{- range $groups }}
+!.config/mise/conf.d/{{ . }}.toml
 {{- end }}
