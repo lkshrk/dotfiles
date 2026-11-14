@@ -58,7 +58,7 @@ if [[ $os == Linux ]]; then
   if [[ ! -d $vault/.git ]] && rbw unlocked >/dev/null 2>&1; then
     say "knowledge vault"
     . "$repo/home/dot_config/env/lib/rbw-sock.sh"
-    sock=$(env_next_rbw_sock_linux) && export SSH_AUTH_SOCK="$sock"
+    sock=$(env_rbw_sock_linux) && export SSH_AUTH_SOCK="$sock"
     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new" git clone git@github.com:lkshrk/knowledge.git "$vault" ||
       warn "could not clone the knowledge vault; check the rbw SSH agent and rerun"
   fi

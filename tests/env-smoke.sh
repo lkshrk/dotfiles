@@ -81,10 +81,10 @@ printf "\n## launchd SSH_AUTH_SOCK override\n"
 sh -c 'SSH_AUTH_SOCK=/var/run/com.apple.launchd.example/Listeners; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; case "$SSH_AUTH_SOCK" in */rbw-*/ssh-agent-socket) printf "launchd-override=rbw\n" ;; *) printf "launchd-override=unexpected:%s\n" "$SSH_AUTH_SOCK"; exit 1 ;; esac'
 
 printf "\n## machine host normalization\n"
-sh -c 'unset KUBECONFIG ENV_NEXT_MACHINE HOSTNAME; HOST=Topaz.local; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"; case "${KUBECONFIG:-}" in "$HOME/.kube/hcloud:$HOME/.kube/legacy") ;; *) exit 1 ;; esac'
+sh -c 'unset KUBECONFIG ENV_MACHINE ENV_NEXT_MACHINE HOSTNAME; HOST=Topaz.local; PATH=/usr/bin:/bin; . "$ENV_DIR/profile.sh"; printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"; case "${KUBECONFIG:-}" in "$HOME/.kube/hcloud:$HOME/.kube/legacy") ;; *) exit 1 ;; esac'
 
 printf "\n## zshrc reloads stale env\n"
-zsh -f -c 'unset KUBECONFIG ENV_NEXT_MACHINE HOSTNAME; HOST=Topaz.local; PATH=/usr/bin:/bin; ENV_NEXT_PROFILE_LOADED=1; ENV_NEXT_PROFILE_PATH=$PATH; unset ENV_NEXT_PROFILE_VERSION; source "$HOME/.zshrc"; printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"; case "${KUBECONFIG:-}" in "$HOME/.kube/hcloud:$HOME/.kube/legacy") ;; *) exit 1 ;; esac'
+zsh -f -c 'unset KUBECONFIG ENV_MACHINE ENV_NEXT_MACHINE HOSTNAME; HOST=Topaz.local; PATH=/usr/bin:/bin; ENV_PROFILE_LOADED=1; ENV_PROFILE_PATH=$PATH; unset ENV_PROFILE_VERSION; source "$HOME/.zshrc"; printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"; case "${KUBECONFIG:-}" in "$HOME/.kube/hcloud:$HOME/.kube/legacy") ;; *) exit 1 ;; esac'
 
 printf "\n## zshenv no lazy wrappers\n"
 node_probe_dir=$(mktemp -d)

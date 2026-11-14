@@ -8,7 +8,7 @@ rbw_fix_ssh_auth_sock() {
   [[ -z ${SSH_AUTH_SOCK:-} || $SSH_AUTH_SOCK == /var/run/com.apple.launchd.*/Listeners ]] || return 0
   local sock os=linux
   [[ $OSTYPE == darwin* ]] && os=darwin
-  sock=$(source "${ENV_DIR:-$HOME/.config/env}/lib/rbw-sock.sh" 2>/dev/null && env_next_rbw_sock_$os) || return 1
+  sock=$(source "${ENV_DIR:-$HOME/.config/env}/lib/rbw-sock.sh" 2>/dev/null && env_rbw_sock_$os) || return 1
   export SSH_AUTH_SOCK=$sock
 }
 

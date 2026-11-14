@@ -42,7 +42,7 @@ run_profile_probe() {
   env -i \
     HOME="$home" \
     ENV_DIR="$ENV_DIR" \
-    ENV_NEXT_OS=linux \
+    ENV_OS=linux \
     XDG_RUNTIME_DIR="$runtime" \
     TMPDIR="$tmpdir" \
     EXPECTED_SSH_AUTH_SOCK="$expected_sock" \
@@ -138,3 +138,15 @@ done
 
 run_profile_probe "linux with existing rbw socket" "$socket_path"
 
+
+printf '\n## pre-rename guard\n'
+env -i HOME="$home" ENV_DIR="$ENV_DIR" PATH=/usr/bin:/bin /bin/sh -c '
+  . "$ENV_DIR/profile.sh"
+  probe=". \"\$ENV_DIR/profile.sh\"; printf \"%s %s\n\" \"\${ENV_PROFILE_LOADED:-unset}\" \"\${ENV_NEXT_PROFILE_LOADED:-unset}\""
+  fresh=$(env -u ENV_PROFILE_LOADED -u ENV_PROFILE_PATH -u ENV_PROFILE_VERSION ENV_NEXT_PROFILE_LOADED=1 \
+    ENV_NEXT_PROFILE_PATH="$PATH" ENV_NEXT_PROFILE_VERSION="$ENV_PROFILE_VERSION" /bin/sh -c "$probe")
+  stale=$(env -u ENV_PROFILE_LOADED -u ENV_PROFILE_PATH -u ENV_PROFILE_VERSION ENV_NEXT_PROFILE_LOADED=1 \
+    ENV_NEXT_PROFILE_PATH="$PATH" ENV_NEXT_PROFILE_VERSION=0 /bin/sh -c "$probe")
+  printf "fresh=%s stale=%s\n" "$fresh" "$stale"
+  [ "$fresh" = "unset 1" ] && [ "$stale" = "1 unset" ]
+' || fail "pre-rename profile guard"

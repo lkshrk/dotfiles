@@ -2,7 +2,7 @@
 # Launch an AI agent CLI with its rbw secret profile, gateway settings and the optional LAN CA.
 set -eu
 
-ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}"
+ENV_DIR="${ENV_DIR:-$HOME/.config/env}"
 
 usage() {
   printf '%s\n' 'usage: agent-run <claude|claude-hass|claude-sub|codex|omp|opencode> [args...]' >&2

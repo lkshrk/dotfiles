@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}"
+ENV_DIR="${ENV_DIR:-$HOME/.config/env}"
 output_dir=${RBW_SSH_PUBKEY_DIR:-$HOME/.ssh/rbw}
 
 # shellcheck source=lib/rbw-sock.sh
@@ -20,8 +20,8 @@ if [ -n "${RBW_SSH_AUTH_SOCK:-}" ]; then
   rbw_sock=$RBW_SSH_AUTH_SOCK
 else
   case "$(uname -s)" in
-    Darwin) rbw_sock=$(env_next_rbw_sock_darwin) ;;
-    Linux) rbw_sock=$(env_next_rbw_sock_linux) ;;
+    Darwin) rbw_sock=$(env_rbw_sock_darwin) ;;
+    Linux) rbw_sock=$(env_rbw_sock_linux) ;;
     *)
       printf 'rbw-ssh-pubkeys: unsupported OS\n' >&2
       exit 1
