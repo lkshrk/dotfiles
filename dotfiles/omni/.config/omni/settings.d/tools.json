@@ -340,6 +340,18 @@
         }
       ]
     },
+    "chezmoi": {
+      "providers": [
+        {
+          "provider": "brew",
+          "package": "chezmoi"
+        },
+        {
+          "provider": "pacman",
+          "package": "chezmoi"
+        }
+      ]
+    },
     "cilium-cli": {
       "providers": [
         {

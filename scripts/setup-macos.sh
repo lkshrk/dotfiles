@@ -52,8 +52,8 @@ ensure_homebrew() {
 
 install_bootstrap_tools() {
   step "bootstrap packages"
-  brew install stow omni bun uv
-  ok "stow, omni, bun, uv installed"
+  brew install chezmoi omni bun uv
+  ok "chezmoi, omni, bun, uv installed"
 
 }
 
@@ -66,7 +66,7 @@ compile_sleep_on_lock() {
   local module_cache="${CLANG_MODULE_CACHE_PATH:-$HOME/.cache/clang/ModuleCache}"
 
   [[ -f "$src" ]] || {
-    warn "missing $src; run 'omni --config \"$OMNI_CONFIG_PATH\" dots sync yabai' and rerun setup"
+    warn "missing $src; run 'chezmoi apply' and rerun setup"
     return
   }
   command -v swiftc >/dev/null 2>&1 || die "swiftc is missing after Command Line Tools install"
@@ -83,7 +83,7 @@ install_sleep_on_lock_agent() {
   local service="gui/$UID/com.lkshrk.sleep-on-lock"
 
   [[ -f "$agent" ]] || {
-    warn "missing $agent; run 'omni --config \"$OMNI_CONFIG_PATH\" dots sync sleep-on-lock' and rerun setup"
+    warn "missing $agent; run 'chezmoi apply' and rerun setup"
     return
   }
 
@@ -106,7 +106,7 @@ install_knowledge_sync_agent() {
     return
   }
   [[ -f "$agent" ]] || {
-    warn "missing $agent; run 'omni --config \"$OMNI_CONFIG_PATH\" dots sync knowledge-sync' and rerun setup"
+    warn "missing $agent; run 'chezmoi apply' and rerun setup"
     return
   }
 

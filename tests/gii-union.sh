@@ -3,7 +3,7 @@
 set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-eval "$(sed -n '/^gii()/,/^}/p' "$repo_dir/dotfiles/zsh/.config/zsh/60-functions.zsh")"
+eval "$(sed -n '/^gii()/,/^}/p' "$repo_dir/home/dot_config/zsh/60-functions.zsh")"
 
 test_dir="$(mktemp -d)"
 trap 'rm -rf "$test_dir"' EXIT

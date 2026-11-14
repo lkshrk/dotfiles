@@ -14,7 +14,7 @@ The setup flow:
 
 1. Verifies Xcode Command Line Tools and `swiftc`.
 2. Ensures Homebrew is installed and on `PATH`.
-3. Installs the bootstrap tools with Brew: GNU Stow, Omni, Bun, and uv.
+3. Installs the bootstrap tools with Brew: chezmoi, Omni, Bun, and uv.
 4. Runs `omni bootstrap --no-import`, then `omni tools sync` for the host's tools and agent state.
 5. Compiles `~/.local/bin/sleep-on-lock` from the tracked Swift source.
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
@@ -63,11 +63,11 @@ The setup flow:
 1. Installs the latest Omni release (checksum-verified) into `~/.local/bin`
    when the installed Omni cannot read this config.
 2. On the first run only, lets the repo's configs replace the fresh defaults:
-   volatile agent configs are moved aside as `*.pre-dotfiles.<stamp>` and
-   conflicting dots are resolved with `--use-repo` (Omni backs those up).
-3. Runs `omni bootstrap --no-import` and `omni tools sync`. Omni installs its
-   own prerequisites: GNU Stow before linking dots, and the package managers
-   this host lists as tools (bun, uv, ...) before the tools that need them.
+   volatile agent configs are moved aside as `*.pre-dotfiles.<stamp>`, and
+   `chezmoi apply --force` overwrites the rest without asking.
+3. Runs `omni bootstrap --no-import` and `omni tools sync` (tools, including
+   chezmoi and the package managers this host lists, before the tools that need
+   them), then `chezmoi init --apply` for the dotfiles.
    Commands a later step needs that are still missing are reported once, and
    their steps are skipped.
 4. Removes the Omarchy packages and web apps listed in
@@ -89,14 +89,38 @@ The setup flow:
 10. Runs `omni agents sync` (APM plugins and hooks; needs the LAN CA), clones
     the knowledge vault to `~/knowledge` and enables `knowledge-sync.timer`.
 11. Installs the Lefthook hooks of this repository and the vault, and checks
-    that Hyprland loads the linked config.
+    that Hyprland loads its config.
 
 Omarchy owns most of `~/.config/hypr` and `~/.config/omarchy` and rewrites them
-on refresh, so those dots track only the files listed in their `ignore`
-negations (`bindings.lua`, `rules.lua`, `shell.json`, `plugins/`, ...). Editors
-that save by replacing the file turn the symlink into a plain copy;
-`omni dots status` then reports a conflict, and `omni dots resolve <name>
---use-local` takes the edit back into the repo.
+on refresh. chezmoi writes only the files the repo tracks (`bindings.lua`,
+`rules.lua`, `shell.json`, `plugins/`, ...) and leaves the rest alone. After an
+Omarchy update, the `check-dots-links` hook reports managed files that changed;
+`chezmoi diff` shows them and `chezmoi re-add` takes a change into the repo.
+
+## Dotfiles (chezmoi)
+
+chezmoi copies files from `home/` into `$HOME` (`.chezmoiroot`). No symlinks:
+edits in `$HOME` don't change the repo until you take them back.
+
+```sh
+chezmoi diff                # what apply would change
+chezmoi apply               # write the repo's files into $HOME
+chezmoi re-add [PATH]       # take edits made in $HOME back into the repo
+chezmoi edit PATH           # edit the source of a managed file
+chezmoi add PATH            # start managing a file
+chezmoi status              # managed files that differ, either direction
+```
+
+- Hosts and their groups are listed in `home/.chezmoidata/hosts.yaml`. A
+  group's files are skipped on hosts without it (`home/.chezmoiignore`).
+- Host variants are templates that include a file from
+  `home/.chezmoitemplates/` (`git/config@<host>`, `zshrc@<host>`).
+- Source names follow chezmoi: `dot_config/` for `.config/`, `executable_`
+  for scripts, `symlink_` for the few links that stay links.
+- `scripts/render-home.sh <host>` writes a host's files into a temp directory;
+  tests that need deployed names use it.
+- zsh helpers: `dotsync` (`chezmoi update`), `dotcheck` (`chezmoi status`),
+  `dottrack PATH` (`chezmoi add`).
 
 `~/.bashrc` loads Omarchy's bash defaults when they exist, so interactive bash
 behaves like a stock Omarchy shell. git uses the `git@topaz` package, whose
@@ -123,28 +147,18 @@ The equivalent environment variable is:
 export OMNI_CONFIG=~/Dev/dotfiles/dotfiles/omni/.config/omni/settings.json
 ```
 
-Useful commands:
+Omni now manages tools and agents only; chezmoi owns the dotfiles (see above).
+Omni is being replaced (`docs/omni-migration-plan.md`).
 
 ```sh
-omni reconcile             # sync tools, upgrade, repair dots, commit dot changes
-omni dots status           # dotfile symlink health + repo status
-omni dots discover         # untracked dotfile candidates
-omni dots add --adopt PATH # adopt a local path into dotfile management
-omni dots sync [name]      # repair all dots or one dot entry
-```
-
-Use the zsh helpers for routine reconciliation:
-
-```sh
-dotsync                   # omni reconcile
-dotcheck                  # omni dots status
-dottrack PATH [args...]   # omni dots add --adopt PATH [args...]
+omni reconcile             # sync tools and upgrades
 ```
 
 The `agent-paths` pre-commit hook checks staged shared Claude/Codex JSON and TOML
 configs for host-local paths (home directories, temporary directories, mounted
-volumes, Homebrew installations and Windows drive paths). `$HOME`, `~` and shared
-system paths remain allowed. Explicit `@host` packages are outside this check.
+volumes, Homebrew installations and Windows drive paths) under `home/dot_claude/`
+and `home/dot_codex/`. `$HOME`, `~` and shared system paths remain allowed.
+Host variants in `home/.chezmoitemplates/` are outside this check.
 Run `python3 scripts/check-agent-paths.py` to check the current index manually.
 
 ### Agent skills
@@ -179,7 +193,7 @@ APM also copies untargeted packages into `~/.config/opencode/skills`, and
 OpenCode keeps one skill per name. `litellm-tools` stays off the `opencode`
 target and is declared in the dotfile-managed `opencode.jsonc` with a
 `{env:LITELLM_API_KEY}` header. See
-[env](dotfiles/env/.config/env/README.md) for the wrapper and provider layout.
+[env](home/dot_config/env/README.md) for the wrapper and provider layout.
 
 Do not dotfile-manage `~/.omp/agent/mcp.json` or the deployed shared skills.
 APM owns their deployment; omp keeps its local enable/disable controls and
@@ -219,12 +233,15 @@ omarchy/                  # files setup-omarchy.sh installs outside $HOME
   webapps                 # web apps setup installs, each its own Helium instance
   remove.packages         # Omarchy preinstalls setup removes
   remove.webapps          # Omarchy web apps setup removes
-templates/                # copied, not linked: opendeck-images/, obs/
-dotfiles/
-  omni/                   # tracked Omni config
-  hypr/                   # Hyprland bindings, rules, input, look and feel
-  omarchy-shell/          # Omarchy shell.json and custom shell plugins
-  yabai/                  # yabai config + sleep-on-lock Swift source
-  sleep-on-lock/          # LaunchAgent plist
-  ...                     # managed dotfile packages
+templates/                # copied by setup: opendeck-images/, obs/
+.chezmoiroot              # "home": chezmoi's source state
+home/                     # files chezmoi writes into $HOME
+  .chezmoidata/hosts.yaml # hosts and their groups
+  .chezmoiignore          # skips a group's files on hosts without it
+  .chezmoitemplates/      # host variants
+  dot_config/hypr/        # Hyprland bindings, rules, input, look and feel
+  dot_config/omarchy/     # Omarchy shell.json and custom shell plugins
+  dot_config/yabai/       # yabai config + sleep-on-lock Swift source
+  ...
+dotfiles/omni/            # Omni config (tools and agents) until Omni is retired
 ```

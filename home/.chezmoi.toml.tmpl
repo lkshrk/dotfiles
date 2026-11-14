@@ -1,0 +1,5 @@
+{{- $host := env "DOTFILES_HOST" | default .chezmoi.hostname | lower -}}
+sourceDir = {{ .chezmoi.sourceDir | quote }}
+
+[data]
+host = {{ $host | quote }}

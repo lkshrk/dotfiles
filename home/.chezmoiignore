@@ -1,0 +1,121 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if not (has "ai" $groups) }}
+.claude
+.codex
+.config/opencode
+.local/bin/omp
+.local/bin/opencode
+.omp
+{{- end }}
+{{- if not (has "base" $groups) }}
+.bashrc
+.config/env/README.md
+.config/env/bin
+.config/env/functions
+.config/env/lib
+.config/env/machine
+.config/env/os
+.config/env/profile.sh
+.config/env/tests
+.config/gh
+.config/git
+.config/lazygit
+.config/nvim/.github
+.config/nvim/.luarc.json
+.config/nvim/.stylua.toml
+.config/nvim/LICENSE.md
+.config/nvim/README.md
+.config/nvim/doc
+.config/nvim/init.lua
+.config/nvim/lua/config
+.config/nvim/lua/custom
+.config/nvim/lua/plugins/cmp.lua
+.config/nvim/lua/plugins/colorscheme.lua
+.config/nvim/lua/plugins/conform.lua
+.config/nvim/lua/plugins/gitsigns.lua
+.config/nvim/lua/plugins/grug-far.lua
+.config/nvim/lua/plugins/indent-blankline.lua
+.config/nvim/lua/plugins/lazygit.lua
+.config/nvim/lua/plugins/lsp.lua
+.config/nvim/lua/plugins/mini.lua
+.config/nvim/lua/plugins/misc.lua
+.config/nvim/lua/plugins/neo-tree.lua
+.config/nvim/lua/plugins/telescope.lua
+.config/nvim/lua/plugins/treesitter.lua
+.config/nvim/lua/plugins/which-key.lua
+.config/tmux
+.config/zsh
+.vim
+.zprofile
+.zshenv
+.zshrc
+{{- end }}
+{{- if not (has "desktop" $groups) }}
+.config/ghostty
+.config/zed
+{{- end }}
+{{- if not (has "gaming" $groups) }}
+.config/com.corsair
+{{- end }}
+{{- if not (has "macos" $groups) }}
+.config/cmux
+.config/linearmouse
+.config/skhd
+.config/yabai
+.hammerspoon
+.profile
+Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
+{{- end }}
+{{- if not (has "node" $groups) }}
+.nvm
+{{- end }}
+{{- if not (has "omarchy" $groups) }}
+.config/opendeck
+.local/share/deck-icons
+.config/fcitx5
+.config/foot
+.config/gtk-3.0
+.config/hypr
+.config/keyd
+.config/nautilus
+.config/omarchy
+.config/pipewire
+.config/signal-desktop-flags.conf
+.config/systemd
+.config/wireplumber
+.config/xkb
+.local/bin/battlenet
+.local/bin/brave-media
+.local/bin/freeze-capture
+.local/bin/ha-doorbell
+.local/bin/obs-config
+.local/bin/omarchy-confirm
+.local/bin/pipeweaver-app
+.local/bin/slurp
+.local/bin/vram-watch
+.local/bin/webapp-focus
+.local/bin/webapp-open-url
+.local/share/applications
+.local/share/ha-doorbell
+.local/share/icons
+.local/share/nautilus
+{{- end }}
+{{- if not (has "personal" $groups) }}
+.config/env/secrets
+.ssh
+Library/LaunchAgents/com.lkshrk.knowledge-sync.plist
+{{- end }}
+{{- if not (has "work" $groups) }}
+.config/nvim/lua/plugins/plantuml.lua
+{{- end }}
+{{- if not (or (eq .host "topaz") (eq .host "towerr")) }}
+.config/git/allowed_signers
+{{- end }}
+{{- if not (or (eq .host "topaz") (eq .host "towerr")) }}
+.config/git/config.local
+{{- end }}
+{{- if ne .chezmoi.os "darwin" }}
+Library
+.config/com.corsair
+.config/ghostty
+{{- end }}

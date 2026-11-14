@@ -91,6 +91,7 @@ omni_bootstrap() (
 
   step "omni tools"
   omni --config "$OMNI_CONFIG_PATH" --yes tools sync
+  chezmoi_apply
 )
 
 install_zsh_completions() {

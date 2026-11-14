@@ -1,4 +1,4 @@
-package.path = "dotfiles/hypr/.config/?.lua;" .. package.path
+package.path = "home/dot_config/?.lua;" .. package.path
 local D = require("hypr.screens.decide")
 
 local first = { address = "a", class = "linear", stable_id = 3, transient = false }

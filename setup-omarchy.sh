@@ -19,7 +19,7 @@ install_if_changed() { cmp -s "$1" "$2" && return 1; sudo install -Dm644 "$1" "$
 
 # The login shell's env spine, from the checkout: ~/.config/env is not linked yet on a fresh machine.
 set +u
-ENV_DIR="$REPO_DIR/dotfiles/env/.config/env" . "$REPO_DIR/dotfiles/env/.config/env/profile.sh"
+ENV_DIR="$REPO_DIR/home/dot_config/env" . "$REPO_DIR/home/dot_config/env/profile.sh"
 set -u
 
 step "admin session"
@@ -76,13 +76,11 @@ done
 ((${#missing[@]} == 0)) || warn "not installed, so their steps are skipped: ${missing[*]} (rerun once omni tools sync installs them)"
 
 if ((first_run)); then
-  status_json="$(omni dots status --state conflict --format json)" || die "omni dots status failed"
-  mapfile -t conflicts < <(jq -r '.entries[]?.name' <<<"$status_json")
-  for name in "${conflicts[@]}"; do
-    omni --yes dots resolve "$name" --use-repo
-  done
+  chezmoi_apply --force
   mkdir -p "$STATE_DIR"
   touch "$FIRST_RUN_MARKER"
+else
+  chezmoi_apply
 fi
 
 step "omarchy defaults"
@@ -250,7 +248,7 @@ step "web apps"
 while IFS='|' read -r name url icon; do
   exec_cmd="$HOME/.local/bin/webapp-focus $url"
   exec_line="Exec=$exec_cmd"
-  wm_class_line="StartupWMClass=$("$REPO_DIR/dotfiles/local-bin/.local/bin/webapp-focus" --class "$url")"
+  wm_class_line="StartupWMClass=$("$REPO_DIR/home/dot_local/bin/executable_webapp-focus" --class "$url")"
   desktop="$HOME/.local/share/applications/$name.desktop"
   if ! { grep -qxF "$exec_line" "$desktop" && grep -qxF "$wm_class_line" "$desktop"; } 2>/dev/null; then
     if ! omarchy-webapp-install "$name" "$url" "$icon" "$exec_cmd" >/dev/null; then
@@ -283,7 +281,7 @@ done < <(list_entries "$REPO_DIR/omarchy/plugins")
 if have rbw; then
   step "rbw"
   if [[ -z "$(rbw config show 2>/dev/null | jq -r '.email // empty')" ]]; then
-    default_email="$(awk '{print $1; exit}' "$REPO_DIR/dotfiles/git@topaz/.config/git/allowed_signers")"
+    default_email="$(awk '{print $1; exit}' "$REPO_DIR/home/dot_config/git/allowed_signers")"
     read -rp "Bitwarden email [$default_email]: " email
     rbw config set email "${email:-$default_email}"
     read -rp "Bitwarden server URL (empty for bitwarden.com): " base_url
@@ -303,7 +301,7 @@ fi
 # The rbw SSH agent socket exists only after the unlock above.
 step "knowledge vault"
 vault="$HOME/knowledge"
-. "$REPO_DIR/dotfiles/env/.config/env/lib/rbw-sock.sh"
+. "$REPO_DIR/home/dot_config/env/lib/rbw-sock.sh"
 rbw_sock="$(env_next_rbw_sock_linux)" && export SSH_AUTH_SOCK="$rbw_sock"
 if [[ ! -d "$vault/.git" ]]; then
   GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new" git clone git@github.com:lkshrk/knowledge.git "$vault" \

@@ -6,9 +6,11 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-HELPER = ROOT / "dotfiles/env/.config/env/bin/local-agents-token"
 
 with tempfile.TemporaryDirectory() as work:
+    rendered = subprocess.run([str(ROOT / "scripts/render-home.sh"), "towerr", str(Path(work) / "render")],
+                              capture_output=True, text=True, check=True).stdout.strip()
+    HELPER = Path(rendered) / ".config/env/bin/local-agents-token"
     home = Path(work)
     bin_dir = home / "bin"
     bin_dir.mkdir()

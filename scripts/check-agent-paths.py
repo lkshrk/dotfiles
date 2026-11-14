@@ -24,9 +24,8 @@ def main():
             continue
         path = raw_path.decode("utf-8", errors="surrogateescape")
         parts = PurePosixPath(path).parts
-        if (len(parts) < 4 or parts[0] not in {"dotfiles", "templates"}
-                or parts[1] not in {"claude", "codex"}
-                or PurePosixPath(path).suffix not in {".json", ".toml"}):
+        if (len(parts) < 3 or parts[0] != "home" or parts[1] not in {"dot_claude", "dot_codex"}
+                or PurePosixPath(path.removesuffix(".tmpl")).suffix not in {".json", ".toml"}):
             continue
         content = git("show", f":{path}").decode("utf-8")
         for number, line in enumerate(content.splitlines(), 1):

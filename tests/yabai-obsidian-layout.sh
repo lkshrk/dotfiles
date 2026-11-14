@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CONFIG_DIR="$REPO_DIR/dotfiles/yabai/.config/yabai"
+CONFIG_DIR="$("$REPO_DIR/scripts/render-home.sh" topaz "$(mktemp -d)")/.config/yabai"
 FAKE_BIN="$(mktemp -d)"
 trap 'rm -rf "$FAKE_BIN"' EXIT
 export PATH="$FAKE_BIN:$PATH"

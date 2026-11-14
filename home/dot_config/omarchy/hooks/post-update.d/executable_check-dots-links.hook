@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Migrations rewrite configs in place; report managed files that now differ from the dotfiles source.
+paths=("$HOME/.config/hypr" "$HOME/.config/omarchy" "$HOME/.config/keyd" "$HOME/.config/xkb" "$HOME/.config/fcitx5")
+
+# The shell, and with it the notification daemon, may be mid-restart during an update.
+alert() {
+  hyprctl notify 0 15000 "rgb(ff5555)" "$1: $2" >/dev/null 2>&1 || logger -t check-dots-links "$1: $2"
+}
+
+if ! drift=$(chezmoi status --no-tty -- "${paths[@]}" 2>/dev/null); then
+  alert "Dotfile check failed" "chezmoi status exited with an error; run it by hand"
+  exit 0
+fi
+
+[[ -z $drift ]] && exit 0
+count=$(wc -l <<<"$drift")
+alert "Omarchy update changed dotfiles" "$count managed files differ from the repo; review with: chezmoi diff, keep with: chezmoi re-add"

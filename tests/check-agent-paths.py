@@ -14,7 +14,7 @@ with tempfile.TemporaryDirectory() as directory:
         assert result.returncode == expected, result.stderr
         return result
     git("init", "-q")
-    path = root / "dotfiles/codex/.codex/config.toml"
+    path = root / "home/dot_codex/config.toml"
     path.parent.mkdir(parents=True)
     safe = 'command = "sh"\nargs = ["-c", \'exec node "$HOME/tool.mjs"\']\n'
     for local in ["/Users/test/tool", "/home/test/tool", "/root/tool", "/tmp/tool",
@@ -31,16 +31,16 @@ with tempfile.TemporaryDirectory() as directory:
     path.write_text('paths = ["~/tool", "$HOME/tool", "/bin/sh", "/usr/bin/env", "/etc/config"]\n')
     git("add", ".")
     check(0)
-    claude = root / "dotfiles/claude/.claude/settings.json"
+    claude = root / "home/dot_claude/settings.json.tmpl"
     claude.parent.mkdir(parents=True)
     claude.write_text('{"env":{"ROOT":"/home/test/plugin"}}\n')
     git("add", ".")
     check(1)
     git("rm", "-f", str(claude))
     check(0)
-    host = root / "dotfiles/codex@host/.codex/config.toml"
+    host = root / "home/.chezmoitemplates/codex/config.toml@host"
     host.parent.mkdir(parents=True)
     host.write_text("path = '/home/host/tool'\n")
     git("add", ".")
     check(0)
-print("PASS: staged path guard, partial staging, both clients, deletions and explicit host packages")
+print("PASS: staged path guard, partial staging, both clients, deletions and host variants")

@@ -18,6 +18,14 @@ omni_bootstrap_dots() {
   command omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
 }
 
+# Usage: chezmoi_apply [--force]   --force only on a first run: it replaces existing files without asking.
+chezmoi_apply() {
+  step "dotfiles"
+  command -v chezmoi >/dev/null 2>&1 || die "chezmoi is not installed; rerun once omni tools sync installs it"
+  chezmoi init --source "$REPO_DIR" --apply "$@"
+  ok "dotfiles written by chezmoi"
+}
+
 # Returns non-zero only when the vault stays locked; a missing LAN CA just warns.
 rbw_unlock_with_lan_ca() {
   # i32::MAX seconds (~68 years): never, yet safe for Instant math on every platform.

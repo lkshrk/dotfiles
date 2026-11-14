@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIG = ROOT / 'dotfiles/git@topaz/.config/git/config.local'
+CONFIG = ROOT / 'home/dot_config/git/config.local'
 
 
 class RepositoryHooks(unittest.TestCase):

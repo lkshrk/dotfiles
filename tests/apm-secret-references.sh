@@ -1,9 +1,9 @@
 #!/bin/sh
-# Usage: tests/apm-secret-references.sh [uvx --from spec]   (default: upstream apm-cli from PyPI)
+# Usage: tests/apm-secret-references.sh <uvx --from spec>, e.g. 'apm-cli==0.36.0' or the fork's wheel URL. Downloads and runs APM.
 # Fails if `apm install -g` writes a secret value instead of a reference. Uses a throwaway HOME and fake values.
 set -eu
 
-spec=${1:-apm-cli}
+spec=${1:?usage: apm-secret-references.sh <uvx --from spec>}
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT HUP INT TERM
 home=$work/home

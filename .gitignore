@@ -21,7 +21,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# AI assistant project-local settings/state (not stowed packages under dotfiles/)
+# AI assistant project-local settings/state
 /.agents/
 /.claude/
 /.codex/
@@ -47,68 +47,13 @@ Temporary Items
 docs/superpowers/
 .agent_progress.md
 
-# zsh runtime
-dotfiles/zsh/.config/zsh/.zcompdump*
-dotfiles/zsh/.config/zsh/.zsh_history
-dotfiles/zsh/.config/zsh/**/*.zwc
-
-# nvim vendored/runtime files
-dotfiles/nvim/.config/nvim/lazy-lock.json
-dotfiles/nvim/.config/nvim/LICENSE.md
-dotfiles/nvim/.config/nvim/README.md
-
-# omni runtime; keep tracked settings.json + settings.d fragments
+# chezmoi writes copies, so app runtime files never land in the repo. Leftovers of the old Stow layout
+# (e.g. an untracked gh hosts.yml) must not be committed.
+/dotfiles/*
+!/dotfiles/omni/
+!/dotfiles/omni-apm/
+!/dotfiles/omni-apm@topaz/
 dotfiles/omni/.config/omni/*
 !dotfiles/omni/.config/omni/settings.json
 !dotfiles/omni/.config/omni/settings.d/
 !dotfiles/omni/.config/omni/settings.d/**
-
-# intentionally unmanaged ~/.config trees
-dotfiles/acli/.config/acli/
-dotfiles/cagent/.config/cagent/
-dotfiles/configstore/.config/configstore/
-dotfiles/github-copilot/.config/github-copilot/
-dotfiles/karabiner/.config/karabiner/
-dotfiles/llmctl/.config/llmctl/
-dotfiles/mole/.config/mole/
-dotfiles/moshi/.config/moshi/
-dotfiles/talos/.config/talos/
-dotfiles/ttllm/.config/ttllm/
-dotfiles/com.corsair/.config/com.corsair/
-
-# ignored discovery candidates
-acli/
-cagent/
-configstore/
-github-copilot/
-karabiner/
-llmctl/
-mole/
-moshi/
-talos/
-ttllm/
-com.corsair/
-
-# local credentials/state
-dotfiles/codex/.codex/rules/default.local.rules
-dotfiles/gh/.config/gh/hosts.yml
-dotfiles/zed/.config/zed/conversations/
-dotfiles/zed/.config/zed/prompts/
-dotfiles/zed/.config/zed/themes/
-dotfiles/zed/.config/zed/settings_backup.json
-
-# claude runtime; keep tracked config, hooks, rules, and scripts (agents/commands/skills are apm-owned)
-dotfiles/claude/.claude/*
-!dotfiles/claude/.claude/keybindings.json
-!dotfiles/claude/.claude/statusline-command.sh
-!dotfiles/claude/.claude/tokenline.sh
-!dotfiles/claude/.claude/RTK.md
-!dotfiles/claude/.claude/rules/
-!dotfiles/claude/.claude/rules/**
-!dotfiles/claude/.claude/hooks/
-!dotfiles/claude/.claude/hooks/**
-!dotfiles/claude/.claude/scripts/
-!dotfiles/claude/.claude/scripts/**
-
-# host-local git identity (work creds must never be pushed)
-dotfiles/git@apm3ljhmvg7xgcf/.config/git/config.local

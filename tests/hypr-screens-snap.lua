@@ -1,4 +1,4 @@
-package.path = "dotfiles/hypr/.config/?.lua;" .. package.path
+package.path = "home/dot_config/?.lua;" .. package.path
 
 local active, calls, joins, handlers = nil, {}, {}, {}
 local monitors = {

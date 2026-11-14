@@ -49,6 +49,7 @@
       "name": "core",
       "tools": [
         "bat",
+        "chezmoi",
         "coreutils",
         "eza",
         "fd",
