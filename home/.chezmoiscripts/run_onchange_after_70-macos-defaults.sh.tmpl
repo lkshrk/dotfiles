@@ -1,4 +1,5 @@
-{{- if eq .chezmoi.os "darwin" -}}
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "macos" $groups -}}
 #!/bin/bash
 set -euo pipefail
 chflags nohidden "$HOME/Library"

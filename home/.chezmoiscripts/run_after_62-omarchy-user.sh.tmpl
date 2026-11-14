@@ -6,6 +6,12 @@ set -euo pipefail
 # screens/top.lua stores each app's top-screen side here and cannot create it from inside the compositor.
 mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/hypr-screens"
 
+# Plugin checkouts are working copies: cloned when missing, never pulled.
+for url in https://github.com/lkshrk/omarchy-stats https://github.com/JanitorHead/omarchy-quotatank.git; do
+  dir="$HOME/Dev/$(basename "$url" .git)"
+  [ -d "$dir/.git" ] || git clone -q "$url" "$dir" || echo "plugins: could not clone $url" >&2
+done
+
 # Proton prefixes break on NTFS, so the STUFF library keeps them on the home disk.
 library=/mnt/stuff/Games/SteamLibrary/steamapps
 compat="$HOME/.local/share/Steam/steamapps/compatdata"

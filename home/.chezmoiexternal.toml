@@ -28,13 +28,3 @@ type = "git-repo"
 url = "https://github.com/tmux-plugins/tmux-continuum.git"
 clone.args = ["--depth", "1"]
 pull.args = ["--ff-only"]
-
-["Dev/omarchy-stats"]
-type = "git-repo"
-url = "https://github.com/lkshrk/omarchy-stats"
-pull.args = ["--ff-only"]
-
-["Dev/omarchy-quotatank"]
-type = "git-repo"
-url = "https://github.com/JanitorHead/omarchy-quotatank.git"
-pull.args = ["--ff-only"]
