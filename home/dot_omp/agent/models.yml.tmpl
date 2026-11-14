@@ -1,0 +1,16 @@
+providers:
+  local-agents:
+    baseUrl: {{ .gateway.url }}
+    apiKey: LITELLM_API_KEY
+    auth: apiKey
+    authHeader: true
+    api: openai-completions
+    discovery:
+      type: litellm
+    modelOverrides:
+{{- range .gateway.models }}
+{{- if eq .family "anthropic" }}
+      {{ .id }}:
+        api: anthropic-messages
+{{- end }}
+{{- end }}

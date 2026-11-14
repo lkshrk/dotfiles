@@ -1,7 +1,7 @@
 setupVersion: 2
 modelRoles:
-  default: local-agents/claude-sonnet-high:high
-  slow: local-agents/claude-opus:high
+  default: local-agents/anthropic/claude-sonnet:high
+  slow: local-agents/anthropic/claude-opus:high
   plan: "@slow"
   task: "@default"
   commit: "@smol"

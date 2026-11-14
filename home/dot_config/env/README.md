@@ -52,13 +52,14 @@ Its native token command calls `bin/local-agents-token`.
 
 `~/.omp/agent/models.yml` discovers LiteLLM models under `local-agents`:
 Claude uses Anthropic Messages, GPT uses OpenAI Responses, and other chat
-models use OpenAI Chat Completions. The default is `local-agents/gpt-astra`.
-For example: `omp --model local-agents/claude-opus`.
+models use OpenAI Chat Completions; the Anthropic overrides are generated from
+`home/.chezmoidata/models.yaml`. For example:
+`omp --model local-agents/anthropic/claude-opus`.
 
 OMP's local essentials live in `~/.omp/agent/config.yml`, separately from
-provider definitions in `models.yml`: `default` uses `local-agents/gpt-astra`,
-`smol` uses `local-agents/claude-sonnet:low`, and `slow` uses
-`local-agents/claude-opus:high`. `plan` follows `@slow`, `task` follows
+provider definitions in `models.yml`: `default` uses
+`local-agents/anthropic/claude-sonnet:high` and `slow` uses
+`local-agents/anthropic/claude-opus:high`. `plan` follows `@slow`, `task` follows
 `@default`, and `commit` follows `@smol`. Bundled agent definitions remain
 unchanged; shared skills load from `~/.agents/skills`.
 Their sources (APM) and invocation syntax are documented under
@@ -93,10 +94,12 @@ another. APM owns `~/.config/opencode/opencode.json` (MCP only, currently
 `opencode.jsonc` declares `local-agents` against `https://api.ai.h-cloud.lan/v1`:
 Claude models use `@opencode/ai/providers/anthropic`, GPT models
 `openai/responses`, and the rest `openai-compatible` chat. The default is
-`local-agents/claude-sonnet-high#high` and session titles use
-`local-agents/claude-sonnet`, matching omp's `config.yml`. A `policies` block
-denies every other provider. Add a model by declaring it under `models` with
-its limits; OpenCode does not discover gateway models.
+`local-agents/anthropic/claude-sonnet#high` and session titles use
+`local-agents/anthropic/claude-sonnet`, matching omp's `config.yml`. A
+`policies` block denies every other provider. OpenCode does not discover
+gateway models: add one to `home/.chezmoidata/models.yaml` (gateway id, family
+and the limits from LiteLLM's `/model/info`) and chezmoi renders it into
+OpenCode, Zed and omp; `tests/gateway-models.sh` checks they agree.
 
 APM's OpenCode adapter drops `headersHelper`, so `litellm-tools` is excluded
 from the `opencode` APM target. `opencode.jsonc` declares it instead, with
