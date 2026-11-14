@@ -31,7 +31,7 @@ rerun by `chezmoi apply` when its inputs change:
 | `55-lan-ca` | personal | LAN root CA from the vault to `~/.local/share/certs/lan-ca.pem` once rbw is unlocked |
 | `60-omarchy-system` | omarchy | `/etc` from `omarchy/` (keyd, fstab mounts, units, cloudflared, irqbalance, ufw, CA trust, keyd/docker groups, zsh login shell) in one pkexec call, only when something differs |
 | `61-omarchy-apps` | omarchy | removes `omarchy/remove.*`, installs `omarchy/webapps`, Helium and File Roller as defaults |
-| `62-omarchy-user` | omarchy | Steam Proton prefixes off the NTFS library |
+| `62-omarchy-user` | omarchy | clones the Omarchy shell plugins if missing; Steam Proton prefixes off the NTFS library |
 | `63-systemd-user` | omarchy | daemon-reload when a user unit changes; units are enabled by the `.wants` links chezmoi writes |
 | `70-macos-defaults` | macOS | Finder and keyboard defaults |
 | `71-sleep-on-lock`, `72-yabai-sudoers` | macos | builds and loads the sleep-on-lock agent; refreshes the yabai sudoers entry (prints the command when there is no terminal) |
@@ -54,9 +54,9 @@ claude doctor
 `towerr` runs [Omarchy](https://omarchy.org/) (Arch Linux + Hyprland). It has
 the same role groups as `topaz` except `macos`, plus `omarchy`
 (keyd, Hyprland and Omarchy shell config); see `home/.chezmoidata/hosts.yaml`.
-Third-party shell plugins are chezmoi git externals cloned to `~/Dev` and
-linked into `~/.config/omarchy/plugins`; the Stream Deck images are `create_`
-files, written once and then left to OpenDeck.
+The shell plugins `~/Dev/omarchy-stats` and `~/Dev/omarchy-quotatank` are
+cloned if missing by `run_after_62-omarchy-user` (working copies, never pulled);
+the Stream Deck images are `create_` files, written once and then left to OpenDeck.
 
 Omarchy owns most of `~/.config/hypr` and `~/.config/omarchy` and rewrites them
 on refresh. chezmoi writes only the files the repo tracks (`bindings.lua`,
@@ -94,20 +94,9 @@ chezmoi status              # managed files that differ, either direction
 - zsh helpers: `dotsync` (`chezmoi update`), `dotcheck` (`chezmoi status`),
   `dottrack PATH` (`chezmoi add`), `dotpush [PATH]` (`chezmoi re-add`).
 
-**Moving a host from the old Stow links to chezmoi** (topaz, the work Mac): pull,
-then run `scripts/migrate-to-chezmoi.sh --dry-run` to see the plan and
-`scripts/migrate-to-chezmoi.sh` to do it. It records the old links under
-`~/.local/state/dotfiles-migration/`, copies git-ignored files that old links
-still reach (such as `gh/hosts.yml`) into place, runs `chezmoi init --apply
---force`, re-links systemd `.wants` links, reloads the `com.lkshrk.*`
-LaunchAgents on macOS and removes stale links. Then it verifies:
-- `chezmoi verify` and `chezmoi status` are clean;
-- no old links are left;
-- systemd links resolve;
-- Hyprland reports no config errors.
-
-It exits non-zero if any check fails. It is safe to rerun.
-`tests/migrate-to-chezmoi.sh` runs it end to end in a throwaway `HOME`.
+**Stow to chezmoi** (the two Macs still on the old links): pull, then
+`scripts/migrate-to-chezmoi.sh --dry-run` shows the plan and
+`scripts/migrate-to-chezmoi.sh` does it and verifies. It is safe to rerun.
 
 `~/.bashrc` loads Omarchy's bash defaults when they exist, so interactive bash
 behaves like a stock Omarchy shell. The git config's GitHub credential helper
@@ -138,6 +127,23 @@ cloned on first apply and pulled by `scripts/update.sh`.
 scripts/update.sh           # upgrade packages, mise tools and dotfiles, then report drift
 scripts/update.sh --check   # drift only: unlisted or missing packages, missing mise tools, dotfile changes
 ```
+
+## Tests
+
+Each file in `tests/` is standalone and runs against a rendered tree
+(`scripts/render-home.sh`), with fake binaries where needed:
+
+```sh
+bash tests/render-hosts.sh     # every host's scripts render and pass bash -n and shellcheck
+sh tests/env-smoke.sh          # .sh tests: sh or bash per shebang
+python3 tests/local-agents-token.py
+lua tests/hypr-screens-snap.lua   # from the repo root
+lefthook run pre-push          # everything below except the migration test
+```
+
+The `pre-push` hook runs all of them in parallel, a few seconds in total.
+`tests/migrate-to-chezmoi.sh` clones the repo and runs the migration in a
+throwaway `HOME`; it is slow, so run it by hand.
 
 ## Checks
 
@@ -219,7 +225,10 @@ omarchy/                  # inputs of the Omarchy chezmoi scripts, installed out
   remove.packages         # Omarchy preinstalls to remove
   remove.webapps          # Omarchy web apps to remove
 templates/obs/            # OBS scenes, applied by obs-config
-scripts/                  # update.sh, render-home.sh, migrate-to-chezmoi.sh, checks
+scripts/                  # update.sh, render-home.sh, migrate-to-chezmoi.sh, check-agent-paths.py
+tests/                    # standalone tests; pre-push runs them (see Tests)
+types/                    # Lua type stubs for the Hammerspoon and Omarchy configs
+apm/                      # APM manifests: ai-plugins (agent dependencies), omp-skills (vendored skill)
 .chezmoiroot              # "home": chezmoi's source state
 home/                     # files chezmoi writes into $HOME
   .chezmoidata/hosts.yaml # hosts and their groups
