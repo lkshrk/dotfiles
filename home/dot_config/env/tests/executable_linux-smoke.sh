@@ -23,7 +23,7 @@ home="$tmpdir/home"
 runtime="$tmpdir/runtime"
 node_bin="$home/.local/share/mise/shims"
 
-mkdir -p "$node_bin" "$home/.bun/bin" "$home/.local/bin" "$runtime/rbw"
+mkdir -p "$node_bin" "$home/.local/bin" "$runtime/rbw"
 
 for cmd in node npm npx pnpm; do
   cat > "$node_bin/$cmd" <<EOF
@@ -62,7 +62,6 @@ run_profile_probe() {
 
       . "$ENV_DIR/profile.sh"
 
-      [ "${BUN_INSTALL:-}" = "$HOME/.bun" ] || fail "BUN_INSTALL"
       [ "${GOPATH:-}" = "$HOME/go" ] || fail "GOPATH"
       [ "${PNPM_HOME:-}" = "$HOME/.local/share/pnpm" ] || fail "PNPM_HOME=$PNPM_HOME"
       [ "${SSH_AUTH_SOCK:-}" = "$EXPECTED_SSH_AUTH_SOCK" ] || fail "SSH_AUTH_SOCK=$SSH_AUTH_SOCK"

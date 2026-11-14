@@ -65,8 +65,9 @@ dependencies:
     targets: [claude, codex]
     registry: false
     transport: stdio
-    command: bunx
+    command: npx
     args:
+    - -y
     - '@shiplightai/mcp@latest'
     env:
       PWDEBUG: console

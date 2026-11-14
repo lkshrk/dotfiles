@@ -1,4 +1,5 @@
 [tools]
 "github:DeusData/codebase-memory-mcp" = "latest"
+"npm:context-mode" = "latest"
 "pipx:obsidian-wiki" = "latest"
 rtk = "latest"

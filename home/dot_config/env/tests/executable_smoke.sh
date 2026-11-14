@@ -53,7 +53,6 @@ for cmd in node npm npx pnpm; do
     *) exit 1 ;;
   esac
 done
-command -v bun >/dev/null 2>&1 && printf "bun=present\n" || printf "bun=absent\n"
 command -v maestro >/dev/null 2>&1 && printf "maestro=present\n" || printf "maestro=absent\n"
 '
 

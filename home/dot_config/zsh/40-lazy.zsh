@@ -8,8 +8,3 @@ if (( $+commands[kubectl] )); then
 fi
 unset _kc_cache
 
-bun() {
-  unset -f bun
-  [[ -s "$HOME/.bun/_bun" ]] && source "$HOME/.bun/_bun"
-  bun "$@"
-}

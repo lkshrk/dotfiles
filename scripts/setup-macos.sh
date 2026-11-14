@@ -52,8 +52,8 @@ ensure_homebrew() {
 
 install_bootstrap_tools() {
   step "bootstrap packages"
-  brew install chezmoi omni bun uv
-  ok "chezmoi, omni, bun, uv installed"
+  brew install chezmoi omni uv
+  ok "chezmoi, omni, uv installed"
 
 }
 

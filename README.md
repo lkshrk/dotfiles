@@ -14,7 +14,7 @@ The setup flow:
 
 1. Verifies Xcode Command Line Tools and `swiftc`.
 2. Ensures Homebrew is installed and on `PATH`.
-3. Installs the bootstrap tools with Brew: chezmoi, Omni, Bun, and uv.
+3. Installs the bootstrap tools with Brew: chezmoi, Omni and uv.
 4. Runs `omni bootstrap --no-import`, then `omni tools sync` for the host's tools and agent state.
 5. Compiles `~/.local/bin/sleep-on-lock` from the tracked Swift source.
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.

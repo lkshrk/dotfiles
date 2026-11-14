@@ -2,7 +2,6 @@
 idiomatic_version_file_enable_tools = ["node"]
 
 [tools]
-bun = "latest"
 "npm:bash-language-server" = "latest"
 "npm:ccundo" = "latest"
 "npm:pm2" = "latest"

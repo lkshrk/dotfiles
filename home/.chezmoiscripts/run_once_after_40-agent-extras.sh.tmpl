@@ -3,9 +3,6 @@
 #!/bin/bash
 # context-mode rewrites its own config, so it is a native plugin rather than an APM package.
 set -uo pipefail
-if command -v bun >/dev/null 2>&1 && ! bun pm ls -g 2>/dev/null | grep -q 'context-mode@'; then
-  bun add -g context-mode
-fi
 if command -v claude >/dev/null 2>&1 && ! claude plugin list 2>/dev/null | grep -q 'context-mode@context-mode'; then
   claude plugin marketplace add mksglu/context-mode && claude plugin install context-mode@context-mode
 fi

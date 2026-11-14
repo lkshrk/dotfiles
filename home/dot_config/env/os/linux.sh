@@ -6,7 +6,7 @@ env_next_path_prepend "$HOME/.local/bin"
 export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
 env_next_path_prepend "$PNPM_HOME/bin"
 
-# Node and Bun ignore the system trust store, so LAN hosts need the CA named explicitly.
+# Node ignores the system trust store, so LAN hosts need the CA named explicitly.
 if [ -z "${NODE_EXTRA_CA_CERTS:-}" ] && [ -r "$HOME/.local/share/certs/lan-ca.pem" ]; then
   export NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/lan-ca.pem"
 fi

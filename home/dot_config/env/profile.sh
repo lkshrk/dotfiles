@@ -1,7 +1,7 @@
 # POSIX-safe env entrypoint.
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
-ENV_NEXT_PROFILE_CURRENT_VERSION=10
+ENV_NEXT_PROFILE_CURRENT_VERSION=11
 ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 
 # Functions are cheap to reload and may have been added after the guarded env
@@ -43,7 +43,6 @@ fi
 
 export EDITOR="${EDITOR:-nvim}"
 export GOPATH="${GOPATH:-$HOME/go}"
-export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
 
 env_next_os="${ENV_NEXT_OS:-${OSTYPE:-}}"
 case "$env_next_os" in
@@ -76,7 +75,6 @@ if [ -r "$ENV_DIR/machine/$env_next_machine.sh" ]; then
 fi
 
 env_next_path_prepend "$HOME/.cargo/bin"
-env_next_path_prepend "$BUN_INSTALL/bin"
 # mise owns CLIs and runtimes; shims serve shells and agents that never run `mise activate`.
 env_next_path_prepend "${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims"
 env_next_path_append "$GOPATH/bin"

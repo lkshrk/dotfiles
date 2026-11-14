@@ -123,7 +123,7 @@ such as `executable_agent-run`.
 - `profile.sh`: POSIX-safe entrypoint for exported base env and PATH.
 - `lib/path.sh`: POSIX-safe path helpers.
 - `lib/dev-cache.sh`: points package-manager and build-tool caches (Go, npm,
-  pnpm, Bun, Deno, uv, pip, Poetry and its virtualenvs, golangci-lint,
+  pnpm, Deno, uv, pip, Poetry and its virtualenvs, golangci-lint,
   Playwright, Helm, CPM.cmake, ccache, sccache) at `DEV_CACHE_HOME`
   (`~/.cache/dev`). On Linux that directory is its own Btrfs subvolume
   (`btrfs subvolume create ~/.cache/dev`), so no snapshot includes it.

@@ -61,7 +61,6 @@ clean_caches() {
   have npm && run npm cache clean --force
   have pnpm && run pnpm store prune
   remove "${pnpm_config_cache_dir:-$cache_home/pnpm/cache}"
-  remove "${BUN_INSTALL_CACHE_DIR:-$cache_home/bun}"
   have uv && run uv cache clean
   have pip && run pip cache purge
   remove "${POETRY_CACHE_DIR:-$cache_home/poetry}/cache" "${POETRY_CACHE_DIR:-$cache_home/poetry}/artifacts"

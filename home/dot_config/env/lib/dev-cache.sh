@@ -8,7 +8,6 @@ export GOLANGCI_LINT_CACHE="${GOLANGCI_LINT_CACHE:-$DEV_CACHE_HOME/golangci-lint
 export npm_config_cache="${npm_config_cache:-$DEV_CACHE_HOME/npm}"
 export pnpm_config_store_dir="${pnpm_config_store_dir:-$DEV_CACHE_HOME/pnpm/store}"
 export pnpm_config_cache_dir="${pnpm_config_cache_dir:-$DEV_CACHE_HOME/pnpm/cache}"
-export BUN_INSTALL_CACHE_DIR="${BUN_INSTALL_CACHE_DIR:-$DEV_CACHE_HOME/bun}"
 export DENO_DIR="${DENO_DIR:-$DEV_CACHE_HOME/deno}"
 export UV_CACHE_DIR="${UV_CACHE_DIR:-$DEV_CACHE_HOME/uv}"
 export PIP_CACHE_DIR="${PIP_CACHE_DIR:-$DEV_CACHE_HOME/pip}"
