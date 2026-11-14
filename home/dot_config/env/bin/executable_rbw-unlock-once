@@ -1,11 +1,14 @@
 #!/bin/sh
-# One pinentry for racing callers: waiters reuse its result, and a cancel holds off new prompts for a minute.
+# One pinentry for racing callers: waiters reuse its result, and a cancel holds off new non-terminal prompts for a minute.
 set -u
 
 rbw unlocked >/dev/null 2>&1 && exit 0
 
 # rbw hands its stdin tty to pinentry; without one only a graphical pinentry can ask (exit 2: nowhere to prompt).
-if [ ! -t 0 ]; then
+if [ -t 0 ]; then
+  tty=true
+else
+  tty=false
   [ -n "${WAYLAND_DISPLAY:-}${DISPLAY:-}" ] || { [ "$(uname -s)" = Darwin ] && [ -z "${SSH_CONNECTION:-}" ]; } || exit 2
   exec </dev/null
 fi
@@ -18,8 +21,12 @@ if [ ! -d "$dir" ]; then
 fi
 cancelled="$dir/$name.cancelled"
 
+say() {
+  [ "$tty" = false ] || printf 'rbw: %s\n' "$1" >&2
+}
+
 unlock() {
-  if [ -n "$(find "$cancelled" -mmin -1 2>/dev/null)" ]; then
+  if [ "$tty" = false ] && [ -n "$(find "$cancelled" -mmin -1 2>/dev/null)" ]; then
     exit 1
   fi
   if rbw unlock >/dev/null 2>&1 && rbw unlocked >/dev/null 2>&1; then
@@ -27,6 +34,7 @@ unlock() {
     exit 0
   fi
   : > "$cancelled"
+  say 'unlock failed or was cancelled; run `rbw unlock` to retry'
   exit 1
 }
 
@@ -35,6 +43,9 @@ if ! command -v flock >/dev/null 2>&1; then
 fi
 
 exec 9>"$dir/$name.lock"
-flock -w 120 9 || exit 1
+if ! flock -n 9; then
+  say 'waiting for another unlock prompt…'
+  flock -w 120 9 || { say 'gave up waiting for another unlock prompt'; exit 1; }
+fi
 rbw unlocked >/dev/null 2>&1 && exit 0
 unlock

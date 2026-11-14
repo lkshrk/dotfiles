@@ -38,6 +38,8 @@ pre-push:
       run: sh tests/opencode-config-smoke.sh
     package-lists:
       run: bash tests/package-lists.sh
+    rbw-unlock-once:
+      run: bash tests/rbw-unlock-once.sh
     render-hosts:
       run: bash tests/render-hosts.sh
     repository-git-hooks:
