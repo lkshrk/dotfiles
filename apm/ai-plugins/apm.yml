@@ -50,7 +50,7 @@ dependencies:
     transport: stdio
     command: codebase-memory-mcp
   - name: litellm-tools
-    targets: [claude, codex, omp]
+    targets: [claude, omp]
     registry: false
     transport: http
     url: https://api.ai.h-cloud.lan/mcp/
