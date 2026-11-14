@@ -66,9 +66,6 @@
 .profile
 Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 {{- end }}
-{{- if not (has "node" $groups) }}
-.nvm
-{{- end }}
 {{- if not (has "omarchy" $groups) }}
 .config/opendeck
 .local/share/deck-icons

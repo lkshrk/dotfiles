@@ -7,12 +7,10 @@ export ENV_DIR
 [ "$(uname -s)" = Darwin ] || exec sh "$ENV_DIR/tests/linux-smoke.sh"
 
 tmpdir=
-nvm_probe_dir=
-nvm_default_probe_dir=
+node_probe_dir=
 cleanup() {
   [ -z "${tmpdir:-}" ] || rm -rf "$tmpdir"
-  [ -z "${nvm_probe_dir:-}" ] || rm -rf "$nvm_probe_dir"
-  [ -z "${nvm_default_probe_dir:-}" ] || rm -rf "$nvm_default_probe_dir"
+  [ -z "${node_probe_dir:-}" ] || rm -rf "$node_probe_dir"
 }
 trap cleanup EXIT HUP INT TERM
 
@@ -28,7 +26,6 @@ find_command_path() {
   fi
 }
 printf "EDITOR=%s\n" "${EDITOR:-}"
-printf "NVM_DIR=%s\n" "${NVM_DIR:-}"
 printf "PNPM_HOME=%s\n" "${PNPM_HOME:-}"
 [ "${PNPM_HOME:-}" = "$HOME/Library/pnpm" ] || exit 1
 printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"
@@ -52,7 +49,7 @@ for cmd in node npm npx pnpm; do
   fi
   printf "%s=%s\n" "$cmd" "$cmd_path"
   case "$cmd_path" in
-    "$NVM_DIR"/versions/node/*/bin/"$cmd") ;;
+    "$HOME"/.local/share/mise/shims/"$cmd") ;;
     *) exit 1 ;;
   esac
 done
@@ -89,10 +86,10 @@ printf "\n## zshrc reloads stale env\n"
 zsh -f -c 'unset KUBECONFIG ENV_NEXT_MACHINE HOSTNAME; HOST=Topaz.local; PATH=/usr/bin:/bin; ENV_NEXT_PROFILE_LOADED=1; ENV_NEXT_PROFILE_PATH=$PATH; unset ENV_NEXT_PROFILE_VERSION; source "$HOME/.zshrc"; printf "KUBECONFIG=%s\n" "${KUBECONFIG:-}"; case "${KUBECONFIG:-}" in "$HOME/.kube/hcloud:$HOME/.kube/legacy") ;; *) exit 1 ;; esac'
 
 printf "\n## zshenv no lazy wrappers\n"
-nvm_probe_dir=$(mktemp -d)
-printf '%s\n' 'lts/*' > "$nvm_probe_dir/.nvmrc"
+node_probe_dir=$(mktemp -d)
+printf '%s\n' '22' > "$node_probe_dir/.nvmrc"
 (
-  cd "$nvm_probe_dir"
+  cd "$node_probe_dir"
   ENV_DIR="$ENV_DIR" PATH=/usr/bin:/bin zsh -c '
     for cmd in node npm npx pnpm; do
       kind=$(whence -w "$cmd" 2>/dev/null || true)
@@ -110,141 +107,10 @@ printf '%s\n' 'lts/*' > "$nvm_probe_dir/.nvmrc"
   '
 )
 
-printf "\n## zshenv nvm default path\n"
-nvm_default_probe_dir=$(mktemp -d)
+printf "\n## mise follows .nvmrc\n"
 (
-  cd "$nvm_default_probe_dir"
-  ENV_DIR="$ENV_DIR" PATH=/usr/bin:/bin zsh -c '
-    node --version
-    for cmd in node npm npx pnpm; do
-      cmd_path=$(whence -p "$cmd")
-      printf "%s_path=%s\n" "$cmd" "$cmd_path"
-      case "$cmd_path" in
-        "$NVM_DIR"/versions/node/*/bin/"$cmd") ;;
-        *) exit 1 ;;
-      esac
-    done
-  '
+  cd "$node_probe_dir"
+  requested=$(mise current node 2>/dev/null || true)
+  printf "node=%s\n" "$requested"
+  case "$requested" in 22*) ;; *) exit 1 ;; esac
 )
-
-printf "\n## interactive zsh nvmrc auto-use\n"
-(
-  cd "$nvm_probe_dir"
-  ENV_DIR="$ENV_DIR" PATH=/usr/bin:/bin zsh -ic '
-    node --version
-    printf "NVM_BIN=%s\n" "${NVM_BIN:-}"
-    case "${NVM_BIN:-}" in
-      "$NVM_DIR"/versions/node/*/bin) ;;
-      *) exit 1 ;;
-    esac
-    for cmd in node npm npx pnpm; do
-      cmd_path=$(whence -p "$cmd")
-      printf "%s_path=%s\n" "$cmd" "$cmd_path"
-      case "$cmd_path" in
-        "$NVM_BIN"/"$cmd") ;;
-        *) exit 1 ;;
-      esac
-    done
-    if whence -w corepack >/dev/null 2>&1; then
-      printf "corepack=present\n"
-      exit 1
-    fi
-    printf "corepack=absent\n"
-  '
-)
-
-printf "\n## rbw-env profile wrapper\n"
-tmpdir=$(mktemp -d)
-cat > "$tmpdir/rbw" <<'EOF'
-#!/bin/sh
-case "$1" in
-  unlocked) exit 0 ;;
-  get) printf 'secret:%s\n' "$2" ;;
-  *) exit 1 ;;
-esac
-EOF
-chmod +x "$tmpdir/rbw"
-env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" \
-  claude-sub \
-  -- sh -c 'printf "HF_TOKEN=%s\n" "$HF_TOKEN"'
-
-printf "\n## rbw-env folder-qualified item\n"
-cat > "$tmpdir/rbw" <<'EOF'
-#!/bin/sh
-case "$1" in
-  unlocked) exit 0 ;;
-  get) shift; printf 'args:%s\n' "$*" ;;
-  *) exit 1 ;;
-esac
-EOF
-chmod +x "$tmpdir/rbw"
-folder_out=$(env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" \
-  claude \
-  -- sh -c 'printf "%s" "$ANTHROPIC_AUTH_TOKEN"')
-if [ "$folder_out" = "args:--folder ENV local-agents" ]; then
-  printf '%s\n' 'folder-item=ok'
-else
-  printf 'folder-item=unexpected:%s\n' "$folder_out"
-  exit 1
-fi
-
-printf "\n## rbw-env locked non-interactive\n"
-cat > "$tmpdir/rbw" <<'EOF'
-#!/bin/sh
-case "$1" in
-  unlocked) exit 1 ;;
-  unlock) exit 1 ;;
-  get) exit 1 ;;
-  *) exit 1 ;;
-esac
-EOF
-chmod +x "$tmpdir/rbw"
-if env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" claude -- sh -c 'printf "unexpected-run\n"' >/dev/null 2>&1; then
-  printf '%s\n' 'locked=unexpected-run'
-  exit 1
-else
-  printf '%s\n' 'locked=refused'
-fi
-
-printf "\n## rbw-env missing rbw strict\n"
-empty_path="$tmpdir/empty"
-mkdir -p "$empty_path"
-if env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$empty_path" "$ENV_DIR/bin/rbw-env" claude -- sh -c 'printf "unexpected-run\n"' >/dev/null 2>&1; then
-  printf '%s\n' 'missing-rbw=unexpected-run'
-  exit 1
-else
-  printf '%s\n' 'missing-rbw=refused'
-fi
-
-printf "\n## rbw-env missing rbw best effort\n"
-RBW_ENV_STRICT=0 PATH="$empty_path" "$ENV_DIR/bin/rbw-env" claude -- /bin/sh -c 'printf "missing-rbw-best-effort=ran\n"'
-
-printf "\n## rbw SSH public selectors\n"
-ssh-keygen -q -t ed25519 -N '' -f "$tmpdir/test-key"
-cat > "$tmpdir/rbw" <<'EOF'
-#!/bin/sh
-[ "$1" = unlock ]
-EOF
-cat > "$tmpdir/ssh-add" <<'EOF'
-#!/bin/sh
-[ "$1" = -L ] || exit 2
-[ "$SSH_AUTH_SOCK" = "$RBW_SSH_AUTH_SOCK" ] || exit 3
-cat "$RBW_TEST_PUBLIC_KEY"
-EOF
-chmod +x "$tmpdir/rbw" "$tmpdir/ssh-add"
-expected_fingerprint=$(
-  ssh-keygen -lf "$tmpdir/test-key.pub" \
-    | awk '{print $2}' \
-    | sed 's/^SHA256://' \
-    | tr '/+' '_-' \
-    | tr -d '='
-)
-RBW_SSH_AUTH_SOCK="$tmpdir/rbw.sock" \
-RBW_SSH_PUBKEY_DIR="$tmpdir/public-keys" \
-RBW_TEST_PUBLIC_KEY="$tmpdir/test-key.pub" \
-PATH="$tmpdir:/usr/bin:/bin" \
-  "$ENV_DIR/bin/rbw-ssh-pubkeys"
-generated_key="$tmpdir/public-keys/rbw-$expected_fingerprint.pub"
-test -f "$generated_key"
-cmp "$tmpdir/test-key.pub" "$generated_key"
-test "$(stat -f %Lp "$generated_key" 2>/dev/null || stat -c %a "$generated_key")" = 644

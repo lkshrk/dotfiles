@@ -1,3 +1,6 @@
+[settings]
+idiomatic_version_file_enable_tools = ["node"]
+
 [tools]
 bun = "latest"
 "npm:bash-language-server" = "latest"

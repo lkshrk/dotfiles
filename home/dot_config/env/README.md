@@ -153,9 +153,9 @@ such as `executable_agent-run`.
 - `secrets/*.envmap`: rbw item to environment variable mappings by consumer.
   An item written as `<folder>/<name>` is fetched with `rbw get --folder`, for
   names that exist in more than one folder.
-- `tests/smoke.sh`: shell-mode checks before migration.
-- `tests/linux-smoke.sh`: clean Linux env checks with fake HOME/NVM and
-  optional rbw socket coverage.
+- `tests/smoke.sh`: shell-mode checks on macOS (runs `linux-smoke.sh` on Linux).
+- `tests/linux-smoke.sh`: clean Linux env checks with a fake HOME and mise
+  shims, and optional rbw socket coverage.
 - `tests/agent-run-smoke.sh`: every agent client's profile, gateway fallback,
   isolation, CA and binary lookup, with a fake rbw.
 - `tests/opencode-config-smoke.sh`: the tracked OpenCode provider/MCP config.
@@ -173,15 +173,13 @@ such as `executable_agent-run`.
 - No explicit npm path.
 - zsh loads the same POSIX profile from `.zshenv`; login shells skip duplicate
   profile work through the profile load guard.
-- Base env prepends the NVM default Node bin directory, so `#!/usr/bin/env node`
-  CLIs work after Homebrew Node is unlinked.
-- Interactive zsh auto-switches `.nvmrc` through the lightweight resolver and
-  only loads full NVM when the fast installed-version path cannot resolve.
-- No Corepack wrapper. NVM's `default-packages` installs `pnpm@11` into each
-  new Node version.
-- `pnpm` resolves from the active NVM Node bin directory; `PNPM_HOME/bin`
-  holds pnpm-installed global commands.
-- `NVM_DIR` is metadata only; loading nvm stays out of base env.
+- Base env puts mise's shims right after `~/.local/bin`, so node, npm, npx,
+  pnpm and the other mise tools resolve without `mise activate`. On Omarchy,
+  node comes from its own mise layer; on macOS from `mise/conf.d/node-macos.toml`.
+- A project's `.nvmrc` (or `.node-version`) picks its node version through mise
+  (`idiomatic_version_file_enable_tools = ["node"]`); no nvm, no shell hook.
+- No Corepack wrapper. pnpm comes from mise; `PNPM_HOME/bin` holds
+  pnpm-installed global commands.
 - Homebrew environment policy is macOS-specific. `os/darwin.sh` resolves and
   exports `HOMEBREW_PREFIX`; zsh lazy tool modules consume that variable
   instead of hardcoding Homebrew install paths.

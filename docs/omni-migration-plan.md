@@ -430,8 +430,10 @@ Done:
   - `github:` tools need exact per-platform `asset_pattern`s (kubectl-cnpg, minijinja-cli).
   - 39 pacman packages removed; `glow` stays as a dependency of `devtools`. omni's bun and uv copies and its
     downloaded binaries removed; the tools left omni's groups.
-  - Still open on towerr: node from nvm to Omarchy's mise node (`40-lazy.zsh`, `profile.sh`,
-    `lib/nvm-node.sh`, env smoke tests); `~/.local/bin/rtk` (still used by running agent sessions).
+  - node: nvm is gone (zsh loader, profile lookup, `lib/nvm-node.sh`, `~/.nvm`). Omarchy's mise node on towerr,
+    `node-macos.toml` on the Macs; a project's `.nvmrc` picks its version through mise
+    (`idiomatic_version_file_enable_tools`).
+  - Still open on towerr: `~/.local/bin/rtk` (used by agent sessions started before the switch).
 
 ## Checked (2026-11-14)
 

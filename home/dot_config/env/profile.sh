@@ -1,7 +1,7 @@
 # POSIX-safe env entrypoint.
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
-ENV_NEXT_PROFILE_CURRENT_VERSION=9
+ENV_NEXT_PROFILE_CURRENT_VERSION=10
 ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 
 # Functions are cheap to reload and may have been added after the guarded env
@@ -30,10 +30,6 @@ else
   return 0 2>/dev/null || exit 0
 fi
 
-# shellcheck source=lib/nvm-node.sh
-if [ -r "$ENV_DIR/lib/nvm-node.sh" ]; then
-  . "$ENV_DIR/lib/nvm-node.sh"
-fi
 
 # shellcheck source=lib/rbw-sock.sh
 if [ -r "$ENV_DIR/lib/rbw-sock.sh" ]; then
@@ -47,7 +43,6 @@ fi
 
 export EDITOR="${EDITOR:-nvim}"
 export GOPATH="${GOPATH:-$HOME/go}"
-export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
 
 env_next_os="${ENV_NEXT_OS:-${OSTYPE:-}}"
@@ -80,14 +75,8 @@ if [ -r "$ENV_DIR/machine/$env_next_machine.sh" ]; then
   . "$ENV_DIR/machine/$env_next_machine.sh"
 fi
 
-env_next_nvm_bin=
-if command -v env_next_nvm_resolve_bin >/dev/null 2>&1; then
-  env_next_nvm_bin=$(env_next_nvm_resolve_bin default 2>/dev/null || true)
-fi
-
 env_next_path_prepend "$HOME/.cargo/bin"
 env_next_path_prepend "$BUN_INSTALL/bin"
-[ -z "$env_next_nvm_bin" ] || env_next_path_prepend "$env_next_nvm_bin"
 # mise owns CLIs and runtimes; shims serve shells and agents that never run `mise activate`.
 env_next_path_prepend "${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims"
 env_next_path_append "$GOPATH/bin"
@@ -95,15 +84,8 @@ env_next_path_append "$ENV_DIR/bin"
 env_next_path_prepend "$HOME/.local/bin"
 env_next_path_prepend "$HOME/.mimocode/bin"
 
-unset env_next_os env_next_machine env_next_nvm_bin
-unset env_next_nvm_lookup env_next_nvm_root env_next_nvm_i env_next_nvm_line
-unset env_next_nvm_pattern env_next_nvm_best env_next_nvm_best_major env_next_nvm_best_minor
-unset env_next_nvm_best_patch env_next_nvm_candidate env_next_nvm_name env_next_nvm_version
-unset env_next_nvm_major env_next_nvm_rest env_next_nvm_minor env_next_nvm_patch
-unset env_next_nvm_target env_next_nvm_dir
+unset env_next_os env_next_machine
 unset env_next_rbw_uid_val env_next_rbw_tmp env_next_rbw_sock env_next_rbw_candidate env_next_rbw_runtime
-unset -f env_next_nvm_alias_target env_next_nvm_best_dir_from_candidates 2>/dev/null || true
-unset -f env_next_nvm_resolve_dir env_next_nvm_resolve_bin 2>/dev/null || true
 unset -f env_next_rbw_uid env_next_rbw_sock_darwin env_next_rbw_sock_linux 2>/dev/null || true
 unset -f env_next_path_remove env_next_path_prepend env_next_path_append 2>/dev/null || true
 

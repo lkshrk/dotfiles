@@ -21,15 +21,14 @@ trap cleanup EXIT HUP INT TERM
 tmpdir=$(mktemp -d)
 home="$tmpdir/home"
 runtime="$tmpdir/runtime"
-node_bin="$home/.nvm/versions/node/v24.17.0/bin"
+node_bin="$home/.local/share/mise/shims"
 
-mkdir -p "$node_bin" "$home/.nvm/alias" "$home/.bun/bin" "$home/.local/bin" "$runtime/rbw"
-printf '%s\n' '24' > "$home/.nvm/alias/default"
+mkdir -p "$node_bin" "$home/.bun/bin" "$home/.local/bin" "$runtime/rbw"
 
 for cmd in node npm npx pnpm; do
   cat > "$node_bin/$cmd" <<EOF
 #!/bin/sh
-printf '%s\n' '$cmd from fake nvm'
+printf '%s\n' '$cmd from fake mise shim'
 EOF
   chmod +x "$node_bin/$cmd"
 done
@@ -63,7 +62,6 @@ run_profile_probe() {
 
       . "$ENV_DIR/profile.sh"
 
-      [ "${NVM_DIR:-}" = "$HOME/.nvm" ] || fail "NVM_DIR"
       [ "${BUN_INSTALL:-}" = "$HOME/.bun" ] || fail "BUN_INSTALL"
       [ "${GOPATH:-}" = "$HOME/go" ] || fail "GOPATH"
       [ "${PNPM_HOME:-}" = "$HOME/.local/share/pnpm" ] || fail "PNPM_HOME=$PNPM_HOME"
@@ -75,13 +73,22 @@ run_profile_probe() {
       esac
 
       case ":$PATH:" in
+        *":$HOME/.local/bin:$HOME/.local/share/mise/shims:"*) ;;
+        *) fail "mise shims must follow HOME .local/bin" ;;
+      esac
+      case ":$PATH:" in
+        *":$HOME/.local/share/mise/shims:"*":/usr/bin:"*) ;;
+        *) fail "mise shims must precede /usr/bin" ;;
+      esac
+
+      case ":$PATH:" in
         *":$PNPM_HOME/bin:"*) ;;
         *) fail "missing PNPM_HOME bin" ;;
       esac
 
       for cmd in node npm npx pnpm; do
         cmd_path=$(find_command_path "$cmd")
-        expected="$NVM_DIR/versions/node/v24.17.0/bin/$cmd"
+        expected="$HOME/.local/share/mise/shims/$cmd"
         [ "$cmd_path" = "$expected" ] || fail "$cmd path=$cmd_path"
         printf "%s=%s\n" "$cmd" "$cmd_path"
       done

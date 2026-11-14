@@ -171,9 +171,7 @@
     },
     {
       "name": "prereqs",
-      "tools": [
-        "nvm"
-      ]
+      "tools": []
     },
     {
       "name": "priv-mac",
