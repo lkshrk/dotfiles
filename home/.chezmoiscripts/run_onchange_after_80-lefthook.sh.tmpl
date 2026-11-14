@@ -1,0 +1,11 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "dev" $groups -}}
+#!/bin/bash
+# lefthook.yml: {{ include "../lefthook.yml" | sha256sum }}
+set -euo pipefail
+{{ template "tool-path.sh" -}}
+cd {{ .chezmoi.workingTree | quote }}
+[ -e .git ] || exit 0
+command -v lefthook >/dev/null 2>&1 || { echo "lefthook: not installed; it comes from mise (dev group)" >&2; exit 1; }
+lefthook install
+{{- end }}

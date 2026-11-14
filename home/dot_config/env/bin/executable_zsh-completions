@@ -33,6 +33,14 @@ gen uv uv generate-shell-completion zsh
 gen vhs vhs completion zsh
 gen yq yq shell-completion zsh
 
+# Renamed so the repo's _argo wrapper (namespace completion) can delegate to it.
+if command -v argo >/dev/null 2>&1 && argo completion zsh 2>/dev/null |
+  sed '/^#compdef argo$/d; /^compdef _argo argo$/d; s/_argo/_argo_upstream/g' > "$dir/.argo.$$" && [ -s "$dir/.argo.$$" ]; then
+  mv -f "$dir/.argo.$$" "$dir/_argo_upstream"
+else
+  rm -f "$dir/.argo.$$"
+fi
+
 # omp prints a script to source, not a #compdef file; the shim skips the ~/.local/bin wrapper and its rbw prompt.
 omp_bin="${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims/omp"
 if [ -x "$omp_bin" ] && "$omp_bin" completions zsh </dev/null > "$dir/.omp.$$" 2>/dev/null && [ -s "$dir/.omp.$$" ]; then
