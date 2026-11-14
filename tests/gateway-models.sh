@@ -17,6 +17,7 @@ cat > "$tmp/live.json" <<'EOF'
   "agent": {
     "default_model": { "provider": "Lite-LLM-OpenAI", "model": "openai/gpt-sol" },
     "commit_message_model": { "provider": "Lite-LLM-Anthropic", "model": "claude-haiku" },
+    "inline_assistant_model": { "provider": "zed.dev", "model": "claude-sonnet-4" },
   },
   "language_models": { "openai_compatible": { "Lite-LLM-OpenAI": { "api_url": "https://old.example/v1", "available_models": [{ "name": "stale" }] } } },
 }
@@ -61,7 +62,7 @@ def zed_check(label, z):
         if i in models:
             check((m["max_tokens"], m["max_output_tokens"]) == (models[i]["context"], models[i]["output"]), f"zed {label} {i} limits")
     for k, v in z["agent"].items():
-        if k.endswith("_model"):
+        if k.endswith("_model") and v["provider"].startswith("Lite-LLM-"):
             check(v["model"] in models, f"zed {label} agent.{k} references {v['model']}")
     return z
 
@@ -70,6 +71,8 @@ live = zed_check("existing file", json.load(open(sys.argv[3])))
 check(live["vim_mode"] is False, "zed modify dropped an unrelated setting")
 check(live["agent"]["default_model"]["model"] == "openai/gpt-sol", "zed modify replaced a valid model choice")
 check(live["agent"]["commit_message_model"]["model"] == "anthropic/claude-haiku", "zed modify kept a stale model")
+check(live["agent"]["inline_assistant_model"] == {"provider": "zed.dev", "model": "claude-sonnet-4"}, "zed modify reset another provider's model")
+check(live["agent"]["thread_summary_model"]["provider"].startswith("Lite-LLM-"), "zed modify left a missing model unset")
 
 omp = open(f"{home}/.omp/agent/models.yml").read()
 overrides = set(re.findall(r"^      (\S+):$", omp, re.M))
