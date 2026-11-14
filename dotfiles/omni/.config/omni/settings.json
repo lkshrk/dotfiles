@@ -112,6 +112,34 @@
         "kind": "plugin",
         "id": "clangd-lsp@claude-plugins-official",
         "reason": "Official LSP plugin; APM cannot package LSP-only plugins yet"
+      },
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "marketplace",
+        "id": "context-mode",
+        "reason": "context-mode updates itself; installed as a native plugin, not through APM"
+      },
+      {
+        "host": "towerr",
+        "target": "claude",
+        "kind": "plugin",
+        "id": "context-mode@context-mode",
+        "reason": "context-mode updates itself; installed as a native plugin, not through APM"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "mcp",
+        "id": "context-mode",
+        "reason": "context-mode updates itself; installed as a native plugin, not through APM"
+      },
+      {
+        "host": "towerr",
+        "target": "codex",
+        "kind": "plugin",
+        "id": "context-mode@context-mode",
+        "reason": "context-mode updates itself; installed as a native plugin, not through APM"
       }
     ]
   },

@@ -466,6 +466,34 @@
         }
       ]
     },
+    "context-mode-claude": {
+      "providers": [
+        {
+          "provider": "script",
+          "options": {
+            "check": "claude plugin list 2>/dev/null | grep -q 'context-mode@context-mode'",
+            "install": "claude plugin marketplace add mksglu/context-mode && claude plugin install context-mode@context-mode",
+            "upgrade": "claude plugin update context-mode@context-mode",
+            "uninstall": "claude plugin uninstall context-mode@context-mode && claude plugin marketplace remove context-mode"
+          }
+        }
+      ],
+      "git": "https://github.com/mksglu/context-mode"
+    },
+    "context-mode-codex": {
+      "providers": [
+        {
+          "provider": "script",
+          "options": {
+            "check": "codex plugin list 2>/dev/null | grep -q '^context-mode@context-mode .*enabled'",
+            "install": "codex plugin marketplace add mksglu/context-mode && codex plugin add context-mode@context-mode && context-mode setup --agents codex --yes",
+            "upgrade": "codex plugin marketplace upgrade context-mode && context-mode setup --agents codex --yes",
+            "uninstall": "codex plugin remove context-mode@context-mode"
+          }
+        }
+      ],
+      "git": "https://github.com/mksglu/context-mode"
+    },
     "copilot-cli": {
       "providers": [
         {

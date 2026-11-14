@@ -28,10 +28,6 @@ dependencies:
   - path: ~/Dev/dotfiles/apm/omp-skills
     targets:
     - codex
-  - git: mksglu/context-mode
-    targets:
-    - claude
-    - codex
   - git: obra/superpowers
     ref: 22f0b463e7a5e579904dd6211a520321035526f7
     targets:

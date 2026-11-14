@@ -15,6 +15,8 @@
         "cargo",
         "ccundo",
         "context-mode",
+        "context-mode-claude",
+        "context-mode-codex",
         "deepwiki-rs",
         "oh-my-codex",
         "rtk",
