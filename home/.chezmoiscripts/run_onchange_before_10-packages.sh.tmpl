@@ -19,6 +19,12 @@ if ! command -v brew >/dev/null 2>&1; then
   done
 fi
 command -v brew >/dev/null 2>&1 || { echo "packages: Homebrew is not installed; see https://brew.sh" >&2; exit 1; }
+# Homebrew refuses formulae and casks from third-party taps until the tap is trusted.
+if brew trust --help >/dev/null 2>&1; then
+  for tap in $(cat{{ range $lists }} {{ . | quote }}{{ end }} | sed -n 's/^tap "\(.*\)"$/\1/p' | sort -u); do
+    brew tap "$tap" >/dev/null && brew trust "$tap" >/dev/null
+  done
+fi
 cat{{ range $lists }} {{ . | quote }}{{ end }} | brew bundle --no-upgrade --file=-
 {{- else if stat "/etc/arch-release" -}}
 mapfile -t pacman_pkgs < <(cat{{ range $lists }} {{ . | quote }}{{ end }} /dev/null | sort -u)

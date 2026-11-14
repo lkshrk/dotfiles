@@ -20,6 +20,7 @@ entries=$(cat $files | sort -u)
 
 for tap in $(printf '%s\n' "$entries" | sed -n 's/^tap "\(.*\)"$/\1/p'); do
   out=$(brew tap "$tap" 2>&1) || echo "WARN: tap $tap failed: $(printf '%s\n' "$out" | tail -1)"
+  ! brew trust --help >/dev/null 2>&1 || brew trust "$tap" >/dev/null 2>&1 || echo "WARN: trust $tap failed"
 done
 
 missing='' allowed=''
