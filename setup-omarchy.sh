@@ -166,12 +166,6 @@ $ufw_rule" /etc/ufw/before.rules
 fi
 ok "cloudflared waits for DNS, irqbalance skips NVMe queues, ufw stops logging IGMP queries"
 
-step "opendeck images"
-# Copied, not linked: OpenDeck skips symlinked images; --update=none keeps icons changed in the GUI.
-mkdir -p "$HOME/.config/opendeck/images"
-cp -r --update=none "$REPO_DIR/templates/opendeck-images/." "$HOME/.config/opendeck/images/"
-ok "Stream Deck icons in place"
-
 if have obs; then
   step "obs"
   # Only seeds a machine without OBS scenes yet; later changes go back to the repo with `obs-config export`.
