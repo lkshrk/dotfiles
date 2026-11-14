@@ -78,6 +78,7 @@ local function load(spec)
       package.loaded[mod] = nil
     end)
   end
+  ---@diagnostic disable-next-line: different-requires
   require('lazy').load { plugins = { plugin.name } }
   if type(spec.config) == 'function' then
     return pcall(spec.config, plugin, spec.opts)

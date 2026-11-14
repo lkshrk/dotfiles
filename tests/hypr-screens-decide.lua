@@ -35,7 +35,7 @@ assert(D.title_key("steam", nil) == nil)
 assert(D.title_key("steam", "Friends List") == "steam|Friends List")
 assert(D.app_key("discord") == "discord|")
 
-local frame = D.frame({ "10", "20", "300", "400" })
+local frame = assert(D.frame({ "10", "20", "300", "400" }))
 assert(frame.x == 10 and frame.y == 20 and frame.w == 300 and frame.h == 400)
 assert(D.frame({ "10", "x" }) == nil)
 assert(D.frame(nil) == nil)

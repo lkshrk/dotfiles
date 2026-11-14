@@ -31,7 +31,9 @@ omarchy_preinstalled_bindings = nil
 omarchy_default_bindings = nil
 
 ---@class HL.Window
+---@diagnostic disable-next-line: duplicate-doc-field
 ---@field at HL.Vec2
+---@diagnostic disable-next-line: duplicate-doc-field
 ---@field size HL.Vec2
 
 ---@class HL.DspNamespace
@@ -119,3 +121,8 @@ function o.notify(message) end
 ---@param match string|O.WindowMatch Window class pattern, or a table of match fields.
 ---@param rules table Hyprland window rule fields.
 function o.window(match, rules) end
+
+---Opts a window in to Omarchy's active/inactive transparency (tag `transparent-window`).
+---@param match string|O.WindowMatch
+---@param opacity? string Hyprland opacity pair; defaults to "0.985 0.96".
+function o.transparent_window(match, opacity) end

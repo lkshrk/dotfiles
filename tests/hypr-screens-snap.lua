@@ -14,6 +14,7 @@ local function dispatcher(kind)
   return function(args) return { kind = kind, args = args } end
 end
 
+---@diagnostic disable-next-line: lowercase-global
 hl = {
   on = function(event, fn) handlers[event] = fn end,
   timer = function() end,
@@ -30,7 +31,7 @@ hl = {
   } },
   dispatch = function(command)
     calls[#calls + 1] = command
-    local args, w = command.args, command.args.window or active
+    local args, w = command.args, (command.args.window or active) --[[@as table]]
     if command.kind == "fullscreen_state" then w.fullscreen = args.internal
     elseif command.kind == "float" then w.floating = args.action == "enable"
     elseif command.kind == "resize" then w.size = { x = args.x, y = args.y }
