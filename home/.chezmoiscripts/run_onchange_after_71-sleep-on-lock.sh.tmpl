@@ -1,0 +1,19 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if and (eq .chezmoi.os "darwin") (has "macos" $groups) -}}
+#!/bin/bash
+# inputs: {{ include "dot_config/yabai/sleep-on-lock.swift" | sha256sum }} {{ include "Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist" | sha256sum }}
+set -euo pipefail
+src="$HOME/.config/yabai/sleep-on-lock.swift"
+bin="$HOME/.local/bin/sleep-on-lock"
+agent="$HOME/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
+service="gui/$(id -u)/com.lkshrk.sleep-on-lock"
+xcode-select -p >/dev/null 2>&1 && xcrun --find swiftc >/dev/null 2>&1 ||
+  { echo "sleep-on-lock: swiftc is missing; install the Xcode Command Line Tools (xcode-select --install)" >&2; exit 1; }
+cache="${CLANG_MODULE_CACHE_PATH:-$HOME/.cache/clang/ModuleCache}"
+mkdir -p "${bin%/*}" "$cache"
+CLANG_MODULE_CACHE_PATH="$cache" xcrun swiftc -O -o "$bin" "$src" -framework Cocoa
+launchctl bootout "$service" 2>/dev/null || true
+launchctl bootstrap "gui/$(id -u)" "$agent"
+launchctl enable "$service"
+launchctl kickstart -k "$service"
+{{- end }}

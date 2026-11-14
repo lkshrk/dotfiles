@@ -1,0 +1,16 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if and (eq .chezmoi.os "darwin") (has "macos" $groups) -}}
+#!/bin/bash
+# Runs on every apply: the entry pins yabai's hash, which changes with every upgrade.
+set -euo pipefail
+PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+script="$HOME/.config/yabai/update_sudoers.sh"
+yabai=$(command -v yabai) || exit 0
+hash=$(shasum -a 256 "$yabai" | cut -d' ' -f1)
+[ "$(cat "$HOME/.cache/yabai-sudoers-hash" 2>/dev/null)" != "$hash" ] || exit 0
+if [ -t 0 ] || sudo -n true 2>/dev/null; then
+  "$script"
+else
+  echo "yabai: the sudoers entry is stale; run $script in a terminal" >&2
+fi
+{{- end }}

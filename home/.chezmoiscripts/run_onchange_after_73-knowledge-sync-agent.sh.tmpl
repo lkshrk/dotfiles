@@ -1,0 +1,11 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if and (eq .chezmoi.os "darwin") (has "personal" $groups) (stat (joinPath .chezmoi.homeDir "knowledge/scripts/sync.sh")) -}}
+#!/bin/bash
+# Renders only once ~/knowledge is cloned, then reruns when the plist changes: {{ include "Library/LaunchAgents/com.lkshrk.knowledge-sync.plist" | sha256sum }}
+set -euo pipefail
+agent="$HOME/Library/LaunchAgents/com.lkshrk.knowledge-sync.plist"
+service="gui/$(id -u)/com.lkshrk.knowledge-sync"
+launchctl bootout "$service" 2>/dev/null || true
+launchctl bootstrap "gui/$(id -u)" "$agent"
+launchctl enable "$service"
+{{- end }}

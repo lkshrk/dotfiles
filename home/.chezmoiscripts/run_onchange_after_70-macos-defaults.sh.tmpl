@@ -1,0 +1,13 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+set -euo pipefail
+chflags nohidden "$HOME/Library"
+defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+# Hold-for-accents everywhere, key repeat in VS Code for vim motions.
+defaults write -g ApplePressAndHoldEnabled -bool true
+defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+killall Finder 2>/dev/null || true
+echo "macos: defaults applied; some take effect after logging out"
+{{- end }}
