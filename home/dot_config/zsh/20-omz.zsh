@@ -1,4 +1,3 @@
-# kubectl completion is cached and sourced in 40-lazy.zsh.
 _zsh_cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 mkdir -p "$_zsh_cache_dir"
 ZSH_COMPDUMP="${ZSH_COMPDUMP:-$_zsh_cache_dir/zcompdump-${${HOST:-${HOSTNAME:-local}}%%.*}-${ZSH_VERSION}}"

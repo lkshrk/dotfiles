@@ -19,11 +19,13 @@ gen() {
 
 gen cilium cilium completion zsh
 gen delta delta --generate-completion zsh
+gen flux flux completion zsh
 gen gh gh completion -s zsh
 gen gitleaks gitleaks completion zsh
 gen golangci-lint golangci-lint completion zsh
 gen helm helm completion zsh
 gen helmfile helmfile completion zsh
+gen kubectl kubectl completion zsh
 gen kustomize kustomize completion zsh
 gen lefthook lefthook completion zsh
 gen rclone rclone completion zsh -

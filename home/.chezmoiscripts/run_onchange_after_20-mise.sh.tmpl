@@ -2,6 +2,7 @@
 #!/bin/bash
 # Installs the tools from this host's mise group files; chezmoi reruns it when one changes.
 # files: {{ range $g := $groups }}{{ $f := printf "dot_config/mise/conf.d/%s.toml" $g }}{{ if stat (joinPath $.chezmoi.sourceDir $f) }}{{ $f }}={{ include $f | sha256sum }} {{ else if stat (joinPath $.chezmoi.sourceDir (printf "%s.tmpl" $f)) }}{{ $f }}={{ includeTemplate (printf "%s.tmpl" $f) $ | sha256sum }} {{ end }}{{ end }}
+# completions: {{ include "dot_config/env/bin/executable_zsh-completions" | sha256sum }}
 set -euo pipefail
 PATH="$PATH:/opt/homebrew/bin:/usr/local/bin"
 command -v mise >/dev/null 2>&1 || { echo "mise: not installed; skipping tool installs" >&2; exit 0; }
