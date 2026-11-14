@@ -1,41 +1,47 @@
 # dotfiles
 
-Personal macOS and Omarchy config. chezmoi writes the dotfiles and runs the package, mise and agent steps; the setup scripts only bootstrap a machine and do the steps that need root or a desktop session.
+Personal macOS and Omarchy config. chezmoi writes the dotfiles and runs every idempotent step as a chezmoi script; `setup.sh` only bootstraps a machine and does the steps that need a person.
 
 ## Setup
 
 ```sh
-git clone <repo> ~/Dev/dotfiles
-cd ~/Dev/dotfiles
-./setup.sh
+git clone https://github.com/lkshrk/dotfiles.git ~/Dev/dotfiles && ~/Dev/dotfiles/setup.sh
 ```
 
-The setup flow:
+`setup.sh` works on macOS and Omarchy and is safe to rerun:
 
-1. Verifies Xcode Command Line Tools and `swiftc`.
-2. Ensures Homebrew is installed and on `PATH`.
-3. Installs the bootstrap tools with Brew: chezmoi and mise.
-4. Runs `chezmoi init --apply`: dotfiles, the host's Brewfiles, mise tools and the agent setup (APM).
-5. Compiles `~/.local/bin/sleep-on-lock` from the tracked Swift source.
-6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
-7. Loads `com.lkshrk.knowledge-sync` as a user LaunchAgent (runs `~/knowledge/scripts/sync.sh` every 5 minutes; needs the vault clone, see its `scripts/setup.sh`).
-8. Refreshes the yabai sudoers entry.
-9. Sets rbw's lock timeout, unlocks it and writes the LAN root CA from the
-   vault to `~/.local/share/certs/lan-ca.pem` (`scripts/lan-ca.sh`).
-10. Installs repository-local Lefthook hooks.
+1. Gets the package manager and chezmoi: on macOS the Xcode Command Line Tools,
+   Homebrew, then `brew install chezmoi mise`; on Omarchy `pacman -S chezmoi`
+   through pkexec (Omarchy ships yay and mise).
+2. Runs `chezmoi init --source <repo>` and `chezmoi apply`. Without
+   `~/.config/chezmoi/chezmoi.toml` (a first run) it adds `--force`, so the
+   repo's configs replace the fresh defaults without asking.
+3. Configures rbw (Bitwarden email and server once, no lock timeout) and
+   unlocks it. On Omarchy it then clones the knowledge vault to `~/knowledge`
+   and, on a machine without OBS scenes, applies `templates/obs/` with `obs-config`.
+4. Runs `chezmoi apply` again for the steps that waited for the vault (LAN root
+   CA, knowledge-sync agent) and, inside Hyprland, checks the config loads.
+
+Everything else is a script in `home/.chezmoiscripts/`, gated by host group and
+rerun by `chezmoi apply` when its inputs change:
+
+| Script | Hosts | Does |
+|---|---|---|
+| `10-packages`, `20-mise`, `30-rust`, `40-agent-extras`, `50-apm` | per group | packages, mise tools, agents |
+| `55-lan-ca` | personal | LAN root CA from the vault to `~/.local/share/certs/lan-ca.pem` once rbw is unlocked |
+| `60-omarchy-system` | omarchy | `/etc` from `omarchy/` (keyd, fstab mounts, units, cloudflared, irqbalance, ufw, CA trust, keyd/docker groups, zsh login shell) in one pkexec call, only when something differs |
+| `61-omarchy-apps` | omarchy | removes `omarchy/remove.*`, installs `omarchy/webapps`, Helium and File Roller as defaults |
+| `62-omarchy-user` | omarchy | Steam Proton prefixes off the NTFS library |
+| `63-systemd-user` | omarchy | daemon-reload when a user unit changes; units are enabled by the `.wants` links chezmoi writes |
+| `70-macos-defaults` | macOS | Finder and keyboard defaults |
+| `71-sleep-on-lock`, `72-yabai-sudoers` | macos | builds and loads the sleep-on-lock agent; refreshes the yabai sudoers entry (prints the command when there is no terminal) |
+| `73-knowledge-sync-agent` | personal Macs | loads the knowledge-sync LaunchAgent once `~/knowledge` exists |
+| `80-lefthook` | dev | `lefthook install` in this repo |
 
 Git hooks use Git's default repository-local directory. Do not set a global
 `core.hooksPath`: Lefthook installs from different repositories would share and
 overwrite that directory. Run `lefthook install` in each new clone that uses
 Lefthook (or its normal package setup). Linked worktrees share their repository's hooks.
-
-Admin-required package actions are handled by normal macOS authentication. Setup warms the sudo session with `sudo -v` when running in an interactive terminal.
-
-Flags:
-
-| Flag | Effect |
-| ---- | ------ |
-| `--macos-defaults` | Run `scripts/macos-defaults.sh` during setup |
 
 After setup, run:
 
@@ -48,42 +54,9 @@ claude doctor
 `towerr` runs [Omarchy](https://omarchy.org/) (Arch Linux + Hyprland). It has
 the same role groups as `topaz` except `macos`, plus `omarchy`
 (keyd, Hyprland and Omarchy shell config); see `home/.chezmoidata/hosts.yaml`.
-
-On a fresh Omarchy install:
-
-```sh
-git clone https://github.com/lkshrk/dotfiles.git ~/Dev/dotfiles && ~/Dev/dotfiles/setup-omarchy.sh
-```
-
-It is safe to rerun.
-
-The setup flow:
-
-1. Installs chezmoi (pacman). Omarchy already ships yay and mise.
-2. Runs `chezmoi init --apply`: dotfiles, the host's pacman/AUR lists, mise
-   tools and the agent setup (APM). On the first run only, `--force` lets the
-   repo's configs replace the fresh defaults without asking.
-3. Reports commands a later step needs that are still missing, once, and skips
-   those steps.
-4. Removes the Omarchy packages and web apps listed in
-   `omarchy/remove.packages` and `omarchy/remove.webapps`.
-5. Switches the login shell to zsh and installs the keyd Mac keymap from
-   `omarchy/keyd/` (Cmd sends Ctrl, Caps Lock is Hyper).
-6. Adds the managed `/etc/fstab` block from `omarchy/fstab.mounts` with the
-   units in `omarchy/systemd/`, keeps the STUFF Steam library's Proton
-   prefixes on the home disk, and applies the system tweaks (cloudflared,
-   `omarchy/default/irqbalance`, one ufw rule).
-7. Copies the Stream Deck images from `templates/opendeck-images/` and, on a
-   machine without OBS scenes, applies `templates/obs/` with `obs-config`.
-8. Enables Docker with sudoless access, makes Helium the default browser and
-   File Roller the archive handler, and installs the web apps in
-   `omarchy/webapps` as app windows, each its own Helium instance.
-9. Configures rbw (asking for the Bitwarden email and server once), unlocks it
-   (which starts the SSH agent used for git signing) and writes the LAN root
-   CA from the vault, trusted system-wide (`scripts/lan-ca.sh`).
-10. Clones the knowledge vault to `~/knowledge` and enables `knowledge-sync.timer`.
-11. Installs the Lefthook hooks of this repository and the vault, and checks
-    that Hyprland loads its config.
+Third-party shell plugins are chezmoi git externals cloned to `~/Dev` and
+linked into `~/.config/omarchy/plugins`; the Stream Deck images are `create_`
+files, written once and then left to OpenDeck.
 
 Omarchy owns most of `~/.config/hypr` and `~/.config/omarchy` and rewrites them
 on refresh. chezmoi writes only the files the repo tracks (`bindings.lua`,
@@ -237,20 +210,16 @@ Verify the applied dependency graph and OMP skill discovery, not just exit statu
 ## Layout
 
 ```text
-setup.sh                  # macOS bootstrap
-setup-omarchy.sh          # Omarchy bootstrap
-scripts/
-  macos-defaults.sh       # optional macOS defaults
-  lan-ca.sh               # LAN root CA from the vault, trusted on Linux
-  lib/setup-common.sh     # helpers shared by setup.sh and setup-omarchy.sh
-omarchy/                  # files setup-omarchy.sh installs outside $HOME
+setup.sh                  # bootstrap for macOS and Omarchy
+omarchy/                  # inputs of the Omarchy chezmoi scripts, installed outside $HOME
   keyd/                   # Mac keymap per keyboard, installed to /etc/keyd
   systemd/, fstab.mounts  # STUFF and NAS mounts, cloudflared drop-in
   default/irqbalance      # /etc/default/irqbalance
-  webapps                 # web apps setup installs, each its own Helium instance
-  remove.packages         # Omarchy preinstalls setup removes
-  remove.webapps          # Omarchy web apps setup removes
-templates/                # copied by setup: opendeck-images/, obs/
+  webapps                 # web apps, each its own Helium instance
+  remove.packages         # Omarchy preinstalls to remove
+  remove.webapps          # Omarchy web apps to remove
+templates/obs/            # OBS scenes, applied by obs-config
+scripts/                  # update.sh, render-home.sh, migrate-to-chezmoi.sh, checks
 .chezmoiroot              # "home": chezmoi's source state
 home/                     # files chezmoi writes into $HOME
   .chezmoidata/hosts.yaml # hosts and their groups
