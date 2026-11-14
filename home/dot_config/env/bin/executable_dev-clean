@@ -80,20 +80,27 @@ clean_caches() {
 
 ignored() { git -C "$1" check-ignore -q --no-index -- "$2" 2>/dev/null; }
 
+mtime() { stat -c %Y "$1" 2>/dev/null || stat -f %m "$1"; }
+
 profile_time() {
-  if [ -d "$1/.fingerprint" ]; then stat -c %Y "$1/.fingerprint"; else stat -c %Y "$1"; fi
+  if [ -d "$1/.fingerprint" ]; then mtime "$1/.fingerprint"; else mtime "$1"; fi
 }
 
+# Fixed descriptors instead of {fd}: macOS ships bash 3.2; without flock (macOS) an open lock file counts as held.
 remove_locked() {
-  local profile=$1 lock fd fds=() rc=0
+  local profile=$1 lock fd=6 rc=0
   for lock in "$profile.cargo-lock" "$profile.cargo-build-lock" "$profile.cargo-artifact-lock"; do
     [ -e "$lock" ] || continue
-    exec {fd}<"$lock" || { rc=1; break; }
-    fds+=("$fd")
-    flock -n "$fd" || { rc=1; break; }
+    fd=$((fd + 1))
+    eval "exec $fd<\"\$lock\"" || { rc=1; break; }
+    if have flock; then
+      flock -n "$fd" || { rc=1; break; }
+    elif lsof -t -- "$lock" >/dev/null 2>&1; then
+      rc=1; break
+    fi
   done
   [ "$rc" = 1 ] || remove "$2"
-  for fd in "${fds[@]}"; do exec {fd}<&-; done
+  while [ "$fd" -gt 6 ]; do eval "exec $fd<&-"; fd=$((fd - 1)); done
   return "$rc"
 }
 
@@ -107,7 +114,7 @@ clean_cargo_target() {
     t=$(profile_time "$profile")
     if [ "$t" -gt "$newest_time" ]; then newest=$profile newest_time=$t; fi
   done
-  for profile in "${profiles[@]}"; do
+  for profile in ${profiles[@]+"${profiles[@]}"}; do
     if [ "$profile" = "$newest" ]; then path="${profile}incremental"; else path="${profile%/}"; fi
     remove_locked "$profile" "$path" || printf '  keep %s: a build holds its lock\n' "${profile%/}"
   done
@@ -163,19 +170,27 @@ merged_into() {
   [ "$(git -C "$repo" cherry "$base" "$squash")" = "- $squash" ]
 }
 
+cwds() {
+  local cwd
+  if [ -d /proc/self ]; then
+    for cwd in /proc/[0-9]*/cwd; do readlink "$cwd" 2>/dev/null; done
+  else
+    lsof -d cwd -Fn 2>/dev/null | sed -n 's/^n//p'
+  fi
+}
+
 in_use() {
-  local cwd dir
-  for cwd in /proc/[0-9]*/cwd; do
-    dir=$(readlink "$cwd" 2>/dev/null) || continue
+  local dir
+  while IFS= read -r dir; do
     case "$dir" in "$1" | "$1"/*) return 0 ;; esac
-  done
+  done < <(cwds)
   return 1
 }
 
 created_recently() {
   local gitdir
   gitdir=$(git -C "$1" rev-parse --absolute-git-dir 2>/dev/null) || return 1
-  [ $(($(date +%s) - $(stat -c %Y "$gitdir/commondir"))) -lt 172800 ]
+  [ $(($(date +%s) - $(mtime "$gitdir/commondir"))) -lt 172800 ]
 }
 
 clean_worktrees() {
@@ -184,7 +199,7 @@ clean_worktrees() {
   while IFS= read -r repo; do
     [ -d "$repo/.git" ] || continue
     if [ "$fetch" = 1 ]; then git -C "$repo" fetch --quiet --prune origin 2>/dev/null; fi
-    git -C "$repo" worktree prune -v "${prune_dry[@]}" 2>&1 | sed 's/^Removing /worktree prune /; s/^/  /'
+    git -C "$repo" worktree prune -v ${prune_dry[@]+"${prune_dry[@]}"} 2>&1 | sed 's/^Removing /worktree prune /; s/^/  /'
     while IFS=$'\t' read -r wt head branch locked; do
       [ "$wt" != "$repo" ] && [ -d "$wt" ] || continue
       merged=""
@@ -215,10 +230,15 @@ clean_worktrees() {
 }
 
 [ "$apply" = 1 ] || echo "Dry run; rerun with --apply to delete."
-before=$(df -k --output=avail "$HOME" | tail -1)
+avail_kb() { df -Pk "$HOME" | awk 'NR == 2 { print $4 }'; }
+before=$(avail_kb)
 for stage in "${stages[@]}"; do "clean_$stage"; done
 if [ "$apply" = 1 ]; then
-  after=$(df -k --output=avail "$HOME" | tail -1)
-  printf '\nfreed %s\n' "$(numfmt --to=iec --from-unit=1024 $((after > before ? after - before : 0)))"
+  after=$(avail_kb)
+  awk -v kb=$((after > before ? after - before : 0)) 'BEGIN {
+    split("K M G T", unit); i = 1
+    while (kb >= 1024 && i < 4) { kb /= 1024; i++ }
+    printf "\nfreed %.1f%s\n", kb, unit[i]
+  }'
 fi
 exit "$failed"
