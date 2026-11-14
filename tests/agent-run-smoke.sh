@@ -32,7 +32,7 @@ cat > "$tmpdir/bin/agent" <<'EOF'
 printf '%s\n' "name=${0##*/}" "base=${ANTHROPIC_BASE_URL:-}" "token=${ANTHROPIC_AUTH_TOKEN:-}" \
   "discovery=${CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY:-}" "litellm=${LITELLM_API:-}" \
   "litellm_key=${LITELLM_API_KEY:-}" "github=${GITHUB_PERSONAL_ACCESS_TOKEN:-}" "hf=${HF_TOKEN:-}" \
-  "ca=${NODE_EXTRA_CA_CERTS:-}" "args=$*"
+  "ca=${NODE_EXTRA_CA_CERTS:-}" "custom=${ANTHROPIC_CUSTOM_MODEL_OPTION:-}" "args=$*"
 EOF
 chmod +x "$env_dir/bin/local-agents-token" "$tmpdir/rbw/rbw" "$tmpdir/bin/agent"
 for name in claude codex omp opencode; do
@@ -40,6 +40,8 @@ for name in claude codex omp opencode; do
 done
 ln -s "$env_dir/bin/agent-run" "$tmpdir/shim/omp"
 ln -s "$env_dir/bin/agent-run" "$tmpdir/shim/opencode"
+mkdir "$tmpdir/rel"
+ln -s ../env/bin/agent-run "$tmpdir/rel/opencode"
 
 ENV_DIR=$env_dir
 LAN_CA_PATH=/nonexistent
@@ -74,11 +76,19 @@ out=$(PATH=$with_rbw ANTHROPIC_AUTH_TOKEN=leak LITELLM_API=leak claude_hass)
 expect "$out" token secret-hass-agent claude-hass
 expect "$out" litellm secret-hass-agent claude-hass
 
-out=$(PATH=$with_rbw ANTHROPIC_BASE_URL=https://leak.example ANTHROPIC_AUTH_TOKEN=leak ccs prompt)
+out=$(PATH=$with_rbw ANTHROPIC_BASE_URL=https://leak.example ANTHROPIC_AUTH_TOKEN=leak \
+  ANTHROPIC_CUSTOM_MODEL_OPTION=leak ccs prompt)
 expect "$out" base '' claude-sub
 expect "$out" token '' claude-sub
+expect "$out" custom '' claude-sub
 expect "$out" litellm secret-local-agents claude-sub
 expect "$out" args prompt claude-sub
+out=$(PATH=$with_rbw ANTHROPIC_BASE_URL=https://leak.example claude_sub)
+expect "$out" base '' 'claude_sub name'
+out=$(PATH=$with_rbw cc-hass)
+expect "$out" token secret-hass-agent 'cc-hass alias'
+out=$(PATH=$with_rbw "$env_dir/bin/agent-run" claude-hass x)
+expect "$out" args x 'agent-run claude-hass'
 
 out=$(PATH=$with_rbw codex exec x)
 expect "$out" name codex codex
@@ -100,6 +110,16 @@ expect "$out" litellm_key token-file 'omp without rbw'
 expect "$out" github '' 'omp without rbw'
 out=$(PATH=$without_rbw claude)
 expect "$out" token token-file 'claude without rbw'
+if PATH=$without_rbw claude_hass >/dev/null 2>&1; then fail 'claude-hass fell back to the local-agents token'; fi
+out=$(PATH="$tmpdir/rel:$without_rbw" opencode)
+expect "$out" name opencode 'relative symlink resolves past agent-run'
+for bad in nope ''; do
+  set +e
+  PATH=$with_rbw "$env_dir/bin/agent-run" $bad >/dev/null 2>&1
+  status=$?
+  set -e
+  [ "$status" = 2 ] || fail "agent-run '$bad' exited $status, want 2"
+done
 
 printf '#!/bin/sh\nexit 1\n' > "$env_dir/bin/local-agents-token"
 if PATH=$without_rbw omp >/dev/null 2>&1; then fail 'omp launched without a gateway key'; fi

@@ -41,7 +41,7 @@ ln -sf ~/.config/env/bin/agent-run ~/.local/bin/omp
 ln -sf ~/.config/env/bin/agent-run ~/.local/bin/opencode
 ```
 
-Add a client by giving it a `describe`/`prepare` entry in `bin/agent-run` and
+Add a client by giving it a row in the client table in `bin/agent-run` and
 a `secrets/<client>.envmap`. After changing an envmap, restart the client's
 background service, which keeps the environment it started with:
 `agent-run codex app-server daemon restart` for Codex; OpenCode's service is
