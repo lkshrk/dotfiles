@@ -1,1 +1,22 @@
-{{ if eq .host "apm3ljhmvg7xgcf" }}{{ include ".chezmoitemplates/git/config@apm3ljhmvg7xgcf" }}{{ else }}{{ include ".chezmoitemplates/git/config@default" }}{{ end }}
+{{- $groups := index .hosts .host | default (list) -}}
+# Shared git config — device-specific settings live in config.local
+[push]
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+{{- if not (has "work" $groups) }}
+[gpg "ssh"]
+	program = /usr/bin/ssh-keygen
+[credential "https://github.com"]
+	helper = 
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !gh auth git-credential
+{{- end }}
+[include]
+	path = ~/.config/git/config.local
