@@ -1,40 +1,13 @@
 {
-  // Extend the Quickshell Omarchy menu with JSONC.
-  //
-  // IDs are object keys. The parent is inferred from the dotted id, so
-  // "personal.notes" appears under "personal", and "personal" appears on the
-  // root menu. Reuse an existing id to override/extend it.
-  //
-  // Fields:
-  //   icon        Nerd Font glyph shown in the icon column.
-  //   label       Visible row title.
-  //   action      Shell command to run. If omitted, the row is a submenu.
-  //   target      Existing submenu id to open. Use for links/aliases.
-  //   provider    Name of a shell-defined runtime row source (e.g. "fonts").
-  //   aliases     alternate `omarchy menu summon <name>` routes; also searchable.
-  //   description Optional subtitle and extra search text.
-  //   when        Shell condition; hide row when it fails.
-  //   checked     Shell condition; append ✓ when it succeeds.
-  //
-  // Examples:
-  // "personal": {"icon":"","label":"Personal"},
-  // "personal.notes": {"icon":"󰎞","label":"Notes","action":"omarchy-launch-editor ~/notes"},
-  // "personal.files": {"icon":"","label":"Files","action":"uwsm-app -- nautilus ~/Documents"},
-  //
-  // provider can only reference row sources the shell already defines (the
-  // providers map in Menu.qml). Static submenus only need dotted ids.
-  //
-  // Example: replace the default About action by reusing the same id. Existing
-  // fields are kept unless overridden.
-  // "about": {"icon":"","label":"About","action":"omarchy-launch-or-focus-tui \"zsh -c 'fastfetch; read -k 1'\""},
+  // Overrides repeat icon and label: Omarchy fills omitted fields with defaults (label = id) instead of keeping the stock ones.
 
   // Quit apps whole instead of closing each window, so browsers keep all their windows.
-  "system.logout": {"action":"~/.config/hypr/scripts/power logout"},
-  "system.reboot": {"action":"~/.config/hypr/scripts/power reboot"},
-  "system.shutdown": {"action":"~/.config/hypr/scripts/power poweroff"},
+  "system.logout": {"icon":"󰍃","label":"Logout","action":"~/.config/hypr/scripts/power logout"},
+  "system.reboot": {"icon":"󰜉","label":"Reboot","action":"~/.config/hypr/scripts/power reboot"},
+  "system.shutdown": {"icon":"󰐥","label":"Shutdown","action":"~/.config/hypr/scripts/power poweroff"},
 
   // Omarchy's list shows its Super defaults, which keyd leaves no key for; this one lists bindings.lua.
-  "learn.keybindings": {"action":"~/.config/hypr/scripts/keybindings"},
+  "learn.keybindings": {"icon":"","label":"Keybindings","action":"~/.config/hypr/scripts/keybindings"},
 
   // Quotatank is a bar plugin, not an app, so it only appears here through its IPC handler.
   "quota": {"icon":"󰊚","label":"LLM Quota","description":"Quotatank usage and limits","aliases":["quotatank"],"action":"quickshell ipc -p /usr/share/omarchy/shell call janitorhead.quotatank toggle"},
