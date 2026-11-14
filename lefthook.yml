@@ -32,6 +32,8 @@ pre-push:
       run: lua tests/hypr-screens-snap.lua
     local-agents-token:
       run: python3 tests/local-agents-token.py
+    macos-scripts:
+      run: bash tests/macos-scripts.sh
     nvim-omarchy-theme:
       run: bash tests/nvim-omarchy-theme.sh
     opencode-config-smoke:

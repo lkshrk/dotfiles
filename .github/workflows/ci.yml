@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq zsh lua5.4 tmux jq
+          command -v lua >/dev/null || sudo ln -s "$(command -v lua5.4)" /usr/local/bin/lua
+      - uses: jdx/mise-action@v2
+        with:
+          mise_toml: |
+            [tools]
+            chezmoi = "2.73.3"
+            lefthook = "2.2.2"
+            shellcheck = "0.11.0"
+      - name: Pre-push tests
+        run: lefthook run pre-push --force
+
+  macos:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      MAC_HOSTS: topaz apm3ljhmvg7xgcf
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install chezmoi and shellcheck
+        run: brew install chezmoi shellcheck
+      - name: Render the Mac hosts on macOS
+        run: RENDER_HOSTS="$MAC_HOSTS" RENDER_OS=native bash tests/render-hosts.sh
+      - name: Scripts parse under bash 3.2, zsh files parse
+        run: bash tests/macos-scripts.sh
+      - name: Brewfile entries resolve
+        run: bash tests/brewfile-entries.sh

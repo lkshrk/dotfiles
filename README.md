@@ -166,6 +166,12 @@ The `pre-push` hook runs all of them in parallel, a few seconds in total.
 `tests/migrate-to-chezmoi.sh` clones the repo and runs the migration in a
 throwaway `HOME`; it is slow, so run it by hand.
 
+GitHub Actions (`.github/workflows/ci.yml`) runs the `pre-push` list on Ubuntu
+(`nvim-omarchy-theme` skips there: no Omarchy themes or lazy plugins), and on
+macOS renders the Mac hosts with the real OS, runs `tests/macos-scripts.sh`
+(bash 3.2, no bash-4 syntax, `zsh -n`) and `tests/brewfile-entries.sh` (every
+Brewfile entry resolves with `brew info`; needs brew and network).
+
 ## Checks
 
 The `agent-paths` pre-commit hook checks staged shared Claude/Codex JSON and TOML

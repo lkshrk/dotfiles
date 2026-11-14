@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Renders every host's tree and chezmoi scripts, on Linux and with the OS forced to darwin, and lints the scripts.
+# RENDER_HOSTS limits the hosts; RENDER_OS=native renders with the running OS instead of both.
 set -euo pipefail
 
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
@@ -7,7 +8,8 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT HUP INT TERM
 fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 
-hosts=$(sed -n '/^hosts:/,$ s/^  \([A-Za-z0-9_.-][A-Za-z0-9_.-]*\):.*/\1/p' "$repo/home/.chezmoidata/hosts.yaml")
+hosts=${RENDER_HOSTS:-$(sed -n '/^hosts:/,$ s/^  \([A-Za-z0-9_.-][A-Za-z0-9_.-]*\):.*/\1/p' "$repo/home/.chezmoidata/hosts.yaml")}
+oses=${RENDER_OS:-linux darwin}
 [ -n "$hosts" ] || fail "no hosts found in hosts.yaml"
 have_shellcheck=0
 command -v shellcheck >/dev/null 2>&1 && have_shellcheck=1
@@ -15,8 +17,9 @@ command -v shellcheck >/dev/null 2>&1 && have_shellcheck=1
 count=0
 for h in $hosts; do
   "$repo/scripts/render-home.sh" "$h" "$tmp/render-$h" >/dev/null 2>"$tmp/err" || { cat "$tmp/err" >&2; fail "render-home.sh failed for host $h"; }
-  for os in linux darwin; do
+  for os in $oses; do
     data="{\"host\":\"$h\",\"chezmoi\":{\"os\":\"$os\"}}"
+    [ "$os" = native ] && data="{\"host\":\"$h\"}"
     for f in "$repo"/home/.chezmoiscripts/*; do
       name=$(basename "$f")
       out="$tmp/out.sh"
