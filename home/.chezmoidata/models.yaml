@@ -1,0 +1,20 @@
+# LiteLLM gateway models; ids are the gateway's /model/info names, limits come from there too.
+gateway:
+  url: https://api.ai.h-cloud.lan
+  models:
+    - {id: anthropic/claude-opus, name: Claude Opus, family: anthropic, context: 1000000, output: 128000, image: true, reasoning: true}
+    - {id: anthropic/claude-fable, name: Claude Fable, family: anthropic, context: 1000000, output: 128000, image: true, reasoning: true}
+    - {id: anthropic/claude-sonnet, name: Claude Sonnet, family: anthropic, context: 1000000, output: 128000, image: true, reasoning: true}
+    - {id: anthropic/claude-haiku, name: Claude Haiku, family: anthropic, context: 200000, output: 64000, image: true, reasoning: true}
+    - {id: openai/gpt-astra, name: GPT Astra, family: openai, context: 922000, output: 128000, image: true, reasoning: true}
+    - {id: openai/gpt-sol, name: GPT Sol, family: openai, context: 922000, output: 128000, image: true, reasoning: true}
+    - {id: openai/gpt-terra, name: GPT Terra, family: openai, context: 922000, output: 128000, image: true, reasoning: true}
+    - {id: openai/gpt-luna, name: GPT Luna, family: openai, context: 922000, output: 128000, image: true, reasoning: true}
+    - {id: moonshot/kimi, name: Kimi, family: other, context: 1048576, output: 131072, image: true, reasoning: false}
+    - {id: opencode/deepseek, name: DeepSeek, family: other, context: 1000000, output: 384000, image: true, reasoning: false}
+    - {id: opencode/glm, name: GLM, family: other, context: 1000000, output: 131072, image: true, reasoning: false}
+    - {id: opencode/minimax, name: MiniMax, family: other, context: 1000000, output: 131072, image: true, reasoning: false}
+    - {id: opencode/qwen, name: Qwen, family: other, context: 1000000, output: 131072, image: true, reasoning: false}
+    - {id: smart-auto, name: Auto, family: other, context: 922000, output: 128000, image: false, reasoning: false}
+    - {id: anthropic-auto, name: Anthropic Auto, family: other, context: 1000000, output: 128000, image: false, reasoning: false}
+    - {id: openai-auto, name: OpenAI Auto, family: other, context: 922000, output: 128000, image: false, reasoning: false}

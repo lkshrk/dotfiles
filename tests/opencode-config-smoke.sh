@@ -1,7 +1,11 @@
 #!/bin/sh
 set -eu
 
-config="$(dirname -- "$0")/../home/dot_config/opencode/opencode.jsonc"
+repo=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+config=$(mktemp)
+trap 'rm -f "$config"' EXIT HUP INT TERM
+chezmoi --source "$repo" --override-data '{"host":"towerr"}' execute-template \
+  < "$repo/home/dot_config/opencode/opencode.jsonc.tmpl" > "$config"
 if command -v node >/dev/null 2>&1; then
   node - "$config" <<'EOF'
 const fs = require("fs");

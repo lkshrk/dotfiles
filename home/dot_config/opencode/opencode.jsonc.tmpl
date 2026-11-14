@@ -1,0 +1,51 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "local-agents/anthropic/claude-sonnet#high",
+  "agents": {
+    "title": { "model": "local-agents/anthropic/claude-sonnet" }
+  },
+  "policies": [
+    { "action": "provider.use", "resource": "*", "effect": "deny" },
+    { "action": "provider.use", "resource": "local-agents", "effect": "allow" }
+  ],
+  "instructions": [
+    "~/.config/opencode/instructions/gateway-tools.md",
+    "~/.claude/rules/h-cloud-kubectl.md"
+  ],
+  "providers": {
+    "local-agents": {
+      "name": "Local agents",
+      "env": ["LITELLM_API_KEY"],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "{{ .gateway.url }}/v1",
+        // Injected by ~/.config/env/bin/agent-run; never stored here.
+        "apiKey": "{env:LITELLM_API_KEY}"
+      },
+      "models": {
+{{- $packages := dict "anthropic" "@opencode/ai/providers/anthropic" "openai" "@opencode/ai/providers/openai/responses" }}
+{{- range $i, $m := .gateway.models }}
+{{- if $i }},{{ end }}
+        {{ toJson $m.id }}: {
+          "name": {{ toJson $m.name }},
+{{- with index $packages $m.family }}
+          "package": {{ toJson . }},
+{{- end }}
+          "capabilities": { "tools": true, "input": {{ if $m.image }}["text", "image"]{{ else }}["text"]{{ end }}, "output": ["text"]{{ if $m.reasoning }}, "reasoning": { "supported": true, "effort": ["low", "medium", "high"] }{{ end }} },
+          "limit": { "context": {{ $m.context }}, "output": {{ $m.output }} }
+        }
+{{- end }}
+      }
+    }
+  },
+  "mcp": {
+    "servers": {
+      "litellm-tools": {
+        "type": "remote",
+        "url": "{{ .gateway.url }}/mcp/",
+        // APM's OpenCode adapter drops header helpers, so the wrapper-injected key is used.
+        "headers": { "x-litellm-api-key": "{env:LITELLM_API_KEY}" }
+      }
+    }
+  }
+}
