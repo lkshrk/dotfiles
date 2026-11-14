@@ -107,7 +107,10 @@ chezmoi status              # managed files that differ, either direction
   group's files are skipped on hosts without it (`home/.chezmoiignore`).
 - Host differences are `{{ if }}` blocks in the file's own template
   (`dot_config/git/config.tmpl`, `dot_zshrc.tmpl`); `home/.chezmoitemplates/`
-  holds snippets the scripts share.
+  holds snippets the scripts share and the bases of modify templates (files
+  an app rewrites): the Zed settings and the OpenDeck profiles, whose live
+  toggle state (`current_state`) survives an apply. `dotpush` skips modify
+  templates: copy profile edits made in OpenDeck into the base by hand.
 - Source names follow chezmoi: `dot_config/` for `.config/`, `executable_`
   for scripts, `symlink_` for the few links that stay links.
 - `scripts/render-home.sh <host>` writes a host's files into a temp directory;
@@ -267,7 +270,7 @@ apm/                      # APM manifests: ai-plugins (agent dependencies), omp-
 home/                     # files chezmoi writes into $HOME
   .chezmoidata/hosts.yaml # hosts and their groups
   .chezmoiignore          # skips a group's files on hosts without it
-  .chezmoitemplates/      # snippets shared by .chezmoiscripts
+  .chezmoitemplates/      # shared snippets, Zed and OpenDeck bases for modify_ templates
   dot_config/hypr/        # Hyprland bindings, rules, input, look and feel
   dot_config/omarchy/     # Omarchy shell.json and custom shell plugins
   dot_config/yabai/       # yabai config and scripts

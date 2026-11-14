@@ -1,0 +1,17 @@
+{{- /* The repo's OpenDeck profile, keeping each key's live toggle state (current_state), which OpenDeck rewrites at runtime. */ -}}
+{{- $profile := include (printf ".chezmoitemplates/opendeck/%s.json" .profile) | fromJson -}}
+{{- $state := dict -}}
+{{- if trim .live -}}
+{{-   $live := fromJson .live -}}
+{{-   range concat ($live.keys | default list) ($live.sliders | default list) -}}
+{{-     if . }}{{ range prepend (.children | default list) . }}{{ $_ := set $state .context .current_state }}{{ end }}{{ end -}}
+{{-   end -}}
+{{- end -}}
+{{- range concat $profile.keys $profile.sliders -}}
+{{-   if . -}}
+{{-     range prepend (.children | default list) . -}}
+{{-       if and (hasKey $state .context) (lt (int (get $state .context)) (len .states)) }}{{ $_ := set . "current_state" (get $state .context) }}{{ end -}}
+{{-     end -}}
+{{-   end -}}
+{{- end -}}
+{{- toPrettyJson "  " $profile | trimSuffix "\n" -}}
