@@ -5,7 +5,7 @@
 - For library/API documentation, use Context7: resolve the library ID first unless an exact ID is supplied, then query documentation matching the project's installed version. Do not assume a version is supported when the result does not identify it.
 - Prefer the gateway's SearXNG tools for general web research and readable URL fetching. Cite sources. If unavailable, use the built-in web tools and state the limitation when relevant.
 - Keep Context Mode local for large-output processing and indexed retrieval; it complements the gateway rather than replacing it.
-- Reuse `~/.config/env/bin/litellm-mcp-headers` for gateway authentication. Never print its output or store its credential in configuration, logs, or notes. Its MCP credential is separate from the model provider's `LITELLM_API_KEY`.
+- Gateway authentication comes from the `LITELLM_API` environment variable set by the launcher. Never print it or store it in configuration, logs, or notes.
 
 # h-cloud cluster: kubectl, flux, talosctl
 

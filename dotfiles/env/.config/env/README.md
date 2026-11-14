@@ -28,14 +28,12 @@ Their Omni-managed sources and invocation syntax are documented under
 [Agent skills](../../../../README.md#agent-skills).
 
 APM generates the untracked `~/.omp/agent/mcp.json` from the tracked
-`apm/ai-plugins/apm.yml` declarations. It launches the pinned `context-mode`
-plugin copy and the `litellm-tools` HTTP gateway, preserving both entries'
-`instructions: false`. The gateway exposes Linear, Context7, and SearXNG;
-Context Mode remains local for large-output processing. OMP resolves the
-`x-litellm-api-key` header at connection time by running
-`~/.config/env/bin/litellm-mcp-headers` and extracting that JSON field with
-`jq -er`. This reuses the existing `LITELLM_API`/rbw credential without
-storing it in OMP configuration; it is separate from `LITELLM_API_KEY`.
+`apm/ai-plugins/apm.yml` declarations. It writes the `litellm-tools` HTTP
+gateway with `instructions: false`. The gateway exposes Linear, Context7, and
+SearXNG. Every client gets the `x-litellm-api-key` header as the reference
+`${LITELLM_API}`, never the value: the launch wrapper supplies it (`rbw-env`
+profiles for Claude and Codex, `omp-local-agents` for OMP). Run
+`omni agents env` to see which variables each client needs.
 
 `~/.omp/agent/AGENTS.md` supplies tool-routing and credential-handling
 guidance. Other clients' MCP configurations are not imported wholesale.

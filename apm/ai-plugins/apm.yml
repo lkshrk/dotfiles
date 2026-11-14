@@ -50,15 +50,12 @@ dependencies:
     transport: stdio
     command: codebase-memory-mcp
   - name: litellm-tools
-    targets: [claude, omp]
+    targets: [claude, codex, omp]
     registry: false
     transport: http
     url: https://api.ai.h-cloud.lan/mcp/
-    extra:
-      headersHelper: ~/.config/env/bin/litellm-mcp-headers
-      http_headers_helper: ~/.config/env/bin/litellm-mcp-headers
-      headersHelperKeys: [x-litellm-api-key]
-      required: true
+    headers:
+      x-litellm-api-key: ${LITELLM_API}
   - name: openaiDeveloperDocs
     targets: [claude, codex]
     registry: false
@@ -71,3 +68,5 @@ dependencies:
     command: bunx
     args:
     - '@shiplightai/mcp@latest'
+    env:
+      PWDEBUG: console
