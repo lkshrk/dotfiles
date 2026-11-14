@@ -120,7 +120,23 @@ chezmoi status              # managed files that differ, either direction
 - `scripts/render-home.sh <host>` writes a host's files into a temp directory;
   tests that need deployed names use it.
 - zsh helpers: `dotsync` (`chezmoi update`), `dotcheck` (`chezmoi status`),
-  `dottrack PATH` (`chezmoi add`).
+  `dottrack PATH` (`chezmoi add`), `dotpush [PATH]` (`chezmoi re-add`).
+
+**Moving a host from the old Stow links to chezmoi** (topaz, the work Mac): pull,
+then run `scripts/migrate-to-chezmoi.sh --dry-run` to see the plan and
+`scripts/migrate-to-chezmoi.sh` to do it. It records the old links under
+`~/.local/state/dotfiles-migration/`, copies git-ignored files that old links
+still reach (such as `gh/hosts.yml`) into place, runs `chezmoi init --apply
+--force`, re-links systemd `.wants` links, reloads the `com.lkshrk.*`
+LaunchAgents on macOS and removes stale links. Then it verifies:
+- `chezmoi verify` and `chezmoi status` are clean;
+- no old links are left besides omni's settings;
+- systemd links resolve;
+- omni loads its settings;
+- Hyprland reports no config errors.
+
+It exits non-zero if any check fails. It is safe to rerun.
+`tests/migrate-to-chezmoi.sh` runs it end to end in a throwaway `HOME`.
 
 `~/.bashrc` loads Omarchy's bash defaults when they exist, so interactive bash
 behaves like a stock Omarchy shell. git uses the `git@topaz` package, whose

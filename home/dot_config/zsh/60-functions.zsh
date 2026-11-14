@@ -138,6 +138,9 @@ dottrack() {
   chezmoi add "$@"
 }
 
+# Take edits made in $HOME back into the repo (all changed files, or the given ones).
+alias dotpush='chezmoi re-add'
+
 vaulttoken() {
   local token="${1:-}"
   if [[ -z "$token" ]]; then
