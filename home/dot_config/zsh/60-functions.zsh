@@ -106,22 +106,9 @@ csh() {
   kubectl run -it --rm --restart=Never --image=busybox "tmp-shell-${USER:-user}-$$" -n "$ns" -- sh
 }
 
-# Pull the dotfiles repo and write its files.
-dotsync() {
-  chezmoi update "$@"
-}
-
-# Managed files that differ from the repo, in either direction.
-dotcheck() {
-  chezmoi status "$@"
-}
-
-# Usage: dottrack ~/.config/aerospace/aerospace.toml
-dottrack() {
-  chezmoi add "$@"
-}
-
-# Take edits made in $HOME back into the repo (all changed files, or the given ones).
+alias dotsync='chezmoi update'
+alias dotcheck='chezmoi status'
+alias dottrack='chezmoi add'
 alias dotpush='chezmoi re-add'
 
 vaulttoken() {
