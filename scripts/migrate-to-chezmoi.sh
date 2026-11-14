@@ -3,7 +3,7 @@
 # Moves this host from omni/Stow symlinks to chezmoi copies, then verifies. Run after pulling the chezmoi layout.
 #   --dry-run      show the plan, change nothing
 #   --yes          don't ask before changing files
-#   --no-services  skip systemd/launchd reloads and the Hyprland check (tests)
+#   --no-services  skip systemd/launchd reloads, chezmoi scripts and the Hyprland check (tests)
 # DOTFILES_HOST overrides the hostname used to pick the host's groups.
 set -euo pipefail
 
@@ -43,7 +43,7 @@ import os, sys
 home, repo = sys.argv[1], sys.argv[2]
 old = os.path.join(repo, "dotfiles") + os.sep
 skip_names = {".git", "node_modules", ".cache", "Trash", "Caches", "mise", ".cargo", ".rustup", "go", ".npm", ".bun",
-              ".nvm", ".oh-my-zsh", "Steam", ".wine", "Containers", "Group Containers"}
+              ".oh-my-zsh", "Steam", ".wine", "Containers", "Group Containers"}
 for root, dirs, files in os.walk(home):
     rel = os.path.relpath(root, home)
     depth = 0 if rel == "." else rel.count(os.sep) + 1
@@ -104,7 +104,12 @@ printf '%s\n' "$plan" | while IFS=$'\t' read -r cls link target; do
 done
 
 say "chezmoi apply"
-chezmoi init --source "$repo" --apply --force --no-tty
+# --no-services also skips chezmoi's scripts (package installs) and externals: tests must not change the host.
+skip=()
+((services)) || skip=(--exclude=scripts,externals)
+# `init --apply` ignores --exclude, so init and apply run separately.
+chezmoi init --source "$repo" --no-tty
+chezmoi apply --force --no-tty ${skip[@]+"${skip[@]}"}
 ok "applied"
 
 say "remaining old links"
@@ -141,8 +146,8 @@ if ((services)); then
 fi
 
 say "verify"
-chezmoi verify --no-tty >/dev/null 2>&1 && ok "chezmoi verify: every managed file matches the repo" || bad "chezmoi verify found differences (run: chezmoi diff)"
-status=$(chezmoi status --no-tty 2>/dev/null || true)
+chezmoi verify --no-tty ${skip[@]+"${skip[@]}"} >/dev/null 2>&1 && ok "chezmoi verify: every managed file matches the repo" || bad "chezmoi verify found differences (run: chezmoi diff)"
+status=$(chezmoi status --no-tty ${skip[@]+"${skip[@]}"} 2>/dev/null || true)
 [ -z "$status" ] && ok "chezmoi status is clean" || bad "chezmoi status reports $(printf '%s\n' "$status" | wc -l | tr -d ' ') entries"
 after=$(scan_links)
 stale=$(printf '%s\n' "$after" | grep -cv -e '^omni	' -e '^$' || true)

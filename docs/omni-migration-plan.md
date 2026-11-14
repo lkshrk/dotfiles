@@ -434,6 +434,15 @@ Done:
     `node-macos.toml` on the Macs; a project's `.nvmrc` picks its version through mise
     (`idiomatic_version_file_enable_tools`).
   - Still open on towerr: `~/.local/bin/rtk` (used by agent sessions started before the switch).
+- Package lists (2026-11-14): `packages/brew/<group>.Brewfile` and `packages/arch/<group>.{pacman,aur}`,
+  drafted from omni's groups, applied by `home/.chezmoiscripts/` (packages, mise, rustup default, agent
+  extras). Omarchy defaults stay out of the Arch lists; ~50 explicit packages omni never managed were sorted
+  into role groups; stow, thefuck and python-pipx removed. `scripts/update.sh` upgrades and reports drift;
+  on towerr it is clean. omni's groups are empty: it now only runs the agents (APM).
+  - Open: the four Mac packages from unknown taps (xcodebuildmcp, flux-markdown, depflush, sbx; check with
+    `brew bundle dump` on topaz); oh-my-zsh and tmux plugins (git externals would pull unpinned upstream code
+    weekly; decide pinned archives vs a clone-if-missing script); `context-mode setup --agents codex` and
+    moshi-hook's installer (upstream installers).
 
 ## Checked (2026-11-14)
 

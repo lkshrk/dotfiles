@@ -6,66 +6,27 @@
     },
     {
       "name": "ai-plugins",
-      "tools": [
-        "cargo",
-        "context-mode",
-        "context-mode-claude",
-        "context-mode-codex",
-        "deepwiki-rs",
-        "oh-my-codex",
-        "rustup"
-      ]
+      "tools": []
     },
     {
       "name": "apps",
-      "tools": [
-        "brave-browser",
-        "chatterino",
-        "elgato-stream-deck",
-        "moonlight",
-        "mosh",
-        "obs",
-        "obsidian",
-        "plex",
-        "signal",
-        "zed"
-      ]
+      "tools": []
     },
     {
       "name": "browser",
-      "tools": [
-        "helium-browser"
-      ]
+      "tools": []
     },
     {
       "name": "core",
-      "tools": [
-        "chezmoi",
-        "coreutils",
-        "neovim",
-        "stow",
-        "thefuck",
-        "tmux",
-        "tmux-plugins",
-        "tree",
-        "wget",
-        "omni"
-      ]
+      "tools": []
     },
     {
       "name": "desk",
-      "tools": [
-        "font-jetbrains-mono-nerd-font"
-      ]
+      "tools": []
     },
     {
       "name": "desk-mac",
-      "tools": [
-        "iina",
-        "ghostty",
-        "chatgpt-classic",
-        "openusage"
-      ]
+      "tools": []
     },
     {
       "name": "dev",
@@ -73,29 +34,15 @@
     },
     {
       "name": "dev-tooling",
-      "tools": [
-        "docker",
-        "imagemagick",
-        "skopeo",
-        "rust-analyzer",
-        "make"
-      ]
+      "tools": []
     },
     {
       "name": "gaming",
-      "tools": [
-        "discord",
-        "equibop"
-      ]
+      "tools": []
     },
     {
       "name": "gaming-mac",
-      "tools": [
-        "battle-net",
-        "elgato-wave-link",
-        "linearmouse",
-        "wowup-cf"
-      ]
+      "tools": []
     },
     {
       "name": "go",
@@ -103,71 +50,23 @@
     },
     {
       "name": "infra",
-      "tools": [
-        "watch"
-      ]
+      "tools": []
     },
     {
       "name": "lua",
-      "tools": [
-        "lua",
-        "busted",
-        "luacheck",
-        "luarocks"
-      ]
+      "tools": []
     },
     {
       "name": "mac",
-      "tools": [
-        "gnu-sed",
-        "mactop",
-        "mas",
-        "mole",
-        "stats",
-        "swiftformat",
-        "swiftlint",
-        "the-unarchiver",
-        "xcodebuildmcp",
-        "zstd",
-        "mlx",
-        "flux-markdown",
-        "tree-sitter",
-        "xcodegen",
-        "typewhisper",
-        "hammerspoon",
-        "bcrypt"
-      ]
+      "tools": []
     },
     {
       "name": "omarchy",
-      "tools": [
-        "7zip",
-        "coppwr",
-        "deepfilternet-ladspa",
-        "file-roller",
-        "hunspell-de",
-        "hunspell-en_us",
-        "keyd",
-        "lsp-plugins-lv2",
-        "mission-center",
-        "moshi-hook",
-        "nfs-utils",
-        "ntfsprogs",
-        "obs-vkcapture",
-        "ouch",
-        "pipeweaver",
-        "x42-plugins-lv2",
-        "xpadneo-dkms",
-        "cloudflared",
-        "wowup-cf-bin",
-        "steam"
-      ]
+      "tools": []
     },
     {
       "name": "omni",
-      "tools": [
-        "ffmpeg"
-      ]
+      "tools": []
     },
     {
       "name": "prereqs",
@@ -175,36 +74,19 @@
     },
     {
       "name": "priv-mac",
-      "tools": [
-        "skhd-zig",
-        "yabai",
-        "linear",
-        "bam",
-        "cmux",
-        "d-streamy",
-        "vlc"
-      ]
+      "tools": []
     },
     {
       "name": "python",
-      "tools": [
-        "pip",
-        "pipx",
-        "wheel"
-      ]
+      "tools": []
     },
     {
       "name": "secrets",
-      "tools": [
-        "rbw"
-      ]
+      "tools": []
     },
     {
       "name": "shell",
-      "tools": [
-        "zsh",
-        "oh-my-zsh"
-      ]
+      "tools": []
     },
     {
       "name": "test-tooling",
@@ -216,63 +98,17 @@
     },
     {
       "name": "utils",
-      "tools": [
-        "bind",
-        "plantuml",
-        "sshpass"
-      ]
+      "tools": []
     },
     {
       "name": "apm3ljhmvg7xgcf",
       "special": "host",
-      "tools": [
-        "azure-cli",
-        "icu4c@76",
-        "karakeep",
-        "maven",
-        "nss",
-        "openjdk@21",
-        "openshift-cli",
-        "pinentry-mac",
-        "sblim-sfcc",
-        "wakeonlan",
-        "youtube-dl",
-        "alt-tab",
-        "betterdisplay",
-        "bruno",
-        "dbeaver-community",
-        "git-credential-manager",
-        "lightworks",
-        "oracle-jdk",
-        "postman",
-        "rectangle",
-        "sqlcl",
-        "telegram",
-        "visual-studio-code"
-      ]
+      "tools": []
     },
     {
       "name": "topaz",
       "special": "host",
-      "tools": [
-        "cmake",
-        "docker-buildx",
-        "fswatch",
-        "libiscsi",
-        "pkgconf",
-        "parsec",
-        "certifi",
-        "numpy",
-        "npm",
-        "gradle",
-        "vips",
-        "cliclick",
-        "depflush",
-        "duti",
-        "osmium-tool",
-        "sbx",
-        "corepack"
-      ]
+      "tools": []
     },
     {
       "name": "towerr",

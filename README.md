@@ -147,6 +147,27 @@ behaves like a stock Omarchy shell. git uses the `git@topaz` package, whose
 GitHub credential helper finds `gh` on `PATH`; commit signing goes through the
 rbw SSH agent on both hosts.
 
+## Packages and tools
+
+Each role group in `home/.chezmoidata/hosts.yaml` can bring:
+
+| Layer | File | Installed by |
+|---|---|---|
+| macOS packages | `packages/brew/<group>.Brewfile` | `brew bundle --no-upgrade` |
+| Arch packages | `packages/arch/<group>.pacman`, `<group>.aur` | `pacman -S --needed` (pkexec), `yay -S --needed` |
+| CLIs and runtimes | `home/dot_config/mise/conf.d/<group>.toml` | `mise install` |
+| macOS-only mise tools | `…/conf.d/<group>-macos.toml` | written only on macOS |
+
+chezmoi runs `home/.chezmoiscripts/` on apply: the package and mise scripts rerun
+whenever one of the host's lists changes; they only install what is missing.
+Anything Omarchy ships (its package lists, or its own mise layer in
+`/etc/mise/conf.d`) stays out of our lists; `tests/package-lists.sh` checks that.
+
+```sh
+scripts/update.sh           # upgrade packages, mise tools and dotfiles, then report drift
+scripts/update.sh --check   # drift only: unlisted or missing packages, missing mise tools, dotfile changes
+```
+
 ## Omni
 
 This repo uses the tracked config:

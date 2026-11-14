@@ -9,5 +9,5 @@ out=${2:-$(mktemp -d)}
 mkdir -p "$out/home"
 printf 'sourceDir = "%s"\n[data]\nhost = "%s"\n' "$repo" "$host" > "$out/chezmoi.toml"
 chezmoi --config "$out/chezmoi.toml" --source "$repo" --destination "$out/home" \
-  --persistent-state "$out/state.boltdb" --no-tty apply --force >/dev/null
+  --persistent-state "$out/state.boltdb" --no-tty apply --force --exclude=scripts,externals >/dev/null
 printf '%s\n' "$out/home"

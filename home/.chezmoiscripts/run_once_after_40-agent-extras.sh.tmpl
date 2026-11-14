@@ -1,0 +1,17 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "ai" $groups -}}
+#!/bin/bash
+# context-mode rewrites its own config, so it is a native plugin rather than an APM package.
+set -uo pipefail
+if command -v claude >/dev/null 2>&1 && ! claude plugin list 2>/dev/null | grep -q 'context-mode@context-mode'; then
+  claude plugin marketplace add mksglu/context-mode && claude plugin install context-mode@context-mode
+fi
+if command -v codex >/dev/null 2>&1 && ! codex plugin list 2>/dev/null | grep -q 'context-mode@context-mode'; then
+  codex plugin marketplace add mksglu/context-mode && codex plugin add context-mode@context-mode
+fi
+command -v bun >/dev/null 2>&1 && ! bun pm ls -g 2>/dev/null | grep -q 'context-mode@' && bun add -g context-mode
+if command -v cargo >/dev/null 2>&1 && ! command -v deepwiki-rs >/dev/null 2>&1; then
+  cargo install --locked deepwiki-rs
+fi
+exit 0
+{{- end }}

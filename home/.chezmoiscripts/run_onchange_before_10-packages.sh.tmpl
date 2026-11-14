@@ -1,0 +1,32 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- $lists := list -}}
+{{- $aur := list -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   range $groups }}{{ $f := printf "packages/brew/%s.Brewfile" . }}{{ if stat (joinPath $.chezmoi.workingTree $f) }}{{ $lists = append $lists $f }}{{ end }}{{ end -}}
+{{- else -}}
+{{-   range $groups }}{{ $f := printf "packages/arch/%s.pacman" . }}{{ if stat (joinPath $.chezmoi.workingTree $f) }}{{ $lists = append $lists $f }}{{ end }}{{ end -}}
+{{-   range $groups }}{{ $f := printf "packages/arch/%s.aur" . }}{{ if stat (joinPath $.chezmoi.workingTree $f) }}{{ $aur = append $aur $f }}{{ end }}{{ end -}}
+{{- end -}}
+#!/bin/bash
+# Installs packages missing from this host's lists; chezmoi reruns it when a list changes.
+# lists: {{ range (concat $lists $aur) }}{{ . }}={{ include (printf "../%s" .) | sha256sum }} {{ end }}
+set -euo pipefail
+cd {{ .chezmoi.workingTree | quote }}
+{{ if eq .chezmoi.os "darwin" -}}
+cat{{ range $lists }} {{ . | quote }}{{ end }} | brew bundle --no-upgrade --file=-
+{{- else if stat "/etc/arch-release" -}}
+mapfile -t pacman_pkgs < <(cat{{ range $lists }} {{ . | quote }}{{ end }} /dev/null | sort -u)
+mapfile -t missing < <(pacman -T "${pacman_pkgs[@]}" || true)
+if ((${#missing[@]})); then
+  echo "packages: installing ${missing[*]}"
+  pkexec /usr/bin/pacman -S --needed --noconfirm "${missing[@]}"
+fi
+{{- if $aur }}
+mapfile -t aur_pkgs < <(cat{{ range $aur }} {{ . | quote }}{{ end }} | sort -u)
+mapfile -t missing < <(pacman -T "${aur_pkgs[@]}" || true)
+if ((${#missing[@]})); then
+  echo "packages: installing from the AUR ${missing[*]}"
+  yay -S --needed "${missing[@]}"
+fi
+{{- end }}
+{{- end }}

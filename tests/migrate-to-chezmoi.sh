@@ -34,9 +34,17 @@ wants=$fake_home/.config/systemd/user/graphical-session.target.wants
 mkdir -p "$wants"
 ln -s "$repo/dotfiles/systemd-user/.config/systemd/user/ha-doorbell.service" "$wants/ha-doorbell.service"
 
+# The test must never change the real host: these fail the run if anything reaches for them.
+guard=$work/guard
+mkdir -p "$guard"
+for tool in pkexec sudo yay brew mise pacman; do
+  printf '#!/bin/sh\necho "test touched the host: %s $*" >&2\nexit 99\n' "$tool" > "$guard/$tool"
+  chmod +x "$guard/$tool"
+done
+
 run() {
   env -u XDG_CONFIG_HOME -u XDG_STATE_HOME -u XDG_DATA_HOME HOME="$fake_home" DOTFILES_HOST=towerr \
-    "$repo/scripts/migrate-to-chezmoi.sh" "$@"
+    PATH="$guard:$PATH" "$repo/scripts/migrate-to-chezmoi.sh" "$@"
 }
 fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 
