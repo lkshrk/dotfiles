@@ -14,7 +14,7 @@ one Go binary, its settings schema, and a private APM build.
 | OS packages, GUI apps, fonts, drivers | omni → brew / pacman / AUR / apt | **Brewfiles** (macOS), **pacman + AUR lists** (Arch, `yay`), applied by chezmoi scripts |
 | CLI and dev tools, language runtimes | omni → brew / pacman / scripts / bun / uv / npm | **mise** (global config, one file per group) |
 | Agent CLIs (claude, codex, omp, opencode) | omni → curl script / bun | **mise** with `auto_update`. On towerr, Omarchy's own mise layer already provides them |
-| Agent plugins, skills, MCP | omni → private APM fork | **upstream APM** (`apm install -g`); the fork only if upstream falls short |
+| Agent plugins, skills, MCP | omni → private APM fork | **APM fork** (pinned wheel, `uv tool install`), run directly with `apm install -g` |
 | Secrets for agents | `bin/agent-run` + rbw envmaps | unchanged |
 | Bootstrap and updates | `omni bootstrap`, `omni tools sync` | `chezmoi init --apply` on a new machine; `chezmoi update` plus `update.sh` afterwards |
 
@@ -286,9 +286,8 @@ today's groups.
   - On the Macs, copy Omarchy's lines into `mise/ai.toml`.
 - Claude and Codex plugins (context-mode): installed through their own plugin commands, from a chezmoi
   script (today's `context-mode-claude` and `context-mode-codex` scripts)
-- APM: upstream through mise (`github:microsoft/apm`), then `apm install -g` against
-  `apm/ai-plugins/apm.yml`. The fork (pinned wheel through `uv tool install`) only if the secret test in
-  "APM: upstream first" fails.
+- APM fork: `uv tool install <wheel URL>#sha256=…` from a chezmoi script, then `apm install -g` against
+  `apm/ai-plugins/apm.yml`. Upstream fails the secret test (see "APM: upstream tested").
 - upstream installer: hermes (its own updater)
 - drop: oh-my-codex (already removed), the bun `context-mode` CLI unless it's used directly
 
@@ -336,25 +335,33 @@ today's groups.
 | Tool status / drift | `brew bundle check`, the `pacman -Qqe` diff, `mise ls --missing`, `chezmoi status` in `update.sh` |
 | `omni doctor` checks | Mostly irrelevant. The MCP secret-literal check becomes a short script only if wanted |
 | `omni agents env` | The envmaps in `env/secrets/` are the list; `agent-run` supplies them |
-| Private APM copy with pin | Upstream APM via mise (`github:microsoft/apm`), pinned in the lockfile |
+| Private APM copy with pin | `uv tool install` of the pinned fork wheel, from a chezmoi script |
 | `agents.ignored`, dots `ignored` entries | Not needed: chezmoi touches only files in the source state |
 | pacman conflict prompt (XXX-428) | Moot: `yay`/`pacman` run directly and interactively. Close the issue |
 | Settings schema migrations (v26 → v27) | Gone |
 
-## APM: upstream first
+## APM: upstream tested, fork stays
 
-Upstream APM 0.35.1 is installable through mise (`github:microsoft/apm`) or `brew install apm`. Before
-dropping the fork, check what our setup relies on:
+Tested 2026-11-14 with `tests/apm-secret-references.sh`:
+- a throwaway `HOME`;
+- fake values in the environment and no terminal;
+- one HTTP header reference, one `Bearer ${VAR}` header and one stdio env reference, targeting Claude and
+  Codex.
 
-1. **Secrets stay references at user scope.** The fork stops `apm install -g` from resolving `${VAR}` into
-   `~/.claude.json` / `~/.codex/config.toml`, or prompting for them. Test against upstream:
-   - run `apm install -g` from a shell where `LITELLM_API` and `GITHUB_PERSONAL_ACCESS_TOKEN` are set;
-   - confirm that no value lands in those files.
-2. **The omp target.** The fork renders omp's `mcp.json` with exact `${NAME}` references.
-3. **Codex `env_vars` / `env_http_headers` at user scope.** Upstream #3406 covers project scope only.
+| | Claude (`~/.claude.json`) | Codex (`~/.codex/config.toml`) |
+|---|---|---|
+| upstream `apm-cli` 0.35.1 | **all three values written in plain text** | headers stay references; **stdio env value written in plain text** |
+| fork 0.35.1+omni.2 | `${VAR}` everywhere | `env_http_headers`, `bearer_token_env_var`, `env_vars`; no values |
 
-If 1 fails, keep the fork (pinned wheel through `uv tool install`) and offer the patches upstream as the
-user-scope counterpart of #3406. If only 2 or 3 fail, decide per client.
+So the fork stays:
+
+- Install it with `uv tool install` of the pinned wheel (version + sha256), from a chezmoi script.
+- The wheel is published in the **omni** repo's releases (`apm-cli-0.35.1-omni.2`). Before omni is
+  archived, republish it in `lkshrk/apm` and point the pin there. Archived repos keep their releases,
+  but the wheel belongs with the fork.
+- Offer the patches upstream as the user-scope counterpart of #3406. Rerun the test script against each
+  new upstream release (`tests/apm-secret-references.sh 'apm-cli==<version>'`) and drop the fork once
+  it passes.
 
 ## Migration order
 
@@ -362,7 +369,7 @@ user-scope counterpart of #3406. If only 2 or 3 fail, decide per client.
    - No new omni features.
    - On each host save `omni tools status`, `brew leaves` / `brew list --cask`, `pacman -Qqe`, `mise ls`,
      `uv tool list` and `bun pm ls -g` to diff against later.
-2. **APM test** (section above): decides upstream vs fork before anything depends on it.
+2. **Move the fork wheel** to `lkshrk/apm` releases and update the pin.
 3. **Convert the repo, on a branch:**
    - `chezmoi add` each managed file from towerr into `home/`, and turn host variants into templates;
    - generate the package lists and `mise/<group>.toml` from `tools.json` / `groups.json` with a one-off jq
@@ -393,7 +400,7 @@ Settled in review (2026-11-14):
 - mise groups: **conf.d files**, written by chezmoi per host.
 - Global Python: **one mise `python`**, `uv` for projects.
 - Agent CLIs on the Macs: **mise with `auto_update`**, as Omarchy does.
-- APM: **try upstream first**; the fork only if the secret test fails.
+- APM: upstream tried; it writes secret values. **Keep the fork**, retest each upstream release.
 - omni: **deprecation notice, then archive** (last step).
 - Lua and neovim: **brew/pacman**.
 
