@@ -1,0 +1,8 @@
+[tools]
+"pipx:basedpyright" = "latest"
+"pipx:poetry" = "latest"
+{{- if eq .chezmoi.os "darwin" }}
+# On Omarchy these come from its packages or its own mise layer.
+python = "3.14"
+uv = "latest"
+{{- end }}

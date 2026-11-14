@@ -1,19 +1,11 @@
 {{- $groups := index .hosts .host | default (list) -}}
 #!/bin/bash
 # Installs the tools from this host's mise group files; chezmoi reruns it when one changes.
-# files: {{ range $g := $groups }}{{ range $s := list "" "-macos" }}{{ $f := printf "home/dot_config/mise/conf.d/%s%s.toml" $g $s }}{{ if stat (joinPath $.chezmoi.workingTree $f) }}{{ $f }}={{ include (printf "../%s" $f) | sha256sum }} {{ end }}{{ end }}{{ end }}
+# files: {{ range $g := $groups }}{{ $f := printf "dot_config/mise/conf.d/%s.toml" $g }}{{ if stat (joinPath $.chezmoi.sourceDir $f) }}{{ $f }}={{ include $f | sha256sum }} {{ else if stat (joinPath $.chezmoi.sourceDir (printf "%s.tmpl" $f)) }}{{ $f }}={{ includeTemplate (printf "%s.tmpl" $f) $ | sha256sum }} {{ end }}{{ end }}
 set -euo pipefail
 command -v mise >/dev/null 2>&1 || { echo "mise: not installed; skipping tool installs" >&2; exit 0; }
-# Only our conf.d files: a plain `mise install` would also fetch Omarchy's lazy tools.
-tools=()
-while IFS= read -r tool; do tools+=("$tool"); done < <(awk '
-  /^\[/ {
-    in_tools = ($0 == "[tools]")
-    if ($0 ~ /^\[tools\."/) { key = $0; sub(/^\[tools\."/, "", key); sub(/"\]$/, "", key); print key }
-    next
-  }
-  in_tools && /^[^#[:space:]]/ { key = $1; gsub(/"/, "", key); print key }
-' "${XDG_CONFIG_HOME:-$HOME/.config}"/mise/conf.d/*.toml)
-((${#tools[@]} == 0)) || mise install --yes "${tools[@]}"
+# Outside any project only global and system config apply, and Omarchy's system tools are lazy, so they stay skipped.
+cd /
+mise install --yes
 completions="${XDG_CONFIG_HOME:-$HOME/.config}/env/bin/zsh-completions"
 [ ! -x "$completions" ] || "$completions"

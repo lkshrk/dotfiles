@@ -1,3 +1,0 @@
-[tools]
-"pipx:basedpyright" = "latest"
-"pipx:poetry" = "latest"

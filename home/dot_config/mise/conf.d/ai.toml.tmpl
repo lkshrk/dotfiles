@@ -1,7 +1,13 @@
 [tools]
-# macOS only: on Omarchy these come from its packages or its own mise layer.
+"github:DeusData/codebase-memory-mcp" = "latest"
+"npm:context-mode" = "latest"
+"pipx:obsidian-wiki" = "latest"
+rtk = "latest"
+{{- if eq .chezmoi.os "darwin" }}
+# On Omarchy these come from its packages or its own mise layer.
 copilot-cli = "latest"
 claude = { version = "latest", auto_update = "4h" }
 codex = { version = "latest", auto_update = "4h" }
 oh-my-pi = { version = "latest", auto_update = "4h" }
 opencode = { version = "latest", auto_update = "4h" }
+{{- end }}

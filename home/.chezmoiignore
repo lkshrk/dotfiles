@@ -114,25 +114,20 @@ Library/LaunchAgents/com.lkshrk.knowledge-sync.plist
 {{- end }}
 {{- if ne .chezmoi.os "darwin" }}
 Library
-.config/mise/conf.d/*-macos.toml
 .config/com.corsair
 .config/ghostty
 {{- end }}
 {{- if not (has "base" $groups) }}
 .config/mise/conf.d/base.toml
-.config/mise/conf.d/base-macos.toml
 {{- end }}
 {{- if not (has "dev" $groups) }}
 .config/mise/conf.d/dev.toml
-.config/mise/conf.d/dev-macos.toml
 {{- end }}
 {{- if not (has "node" $groups) }}
 .config/mise/conf.d/node.toml
-.config/mise/conf.d/node-macos.toml
 {{- end }}
 {{- if not (has "python" $groups) }}
 .config/mise/conf.d/python.toml
-.config/mise/conf.d/python-macos.toml
 {{- end }}
 {{- if not (has "go" $groups) }}
 .config/mise/conf.d/go.toml
@@ -145,7 +140,6 @@ Library
 {{- end }}
 {{- if not (has "ai" $groups) }}
 .config/mise/conf.d/ai.toml
-.config/mise/conf.d/ai-macos.toml
 {{- end }}
 {{- if not (has "jvm" $groups) }}
 .config/mise/conf.d/jvm.toml

@@ -10,3 +10,7 @@ idiomatic_version_file_enable_tools = ["node"]
 "npm:typescript-language-server" = "latest"
 "npm:yaml-language-server" = "latest"
 pnpm = "latest"
+{{- if eq .chezmoi.os "darwin" }}
+# On Omarchy these come from its packages or its own mise layer.
+node = "24"
+{{- end }}

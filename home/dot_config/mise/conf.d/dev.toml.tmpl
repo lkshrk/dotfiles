@@ -12,3 +12,7 @@ shellcheck = "latest"
 ttyd = "latest"
 vhs = "latest"
 yamlfmt = "latest"
+{{- if eq .chezmoi.os "darwin" }}
+# On Omarchy these come from its packages or its own mise layer.
+yt-dlp = "latest"
+{{- end }}
