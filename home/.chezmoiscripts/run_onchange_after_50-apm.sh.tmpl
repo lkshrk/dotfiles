@@ -6,9 +6,9 @@
 set -euo pipefail
 # This may run before a shell has put the mise shims on PATH (first setup); uv installs apm into ~/.local/bin.
 {{ template "tool-path.sh" -}}
-version="0.35.1+lk.1"
-url="https://github.com/lkshrk/apm/releases/download/v0.35.1%2Blk.1/apm_cli-0.35.1%2Blk.1-py3-none-any.whl"
-sha256="c6e39dcb0465fa7363b48af5c164c9f607b70f6e4c1a193070aa2db1e7018e62"
+version="0.35.1+lk.2"
+url="https://github.com/lkshrk/apm/releases/download/v0.35.1%2Blk.2/apm_cli-0.35.1%2Blk.2-py3-none-any.whl"
+sha256="d93e0b3458c7080b68e13bf59916b03c95279036c751be54ff7b266caf6ed0fd"
 
 installed=$(apm --version 2>/dev/null | awk '{print $NF}' || true)
 if [ "$installed" != "$version" ]; then
