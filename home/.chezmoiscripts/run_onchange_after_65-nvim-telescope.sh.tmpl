@@ -1,0 +1,15 @@
+#!/bin/bash
+# Moves existing installs off telescope's old 0.1.x branch, which lazy keeps until updated. spec: {{ include "dot_config/nvim/lua/plugins/telescope.lua" | sha256sum }}
+set -uo pipefail
+{{ template "tool-path.sh" -}}
+command -v nvim >/dev/null 2>&1 || exit 0
+lazy="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/lazy"
+[ -d "$lazy/lazy.nvim" ] && [ -d "$lazy/telescope.nvim" ] || exit 0
+run() { "$@"; }
+if command -v timeout >/dev/null 2>&1; then
+  run() { timeout 300 "$@"; }
+elif command -v gtimeout >/dev/null 2>&1; then
+  run() { gtimeout 300 "$@"; }
+fi
+run nvim --headless "+Lazy! update telescope.nvim" +qa </dev/null >/dev/null 2>&1 ||
+  echo "nvim: telescope.nvim update failed; run :Lazy update telescope.nvim" >&2
