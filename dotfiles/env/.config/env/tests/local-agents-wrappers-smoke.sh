@@ -29,6 +29,24 @@ for wrapper in omp-local-agents:OMP_BIN opencode-local-agents:OPENCODE_BIN; do
   [ "$output" = "$expected" ] || { printf '%s: unexpected output\n%s\n' "$script" "$output" >&2; exit 1; }
 done
 
+cat > "$tmpdir/env/bin/rbw-env" <<'EOF'
+#!/bin/sh
+[ "$*" = "--pairs gh-cli GITHUB_PERSONAL_ACCESS_TOKEN -- ${0%/env/bin/rbw-env}/bin/gh-agent" ] || exit 9
+shift 4
+GITHUB_PERSONAL_ACCESS_TOKEN=gh-test exec "$@"
+EOF
+printf '#!/bin/sh\n' > "$tmpdir/bin/rbw"
+printf '#!/bin/sh\nprintf "gh=%%s\\n" "${GITHUB_PERSONAL_ACCESS_TOKEN:-}"\n' > "$tmpdir/bin/gh-agent"
+chmod +x "$tmpdir/env/bin/rbw-env" "$tmpdir/bin/rbw" "$tmpdir/bin/gh-agent"
+for wrapper in omp-local-agents:OMP_BIN opencode-local-agents:OPENCODE_BIN; do
+  script=${wrapper%%:*}
+  bin_var=${wrapper#*:}
+  output=$(env -u GITHUB_PERSONAL_ACCESS_TOKEN PATH="$tmpdir/bin:$PATH" ENV_DIR="$tmpdir/env" \
+    "$bin_var=$tmpdir/bin/gh-agent" "$ENV_PACKAGE_DIR/bin/$script")
+  [ "$output" = gh=gh-test ] || { printf '%s: GitHub token not injected: %s\n' "$script" "$output" >&2; exit 1; }
+done
+rm "$tmpdir/env/bin/rbw-env" "$tmpdir/bin/rbw"
+
 cat > "$tmpdir/env/bin/local-agents-token" <<'EOF'
 #!/bin/sh
 exit 1
@@ -79,4 +97,4 @@ if grep -Eq 'sk-[A-Za-z0-9]{8,}' "$config"; then
   exit 1
 fi
 
-printf '%s\n' 'omp, opencode and oc: credential injection, arguments, failure and config checks passed'
+printf '%s\n' 'omp, opencode and oc: credential and GitHub token injection, arguments, failure and config checks passed'
