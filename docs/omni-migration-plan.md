@@ -439,10 +439,14 @@ Done:
   extras). Omarchy defaults stay out of the Arch lists; ~50 explicit packages omni never managed were sorted
   into role groups; stow, thefuck and python-pipx removed. `scripts/update.sh` upgrades and reports drift;
   on towerr it is clean. omni's groups are empty: it now only runs the agents (APM).
+  - Packages the OS or Omarchy installer put on a host stay theirs: dropped from the role lists and recorded per
+    host in `packages/installer/<host>.txt` (derived once from `/var/log/pacman.log`), which the drift check
+    treats like Omarchy's defaults.
+  - oh-my-zsh, its two plugins and the tmux plugins are chezmoi `git-repo` externals, cloned once and pulled
+    only by `scripts/update.sh` (`--refresh-externals`). context-mode (plugins, CLI and Codex setup) and
+    deepwiki-rs come from a run_once script. moshi-hook is dropped.
   - Open: the four Mac packages from unknown taps (xcodebuildmcp, flux-markdown, depflush, sbx; check with
-    `brew bundle dump` on topaz); oh-my-zsh and tmux plugins (git externals would pull unpinned upstream code
-    weekly; decide pinned archives vs a clone-if-missing script); `context-mode setup --agents codex` and
-    moshi-hook's installer (upstream installers).
+    `brew bundle dump` on topaz).
 
 ## Checked (2026-11-14)
 

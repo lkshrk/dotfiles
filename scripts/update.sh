@@ -23,7 +23,7 @@ if ((!check)); then
     Linux) say "pacman and AUR"; yay -Syu ;;
   esac
   say "mise"; mise upgrade --yes
-  say "dotfiles"; chezmoi update --no-tty
+  say "dotfiles and git externals"; chezmoi update --no-tty --refresh-externals
 fi
 
 say "drift on $host ($groups)"
@@ -40,7 +40,9 @@ case $(uname -s) in
   Linux)
     listed=$(lists arch pacman; lists arch aur)
     # shellcheck disable=SC2086
-    wanted=$( { [ -z "$listed" ] || cat $listed; cat /usr/share/omarchy/install/*.packages 2>/dev/null | sed 's/#.*//' | tr -s ' \t' '\n'; } | grep -v '^$' | sort -u)
+    # Packages the OS or Omarchy installer put on this host are theirs, not ours.
+    installer="$repo/packages/installer/$host.txt"
+    wanted=$( { [ -z "$listed" ] || cat $listed; [ ! -f "$installer" ] || cat "$installer"; cat /usr/share/omarchy/install/*.packages 2>/dev/null | sed 's/#.*//' | tr -s ' \t' '\n'; } | grep -v '^$' | sort -u)
     unlisted=$(pacman -Qqe | grep -v '^omarchy' | comm -23 - <(printf '%s\n' "$wanted") || true)
     # shellcheck disable=SC2086
     missing=$( [ -z "$listed" ] || pacman -T $(cat $listed) || true)

@@ -1,9 +1,7 @@
 7zip
 bind
 chezmoi
-coreutils
 mosh
-neovim
 sshpass
 tree
 wget

@@ -1,14 +1,10 @@
-clang
 cmake
-llvm
 make
-mbedtls
 ninja
 plantuml
 python-protobuf
 rust-analyzer
 rustup
 skopeo
-uthash
 wimlib
 xorg-server-xvfb

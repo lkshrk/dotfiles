@@ -161,7 +161,11 @@ Each role group in `home/.chezmoidata/hosts.yaml` can bring:
 chezmoi runs `home/.chezmoiscripts/` on apply: the package and mise scripts rerun
 whenever one of the host's lists changes; they only install what is missing.
 Anything Omarchy ships (its package lists, or its own mise layer in
-`/etc/mise/conf.d`) stays out of our lists; `tests/package-lists.sh` checks that.
+`/etc/mise/conf.d`) stays out of our lists, and so does whatever the OS or
+Omarchy installer put on a host (`packages/installer/<host>.txt`, used only by
+the drift check); `tests/package-lists.sh` checks both. oh-my-zsh, its plugins
+and the tmux plugins are chezmoi git externals (`home/.chezmoiexternal.toml`),
+cloned on first apply and pulled by `scripts/update.sh`.
 
 ```sh
 scripts/update.sh           # upgrade packages, mise tools and dotfiles, then report drift
