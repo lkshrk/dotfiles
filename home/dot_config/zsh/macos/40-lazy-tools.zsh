@@ -14,11 +14,10 @@ _load_homebrew_openjdk() {
   esac
 }
 
-java()   { unset -f java javac jar javadoc keytool 2>/dev/null; _load_homebrew_openjdk || return; command java "$@"; }
-javac()  { unset -f java javac jar javadoc keytool 2>/dev/null; _load_homebrew_openjdk || return; command javac "$@"; }
-jar()    { unset -f java javac jar javadoc keytool 2>/dev/null; _load_homebrew_openjdk || return; command jar "$@"; }
-javadoc(){ unset -f java javac jar javadoc keytool 2>/dev/null; _load_homebrew_openjdk || return; command javadoc "$@"; }
-keytool(){ unset -f java javac jar javadoc keytool 2>/dev/null; _load_homebrew_openjdk || return; command keytool "$@"; }
+for _tool in java javac jar javadoc keytool; do
+  eval "$_tool() { unset -f java javac jar javadoc keytool 2>/dev/null; _load_homebrew_openjdk || return; command $_tool \"\$@\"; }"
+done
+unset _tool
 
 if [[ -n "${GHOSTTY_RESOURCES_DIR:-}" && -r "${GHOSTTY_RESOURCES_DIR}/shell-integration/zsh/ghostty-integration" ]]; then
   source "${GHOSTTY_RESOURCES_DIR}/shell-integration/zsh/ghostty-integration"
