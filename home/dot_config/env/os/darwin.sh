@@ -34,3 +34,5 @@ if [ -n "$env_next_homebrew_prefix" ] && [ -d "$env_next_homebrew_prefix/bin" ];
   env_next_path_prepend "$env_next_homebrew_prefix/bin"
 fi
 unset env_next_homebrew_prefix
+
+[ ! -d "$HOME/.docker/bin" ] || env_next_path_append "$HOME/.docker/bin"

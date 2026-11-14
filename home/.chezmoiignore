@@ -47,7 +47,6 @@
 .config/tmux
 .config/zsh
 .vim
-.zprofile
 .zshenv
 .zshrc
 {{- end }}
@@ -63,7 +62,6 @@
 .config/linearmouse
 .config/skhd
 .config/yabai
-.profile
 Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 {{- end }}
 {{- if not (has "omarchy" $groups) }}

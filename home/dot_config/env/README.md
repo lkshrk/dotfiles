@@ -126,8 +126,8 @@ such as `executable_agent-run`.
   Playwright, Helm, CPM.cmake, ccache, sccache) at `DEV_CACHE_HOME`
   (`~/.cache/dev`). On Linux that directory is its own Btrfs subvolume
   (`btrfs subvolume create ~/.cache/dev`), so no snapshot includes it.
-  `~/.cargo` is a symlink to `~/.cache/dev/cargo`, because rustup and `.profile`
-  expect that path. Cargo's `build-dir` puts intermediates in
+  `~/.cargo` is a symlink to `~/.cache/dev/cargo`, because rustup expects
+  that path. Cargo's `build-dir` puts intermediates in
   `~/.cargo/build/<workspace hash>`; `target/` keeps only final artifacts.
   On Linux, `/var/lib/docker` and `/var/lib/containerd` are mounted from the
   top-level subvolumes `@docker` and `@containerd` (`/etc/fstab`, like `@pkg`),
@@ -165,7 +165,7 @@ such as `executable_agent-run`.
 - `~/.config/zsh/macos/`: macOS-only interactive modules (Homebrew-backed
   lazy tool loaders and functions), sourced by `.zshrc` only on darwin.
 - `zshenv` sources `profile.sh` directly (covers every zsh shell, login
-  included). `zprofile` carries only login-only behavior, if any.
+  included); there is no `zprofile`.
 
 ## Current Decisions
 
