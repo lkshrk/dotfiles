@@ -32,7 +32,10 @@ while IFS='|' read -r name url icon; do
   if grep -qxF "Exec=$exec_cmd" "$desktop" 2>/dev/null && grep -qxF "$wm_class_line" "$desktop"; then
     continue
   fi
-  omarchy-webapp-install "$name" "$url" "$icon" "$exec_cmd" >/dev/null
+  if ! omarchy-webapp-install "$name" "$url" "$icon" "$exec_cmd" >/dev/null; then
+    echo "omarchy: web app $name failed to install; rerun chezmoi apply" >&2
+    continue
+  fi
   printf '%s\n' "$wm_class_line" >>"$desktop"
   echo "omarchy: web app $name opens in its own Helium instance"
 done < <(entries webapps)

@@ -49,7 +49,7 @@ if have rbw; then
     [[ -z $base_url ]] || rbw config set base_url "$base_url"
   fi
   # i32::MAX seconds (~68 years): never, yet safe for rbw's Instant math.
-  rbw config set lock_timeout 2147483647
+  rbw config show 2>/dev/null | grep -q '"lock_timeout": *2147483647' || rbw config set lock_timeout 2147483647
   rbw unlocked >/dev/null 2>&1 || rbw unlock || warn "rbw stays locked; the LAN CA and the vault clone wait for the next run"
 fi
 
@@ -66,6 +66,9 @@ if [[ $os == Linux ]]; then
   if have obs && [[ ! -f $HOME/.config/obs-studio/basic/scenes/Untitled.json ]]; then
     say "obs"
     "$HOME/.local/bin/obs-config" apply || warn "OBS config not applied (vault locked or OBS running); run obs-config apply later"
+  fi
+  if have docker && have omarchy-setup-security-sudoless-docker && ! id -nG | grep -qw docker; then
+    omarchy-setup-security-sudoless-docker || true
   fi
 fi
 

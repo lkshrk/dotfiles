@@ -3,3 +3,10 @@
 {{- if has "macos" $groups }}
 .profile
 {{- end }}
+{{- if eq .chezmoi.os "darwin" }}
+.config/mise/conf.d/base-macos.toml
+.config/mise/conf.d/dev-macos.toml
+.config/mise/conf.d/node-macos.toml
+.config/mise/conf.d/python-macos.toml
+.config/mise/conf.d/ai-macos.toml
+{{- end }}

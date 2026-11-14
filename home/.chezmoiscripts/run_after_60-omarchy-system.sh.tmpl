@@ -17,6 +17,7 @@ trap 'rm -rf "$work"' EXIT
 todo=() stale=()
 
 if have keyd; then
+  keyd check "$repo"/omarchy/keyd/*.conf >/dev/null || { echo "system: omarchy/keyd fails keyd check; not installing it" >&2; exit 1; }
   for src in "$repo"/omarchy/keyd/*; do
     differs "$src" "/etc/keyd/${src##*/}" && todo+=(keyd)
   done
@@ -44,6 +45,16 @@ awk -v mounts="$repo/omarchy/fstab.mounts" '
   { print }
   END { if (!placed) block() }
 ' /etc/fstab >"$work/fstab"
+begins=$(grep -cxF '# BEGIN dotfiles mounts' /etc/fstab || true)
+ends=$(grep -cxF '# END dotfiles mounts' /etc/fstab || true)
+if [ "$begins" != "$ends" ] || [ "$begins" -gt 1 ]; then
+  echo "system: /etc/fstab has unbalanced dotfiles mount markers; fix it by hand" >&2
+  exit 1
+fi
+if findmnt --verify --tab-file /etc/fstab >/dev/null 2>&1 && ! findmnt --verify --tab-file "$work/fstab" >/dev/null 2>&1; then
+  echo "system: the generated fstab fails findmnt --verify; not installing it" >&2
+  exit 1
+fi
 differs "$work/fstab" /etc/fstab && todo+=(fstab)
 for unit in ntfsfix-stuff.service mnt-stuff.mount.d/ntfsfix.conf; do
   differs "$repo/omarchy/systemd/$unit" "/etc/systemd/system/$unit" && todo+=(units)
@@ -65,9 +76,6 @@ if have ufw && ! grep -qxF -- "$ufw_rule" /etc/ufw/before.rules; then
 fi
 if [ -r "$pem" ]; then
   differs "$pem" "$anchor" && todo+=(ca)
-fi
-if have docker; then
-  in_group docker || todo+=(docker-group)
 fi
 zsh_path=$(command -v zsh || true)
 if [ -n "$zsh_path" ] && [ "$(getent passwd "$user" | cut -d: -f7)" != "$zsh_path" ]; then
@@ -129,9 +137,6 @@ if want ca; then
 fi
 if want keyd-group; then
   usermod -aG keyd "$USER_NAME"
-fi
-if want docker-group; then
-  usermod -aG docker "$USER_NAME"
 fi
 if want shell; then
   usermod -s "$ZSH_PATH" "$USER_NAME"
