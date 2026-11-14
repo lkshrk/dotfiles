@@ -1,5 +1,10 @@
 [tools]
+{{- if eq .chezmoi.os "linux" }}
+# The plain Linux asset segfaults before main on glibc 2.44 (DeusData/codebase-memory-mcp#2763).
+"github:DeusData/codebase-memory-mcp" = { version = "latest", asset_pattern = "codebase-memory-mcp-linux-amd64-portable.tar.gz" }
+{{- else }}
 "github:DeusData/codebase-memory-mcp" = "latest"
+{{- end }}
 "npm:context-mode" = "latest"
 "pipx:obsidian-wiki" = "latest"
 rtk = "latest"
