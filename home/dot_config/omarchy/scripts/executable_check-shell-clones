@@ -29,8 +29,12 @@ enabled() {
     ~/.config/omarchy/shell.json >/dev/null 2>&1
 }
 
+# Successful loads log nothing; a plugin reload retries every failed load, and a retry that fails again logs again.
 load_failed() {
-  log_of_current_shell | grep -qF -e "service plugin load failed for $1:" -e "Plugin widget $1 failed:"
+  log_of_current_shell | awk -v id="$1" '
+    index($0, "service plugin load failed for " id ":") || index($0, "Plugin widget " id " failed:") { failed = 1; next }
+    index($0, "Local plugin changed, reloading:") { failed = 0 }
+    END { exit !failed }'
 }
 
 for _ in $(seq 1 20); do

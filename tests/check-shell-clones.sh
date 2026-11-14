@@ -58,6 +58,15 @@ echo ' WARN qml: Plugin widget lkshrk.tray failed: Type TrayModel unavailable' >
 "$script"
 expect "$(fell_back lkshrk.tray omarchy.tray "System tray")"
 
+# A failed load that Omarchy retried after a plugin reload counts only if the retry failed too.
+printf '%s\n' ' WARN qml: Plugin widget lkshrk.tray failed: Type TrayModel unavailable' \
+  ' INFO qml: Local plugin changed, reloading: lkshrk.tray' > "$log"
+"$script"
+expect ""
+echo ' WARN qml: Plugin widget lkshrk.tray failed: still broken' >> "$log"
+"$script"
+expect "$(fell_back lkshrk.tray omarchy.tray "System tray")"
+
 # Service clones still fall back on their own load error, and a silent lock on IPC.
 echo ' WARN qml: service plugin load failed for lkshrk.polkit: syntax error' > "$log"
 CLONES_TEST_LOCK_DEAD=1 "$script"
