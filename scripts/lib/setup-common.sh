@@ -13,15 +13,10 @@ warn() { say "${c_yel}!${c_off} $*" >&2; }
 die()  { say "${c_red}x${c_off} $*" >&2; exit 1; }
 have() { command -v "$1" >/dev/null 2>&1; }
 
-omni_bootstrap_dots() {
-  step "omni bootstrap"
-  command omni --config "$OMNI_CONFIG_PATH" --yes bootstrap --no-import
-}
-
 # Usage: chezmoi_apply [--force]   --force only on a first run: it replaces existing files without asking.
 chezmoi_apply() {
   step "dotfiles"
-  command -v chezmoi >/dev/null 2>&1 || die "chezmoi is not installed; rerun once omni tools sync installs it"
+  command -v chezmoi >/dev/null 2>&1 || die "chezmoi is not installed"
   chezmoi init --source "$REPO_DIR" --apply "$@"
   ok "dotfiles written by chezmoi"
 }

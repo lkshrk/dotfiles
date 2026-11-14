@@ -1,7 +1,7 @@
 # POSIX-safe env entrypoint.
 # Intended for zsh, bash, sh, agents, editor launchers, and CI-like shells.
 
-ENV_NEXT_PROFILE_CURRENT_VERSION=11
+ENV_NEXT_PROFILE_CURRENT_VERSION=12
 ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 
 # Functions are cheap to reload and may have been added after the guarded env
@@ -66,9 +66,6 @@ env_next_machine="${ENV_NEXT_MACHINE:-${HOST:-${HOSTNAME:-}}}"
 [ -n "$env_next_machine" ] || env_next_machine="$(hostname -s 2>/dev/null || hostname 2>/dev/null || printf unknown)"
 env_next_machine="${env_next_machine%%.*}"
 env_next_machine="$(printf '%s' "$env_next_machine" | tr '[:upper:]' '[:lower:]')"
-if [ -z "${OMNI_HOSTNAME:-}" ]; then
-  export OMNI_HOSTNAME="$env_next_machine"
-fi
 if [ -r "$ENV_DIR/machine/$env_next_machine.sh" ]; then
   # shellcheck source=/dev/null
   . "$ENV_DIR/machine/$env_next_machine.sh"

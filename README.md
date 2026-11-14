@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal macOS and Omarchy config managed by [Omni](https://github.com/lkshrk/omni). Omni owns package reconciliation and dotfile symlinks; this repo only keeps the bootstrap glue and a few local post-sync steps.
+Personal macOS and Omarchy config. chezmoi writes the dotfiles and runs the package, mise and agent steps; the setup scripts only bootstrap a machine and do the steps that need root or a desktop session.
 
 ## Setup
 
@@ -14,8 +14,8 @@ The setup flow:
 
 1. Verifies Xcode Command Line Tools and `swiftc`.
 2. Ensures Homebrew is installed and on `PATH`.
-3. Installs the bootstrap tools with Brew: chezmoi, Omni and uv.
-4. Runs `omni bootstrap --no-import`, then `omni tools sync` for the host's tools and agent state.
+3. Installs the bootstrap tools with Brew: chezmoi and mise.
+4. Runs `chezmoi init --apply`: dotfiles, the host's Brewfiles, mise tools and the agent setup (APM).
 5. Compiles `~/.local/bin/sleep-on-lock` from the tracked Swift source.
 6. Loads `com.lkshrk.sleep-on-lock` as a user LaunchAgent.
 7. Loads `com.lkshrk.knowledge-sync` as a user LaunchAgent (runs `~/knowledge/scripts/sync.sh` every 5 minutes; needs the vault clone, see its `scripts/setup.sh`).
@@ -45,10 +45,9 @@ claude doctor
 
 ## Omarchy
 
-`towerr` runs [Omarchy](https://omarchy.org/) (Arch Linux + Hyprland). It gets
-the same CLI, dev, AI and secrets groups as `topaz`, resolved through `pacman`
-and `aur` providers, plus the `omarchy` group (keyd, Hyprland and Omarchy shell
-config).
+`towerr` runs [Omarchy](https://omarchy.org/) (Arch Linux + Hyprland). It has
+the same role groups as `topaz` except `macos` and `apple-dev`, plus `omarchy`
+(keyd, Hyprland and Omarchy shell config); see `home/.chezmoidata/hosts.yaml`.
 
 On a fresh Omarchy install:
 
@@ -60,16 +59,12 @@ It is safe to rerun.
 
 The setup flow:
 
-1. Installs the latest Omni release (checksum-verified) into `~/.local/bin`
-   when the installed Omni cannot read this config.
-2. On the first run only, lets the repo's configs replace the fresh defaults:
-   volatile agent configs are moved aside as `*.pre-dotfiles.<stamp>`, and
-   `chezmoi apply --force` overwrites the rest without asking.
-3. Runs `omni bootstrap --no-import` and `omni tools sync` (tools, including
-   chezmoi and the package managers this host lists, before the tools that need
-   them), then `chezmoi init --apply` for the dotfiles.
-   Commands a later step needs that are still missing are reported once, and
-   their steps are skipped.
+1. Installs chezmoi (pacman). Omarchy already ships yay and mise.
+2. Runs `chezmoi init --apply`: dotfiles, the host's pacman/AUR lists, mise
+   tools and the agent setup (APM). On the first run only, `--force` lets the
+   repo's configs replace the fresh defaults without asking.
+3. Reports commands a later step needs that are still missing, once, and skips
+   those steps.
 4. Removes the Omarchy packages and web apps listed in
    `omarchy/remove.packages` and `omarchy/remove.webapps`.
 5. Switches the login shell to zsh and installs the keyd Mac keymap from
@@ -86,8 +81,7 @@ The setup flow:
 9. Configures rbw (asking for the Bitwarden email and server once), unlocks it
    (which starts the SSH agent used for git signing) and writes the LAN root
    CA from the vault, trusted system-wide (`scripts/lan-ca.sh`).
-10. Runs `omni agents sync` (APM plugins and hooks; needs the LAN CA), clones
-    the knowledge vault to `~/knowledge` and enables `knowledge-sync.timer`.
+10. Clones the knowledge vault to `~/knowledge` and enables `knowledge-sync.timer`.
 11. Installs the Lefthook hooks of this repository and the vault, and checks
     that Hyprland loads its config.
 
@@ -134,9 +128,8 @@ still reach (such as `gh/hosts.yml`) into place, runs `chezmoi init --apply
 --force`, re-links systemd `.wants` links, reloads the `com.lkshrk.*`
 LaunchAgents on macOS and removes stale links. Then it verifies:
 - `chezmoi verify` and `chezmoi status` are clean;
-- no old links are left besides omni's settings;
+- no old links are left;
 - systemd links resolve;
-- omni loads its settings;
 - Hyprland reports no config errors.
 
 It exits non-zero if any check fails. It is safe to rerun.
@@ -172,32 +165,7 @@ scripts/update.sh           # upgrade packages, mise tools and dotfiles, then re
 scripts/update.sh --check   # drift only: unlisted or missing packages, missing mise tools, dotfile changes
 ```
 
-## Omni
-
-This repo uses the tracked config:
-
-```sh
-dotfiles/omni/.config/omni/settings.json
-```
-
-Use it explicitly when running Omni from a fresh shell:
-
-```sh
-omni --config ~/Dev/dotfiles/dotfiles/omni/.config/omni/settings.json reconcile
-```
-
-The equivalent environment variable is:
-
-```sh
-export OMNI_CONFIG=~/Dev/dotfiles/dotfiles/omni/.config/omni/settings.json
-```
-
-Omni now manages tools and agents only; chezmoi owns the dotfiles (see above).
-Omni is being replaced (`docs/omni-migration-plan.md`).
-
-```sh
-omni reconcile             # sync tools and upgrades
-```
+## Checks
 
 The `agent-paths` pre-commit hook checks staged shared Claude/Codex JSON and TOML
 configs for host-local paths (home directories, temporary directories, mounted
@@ -208,12 +176,15 @@ Run `python3 scripts/check-agent-paths.py` to check the current index manually.
 
 ### Agent skills
 
-Manage agent dependencies through `omni agents sync`, not direct APM installs
-or copies into live skill directories. The host template points to
-`apm/ai-plugins/apm.yml`; its `codex` target deploys shared skills into
-`~/.agents/skills`, which OMP also discovers. The native `omp` target manages
-MCP through Omni's pinned APM fork (`0.35.0+omni.4`, based on release v0.35.0).
-Existing Claude-targeted packages remain separate.
+Agent dependencies are declared in `apm/ai-plugins/apm.yml`, never installed
+into live skill directories by hand. chezmoi writes the global manifest
+`~/.apm/apm.yml`, which points at it, and its APM script runs
+`apm install -g --trust-transitive-mcp` when a manifest changes;
+`scripts/update.sh` refreshes the refs. APM is the patched build from
+`lkshrk/apm` (branch `lk`: omp target, MCP secrets stay references), pinned by
+version and sha256 in `home/.chezmoiscripts/run_onchange_after_50-apm.sh.tmpl`.
+The `codex` target deploys shared skills into `~/.agents/skills`, which OMP also
+discovers.
 
 - `lkshrk/useful-skills` supplies the `linear-*`, `wow-*`, `upgrade-deps`,
   `project-tool-allowlist`, `ai-context-generator` and other personal skills.
@@ -256,8 +227,8 @@ Polly's `investigate`, `cross-review`, and `fanout` bundle is not deployed here:
 it requires the Omnigent server's orchestration tools.
 
 APM 0.34 refreshes cached local packages after resolving dependencies. When
-adding dependencies inside a local package, the first `omni agents sync` can
-refresh that manifest without installing its new children; a second sync
+adding dependencies inside a local package, the first `apm install -g` can
+refresh that manifest without installing its new children; a second run
 resolves the refreshed graph. Its dry-run compares only root dependencies
 against the lock and can incorrectly report transitive packages as removals.
 Verify the applied dependency graph and OMP skill discovery, not just exit status.
@@ -288,5 +259,5 @@ home/                     # files chezmoi writes into $HOME
   dot_config/omarchy/     # Omarchy shell.json and custom shell plugins
   dot_config/yabai/       # yabai config + sleep-on-lock Swift source
   ...
-dotfiles/omni/            # Omni config (tools and agents) until Omni is retired
+packages/                 # Brewfiles and pacman/AUR lists per role group
 ```

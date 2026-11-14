@@ -106,23 +106,6 @@ csh() {
   kubectl run -it --rm --restart=Never --image=busybox "tmp-shell-${USER:-user}-$$" -n "$ns" -- sh
 }
 
-dotfiles_omni() {
-  local repo="${DOTFILES_DIR:-}"
-  if [[ -z "$repo" ]]; then
-    if [[ -d "$HOME/Dev/dotfiles" ]]; then
-      repo="$HOME/Dev/dotfiles"
-    else
-      repo="$HOME/dotfiles"
-    fi
-  fi
-  [[ -d "$repo" ]] || {
-    print -u2 "dotfiles repo not found: $repo"
-    return 1
-  }
-
-  command omni --config "$repo/dotfiles/omni/.config/omni/settings.json" "$@"
-}
-
 # Pull the dotfiles repo and write its files.
 dotsync() {
   chezmoi update "$@"

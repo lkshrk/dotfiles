@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Usage: scripts/migrate-to-chezmoi.sh [--dry-run] [--yes] [--no-services]
-# Moves this host from omni/Stow symlinks to chezmoi copies, then verifies. Run after pulling the chezmoi layout.
+# Moves this host from Stow symlinks to chezmoi copies, then verifies. Run after pulling the chezmoi layout.
 #   --dry-run      show the plan, change nothing
 #   --yes          don't ask before changing files
 #   --no-services  skip systemd/launchd reloads, chezmoi scripts and the Hyprland check (tests)
@@ -36,7 +36,7 @@ if [ -f "$config" ] && ! grep -qF "sourceDir = \"$repo\"" "$config"; then
   die "$config points chezmoi at another source; fix or remove it first"
 fi
 
-# Prints: <class> TAB <link> TAB <absolute target>. Classes: omni (kept), leftover (target exists), dangling.
+# Prints: <class> TAB <link> TAB <absolute target>. Classes: leftover (target exists), dangling.
 scan_links() {
   python3 -I - "$HOME" "$repo" <<'EOF'
 import os, sys
@@ -59,10 +59,7 @@ for root, dirs, files in os.walk(home):
         target = os.path.normpath(os.path.join(root, os.readlink(path)))
         if not target.startswith(old):
             continue
-        package = target[len(old):].split(os.sep, 1)[0]
-        if package in {"omni", "omni-apm"} or package.startswith("omni-apm@"):
-            cls = "omni"
-        elif os.path.isfile(target):
+        if os.path.isfile(target):
             cls = "leftover"
         else:
             cls = "dangling"
@@ -75,9 +72,9 @@ untracked() { ! git -C "$repo" ls-files --error-unmatch -- "$1" >/dev/null 2>&1;
 say "host $host, source $repo"
 plan=$(scan_links)
 count() { printf '%s\n' "$plan" | grep -c "^$1	" || true; }
-leftovers=$(count leftover) dangling=$(count dangling) omni_links=$(count omni)
-printf '  old links: %s dangling (chezmoi replaces or they are removed), %s to untracked repo files (copied into place), %s omni settings (kept)\n' \
-  "$dangling" "$leftovers" "$omni_links"
+leftovers=$(count leftover) dangling=$(count dangling)
+printf '  old links: %s dangling (chezmoi replaces or they are removed), %s to untracked repo files (copied into place)\n' \
+  "$dangling" "$leftovers"
 printf '%s\n' "$plan" | awk -F'\t' '$1=="leftover" {print "    copy  " $2}'
 managed=$(chezmoi --source "$repo" --override-data "{\"host\":\"$host\"}" managed --include=files,symlinks | wc -l | tr -d ' ')
 printf '  chezmoi will manage %s files for %s\n' "$managed" "$host"
@@ -150,14 +147,10 @@ chezmoi verify --no-tty ${skip[@]+"${skip[@]}"} >/dev/null 2>&1 && ok "chezmoi v
 status=$(chezmoi status --no-tty ${skip[@]+"${skip[@]}"} 2>/dev/null || true)
 [ -z "$status" ] && ok "chezmoi status is clean" || bad "chezmoi status reports $(printf '%s\n' "$status" | wc -l | tr -d ' ') entries"
 after=$(scan_links)
-stale=$(printf '%s\n' "$after" | grep -cv -e '^omni	' -e '^$' || true)
-[ "$stale" = 0 ] && ok "no old links left besides omni's settings" || bad "$stale old links left (see: $0 --dry-run)"
+stale=$(printf '%s\n' "$after" | grep -cv '^$' || true)
+[ "$stale" = 0 ] && ok "no old links left" || bad "$stale old links left (see: $0 --dry-run)"
 broken_wants=$(find "${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user" -path '*.wants/*' -xtype l 2>/dev/null | wc -l | tr -d ' ')
 [ "$broken_wants" = 0 ] && ok "systemd .wants links resolve" || bad "$broken_wants dangling systemd .wants links"
-if command -v omni >/dev/null 2>&1 && [ -f "$repo/dotfiles/omni/.config/omni/settings.json" ]; then
-  omni --config "$repo/dotfiles/omni/.config/omni/settings.json" settings show --format json >/dev/null 2>&1 &&
-    ok "omni loads its settings" || bad "omni cannot load its settings (run: omni doctor)"
-fi
 if ((services)) && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ] && command -v hyprctl >/dev/null 2>&1; then
   errors=$(hyprctl configerrors 2>/dev/null | grep -v '^$' || true)
   [ -z "$errors" ] && ok "Hyprland reports no config errors" || bad "Hyprland config errors: $errors"
@@ -178,3 +171,4 @@ printf '%s\n' "$plan" | while IFS=$'\t' read -r cls link target; do
 done
 find "$repo/dotfiles" -mindepth 1 -type d -empty -delete 2>/dev/null || true
 say "done: $host now uses chezmoi copies"
+! command -v omni >/dev/null 2>&1 || say "omni is no longer used: remove it (brew uninstall omni, or ~/.local/bin/omni) and ~/.config/omni, ~/.local/share/omni, ~/.local/state/omni, ~/.cache/omni"

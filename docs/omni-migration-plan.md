@@ -398,6 +398,15 @@ So the patches stay, now built by a pipeline in the fork (2026-11-14):
    - archive the GitHub repository;
    - close the open omni issues in Linear (XXX-428 and others) with a reference to the notice.
 
+## Status (2026-11-14)
+
+- towerr is fully off omni: dotfiles (chezmoi), CLIs (mise), packages (lists + chezmoi scripts), agents
+  (APM `0.35.1+lk.1` from `lkshrk/apm`, installed by a chezmoi script). The repo no longer contains omni's
+  config, and the setup scripts bootstrap with chezmoi.
+- topaz and the work Mac: pull, `scripts/migrate-to-chezmoi.sh`, then remove omni (`brew uninstall omni`
+  and `~/.config/omni`, `~/.local/share/omni`, `~/.local/state/omni`, `~/.cache/omni`).
+- Left: deprecation notice and archive of the omni repository; close its Linear issues (XXX-428).
+
 ## Decisions
 
 Settled in review (2026-11-14):

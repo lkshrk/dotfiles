@@ -2,9 +2,7 @@
 
 set -euo pipefail
 
-OMNI_REPO="lkshrk/omni"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.json}"
 
 . "$REPO_DIR/scripts/lib/setup-common.sh"
 
@@ -13,7 +11,6 @@ OMNI_CONFIG_PATH="${OMNI_CONFIG:-$REPO_DIR/dotfiles/omni/.config/omni/settings.j
 
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
 FIRST_RUN_MARKER="$STATE_DIR/omarchy-setup-done"
-omni() { command omni --config "$OMNI_CONFIG_PATH" "$@"; }
 list_entries() { grep -v -e '^#' -e '^[[:space:]]*$' "$1"; }
 install_if_changed() { cmp -s "$1" "$2" && return 1; sudo install -Dm644 "$1" "$2" || die "could not install $2"; }
 
@@ -26,55 +23,12 @@ step "admin session"
 sudo -v
 ok "sudo credentials cached for this terminal"
 
-omni_reads_config() { command -v omni >/dev/null 2>&1 && omni settings show --format json >/dev/null 2>&1; }
-
-install_omni_release() (
-  set -euo pipefail
-  release=$(curl -fsSLI --proto-redir '=https' -o /dev/null -w '%{url_effective}' "https://github.com/$OMNI_REPO/releases/latest")
-  tag=${release##*/}
-  asset="omni_linux_$(uname -m).tar.gz"
-  base="https://github.com/$OMNI_REPO/releases/download/$tag"
-  tmp=$(mktemp -d)
-  trap 'rm -rf "$tmp"' EXIT
-  curl -fsSL --proto-redir '=https' "$base/$asset" -o "$tmp/$asset"
-  curl -fsSL --proto-redir '=https' "$base/checksums.txt" -o "$tmp/checksums.txt"
-  (cd "$tmp" && grep -F "  $asset" checksums.txt | sha256sum -c -)
-  tar -xzf "$tmp/$asset" -C "$tmp" omni
-  install -Dm755 "$tmp/omni" "$HOME/.local/bin/omni"
-)
-
-step "omni"
-if ! omni_reads_config; then
-  install_omni_release
-  hash -r
-  omni_reads_config || die "omni $(command omni --version 2>/dev/null) cannot read this repo's config; it needs a release with settings v$(jq -r .version "$OMNI_CONFIG_PATH")"
-fi
-ok "$(command omni --version)"
-
 first_run=0
 [[ -e "$FIRST_RUN_MARKER" ]] || first_run=1
 
-tools_failed=0
-rc=0
-(
-  omni_bootstrap_dots || exit 2
-
-  step "omni tools"
-  omni --yes tools sync || exit 3
-) || rc=$?
-case "$rc" in
-  0) ;;
-  3) tools_failed=1; warn "some tools failed to install; continuing with the rest of the setup" ;;
-  *) die "omni bootstrap failed" ;;
-esac
-
-hash -r
-missing=()
-for cmd in zsh keyd docker rbw lefthook; do
-  have "$cmd" || missing+=("$cmd")
-done
-((${#missing[@]} == 0)) || warn "not installed, so their steps are skipped: ${missing[*]} (rerun once omni tools sync installs them)"
-
+# Omarchy ships yay and mise; chezmoi's scripts install the package lists, mise tools and agents.
+step "chezmoi"
+have chezmoi || sudo pacman -S --needed --noconfirm chezmoi || die "could not install chezmoi"
 if ((first_run)); then
   chezmoi_apply --force
   mkdir -p "$STATE_DIR"
@@ -82,6 +36,13 @@ if ((first_run)); then
 else
   chezmoi_apply
 fi
+
+hash -r
+missing=()
+for cmd in zsh keyd docker rbw lefthook; do
+  have "$cmd" || missing+=("$cmd")
+done
+((${#missing[@]} == 0)) || warn "not installed, so their steps are skipped: ${missing[*]} (check the package lists and rerun)"
 
 step "omarchy defaults"
 mapfile -t drop < <(list_entries "$REPO_DIR/omarchy/remove.packages")
@@ -261,7 +222,7 @@ while IFS='|' read -r name url icon; do
 done < <(list_entries "$REPO_DIR/omarchy/webapps")
 
 step "shell plugins"
-# Linked, not in the omarchy-shell package: plugin files there make omni replace the link with a folder.
+# Each plugin is its own repository: a checkout under ~/Dev, linked into the shell config.
 mkdir -p "$HOME/.config/omarchy/plugins"
 while IFS='|' read -r id url; do
   checkout="$HOME/Dev/$(basename "$url" .git)"
@@ -288,14 +249,6 @@ if have rbw; then
     [[ -z "$base_url" ]] || rbw config set base_url "$base_url"
   fi
   rbw_unlock_with_lan_ca || die "rbw is locked; unlock it and rerun setup"
-fi
-
-# After the CA: APM fetches the litellm marketplace from a LAN host.
-step "omni agents"
-if omni --yes agents sync; then
-  ok "agent plugins and hooks installed"
-else
-  warn "omni agents sync failed; rerun it once the cause is fixed"
 fi
 
 # The rbw SSH agent socket exists only after the unlock above.
@@ -339,9 +292,4 @@ else
   warn "not inside Hyprland; it picks the config up at next login"
 fi
 
-if ((tools_failed)); then
-  warn "setup finished, but some tools failed to install (listed above under omni tools)"
-  warn "fix the cause, then run: omni --config $OMNI_CONFIG_PATH tools sync --retry-failed"
-  exit 1
-fi
 say "${c_grn}Omarchy setup done.${c_off} Log out and back in to start zsh."

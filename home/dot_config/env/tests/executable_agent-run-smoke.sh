@@ -4,7 +4,7 @@ set -eu
 ENV_PACKAGE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 unset ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY \
   LITELLM_API LITELLM_API_KEY LITELLM_BASE_URL GITHUB_PERSONAL_ACCESS_TOKEN HF_TOKEN NODE_EXTRA_CA_CERTS \
-  OMNI_CA_PATH CLAUDE_BIN CODEX_BIN OMP_BIN OPENCODE_BIN
+  LAN_CA_PATH CLAUDE_BIN CODEX_BIN OMP_BIN OPENCODE_BIN
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT HUP INT TERM
 mkdir -p "$tmpdir/env/bin" "$tmpdir/bin" "$tmpdir/rbw" "$tmpdir/shim" "$tmpdir/sys"
@@ -41,8 +41,8 @@ ln -s "$env_dir/bin/agent-run" "$tmpdir/shim/omp"
 ln -s "$env_dir/bin/agent-run" "$tmpdir/shim/opencode"
 
 ENV_DIR=$env_dir
-OMNI_CA_PATH=/nonexistent
-export ENV_DIR OMNI_CA_PATH
+LAN_CA_PATH=/nonexistent
+export ENV_DIR LAN_CA_PATH
 with_rbw="$tmpdir/shim:$tmpdir/rbw:$tmpdir/bin:$tmpdir/sys"
 without_rbw="$tmpdir/shim:$tmpdir/bin:$tmpdir/sys"
 # shellcheck source=../functions/agents
@@ -106,9 +106,9 @@ out=$(PATH=$without_rbw codex)
 expect "$out" litellm '' 'codex without any key'
 
 : > "$tmpdir/ca.pem"
-out=$(PATH=$with_rbw OMNI_CA_PATH="$tmpdir/ca.pem" codex)
+out=$(PATH=$with_rbw LAN_CA_PATH="$tmpdir/ca.pem" codex)
 expect "$out" ca "$tmpdir/ca.pem" 'LAN CA'
-out=$(PATH=$with_rbw NODE_EXTRA_CA_CERTS=/inherited.pem OMNI_CA_PATH="$tmpdir/ca.pem" codex)
+out=$(PATH=$with_rbw NODE_EXTRA_CA_CERTS=/inherited.pem LAN_CA_PATH="$tmpdir/ca.pem" codex)
 expect "$out" ca /inherited.pem 'inherited CA'
 
 out=$(PATH=$with_rbw OMP_BIN="$tmpdir/bin/codex" omp)

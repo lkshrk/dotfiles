@@ -39,7 +39,7 @@ prepare() {
       ;;
   esac
   if [ -z "${NODE_EXTRA_CA_CERTS:-}" ]; then
-    for ca in "${OMNI_CA_PATH:-}" "$HOME/.local/share/certs/lan-ca.pem" \
+    for ca in "${LAN_CA_PATH:-}" "$HOME/.local/share/certs/lan-ca.pem" \
       /usr/local/share/ca-certificates/lan-ca.crt /etc/ssl/certs/lan-ca.pem; do
       if [ -n "$ca" ] && [ -r "$ca" ]; then
         export NODE_EXTRA_CA_CERTS="$ca"

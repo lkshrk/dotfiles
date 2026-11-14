@@ -60,7 +60,7 @@ grep -q 'user: test' "$fake_home/.config/gh/hosts.yml" || fail "gh hosts.yml los
 [ -f "$fake_home/.config/hypr/hyprland.lua" ] && [ ! -L "$fake_home/.config/hypr/hyprland.lua" ] || fail "hyprland.lua is not a copy"
 [ "$(readlink "$wants/ha-doorbell.service")" = "$fake_home/.config/systemd/user/ha-doorbell.service" ] || fail "wants link not re-linked"
 [ -x "$fake_home/.config/env/bin/agent-run" ] || fail "agent-run lost its executable bit"
-if find "$fake_home" -type l -lname '*repo/dotfiles/*' | grep -v '/.config/omni/' | grep -q .; then
+if find "$fake_home" -type l -lname '*repo/dotfiles/*' | grep -q .; then
   fail "old links remain"
 fi
 

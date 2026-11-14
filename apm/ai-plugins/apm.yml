@@ -1,6 +1,6 @@
 name: ai-plugins
 version: 1.0.0
-description: Shared Omni agent dependencies (plugins, MCP servers) for every apm-managed host.
+description: Shared agent dependencies (plugins, skills, MCP servers) for every host with the ai group.
 dependencies:
   apm:
   - git: ShiplightAI/agent-skills-v2

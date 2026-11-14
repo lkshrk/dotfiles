@@ -2,7 +2,7 @@
 
 env_next_path_prepend "$HOME/.local/bin"
 
-# Standalone pnpm refuses `pnpm ls -g` (aborting omni sync) unless its bin dir is on PATH.
+# Standalone pnpm refuses `pnpm ls -g` unless its bin dir is on PATH.
 export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
 env_next_path_prepend "$PNPM_HOME/bin"
 

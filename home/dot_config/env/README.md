@@ -20,7 +20,7 @@ For each launch `agent-run`:
 1. points the Claude clients at `LITELLM_BASE_URL` (default
    `https://api.ai.h-cloud.lan`); `claude-sub` clears every gateway variable;
 2. sets `NODE_EXTRA_CA_CERTS` to the LAN CA when one is readable
-   (`OMNI_CA_PATH` first) and the caller has not set it;
+   (`LAN_CA_PATH` first) and the caller has not set it;
 3. loads the client's envmap through `rbw-env`; a secret rbw cannot provide is
    skipped, not fatal. Variables already set in the caller win;
 4. without `LITELLM_API`, falls back to `bin/local-agents-token` (an injected
@@ -61,22 +61,21 @@ provider definitions in `models.yml`: `default` uses `local-agents/gpt-astra`,
 `local-agents/claude-opus:high`. `plan` follows `@slow`, `task` follows
 `@default`, and `commit` follows `@smol`. Bundled agent definitions remain
 unchanged; shared skills load from `~/.agents/skills`.
-Their Omni-managed sources and invocation syntax are documented under
+Their sources (APM) and invocation syntax are documented under
 [Agent skills](../../../../README.md#agent-skills).
 
 APM generates the untracked `~/.omp/agent/mcp.json` from the tracked
 `apm/ai-plugins/apm.yml` declarations. It writes the `litellm-tools` HTTP
 gateway with `instructions: false`. The gateway exposes Linear, Context7, and
 SearXNG. Every client gets the `x-litellm-api-key` header as the reference
-`${LITELLM_API}`, never the value: `agent-run` supplies it. Run
-`omni agents env` to see which variables each client needs.
+`${LITELLM_API}`, never the value: `agent-run` supplies it from the client's
+envmap in `secrets/`.
 
 `~/.omp/agent/AGENTS.md` supplies tool-routing and credential-handling
 guidance. Other clients' MCP configurations are not imported wholesale.
 Run `/mcp reload` in an existing session after changing MCP configuration;
-start a new session to load changed user instructions. Omni's `omp` dots entry
-allowlists only `config.yml`, `models.yml`, and `AGENTS.md` under
-`~/.omp/agent`. Declaring the entry does not adopt or sync those files.
+start a new session to load changed user instructions. chezmoi manages only
+`config.yml`, `models.yml`, and `AGENTS.md` under `~/.omp/agent`.
 MCP remains APM-owned; generated hooks/extensions, credentials, sessions and
 runtime databases are excluded from dotfile tracking.
 
@@ -127,8 +126,8 @@ such as `executable_agent-run`.
   Playwright, Helm, CPM.cmake, ccache, sccache) at `DEV_CACHE_HOME`
   (`~/.cache/dev`). On Linux that directory is its own Btrfs subvolume
   (`btrfs subvolume create ~/.cache/dev`), so no snapshot includes it.
-  `~/.cargo` is a symlink to `~/.cache/dev/cargo`, because Omni and `.profile`
-  hardcode that path. Cargo's `build-dir` puts intermediates in
+  `~/.cargo` is a symlink to `~/.cache/dev/cargo`, because rustup and `.profile`
+  expect that path. Cargo's `build-dir` puts intermediates in
   `~/.cargo/build/<workspace hash>`; `target/` keeps only final artifacts.
   On Linux, `/var/lib/docker` and `/var/lib/containerd` are mounted from the
   top-level subvolumes `@docker` and `@containerd` (`/etc/fstab`, like `@pkg`),
@@ -160,10 +159,10 @@ such as `executable_agent-run`.
   isolation, CA and binary lookup, with a fake rbw.
 - `tests/opencode-config-smoke.sh`: the tracked OpenCode provider/MCP config.
 
-## Stow/Omni Package Shape
+## Shell layout
 
-- `zsh`: generic interactive zsh modules.
-- `zsh/.config/zsh/macos/`: macOS-only interactive modules (Homebrew-backed
+- `~/.config/zsh` (`home/dot_config/zsh`): generic interactive zsh modules.
+- `~/.config/zsh/macos/`: macOS-only interactive modules (Homebrew-backed
   lazy tool loaders and functions), sourced by `.zshrc` only on darwin.
 - `zshenv` sources `profile.sh` directly (covers every zsh shell, login
   included). `zprofile` carries only login-only behavior, if any.

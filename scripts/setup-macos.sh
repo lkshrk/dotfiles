@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # scripts/setup-macos.sh - macOS-specific bootstrap steps.
-# Sourced variables from setup.sh: REPO_DIR, OMNI_CONFIG_PATH,
-#   RUN_MACOS_DEFAULTS, c_red/c_yel/c_grn/c_dim/c_off.
+# Sourced variables from setup.sh: REPO_DIR, RUN_MACOS_DEFAULTS, c_red/c_yel/c_grn/c_dim/c_off.
 # Helper functions (say/step/ok/warn/die) are exported from setup.sh.
 
 set -euo pipefail
@@ -52,8 +51,8 @@ ensure_homebrew() {
 
 install_bootstrap_tools() {
   step "bootstrap packages"
-  brew install chezmoi omni uv
-  ok "chezmoi, omni, uv installed"
+  brew install chezmoi mise
+  ok "chezmoi and mise installed; chezmoi installs the rest"
 
 }
 

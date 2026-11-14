@@ -47,13 +47,5 @@ Temporary Items
 docs/superpowers/
 .agent_progress.md
 
-# chezmoi writes copies, so app runtime files never land in the repo. Leftovers of the old Stow layout
-# (e.g. an untracked gh hosts.yml) must not be committed.
-/dotfiles/*
-!/dotfiles/omni/
-!/dotfiles/omni-apm/
-!/dotfiles/omni-apm@topaz/
-dotfiles/omni/.config/omni/*
-!dotfiles/omni/.config/omni/settings.json
-!dotfiles/omni/.config/omni/settings.d/
-!dotfiles/omni/.config/omni/settings.d/**
+# Leftovers of the old Stow layout on hosts not yet migrated (e.g. an untracked gh hosts.yml).
+/dotfiles/

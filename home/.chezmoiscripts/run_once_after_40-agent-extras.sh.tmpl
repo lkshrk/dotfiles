@@ -3,6 +3,8 @@
 #!/bin/bash
 # context-mode rewrites its own config, so it is a native plugin rather than an APM package.
 set -uo pipefail
+# Tools come from mise; this may run before a shell has put its shims on PATH (first setup).
+export PATH="${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims:$PATH"
 if command -v claude >/dev/null 2>&1 && ! claude plugin list 2>/dev/null | grep -q 'context-mode@context-mode'; then
   claude plugin marketplace add mksglu/context-mode && claude plugin install context-mode@context-mode
 fi
