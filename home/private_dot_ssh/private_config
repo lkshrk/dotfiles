@@ -27,22 +27,6 @@ Host hetzner
     IdentityFile ~/.ssh/rbw/rbw-3o1uFh0xBkmu_XzUWgjQPFGRvxTbskXTQL5BTqYQdLk.pub
     IdentitiesOnly yes
 
-
-Host wsl
-    HostName 192.168.176.41
-    User lkshrk
-    IdentityAgent SSH_AUTH_SOCK
-    IdentityFile ~/.ssh/rbw/rbw-gCnoW3IOy52ZHAJ8-NxzAOiIO-8VEkkq1Sjw2-sdBDY.pub
-    IdentitiesOnly yes
-
-Host towerr-dev
-    HostName 172.16.20.195
-    Port 2222
-    User dev
-    IdentityAgent SSH_AUTH_SOCK
-    IdentityFile ~/.ssh/rbw/rbw-RdP2DL7_Yh7az2NUTPe6hzTOwRy3XIUhWkDidl2RS8g.pub
-    IdentitiesOnly yes
-
 Host *
   PermitLocalCommand yes
   LocalCommand test -t 1 && printf '\033]2;%n\007' || true
