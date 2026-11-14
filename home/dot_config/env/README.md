@@ -175,7 +175,8 @@ such as `executable_agent-run`.
   profile work through the profile load guard.
 - Base env puts mise's shims right after `~/.local/bin`, so node, npm, npx,
   pnpm and the other mise tools resolve without `mise activate`. On Omarchy,
-  node comes from its own mise layer; on macOS from `mise/conf.d/node-macos.toml`.
+  node comes from its own mise layer; on macOS from the darwin block of
+  `mise/conf.d/node.toml`.
 - A project's `.nvmrc` (or `.node-version`) picks its node version through mise
   (`idiomatic_version_file_enable_tools = ["node"]`); no nvm, no shell hook.
 - No Corepack wrapper. pnpm comes from mise; `PNPM_HOME/bin` holds

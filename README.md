@@ -111,8 +111,9 @@ chezmoi status              # managed files that differ, either direction
 
 - Hosts and their groups are listed in `home/.chezmoidata/hosts.yaml`. A
   group's files are skipped on hosts without it (`home/.chezmoiignore`).
-- Host variants are templates that include a file from
-  `home/.chezmoitemplates/` (`git/config@<host>`, `zshrc@<host>`).
+- Host differences are `{{ if }}` blocks in the file's own template
+  (`dot_config/git/config.tmpl`, `dot_zshrc.tmpl`); `home/.chezmoitemplates/`
+  holds snippets the scripts share.
 - Source names follow chezmoi: `dot_config/` for `.config/`, `executable_`
   for scripts, `symlink_` for the few links that stay links.
 - `scripts/render-home.sh <host>` writes a host's files into a temp directory;
@@ -136,9 +137,9 @@ It exits non-zero if any check fails. It is safe to rerun.
 `tests/migrate-to-chezmoi.sh` runs it end to end in a throwaway `HOME`.
 
 `~/.bashrc` loads Omarchy's bash defaults when they exist, so interactive bash
-behaves like a stock Omarchy shell. git uses the `git@topaz` package, whose
-GitHub credential helper finds `gh` on `PATH`; commit signing goes through the
-rbw SSH agent on both hosts.
+behaves like a stock Omarchy shell. The git config's GitHub credential helper
+(every host but the work Mac) finds `gh` on `PATH`; commit signing goes through
+the rbw SSH agent on both personal hosts.
 
 ## Packages and tools
 
@@ -149,7 +150,7 @@ Each role group in `home/.chezmoidata/hosts.yaml` can bring:
 | macOS packages | `packages/brew/<group>.Brewfile` | `brew bundle --no-upgrade` |
 | Arch packages | `packages/arch/<group>.pacman`, `<group>.aur` | `pacman -S --needed` (pkexec), `yay -S --needed` |
 | CLIs and runtimes | `home/dot_config/mise/conf.d/<group>.toml` | `mise install` |
-| macOS-only mise tools | `…/conf.d/<group>-macos.toml` | written only on macOS |
+| macOS-only mise tools | darwin block in `…/conf.d/<group>.toml.tmpl` | rendered only on macOS |
 
 chezmoi runs `home/.chezmoiscripts/` on apply: the package and mise scripts rerun
 whenever one of the host's lists changes; they only install what is missing.
@@ -171,7 +172,7 @@ The `agent-paths` pre-commit hook checks staged shared Claude/Codex JSON and TOM
 configs for host-local paths (home directories, temporary directories, mounted
 volumes, Homebrew installations and Windows drive paths) under `home/dot_claude/`
 and `home/dot_codex/`. `$HOME`, `~` and shared system paths remain allowed.
-Host variants in `home/.chezmoitemplates/` are outside this check.
+Files in `home/.chezmoitemplates/` are outside this check.
 Run `python3 scripts/check-agent-paths.py` to check the current index manually.
 
 ### Agent skills
@@ -254,7 +255,7 @@ templates/                # copied by setup: opendeck-images/, obs/
 home/                     # files chezmoi writes into $HOME
   .chezmoidata/hosts.yaml # hosts and their groups
   .chezmoiignore          # skips a group's files on hosts without it
-  .chezmoitemplates/      # host variants
+  .chezmoitemplates/      # snippets shared by .chezmoiscripts
   dot_config/hypr/        # Hyprland bindings, rules, input, look and feel
   dot_config/omarchy/     # Omarchy shell.json and custom shell plugins
   dot_config/yabai/       # yabai config + sleep-on-lock Swift source
