@@ -193,20 +193,14 @@ ai-clean() {
   print "ai-clean: estimated cache size $(( before / 1024 ))MB"
 
   if (( ! confirm )); then
-    print "ai-clean: dry run only; rerun with --yes to delete files and prune Docker"
+    print "ai-clean: dry run only; rerun with --yes to delete them"
     return 0
   fi
 
   rm -rf "${targets[@]}"/* 2>/dev/null
   after=$(du -sc "${targets[@]}" 2>/dev/null | tail -1 | awk '{print $1}')
   freed=$(( (before - after) / 1024 ))
-  print "ai-clean: freed ${freed}MB (files)"
-
-  if command -v docker &>/dev/null && docker info &>/dev/null; then
-    local reclaimed
-    reclaimed=$(docker system prune -af --volumes 2>/dev/null | grep -i 'reclaimed' | grep -oE '[0-9.]+[kMGT]B')
-    print "ai-clean: docker pruned${reclaimed:+ $reclaimed}"
-  fi
+  print "ai-clean: freed ${freed}MB"
 }
 
 
