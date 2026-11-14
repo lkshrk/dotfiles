@@ -158,12 +158,10 @@ Existing Claude-targeted packages remain separate.
 
 - `lkshrk/useful-skills` supplies the `linear-*`, `wow-*`, `upgrade-deps`,
   `project-tool-allowlist`, `ai-context-generator` and other personal skills.
-- `apm/omp-skills` supplies adapted `systematic-debugging` and
-  `receiving-code-review` skills from obra/superpowers at
-  `2ce8aa15d05bd57213e6f746f953aafb7ded7a8b`, with their MIT licenses.
-- The same local package vendors `i-have-adhd` unchanged from
+- `apm/omp-skills` vendors `i-have-adhd` unchanged from
   ayghri/i-have-adhd at `1ecea1993b7fce257ffbd686c070948b5e07eda6`, including
-  its license and manual-invocation metadata but no always-on hooks.
+  its license and manual-invocation metadata but no always-on hooks. Codex gets
+  the superpowers skills from its own `superpowers@openai-curated` plugin.
 
 In OMP, invoke `/skill:<name>`; for example `/skill:upgrade-deps` or
 `/skill:i-have-adhd`. The latter is manual-only and intentionally absent from
@@ -171,17 +169,16 @@ the model's automatic skill list. Start a new OMP session after syncing.
 
 For MCP, the host enables `claude`, `codex`, `omp`, and `opencode`. Per-server
 `targets` keep `codebase-memory-mcp`, `openaiDeveloperDocs`, and `shiplight` on
-Claude/Codex; omp receives only the APM-managed `context-mode` plugin and
-`litellm-tools`. The gateway declaration uses `headersHelperKeys` so omp
-extracts its authentication header through the existing helper at connection
-time. No credential is stored in the manifest or native config.
+Claude/Codex. `litellm-tools` goes to Claude, Codex and omp with the header
+`x-litellm-api-key: ${LITELLM_API}`: a reference, never the value, supplied at
+launch by `agent-run`. context-mode is installed as native Claude and Codex
+plugins, not through APM, because it rewrites its own config.
 
-OpenCode receives `context-mode` from APM in `~/.config/opencode/opencode.json`
-and discovers shared skills from `~/.agents/skills` and `~/.claude/skills`;
+OpenCode discovers shared skills from `~/.agents/skills` and `~/.claude/skills`;
 APM also copies untargeted packages into `~/.config/opencode/skills`, and
-OpenCode keeps one skill per name. APM's OpenCode adapter cannot render header helpers,
-so `litellm-tools` stays off the `opencode` target and is declared in the
-dotfile-managed `opencode.jsonc` with a `{env:LITELLM_API_KEY}` header. See
+OpenCode keeps one skill per name. `litellm-tools` stays off the `opencode`
+target and is declared in the dotfile-managed `opencode.jsonc` with a
+`{env:LITELLM_API_KEY}` header. See
 [env](dotfiles/env/.config/env/README.md) for the wrapper and provider layout.
 
 Do not dotfile-manage `~/.omp/agent/mcp.json` or the deployed shared skills.
@@ -223,7 +220,6 @@ omarchy/                  # files setup-omarchy.sh installs outside $HOME
   remove.packages         # Omarchy preinstalls setup removes
   remove.webapps          # Omarchy web apps setup removes
 templates/                # copied, not linked: opendeck-images/, obs/
-docs/reviews/             # design reviews and evaluations
 dotfiles/
   omni/                   # tracked Omni config
   hypr/                   # Hyprland bindings, rules, input, look and feel

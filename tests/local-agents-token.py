@@ -14,12 +14,14 @@ with tempfile.TemporaryDirectory() as work:
     bin_dir.mkdir()
     env = {"HOME": work, "PATH": f"{bin_dir}:{os.environ['PATH']}",
            "XDG_DATA_HOME": str(home / "data"),
-           "XDG_CONFIG_HOME": str(home / "config")}
+           "XDG_CONFIG_HOME": str(home / "config"),
+           "XDG_RUNTIME_DIR": str(home / "run")}
+    (home / "run").mkdir()
     installed = home / "config/env/bin/local-agents-token"
     installed.parent.mkdir(parents=True)
     installed.symlink_to(HELPER)
     rbw = bin_dir / "rbw"
-    rbw.write_text('#!/bin/sh\n[ "$*" = "get --folder ENV local-agents" ] || exit 2\nprintf "vault-token\\n"\n')
+    rbw.write_text('#!/bin/sh\n[ "$1" = unlocked ] && exit 0\n[ "$*" = "get --folder ENV local-agents" ] || exit 2\nprintf "vault-token\\n"\n')
     rbw.chmod(0o755)
 
     def run(script, *args):

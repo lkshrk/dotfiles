@@ -58,7 +58,7 @@ jq -e '
       ((.options.install // "") | test("curl[^;|]*\\|[[:space:]]*(sh|bash)") | not))
   and all($scripts[];
       ((.options.uninstall // "") | test("rm[[:space:]][^;]*[[:space:]]\\$HOME") | not))
-  and all(["bun", "cargo", "claude-code", "golangci-lint", "hermes", "just"][];
+  and all(["bun", "rustup", "claude-code", "golangci-lint", "hermes", "just"][];
       . as $name
       | any($scripts[];
           .logical_name == $name

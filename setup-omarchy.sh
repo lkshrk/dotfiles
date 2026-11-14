@@ -283,7 +283,7 @@ done < <(list_entries "$REPO_DIR/omarchy/plugins")
 if have rbw; then
   step "rbw"
   if [[ -z "$(rbw config show 2>/dev/null | jq -r '.email // empty')" ]]; then
-    default_email="$(awk '{print $1; exit}' "$REPO_DIR/dotfiles/git/.config/git/allowed_signers")"
+    default_email="$(awk '{print $1; exit}' "$REPO_DIR/dotfiles/git@topaz/.config/git/allowed_signers")"
     read -rp "Bitwarden email [$default_email]: " email
     rbw config set email "${email:-$default_email}"
     read -rp "Bitwarden server URL (empty for bitwarden.com): " base_url

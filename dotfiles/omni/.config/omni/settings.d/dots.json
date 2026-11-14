@@ -27,7 +27,6 @@
           "path": "~/.claude",
           "ignore": [
             "*",
-            "!/scripts/",
             "!/keybindings.json",
             "!/statusline-command.sh",
             "!/tokenline.sh",

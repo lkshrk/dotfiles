@@ -1,2 +1,0 @@
-# Local OMX defaults.
-export OMX_LORE_COMMIT_GUARD="${OMX_LORE_COMMIT_GUARD:-0}"

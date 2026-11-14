@@ -45,7 +45,7 @@ hl = {
 monitors[1].active_workspace = { name = "3" }
 package.loaded["hypr.screens.config"] = {
   side = "portrait", main = "main", top_workspace = "10",
-  homes = { kitty = "10" }, password_prompt = {}, side_workspaces = {},
+  homes = { kitty = "10" }, password_prompt = function() return false end, side_workspaces = {},
 }
 package.loaded["hypr.screens.top"] = {
   join = function(w, side)

@@ -122,7 +122,6 @@ CLAUDE.local.md
 .claude/settings.local.json
 .sisyphus/
 .omc/
-.omx/
 **/.wolf/
 .codebase-memory/
 GEMINI.local.md
