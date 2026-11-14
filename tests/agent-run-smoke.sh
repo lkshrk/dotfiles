@@ -1,12 +1,13 @@
 #!/bin/sh
 set -eu
 
-ENV_PACKAGE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+repo=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 unset ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY \
   LITELLM_API LITELLM_API_KEY LITELLM_BASE_URL GITHUB_PERSONAL_ACCESS_TOKEN HF_TOKEN NODE_EXTRA_CA_CERTS \
   LAN_CA_PATH CLAUDE_BIN CODEX_BIN OMP_BIN OPENCODE_BIN
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT HUP INT TERM
+ENV_PACKAGE_DIR="$("$repo/scripts/render-home.sh" towerr "$tmpdir/render")/.config/env"
 mkdir -p "$tmpdir/env/bin" "$tmpdir/bin" "$tmpdir/rbw" "$tmpdir/shim" "$tmpdir/sys"
 # A PATH without the real rbw, so no test can read the vault.
 for tool in sh sed readlink tr cat uname dirname env; do
@@ -45,7 +46,7 @@ LAN_CA_PATH=/nonexistent
 export ENV_DIR LAN_CA_PATH
 with_rbw="$tmpdir/shim:$tmpdir/rbw:$tmpdir/bin:$tmpdir/sys"
 without_rbw="$tmpdir/shim:$tmpdir/bin:$tmpdir/sys"
-# shellcheck source=../functions/agents
+# shellcheck source=../home/dot_config/env/functions/agents
 . "$ENV_PACKAGE_DIR/functions/agents"
 
 fail() {

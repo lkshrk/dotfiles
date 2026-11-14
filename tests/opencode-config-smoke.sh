@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-config="$(dirname -- "$0")/../../opencode/opencode.jsonc"
+config="$(dirname -- "$0")/../home/dot_config/opencode/opencode.jsonc"
 if command -v node >/dev/null 2>&1; then
   node - "$config" <<'EOF'
 const fs = require("fs");

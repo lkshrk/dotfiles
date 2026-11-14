@@ -1,18 +1,20 @@
 #!/bin/sh
 set -eu
 
-ENV_DIR="${ENV_DIR:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}"
-export ENV_DIR
-
-[ "$(uname -s)" = Darwin ] || exec sh "$ENV_DIR/tests/linux-smoke.sh"
+repo=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
+[ "$(uname -s)" = Darwin ] || exec sh "$repo/tests/env-linux-smoke.sh"
 
 tmpdir=
 node_probe_dir=
+render=$(mktemp -d)
 cleanup() {
   [ -z "${tmpdir:-}" ] || rm -rf "$tmpdir"
   [ -z "${node_probe_dir:-}" ] || rm -rf "$node_probe_dir"
+  rm -rf "$render"
 }
 trap cleanup EXIT HUP INT TERM
+ENV_DIR="${ENV_DIR:-$("$repo/scripts/render-home.sh" topaz "$render")/.config/env}"
+export ENV_DIR
 
 probe='
 unset SSH_AUTH_SOCK

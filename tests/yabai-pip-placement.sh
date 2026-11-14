@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+repo="$(cd "$(dirname "$0")/.." && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
+yabai="$("$repo/scripts/render-home.sh" topaz "$tmp/render")/.config/yabai"
 export YABAI_TEST_ACTIONS="$tmp/actions"
 export YABAI_PIP_STATE="$tmp/pip-placed"
 
@@ -24,13 +26,13 @@ fi
 EOF
 chmod +x "$tmp/yabai"
 
-PATH="$tmp:$PATH" YABAI_TEST_NO_PORTRAIT=1 YABAI_WINDOW_ID=42 "$(dirname "$0")/../place-pip.sh"
+PATH="$tmp:$PATH" YABAI_TEST_NO_PORTRAIT=1 YABAI_WINDOW_ID=42 "$yabai/place-pip.sh"
 [ ! -e "$YABAI_TEST_ACTIONS" ] && [ ! -e "$YABAI_PIP_STATE" ] || {
   echo 'expected no placement and no state without a portrait display' >&2
   exit 1
 }
 
-PATH="$tmp:$PATH" YABAI_WINDOW_ID=42 "$(dirname "$0")/../window-created.sh"
+PATH="$tmp:$PATH" YABAI_WINDOW_ID=42 "$yabai/window-created.sh"
 
 expected="$(cat <<'EOF'
 -m window 42 --space 4
@@ -46,7 +48,7 @@ actual="$(cat "$YABAI_TEST_ACTIONS" 2>/dev/null || true)"
 }
 
 rm -f "$YABAI_TEST_ACTIONS"
-PATH="$tmp:$PATH" YABAI_WINDOW_ID=42 "$(dirname "$0")/../place-pip.sh"
+PATH="$tmp:$PATH" YABAI_WINDOW_ID=42 "$yabai/place-pip.sh"
 [ ! -s "$YABAI_TEST_ACTIONS" ] || {
   printf 'expected no re-placement, got:\n%s\n' "$(cat "$YABAI_TEST_ACTIONS")" >&2
   exit 1

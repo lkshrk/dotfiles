@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+repo="$(cd "$(dirname "$0")/.." && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
+yabai="$("$repo/scripts/render-home.sh" topaz "$tmp/render")/.config/yabai"
 export YABAI_TEST_ACTIONS="$tmp/actions"
 export TMPDIR="$tmp/"
 
@@ -31,7 +33,7 @@ echo "$*" >> "$YABAI_TEST_ACTIONS"
 EOF
 chmod +x "$tmp/yabai" "$tmp/open"
 
-PATH="$tmp:$PATH" FOCUS_APP_NO_OPEN=1 "$(dirname "$0")/../focus-app.sh" Signal
+PATH="$tmp:$PATH" FOCUS_APP_NO_OPEN=1 "$yabai/focus-app.sh" Signal
 [ ! -e "$YABAI_TEST_ACTIONS" ] || {
   printf 'expected no app launch, got %q\n' "$(cat "$YABAI_TEST_ACTIONS")" >&2
   exit 1
@@ -40,23 +42,23 @@ PATH="$tmp:$PATH" FOCUS_APP_NO_OPEN=1 "$(dirname "$0")/../focus-app.sh" Signal
 export PATH="$tmp:$PATH"
 export YABAI_TEST_WINDOWS='[{"id":41,"app":"Helium","display":1,"space":2},{"id":42,"app":"Helium","display":1,"space":2}]'
 # Fullscreen apps may have no queryable focused window; still focus the target.
-"$(dirname "$0")/../focus-app.sh" Helium
+"$yabai/focus-app.sh" Helium
 [ "$(cat "$YABAI_TEST_ACTIONS")" = '-m window --focus 41' ]
 : > "$YABAI_TEST_ACTIONS"
-YABAI_TEST_CURRENT=41 "$(dirname "$0")/../focus-app.sh" Helium
+YABAI_TEST_CURRENT=41 "$yabai/focus-app.sh" Helium
 [ "$(cat "$YABAI_TEST_ACTIONS")" = '-m window --focus 42' ]
 
 export YABAI_TEST_WINDOWS='[{"id":42,"app":"Moonlight","title":"towerr","space":4}]'
 : > "$YABAI_TEST_ACTIONS"
-"$(dirname "$0")/../focus-gaming.sh"
+"$yabai/focus-gaming.sh"
 [ "$(cat "$YABAI_TEST_ACTIONS")" = '-m window 42 --focus' ]
 : > "$YABAI_TEST_ACTIONS"
-YABAI_TEST_FOCUS_FAIL=1 "$(dirname "$0")/../focus-gaming.sh"
+YABAI_TEST_FOCUS_FAIL=1 "$yabai/focus-gaming.sh"
 [ "$(cat "$YABAI_TEST_ACTIONS")" = $'-m space --focus 4\n-a Moonlight' ]
 : > "$YABAI_TEST_ACTIONS"
-YABAI_TEST_FOCUS_FAIL=1 YABAI_TEST_SPACE=4 "$(dirname "$0")/../focus-gaming.sh"
+YABAI_TEST_FOCUS_FAIL=1 YABAI_TEST_SPACE=4 "$yabai/focus-gaming.sh"
 [ "$(cat "$YABAI_TEST_ACTIONS")" = '-a Moonlight' ]
 : > "$YABAI_TEST_ACTIONS"
-YABAI_TEST_WINDOWS='[]' "$(dirname "$0")/../focus-gaming.sh"
+YABAI_TEST_WINDOWS='[]' "$yabai/focus-gaming.sh"
 [ "$(cat "$YABAI_TEST_ACTIONS")" = '-m space --focus 3' ]
 echo 'Focus regression checks passed'

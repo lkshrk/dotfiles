@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-scripts="$(cd "$(dirname "$0")/.." && pwd)"
+repo="$(cd "$(dirname "$0")/.." && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
+scripts="$("$repo/scripts/render-home.sh" towerr "$tmp/render")/.config/hypr/scripts"
 export HYPR_TEST_ACTIONS="$tmp/actions"
 
 cat > "$tmp/hyprctl" <<'EOF'

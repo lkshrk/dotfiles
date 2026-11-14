@@ -113,8 +113,8 @@ existed) fails gateway authentication. Restart it with
 both through `agent-run`), or pass `--standalone` for a private server.
 
 chezmoi writes this directory from `home/dot_config/env` in the dotfiles repo
-to `~/.config/env`. Run the tests from the written copy (`~/.config/env/tests/`)
-or from `scripts/render-home.sh <host>` output: the source uses chezmoi names
+to `~/.config/env`. Its tests live in the repo's `tests/` and run against
+`scripts/render-home.sh <host>` output, because the source uses chezmoi names
 such as `executable_agent-run`.
 
 ## Layers
@@ -152,8 +152,9 @@ such as `executable_agent-run`.
 - `secrets/*.envmap`: rbw item to environment variable mappings by consumer.
   An item written as `<folder>/<name>` is fetched with `rbw get --folder`, for
   names that exist in more than one folder.
-- `tests/smoke.sh`: shell-mode checks on macOS (runs `linux-smoke.sh` on Linux).
-- `tests/linux-smoke.sh`: clean Linux env checks with a fake HOME and mise
+- `tests/env-smoke.sh`: shell-mode checks on macOS (runs `env-linux-smoke.sh`
+  on Linux).
+- `tests/env-linux-smoke.sh`: clean Linux env checks with a fake HOME and mise
   shims, and optional rbw socket coverage.
 - `tests/agent-run-smoke.sh`: every agent client's profile, gateway fallback,
   isolation, CA and binary lookup, with a fake rbw.

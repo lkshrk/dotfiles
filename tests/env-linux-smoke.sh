@@ -1,8 +1,7 @@
 #!/bin/sh
 set -eu
 
-ENV_DIR="${ENV_DIR:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}"
-export ENV_DIR
+repo=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 
 tmpdir=
 socket_pid=
@@ -19,6 +18,8 @@ cleanup() {
 trap cleanup EXIT HUP INT TERM
 
 tmpdir=$(mktemp -d)
+ENV_DIR="${ENV_DIR:-$("$repo/scripts/render-home.sh" towerr "$tmpdir/render")/.config/env}"
+export ENV_DIR
 home="$tmpdir/home"
 runtime="$tmpdir/runtime"
 node_bin="$home/.local/share/mise/shims"
@@ -137,9 +138,3 @@ done
 
 run_profile_probe "linux with existing rbw socket" "$socket_path"
 
-for focus_test in "$ENV_DIR/../hypr/scripts/tests/focus-test.sh" "$ENV_DIR/../../../hypr/.config/hypr/scripts/tests/focus-test.sh"; do
-  [ -r "$focus_test" ] || continue
-  printf '\n## hypr focus-app\n'
-  bash "$focus_test" || fail "focus-test.sh"
-  break
-done
