@@ -397,14 +397,25 @@ Settled in review (2026-11-14):
 - omni: **deprecation notice, then archive** (last step).
 - Lua and neovim: **brew/pacman**.
 
+- Grouping: **the 18 role-based groups** above.
+
 Still open:
 
-- The grouping above (proposed, not yet agreed).
 - Which app-written configs become `create_` (written once) vs managed and re-added.
 - Whether `prometheus` on topaz is the server or only `promtool`.
 
-## To verify before migrating
+## Checked (2026-11-14)
 
-- What Omarchy's `locked_scopes = ["project", "global"]` does to tools in `~/.config/mise/conf.d`.
-- mise `github:` asset selection for codebase-memory-mcp, flate and minijinja-cli.
-- Whether a mise-installed Codex still runs its daemon self-updater (disable it so mise owns updates).
+- **Omarchy's `locked_scopes`** only matters in strict lockfile mode (`locked = true`), which is off.
+  Our `conf.d` tools need no lockfile entry. `mise lock --global` stays optional.
+- **Release assets for mise's `github:` backend:**
+  - flate (`home-operations/flate`): standard goreleaser names, auto-detected.
+  - minijinja-cli: prebuilt binaries in `mitsuhiko/minijinja`; use `asset_pattern = "minijinja-cli-*"`
+    instead of a cargo build.
+  - codebase-memory-mcp: Linux has both `-portable` and plain tarballs plus `.mcpb` bundles; pin
+    `asset_pattern = "codebase-memory-mcp-{os}-{arch}.tar.gz"`, as omni's recipe does.
+  - Installing them through mise wasn't tried here (running downloaded binaries needs approval).
+- **Codex's app-server daemon** has its own updater (`~/.codex/app-server-daemon/daemon-updater.*`) and
+  installs its own releases under `~/.codex/packages/app-server-daemon/releases/`, independent of how the
+  CLI was installed. mise manages only the CLI; the daemon keeps updating itself unless that updater is
+  turned off. The documented switch isn't confirmed.
