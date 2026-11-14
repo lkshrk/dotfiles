@@ -10,7 +10,7 @@ fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 groups=$(sed -n 's/^  [^:]*: \[\(.*\)\]$/\1/p' "$repo/home/.chezmoidata/hosts.yaml" | tr ',' '\n' | tr -d ' ' | sort -u)
 for f in arch/* brew/*; do
   g=$(basename "$f"); g=${g%%.*}
-  printf '%s\n' "$groups" | grep -qx "$g" || fail "$f: group '$g' is not in hosts.yaml"
+  grep -qx "$g" <<<"$groups" || fail "$f: group '$g' is not in hosts.yaml"
 done
 
 for f in arch/*; do

@@ -19,7 +19,7 @@ done | sort -u)
 entries=$(cat $files | sort -u)
 
 for tap in $(printf '%s\n' "$entries" | sed -n 's/^tap "\(.*\)"$/\1/p'); do
-  brew tap "$tap" >/dev/null 2>&1 || echo "WARN: tap $tap failed"
+  out=$(brew tap "$tap" 2>&1) || echo "WARN: tap $tap failed: $(printf '%s\n' "$out" | tail -1)"
 done
 
 missing='' allowed=''
@@ -30,10 +30,10 @@ for kind in brew cask; do
   # shellcheck disable=SC2086
   brew info --json=v2 $flag $names >/dev/null 2>&1 && continue
   for n in $names; do
-    brew info --json=v2 "$flag" "$n" >/dev/null 2>&1 && continue
+    err=$(brew info --json=v2 "$flag" "$n" 2>&1 >/dev/null) && continue
     case $allowed_missing in
       *" ${n##*/} "*) allowed="$allowed $kind:$n" ;;
-      *) missing="$missing $kind:$n" ;;
+      *) missing="$missing $kind:$n"; printf '  %s: %s\n' "$n" "$(printf '%s\n' "$err" | grep -m1 . || true)" >&2 ;;
     esac
   done
 done
