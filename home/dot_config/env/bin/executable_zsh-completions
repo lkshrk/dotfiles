@@ -1,0 +1,46 @@
+#!/bin/sh
+# Regenerates zsh completions for CLIs whose package no longer ships them (mise tools); run after installs and upgrades.
+set -u
+
+dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
+mkdir -p "$dir"
+
+gen() {
+  name=$1
+  shift
+  command -v "$1" >/dev/null 2>&1 || return 0
+  tmp="$dir/.$name.$$"
+  if "$@" > "$tmp" 2>/dev/null && head -n 1 "$tmp" | grep -q '^#compdef'; then
+    mv -f "$tmp" "$dir/_$name"
+  else
+    rm -f "$tmp"
+  fi
+}
+
+gen cilium cilium completion zsh
+gen delta delta --generate-completion zsh
+gen gh gh completion -s zsh
+gen gitleaks gitleaks completion zsh
+gen golangci-lint golangci-lint completion zsh
+gen helm helm completion zsh
+gen helmfile helmfile completion zsh
+gen just just --completions zsh
+gen kustomize kustomize completion zsh
+gen lefthook lefthook completion zsh
+gen rclone rclone completion zsh -
+gen talosctl talosctl completion zsh
+gen task task --completion zsh
+gen uv uv generate-shell-completion zsh
+gen vhs vhs completion zsh
+gen yq yq shell-completion zsh
+
+# omp prints a script to source, not a #compdef file; the shim skips the ~/.local/bin wrapper and its rbw prompt.
+omp_bin="${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims/omp"
+if [ -x "$omp_bin" ] && "$omp_bin" completions zsh </dev/null > "$dir/.omp.$$" 2>/dev/null && [ -s "$dir/.omp.$$" ]; then
+  mv -f "$dir/.omp.$$" "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/omp-completions.zsh"
+else
+  rm -f "$dir/.omp.$$"
+fi
+
+# compinit caches where every completion lives; drop the cache so the next shell picks up new and removed ones.
+rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/zsh/zcompdump-*

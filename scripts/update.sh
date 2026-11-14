@@ -23,6 +23,7 @@ if ((!check)); then
     Linux) say "pacman and AUR"; yay -Syu ;;
   esac
   say "mise"; mise upgrade --yes
+  "${XDG_CONFIG_HOME:-$HOME/.config}/env/bin/zsh-completions"
   say "dotfiles and git externals"; chezmoi update --no-tty --refresh-externals
 fi
 
