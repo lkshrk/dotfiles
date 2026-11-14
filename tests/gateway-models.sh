@@ -2,7 +2,7 @@
 # Renders towerr's opencode, zed and omp configs and checks them against home/.chezmoidata/models.yaml.
 set -eu
 
-repo=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+repo=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT HUP INT TERM
 
