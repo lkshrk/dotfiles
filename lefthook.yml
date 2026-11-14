@@ -20,6 +20,8 @@ pre-push:
       run: bash tests/check-shell-clones.sh
     env-smoke:
       run: sh tests/env-smoke.sh
+    gateway-models:
+      run: sh tests/gateway-models.sh
     gii-union:
       run: bash tests/gii-union.sh
     hypr-focus-app:
