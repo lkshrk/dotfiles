@@ -1,5 +1,5 @@
 {{- $host := env "DOTFILES_HOST" | default .chezmoi.hostname | lower -}}
-sourceDir = {{ .chezmoi.sourceDir | quote }}
+sourceDir = {{ .chezmoi.workingTree | quote }}
 
 [data]
 host = {{ $host | quote }}
