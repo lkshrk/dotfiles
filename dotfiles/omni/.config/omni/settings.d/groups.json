@@ -2,26 +2,18 @@
   "groups": [
     {
       "name": "ai",
-      "tools": [
-        "claude-code",
-        "@openai/codex",
-        "obsidian-wiki",
-        "@oh-my-pi/pi-coding-agent"
-      ]
+      "tools": []
     },
     {
       "name": "ai-plugins",
       "tools": [
         "cargo",
-        "ccundo",
         "context-mode",
         "context-mode-claude",
         "context-mode-codex",
         "deepwiki-rs",
         "oh-my-codex",
-        "rtk",
-        "rustup",
-        "codebase-memory-mcp"
+        "rustup"
       ]
     },
     {
@@ -48,26 +40,16 @@
     {
       "name": "core",
       "tools": [
-        "bat",
         "chezmoi",
         "coreutils",
-        "eza",
-        "fd",
-        "jq",
-        "just",
         "neovim",
-        "ripgrep",
         "stow",
         "thefuck",
         "tmux",
         "tmux-plugins",
         "tree",
-        "tree-sitter-cli",
         "wget",
-        "yq",
-        "omni",
-        "glow",
-        "markdownlint-cli"
+        "omni"
       ]
     },
     {
@@ -87,32 +69,15 @@
     },
     {
       "name": "dev",
-      "tools": [
-        "lefthook"
-      ]
+      "tools": []
     },
     {
       "name": "dev-tooling",
       "tools": [
         "docker",
-        "gh",
-        "git-filter-repo",
         "imagemagick",
-        "lazydocker",
-        "lazygit",
         "skopeo",
-        "yaml-language-server",
-        "bash-language-server",
-        "shellcheck",
         "rust-analyzer",
-        "yaml-lint",
-        "yamlfmt",
-        "yamllint",
-        "git-delta",
-        "actionlint",
-        "direnv",
-        "gitleaks",
-        "devcontainer",
         "make"
       ]
     },
@@ -134,35 +99,12 @@
     },
     {
       "name": "go",
-      "tools": [
-        "go",
-        "go-task",
-        "golangci-lint",
-        "gomplate",
-        "gopls"
-      ]
+      "tools": []
     },
     {
       "name": "infra",
       "tools": [
-        "argo",
-        "cilium-cli",
-        "flux",
-        "flux-local",
-        "helm",
-        "helmfile",
-        "krew",
-        "kubectl-cnpg",
-        "kubectx",
-        "kustomize",
-        "kubernetes-cli",
-        "sops",
-        "talosctl",
-        "opentofu",
-        "terraform-ls",
-        "minijinja-cli",
-        "watch",
-        "flate"
+        "watch"
       ]
     },
     {
@@ -170,10 +112,8 @@
       "tools": [
         "lua",
         "busted",
-        "lua-language-server",
         "luacheck",
-        "luarocks",
-        "stylua"
+        "luarocks"
       ]
     },
     {
@@ -218,7 +158,6 @@
         "pipeweaver",
         "x42-plugins-lv2",
         "xpadneo-dkms",
-        "yazi",
         "cloudflared",
         "wowup-cf-bin",
         "steam"
@@ -227,17 +166,13 @@
     {
       "name": "omni",
       "tools": [
-        "ffmpeg",
-        "ttyd",
-        "vhs"
+        "ffmpeg"
       ]
     },
     {
       "name": "prereqs",
       "tools": [
-        "bun",
-        "nvm",
-        "uv"
+        "nvm"
       ]
     },
     {
@@ -257,11 +192,7 @@
       "tools": [
         "pip",
         "pipx",
-        "python@3.14",
-        "wheel",
-        "pyright",
-        "poetry",
-        "basedpyright"
+        "wheel"
       ]
     },
     {
@@ -279,56 +210,38 @@
     },
     {
       "name": "test-tooling",
-      "tools": [
-        "bats-core"
-      ]
+      "tools": []
     },
     {
       "name": "ts",
-      "tools": [
-        "pm2",
-        "pnpm",
-        "typescript",
-        "typescript-language-server"
-      ]
+      "tools": []
     },
     {
       "name": "utils",
       "tools": [
         "bind",
-        "homeassistant-cli",
         "plantuml",
-        "sshpass",
-        "witr"
+        "sshpass"
       ]
     },
     {
       "name": "apm3ljhmvg7xgcf",
       "special": "host",
       "tools": [
-        "awscli",
         "azure-cli",
-        "fzf",
-        "gum",
         "icu4c@76",
-        "jd",
         "karakeep",
-        "kubeconform",
         "maven",
-        "minio-mc",
-        "mkcert",
         "nss",
         "openjdk@21",
         "openshift-cli",
         "pinentry-mac",
         "sblim-sfcc",
-        "tldr",
         "wakeonlan",
         "youtube-dl",
         "alt-tab",
         "betterdisplay",
         "bruno",
-        "copilot-cli",
         "dbeaver-community",
         "git-credential-manager",
         "lightworks",
@@ -355,14 +268,10 @@
         "npm",
         "gradle",
         "vips",
-        "yt-dlp",
         "cliclick",
         "depflush",
-        "duckdb",
         "duti",
         "osmium-tool",
-        "prometheus",
-        "rclone",
         "sbx",
         "corepack"
       ]

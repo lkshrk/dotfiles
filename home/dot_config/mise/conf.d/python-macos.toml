@@ -1,0 +1,4 @@
+[tools]
+# macOS only: on Omarchy these come from its packages or its own mise layer.
+python = "3.14"
+uv = "latest"

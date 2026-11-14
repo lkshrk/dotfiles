@@ -1,0 +1,37 @@
+[tools]
+argo = "latest"
+awscli = "latest"
+cilium-cli = "latest"
+flux2 = "latest"
+"github:home-operations/flate" = "latest"
+helm = "latest"
+helmfile = "latest"
+krew = "latest"
+kubeconform = "latest"
+kubectl = "latest"
+kubectx = "latest"
+kustomize = "latest"
+mc = "latest"
+mkcert = "latest"
+opentofu = "latest"
+"pipx:flux-local" = "latest"
+"pipx:homeassistant-cli" = "latest"
+promtool = "latest"
+rclone = "latest"
+sops = "latest"
+talosctl = "latest"
+terraform-ls = "latest"
+
+[tools."github:cloudnative-pg/cloudnative-pg"]
+version = "latest"
+platforms.linux-x64 = { asset_pattern = "kubectl-cnpg_*_linux_x86_64.tar.gz" }
+platforms.linux-arm64 = { asset_pattern = "kubectl-cnpg_*_linux_arm64.tar.gz" }
+platforms.macos-arm64 = { asset_pattern = "kubectl-cnpg_*_darwin_arm64.tar.gz" }
+platforms.macos-x64 = { asset_pattern = "kubectl-cnpg_*_darwin_x86_64.tar.gz" }
+
+[tools."github:mitsuhiko/minijinja"]
+version = "latest"
+platforms.linux-x64 = { asset_pattern = "minijinja-cli-x86_64-unknown-linux-gnu.tar.xz" }
+platforms.linux-arm64 = { asset_pattern = "minijinja-cli-aarch64-unknown-linux-gnu.tar.xz" }
+platforms.macos-arm64 = { asset_pattern = "minijinja-cli-aarch64-apple-darwin.tar.xz" }
+platforms.macos-x64 = { asset_pattern = "minijinja-cli-x86_64-apple-darwin.tar.xz" }

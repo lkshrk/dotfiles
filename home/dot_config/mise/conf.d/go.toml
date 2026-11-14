@@ -1,0 +1,6 @@
+[tools]
+go = "1.27"
+"go:golang.org/x/tools/gopls" = "latest"
+golangci-lint = "latest"
+gomplate = "latest"
+task = "latest"

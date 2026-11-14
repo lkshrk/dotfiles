@@ -1,0 +1,10 @@
+[tools]
+delta = "latest"
+direnv = "latest"
+glow = "latest"
+jd = "latest"
+just = "latest"
+"npm:markdownlint-cli" = "latest"
+witr = "latest"
+yazi = "latest"
+yq = "latest"

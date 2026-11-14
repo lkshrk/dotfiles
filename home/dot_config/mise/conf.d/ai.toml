@@ -1,0 +1,4 @@
+[tools]
+"github:DeusData/codebase-memory-mcp" = "latest"
+"pipx:obsidian-wiki" = "latest"
+rtk = "latest"

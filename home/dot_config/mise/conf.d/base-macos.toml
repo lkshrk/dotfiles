@@ -1,0 +1,13 @@
+[tools]
+# macOS only: on Omarchy these come from its packages or its own mise layer.
+bat = "latest"
+eza = "latest"
+fd = "latest"
+fzf = "latest"
+gh = "latest"
+gum = "latest"
+jq = "latest"
+lazygit = "latest"
+ripgrep = "latest"
+tealdeer = "latest"
+tree-sitter = "latest"
