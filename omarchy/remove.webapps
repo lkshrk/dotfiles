@@ -1,4 +1,4 @@
-# Omarchy web apps that setup-omarchy.sh removes. Reinstall with `omarchy webapp install`.
+# Omarchy web apps that chezmoi removes. Reinstall with `omarchy webapp install`.
 Basecamp
 Discord
 Google Contacts

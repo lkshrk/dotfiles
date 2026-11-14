@@ -1,0 +1,48 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "omarchy" $groups -}}
+#!/bin/bash
+# inputs: {{ range list "remove.packages" "remove.webapps" "webapps" }}{{ . }}={{ include (printf "../omarchy/%s" .) | sha256sum }} {{ end }}webapp-focus={{ include "dot_local/bin/executable_webapp-focus" | sha256sum }}
+set -euo pipefail
+repo={{ .chezmoi.workingTree | quote }}
+apps="$HOME/.local/share/applications"
+entries() { grep -v -e '^#' -e '^[[:space:]]*$' "$repo/omarchy/$1" || true; }
+desktop_of() { pacman -Qlq "$1" 2>/dev/null | grep -m1 '^/usr/share/applications/.*\.desktop$' || true; }
+
+mapfile -t drop < <(entries remove.packages)
+if ((${#drop[@]})); then
+  mapfile -t installed < <(pacman -Qq "${drop[@]}" 2>/dev/null || true)
+  if ((${#installed[@]})); then
+    echo "omarchy: removing ${installed[*]}"
+    pkexec /usr/bin/pacman -Rns --noconfirm "${installed[@]}"
+  fi
+  # Package removal leaves the user launcher behind, so it would stay in the app menu.
+  for pkg in "${drop[@]}"; do
+    pacman -Q "$pkg" >/dev/null 2>&1 || rm -f "$apps/$pkg.desktop"
+  done
+fi
+while IFS= read -r webapp; do
+  OMARCHY_REMOVE_NOTIFY=false omarchy-webapp-remove "$webapp"
+done < <(entries remove.webapps)
+
+# Own absolute Exec: omarchy-launch-webapp uses the default browser and gtk-launch expands neither ~ nor $HOME.
+while IFS='|' read -r name url icon; do
+  exec_cmd="$HOME/.local/bin/webapp-focus $url"
+  wm_class_line="StartupWMClass=$("$HOME/.local/bin/webapp-focus" --class "$url")"
+  desktop="$apps/$name.desktop"
+  if grep -qxF "Exec=$exec_cmd" "$desktop" 2>/dev/null && grep -qxF "$wm_class_line" "$desktop"; then
+    continue
+  fi
+  omarchy-webapp-install "$name" "$url" "$icon" "$exec_cmd" >/dev/null
+  printf '%s\n' "$wm_class_line" >>"$desktop"
+  echo "omarchy: web app $name opens in its own Helium instance"
+done < <(entries webapps)
+
+# `omarchy default browser` has no Helium option.
+helium=$(desktop_of helium-browser-bin)
+[ -n "$helium" ] || { echo "omarchy: helium-browser-bin is not installed; it comes from the package lists" >&2; exit 1; }
+env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser "${helium##*/}"
+roller=/usr/share/applications/org.gnome.FileRoller.desktop
+[ -f "$roller" ] || { echo "omarchy: file-roller is not installed; it comes from the package lists" >&2; exit 1; }
+mapfile -t types < <(sed -n 's/^MimeType=//p' "$roller" | tr ';' '\n' | grep .)
+xdg-mime default "${roller##*/}" "${types[@]}"
+{{- end }}

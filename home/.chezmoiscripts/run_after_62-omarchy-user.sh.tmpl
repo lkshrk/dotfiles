@@ -1,0 +1,19 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "omarchy" $groups -}}
+#!/bin/bash
+# Runs on every apply: the STUFF library only exists once its disk is mounted.
+set -euo pipefail
+# screens/top.lua stores each app's top-screen side here and cannot create it from inside the compositor.
+mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/hypr-screens"
+
+# Proton prefixes break on NTFS, so the STUFF library keeps them on the home disk.
+library=/mnt/stuff/Games/SteamLibrary/steamapps
+compat="$HOME/.local/share/Steam/steamapps/compatdata"
+[ -d "$library" ] && [ ! -L "$library/compatdata" ] || exit 0
+if [ -e "$library/compatdata" ]; then
+  echo "steam: $library/compatdata is a real folder; move its prefixes to $compat" >&2
+  exit 0
+fi
+mkdir -p "$compat"
+ln -s "$compat" "$library/compatdata"
+{{- end }}

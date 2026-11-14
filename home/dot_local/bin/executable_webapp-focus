@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Helium names an --app window's class after the URL; setup-omarchy.sh reads it via --class for StartupWMClass.
+# Helium names an --app window's class after the URL; the Omarchy apps script reads it via --class for StartupWMClass.
 set -euo pipefail
 
 print_class=0

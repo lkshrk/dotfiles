@@ -1,4 +1,4 @@
-# Web apps that setup-omarchy.sh installs, as name|url|icon. Each runs as its own Helium
+# Web apps that chezmoi installs, as name|url|icon. Each runs as its own Helium
 # instance with separate logins; its links open in the main Helium. An empty icon fetches the site's favicon.
 ChatGPT|https://chatgpt.com/|
 Figma|https://figma.com/|
