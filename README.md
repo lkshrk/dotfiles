@@ -257,6 +257,7 @@ omarchy/                  # inputs of the Omarchy chezmoi scripts, installed out
   webapps                 # web apps, each its own Helium instance
   remove.packages         # Omarchy preinstalls to remove
   remove.webapps          # Omarchy web apps to remove
+macos/                    # inputs of the macOS chezmoi scripts: sleep-on-lock.swift
 templates/obs/            # OBS scenes, applied by obs-config
 scripts/                  # update.sh, render-home.sh, migrate-to-chezmoi.sh, check-agent-paths.py
 tests/                    # standalone tests; pre-push runs them (see Tests)
@@ -269,7 +270,7 @@ home/                     # files chezmoi writes into $HOME
   .chezmoitemplates/      # snippets shared by .chezmoiscripts
   dot_config/hypr/        # Hyprland bindings, rules, input, look and feel
   dot_config/omarchy/     # Omarchy shell.json and custom shell plugins
-  dot_config/yabai/       # yabai config + sleep-on-lock Swift source
+  dot_config/yabai/       # yabai config and scripts
   ...
 packages/                 # Brewfiles and pacman/AUR lists per role group
 ```

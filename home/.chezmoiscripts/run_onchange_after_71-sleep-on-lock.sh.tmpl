@@ -1,9 +1,9 @@
 {{- $groups := index .hosts .host | default (list) -}}
 {{- if and (eq .chezmoi.os "darwin") (has "macos" $groups) -}}
 #!/bin/bash
-# inputs: {{ include "dot_config/yabai/sleep-on-lock.swift" | sha256sum }} {{ include "Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist" | sha256sum }}
+# inputs: {{ include "../macos/sleep-on-lock.swift" | sha256sum }} {{ include "Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist" | sha256sum }}
 set -euo pipefail
-src="$HOME/.config/yabai/sleep-on-lock.swift"
+src={{ joinPath .chezmoi.workingTree "macos/sleep-on-lock.swift" | quote }}
 bin="$HOME/.local/bin/sleep-on-lock"
 agent="$HOME/Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist"
 service="gui/$(id -u)/com.lkshrk.sleep-on-lock"

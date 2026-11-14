@@ -6,6 +6,7 @@
 .config/zsh/55-kubectl-completions.zsh
 {{- if has "macos" $groups }}
 .profile
+.config/yabai/sleep-on-lock.swift
 {{- end }}
 {{- if eq .chezmoi.os "darwin" }}
 .config/mise/conf.d/base-macos.toml
