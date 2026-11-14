@@ -5,6 +5,9 @@ ZSH_COMPDUMP="${ZSH_COMPDUMP:-$_zsh_cache_dir/zcompdump-${${HOST:-${HOSTNAME:-lo
 unset _zsh_cache_dir
 
 ZSH_THEME="robbyrussell"
+ZSH_DISABLE_COMPFIX=true
+# chezmoi externals keep oh-my-zsh current.
+DISABLE_AUTO_UPDATE=true
 
 plugins=(
   extract
