@@ -165,7 +165,7 @@ esac
 EOF
 chmod +x "$tmpdir/rbw"
 env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" \
-  claude \
+  claude-sub \
   -- sh -c 'printf "HF_TOKEN=%s\n" "$HF_TOKEN"'
 
 printf "\n## rbw-env folder-qualified item\n"
@@ -179,7 +179,7 @@ esac
 EOF
 chmod +x "$tmpdir/rbw"
 folder_out=$(env -i HOME="$HOME" ENV_DIR="$ENV_DIR" PATH="$tmpdir:/usr/bin:/bin" "$ENV_DIR/bin/rbw-env" \
-  claude-api \
+  claude \
   -- sh -c 'printf "%s" "$ANTHROPIC_AUTH_TOKEN"')
 if [ "$folder_out" = "args:--folder ENV local-agents" ]; then
   printf '%s\n' 'folder-item=ok'

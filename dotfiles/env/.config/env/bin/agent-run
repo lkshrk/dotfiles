@@ -1,0 +1,123 @@
+#!/bin/sh
+# Launch an AI agent CLI with its rbw secret profile, gateway settings and the optional LAN CA.
+set -eu
+
+ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-$HOME/.config/env}}"
+self=$(readlink -f "$0" 2>/dev/null || printf '%s\n' "$0")
+
+usage() {
+  printf '%s\n' 'usage: agent-run <claude|claude-hass|claude-sub|codex|omp|opencode> [args...]' >&2
+  exit 2
+}
+
+# Sets bin, gateway (falls back to the local-agents token) and require (var that must be set).
+describe() {
+  bin=$1 gateway=1 require=
+  case $1 in
+    claude) bin=claude require=ANTHROPIC_AUTH_TOKEN ;;
+    claude-hass) bin=claude gateway=0 require=ANTHROPIC_AUTH_TOKEN ;;
+    claude-sub) bin=claude ;;
+    codex) ;;
+    omp | opencode) require=LITELLM_API ;;
+    *) usage ;;
+  esac
+}
+
+prepare() {
+  case $1 in
+    claude-hass) unset ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY LITELLM_API LITELLM_API_KEY ;;
+    claude-sub)
+      unset ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY \
+        CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY ANTHROPIC_CUSTOM_MODEL_OPTION \
+        ANTHROPIC_CUSTOM_MODEL_OPTION_NAME ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION
+      ;;
+  esac
+  case $1 in
+    claude | claude-hass)
+      export ANTHROPIC_BASE_URL="${LITELLM_BASE_URL:-https://api.ai.h-cloud.lan}"
+      export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
+      ;;
+  esac
+  if [ -z "${NODE_EXTRA_CA_CERTS:-}" ]; then
+    for ca in "${OMNI_CA_PATH:-}" "$HOME/.local/share/certs/lan-ca.pem" \
+      /usr/local/share/ca-certificates/lan-ca.crt /etc/ssl/certs/lan-ca.pem; do
+      if [ -n "$ca" ] && [ -r "$ca" ]; then
+        export NODE_EXTRA_CA_CERTS="$ca"
+        break
+      fi
+    done
+  fi
+}
+
+find_bin() {
+  override_var=$(printf '%s_BIN' "$1" | tr 'a-z-' 'A-Z_')
+  eval "override=\${$override_var:-}"
+  if [ -n "$override" ]; then
+    printf '%s\n' "$override"
+    return 0
+  fi
+  old_ifs=$IFS
+  IFS=:
+  for dir in $PATH; do
+    candidate="${dir:-.}/$1"
+    [ -f "$candidate" ] && [ -x "$candidate" ] || continue
+    [ "$(readlink -f "$candidate" 2>/dev/null)" = "$self" ] && continue
+    IFS=$old_ifs
+    printf '%s\n' "$candidate"
+    return 0
+  done
+  IFS=$old_ifs
+  return 1
+}
+
+launch() {
+  client=$1
+  shift
+  : "${LITELLM_API:=${LITELLM_API_KEY:-}}"
+  if [ -z "$LITELLM_API" ] && [ "$gateway" = 1 ]; then
+    LITELLM_API=$("$ENV_DIR/bin/local-agents-token" 2>/dev/null) || LITELLM_API=
+  fi
+  if [ -n "$LITELLM_API" ]; then
+    LITELLM_API_KEY=$LITELLM_API
+    export LITELLM_API LITELLM_API_KEY
+    [ "$client" = claude ] && export ANTHROPIC_AUTH_TOKEN="${ANTHROPIC_AUTH_TOKEN:-$LITELLM_API}"
+  else
+    unset LITELLM_API
+  fi
+  if [ -n "$require" ]; then
+    eval "required=\${$require:-}"
+    if [ -z "$required" ]; then
+      printf 'agent-run: %s needs %s; unlock rbw or provision the local-agents token\n' "$client" "$require" >&2
+      exit 1
+    fi
+  fi
+  real=$(find_bin "$bin") || {
+    printf 'agent-run: %s not found on PATH\n' "$bin" >&2
+    exit 127
+  }
+  exec "$real" "$@"
+}
+
+if [ "${1:-}" = --launch ]; then
+  shift
+  [ "$#" -gt 0 ] || usage
+  describe "$1"
+  launch "$@"
+fi
+
+case ${0##*/} in
+  agent-run)
+    [ "$#" -gt 0 ] || usage
+    client=$1
+    shift
+    ;;
+  *) client=${0##*/} ;;
+esac
+describe "$client"
+prepare "$client"
+
+profile="$ENV_DIR/secrets/$client.envmap"
+if command -v rbw >/dev/null 2>&1 && [ -x "$ENV_DIR/bin/rbw-env" ] && [ -r "$profile" ]; then
+  RBW_ENV_STRICT=0 exec "$ENV_DIR/bin/rbw-env" "$client" -- "$self" --launch "$client" "$@"
+fi
+launch "$client" "$@"

@@ -6,13 +6,9 @@ ENV_DIR="${ENV_DIR:-${ENV_NEXT_DIR:-${HOME}/.config/env}}"
 
 # Functions are cheap to reload and may have been added after the guarded env
 # setup ran in this shell.
-# shellcheck source=functions/claude
-if [ -r "$ENV_DIR/functions/claude" ]; then
-  . "$ENV_DIR/functions/claude"
-fi
-# shellcheck source=functions/opencode
-if [ -r "$ENV_DIR/functions/opencode" ]; then
-  . "$ENV_DIR/functions/opencode"
+# shellcheck source=functions/agents
+if [ -r "$ENV_DIR/functions/agents" ]; then
+  . "$ENV_DIR/functions/agents"
 fi
 # shellcheck source=functions/hass
 if [ -r "$ENV_DIR/functions/hass" ]; then

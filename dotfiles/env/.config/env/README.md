@@ -2,17 +2,54 @@
 
 Shell-neutral environment layout for exported env, PATH, and secret injection.
 
-`claude` and `cc` both launch Claude Code through LiteLLM, using the gateway
-credential from `ENV/local-agents`. Override the endpoint with `LITELLM_BASE_URL`.
-Claude uses the system certificate trust without a per-launch CA wrapper; other
-AI clients retain the shared CA helper in `65-ai-certs.zsh` (`OMNI_CA_PATH`).
+## Agent launcher
+
+Every AI agent CLI starts through `bin/agent-run <client>`:
+
+| Command | Client | Secret profile | Notes |
+|---|---|---|---|
+| `claude`, `cc` | `claude` | `secrets/claude.envmap` | Claude Code through LiteLLM |
+| `claude_hass`, `cc-hass` | `claude-hass` | `secrets/claude-hass.envmap` | Home Assistant gateway key |
+| `claude_sub`, `ccs` | `claude-sub` | `secrets/claude-sub.envmap` | Anthropic subscription, no gateway |
+| `codex` | `codex` | `secrets/codex.envmap` | |
+| `omp` | `omp` | `secrets/omp.envmap` | via `~/.local/bin/omp` |
+| `opencode`, `oc` | `opencode` | `secrets/opencode.envmap` | via `~/.local/bin/opencode` |
+
+For each launch `agent-run`:
+
+1. points the Claude clients at `LITELLM_BASE_URL` (default
+   `https://api.ai.h-cloud.lan`); `claude-sub` clears every gateway variable;
+2. sets `NODE_EXTRA_CA_CERTS` to the LAN CA when one is readable
+   (`OMNI_CA_PATH` first) and the caller has not set it;
+3. loads the client's envmap through `rbw-env`; a secret rbw cannot provide is
+   skipped, not fatal. Variables already set in the caller win;
+4. without `LITELLM_API`, falls back to `bin/local-agents-token` (an injected
+   `LITELLM_API_KEY`, the private token file, or the vault item), and exports
+   the key as both `LITELLM_API` and `LITELLM_API_KEY`;
+5. refuses to start Claude without `ANTHROPIC_AUTH_TOKEN`, or omp and OpenCode
+   without the gateway key;
+6. runs the first `<client>` binary on `PATH` that is not `agent-run` itself
+   (override with `CLAUDE_BIN`, `CODEX_BIN`, `OMP_BIN`, `OPENCODE_BIN`).
+
+`claude` and `codex` are shell functions (`functions/agents`, loaded by
+`profile.sh`) because Claude's own installer owns `~/.local/bin/claude`. omp
+and OpenCode are reached through symlinks, so launches outside zsh get their
+secrets too:
+
+```sh
+ln -sf ~/.config/env/bin/agent-run ~/.local/bin/omp
+ln -sf ~/.config/env/bin/agent-run ~/.local/bin/opencode
+```
+
+Add a client by giving it a `describe`/`prepare` entry in `bin/agent-run` and
+a `secrets/<client>.envmap`. After changing an envmap, restart the client's
+background service, which keeps the environment it started with:
+`agent-run codex app-server daemon restart` for Codex; OpenCode's service is
+described below.
 
 Codex uses the LiteLLM Responses provider with its existing Astra default.
-Its native token command calls `bin/local-agents-token`: an injected
-`LITELLM_API_KEY`, a private token file, or the vault gateway item.
+Its native token command calls `bin/local-agents-token`.
 
-`omp` uses `~/.local/bin/omp` → `bin/omp-local-agents` to inject the same
-`ENV/local-agents` credential as `LITELLM_API_KEY` into the OMP process.
 `~/.omp/agent/models.yml` discovers LiteLLM models under `local-agents`:
 Claude uses Anthropic Messages, GPT uses OpenAI Responses, and other chat
 models use OpenAI Chat Completions. The default is `local-agents/gpt-astra`.
@@ -31,8 +68,7 @@ APM generates the untracked `~/.omp/agent/mcp.json` from the tracked
 `apm/ai-plugins/apm.yml` declarations. It writes the `litellm-tools` HTTP
 gateway with `instructions: false`. The gateway exposes Linear, Context7, and
 SearXNG. Every client gets the `x-litellm-api-key` header as the reference
-`${LITELLM_API}`, never the value: the launch wrapper supplies it (`rbw-env`
-profiles for Claude and Codex, `omp-local-agents` for OMP). Run
+`${LITELLM_API}`, never the value: `agent-run` supplies it. Run
 `omni agents env` to see which variables each client needs.
 
 `~/.omp/agent/AGENTS.md` supplies tool-routing and credential-handling
@@ -49,10 +85,7 @@ It remains local-only until an explicit dots adoption/sync action; it never
 tracks APM-generated MCP, extension, hook, credential, session, or database
 state.
 
-`opencode` and `oc` use `~/.local/bin/opencode` → `bin/opencode-local-agents`,
-which injects the same credential as `LITELLM_API_KEY` and executes
-`/usr/bin/opencode` (override with `OPENCODE_BIN`). There is no subscription
-escape hatch: OpenCode holds no subscription credentials here, and the tracked
+OpenCode has no subscription escape hatch: OpenCode holds no subscription credentials here, and the tracked
 config allows only the `local-agents` provider.
 
 OpenCode merges every global config document instead of replacing one with
@@ -76,9 +109,9 @@ still generate one.
 OpenCode v2 runs one background service that every client attaches to, and it
 inherits the environment of whichever client starts it. Credentials resolve in
 that service, so a service started outside the wrapper (or before the wrapper
-existed) fails gateway authentication. Restart it from a wrapped shell with
-`opencode service stop && opencode service start`, or pass `--standalone` for
-a private server.
+existed) fails gateway authentication. Restart it with
+`opencode service stop && opencode service start` (the `opencode` symlink runs
+both through `agent-run`), or pass `--standalone` for a private server.
 
 This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 `~/.config/env` by Omni/Stow.
@@ -121,8 +154,9 @@ This is a Stow-shaped package: `dotfiles/env/.config/env` is managed as
 - `tests/smoke.sh`: shell-mode checks before migration.
 - `tests/linux-smoke.sh`: clean Linux env checks with fake HOME/NVM and
   optional rbw socket coverage.
-- `tests/local-agents-wrappers-smoke.sh`: omp/OpenCode credential injection,
-  `oc`, and the tracked OpenCode provider/MCP config.
+- `tests/agent-run-smoke.sh`: every agent client's profile, gateway fallback,
+  isolation, CA and binary lookup, with a fake rbw.
+- `tests/opencode-config-smoke.sh`: the tracked OpenCode provider/MCP config.
 
 ## Stow/Omni Package Shape
 

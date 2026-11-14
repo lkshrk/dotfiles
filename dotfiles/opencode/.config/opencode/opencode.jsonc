@@ -19,7 +19,7 @@
       "package": "@opencode/ai/providers/openai-compatible",
       "settings": {
         "baseURL": "https://api.ai.h-cloud.lan/v1",
-        // Injected by ~/.config/env/bin/opencode-local-agents; never stored here.
+        // Injected by ~/.config/env/bin/agent-run; never stored here.
         "apiKey": "{env:LITELLM_API_KEY}"
       },
       "models": {
