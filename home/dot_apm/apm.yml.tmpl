@@ -1,0 +1,10 @@
+name: agents
+version: 1.0.0
+dependencies:
+  apm:
+  - path: {{ joinPath .chezmoi.workingTree "apm/ai-plugins" }}
+targets:
+- claude
+- codex
+- omp
+- opencode

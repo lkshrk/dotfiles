@@ -25,6 +25,9 @@ if ((!check)); then
   say "mise"; mise upgrade --yes
   "${XDG_CONFIG_HOME:-$HOME/.config}/env/bin/zsh-completions"
   say "dotfiles and git externals"; chezmoi update --no-tty --refresh-externals
+  if command -v apm >/dev/null 2>&1 && [ -f "$HOME/.apm/apm.yml" ]; then
+    say "agents (APM)"; apm update -g --yes && apm install -g --trust-transitive-mcp
+  fi
 fi
 
 say "drift on $host ($groups)"

@@ -1,5 +1,6 @@
 {{- $groups := index .hosts .host | default (list) -}}
 {{- if not (has "ai" $groups) }}
+.apm
 .claude
 .codex
 .config/opencode

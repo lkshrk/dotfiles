@@ -1,0 +1,28 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "ai" $groups -}}
+#!/bin/bash
+# Installs the pinned APM fork (user-scope MCP secrets stay references), then the global agent manifest.
+# inputs: {{ include "dot_apm/apm.yml.tmpl" | sha256sum }} {{ include "../apm/ai-plugins/apm.yml" | sha256sum }}
+set -euo pipefail
+version="0.35.1+omni.2"
+url="https://github.com/lkshrk/omni/releases/download/apm-cli-0.35.1-omni.2/apm_cli-0.35.1%2Bomni.2-py3-none-any.whl"
+sha256="d596cf2ba617ba69de2a21c2ef7d84406973a127af375a742b1814147d2dffb6"
+
+installed=$(apm --version 2>/dev/null | awk '{print $NF}' || true)
+if [ "$installed" != "$version" ]; then
+  command -v uv >/dev/null 2>&1 || { echo "apm: uv is not installed" >&2; exit 1; }
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' EXIT
+  wheel="$tmp/apm_cli-$version-py3-none-any.whl"
+  curl -fsSL --proto '=https' -o "$wheel" "$url"
+  if command -v sha256sum >/dev/null 2>&1; then
+    actual=$(sha256sum "$wheel" | cut -d' ' -f1)
+  else
+    actual=$(shasum -a 256 "$wheel" | cut -d' ' -f1)
+  fi
+  [ "$actual" = "$sha256" ] || { echo "apm: wheel checksum mismatch" >&2; exit 1; }
+  uv tool install --force "$wheel"
+fi
+# Plugins that declare their own MCP server sit behind the shared package; apm drops those unless trusted.
+apm install -g --trust-transitive-mcp
+{{- end }}
