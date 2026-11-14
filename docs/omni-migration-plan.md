@@ -251,7 +251,7 @@ today's groups.
 
 ### Rust (ai-plugins today)
 
-- mise: `rust` (`core:rust`, which runs rustup), rust-analyzer, `cargo:deepwiki-rs`
+- OS: rustup (brew/pacman) and rust-analyzer; `deepwiki-rs` stays a cargo install
 - drop: system `rustup`, the omni `cargo`/`rustup` script tools, the duplicate cargo provider for rbw
 
 ### Lua (lua)
@@ -415,6 +415,23 @@ Done:
 
 - Dotfiles moved to chezmoi on towerr (2026-11-14). topaz and the work Mac move with
   `scripts/migrate-to-chezmoi.sh` after pulling.
+- mise layer on towerr (2026-11-14): `home/dot_config/mise/conf.d/<group>.toml` per role group. Decisions made
+  on the way:
+  - **Anything Omarchy ships stays Omarchy's**, as pacman defaults (bat, eza, fd, ripgrep, jq, fzf, gum,
+    tldr, tree-sitter-cli, lazygit, yt-dlp) or through its own mise layer (node, uv, gh, claude, codex,
+    oh-my-pi, opencode, copilot). Otherwise Omarchy updates would reinstall them. The Macs get these from
+    `<group>-macos.toml`, which chezmoi writes only on macOS: an `os = ["macos"]` entry in a shared file
+    overrides Omarchy's entry of the same name on Linux and leaves the tool without a version.
+  - mise shims sit behind `~/.local/bin` on the profile `PATH`; no `mise activate`, so `~/.local/bin` still
+    wins.
+  - Rust stays on the OS `rustup`; `deepwiki-rs` stays a cargo install; mise `python` is macOS-only (Arch
+    ships 3.14); `pipx:` tools run on a uv-managed Python. 7zip goes back to the OS lists (mise's `7zip` names
+    its binary `7zz`); `npm:yaml-lint` is dropped (its `yamllint` command collides with Python yamllint).
+  - `github:` tools need exact per-platform `asset_pattern`s (kubectl-cnpg, minijinja-cli).
+  - 39 pacman packages removed; `glow` stays as a dependency of `devtools`. omni's bun and uv copies and its
+    downloaded binaries removed; the tools left omni's groups.
+  - Still open on towerr: node from nvm to Omarchy's mise node (`40-lazy.zsh`, `profile.sh`,
+    `lib/nvm-node.sh`, env smoke tests); `~/.local/bin/rtk` (still used by running agent sessions).
 
 ## Checked (2026-11-14)
 
