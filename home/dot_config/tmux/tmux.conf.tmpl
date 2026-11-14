@@ -119,6 +119,10 @@ set -g message-style "bg=#16161e,fg=#7aa2f7"
 set -g message-command-style "bg=#16161e,fg=#7aa2f7"
 set -g mode-style "bg=#7aa2f7,fg=#1a1b26"
 setw -g clock-mode-colour "#7aa2f7"
+{{- if has "omarchy" (index .hosts .host | default (list)) }}
+# Omarchy theme palette, written by ~/.config/omarchy/hooks/theme-set.d/20-tmux.
+source-file -q ~/.local/state/omarchy/current/theme/tmux.conf
+{{- end }}
 
 # Sessions survive crashes and reboots: snapshot every 5 minutes, restore when the server starts.
 set -g @resurrect-dir "~/.local/state/tmux/resurrect"

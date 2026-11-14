@@ -42,6 +42,8 @@ pre-push:
       run: bash tests/render-hosts.sh
     repository-git-hooks:
       run: python3 tests/repository-git-hooks.py
+    tmux-omarchy-theme:
+      run: bash tests/tmux-omarchy-theme.sh
     yabai-focus-app:
       run: bash tests/yabai-focus-app.sh
     yabai-obsidian-layout:

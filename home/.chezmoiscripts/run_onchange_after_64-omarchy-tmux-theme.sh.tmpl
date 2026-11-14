@@ -1,0 +1,8 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "omarchy" $groups -}}
+#!/bin/bash
+# Writes the tmux palette for the current theme once; theme switches rerun the hook. hook: {{ include "dot_config/omarchy/hooks/theme-set.d/executable_20-tmux" | sha256sum }}
+set -euo pipefail
+command -v omarchy-theme-color >/dev/null 2>&1 || exit 0
+"$HOME/.config/omarchy/hooks/theme-set.d/20-tmux" || echo "tmux: theme palette not written" >&2
+{{- end }}

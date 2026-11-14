@@ -1,0 +1,51 @@
+#!/bin/bash
+# Writes the tmux status palette for the current Omarchy theme and reloads it in running tmux servers.
+set -euo pipefail
+
+theme="${OMARCHY_THEME_DIR:-$HOME/.local/state/omarchy/current/theme}"
+colors="$theme/colors.toml"
+out="$theme/tmux.conf"
+[[ -f $colors ]] || exit 0
+
+declare -A c=()
+while IFS=$'\t' read -r key value; do
+  c[$key]=$value
+done < <(omarchy-theme-color --file "$colors" --all 2>/dev/null)
+
+bg=${c[background]:-}
+bg_dark=${c[dark_background]:-}
+fg=${c[foreground]:-}
+accent=${c[accent]:-${c[blue]:-}}
+comment=${c[dark_foreground]:-}
+border=${c[muted]:-}
+for value in "$bg" "$bg_dark" "$fg" "$accent" "$comment" "$border"; do
+  [[ $value =~ ^#[0-9A-Fa-f]{6}$ ]] || exit 0
+done
+
+tmp=$(mktemp "$out.XXXXXX")
+trap 'rm -f "$tmp"' EXIT
+cat >"$tmp" <<EOF
+set -g status-style "bg=$bg_dark,fg=$fg"
+set -g status-left "#[fg=$bg,bg=$accent,bold] #S #[fg=$accent,bg=$bg_dark,nobold] "
+set -g status-right "#[fg=$accent]#{?pane_in_mode,COPY ,}#{?client_prefix,PREFIX ,}#{?window_zoomed_flag,ZOOM ,}#[fg=$comment]#h "
+set -g window-status-format "#[fg=$comment,bg=$bg_dark] #I:#W "
+set -g window-status-current-format "#[fg=$accent,bg=$bg_dark,bold] #I:#W "
+set -g pane-border-style "fg=$border"
+set -g pane-active-border-style "fg=$accent"
+set -g message-style "bg=$bg_dark,fg=$accent"
+set -g message-command-style "bg=$bg_dark,fg=$accent"
+set -g mode-style "bg=$accent,fg=$bg"
+setw -g clock-mode-colour "$accent"
+EOF
+chmod 644 "$tmp"
+mv "$tmp" "$out"
+trap - EXIT
+
+tmux list-sessions >/dev/null 2>&1 || exit 0
+old_right=$(tmux show-options -gv status-right 2>/dev/null || true)
+tmux source-file "$out"
+# tmux-continuum keeps its autosave in status-right; put it back after the reset.
+save=$(grep -o '#([^)]*continuum_save\.sh)' <<<"$old_right" || true)
+if [[ -n $save ]]; then
+  tmux set-option -g status-right "$save$(tmux show-options -gv status-right)"
+fi
