@@ -1,18 +1,39 @@
 #!/usr/bin/env bash
-# Usage: scripts/update.sh [--check]
+# Usage: scripts/update.sh [--check | --bump-apm]
 # Upgrades OS packages, mise tools and the dotfiles, then reports drift. --check only reports.
+# --bump-apm moves the APM git pins in apm/ai-plugins/apm.yml to each upstream's HEAD and installs them.
 set -euo pipefail
 export LC_ALL=C
 
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
 check=0
+bump=0
 case ${1:-} in
   --check) check=1 ;;
+  --bump-apm) bump=1 ;;
   "") ;;
-  *) printf 'usage: %s [--check]\n' "$0" >&2; exit 2 ;;
+  *) printf 'usage: %s [--check | --bump-apm]\n' "$0" >&2; exit 2 ;;
 esac
 
 say() { printf '==> %s\n' "$*"; }
+
+if ((bump)); then
+  manifest="$repo/apm/ai-plugins/apm.yml"
+  say "APM pins"
+  while IFS= read -r dep; do
+    sha=$(git ls-remote "https://github.com/$dep.git" HEAD | cut -f1)
+    [ -n "$sha" ] || { printf 'no HEAD for %s\n' "$dep" >&2; exit 1; }
+    awk -v dep="$dep" -v sha="$sha" '
+      /^  - / { cur = ($0 == "  - git: " dep) }
+      cur && /^    ref: / { $0 = "    ref: " sha }
+      { print }' "$manifest" > "$manifest.tmp" && mv "$manifest.tmp" "$manifest"
+  done < <(sed -n 's/^  - git: //p' "$manifest" | sort -fu)
+  git -C "$repo" diff --stat -- "$manifest"
+  apm install -g --trust-transitive-mcp
+  echo "Review and commit $manifest; other hosts install the new pins on their next chezmoi apply."
+  exit 0
+fi
+
 host=$(chezmoi execute-template '{{ .host }}')
 groups=$(chezmoi execute-template '{{ index .hosts .host | default (list) | join " " }}')
 lists() { for g in $groups; do [ -f "$repo/packages/$1/$g.$2" ] && printf '%s\n' "$repo/packages/$1/$g.$2"; done; }
@@ -26,7 +47,7 @@ if ((!check)); then
   "${XDG_CONFIG_HOME:-$HOME/.config}/env/bin/zsh-completions"
   say "dotfiles and git externals"; chezmoi update --no-tty --refresh-externals
   if command -v apm >/dev/null 2>&1 && [ -f "$HOME/.apm/apm.yml" ]; then
-    say "agents (APM)"; apm update -g --yes && apm install -g --trust-transitive-mcp
+    say "agents (APM, pinned; bump with --bump-apm)"; apm install -g --trust-transitive-mcp
   fi
 fi
 

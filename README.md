@@ -186,8 +186,14 @@ Run `python3 scripts/check-agent-paths.py` to check the current index manually.
 Agent dependencies are declared in `apm/ai-plugins/apm.yml`, never installed
 into live skill directories by hand. chezmoi writes the global manifest
 `~/.apm/apm.yml`, which points at it, and its APM script runs
-`apm install -g --trust-transitive-mcp` when a manifest changes;
-`scripts/update.sh` refreshes the refs. APM is the patched build from
+`apm install -g --trust-transitive-mcp` when a manifest changes. Every git
+dependency is pinned with `ref: <commit>`; `scripts/update.sh` installs the
+pins and never moves them (`apm update` would not either: it only moves SHA pins
+to annotated release tags, which most of these repositories lack, and skips
+local packages like `ai-plugins`). To bump, run `scripts/update.sh --bump-apm`
+in `~/Dev/dotfiles`: it sets each pin to its upstream's `HEAD`, installs, and
+leaves the manifest for you to review and commit; to bump one dependency, edit
+its `ref:` by hand. Local `path:` dependencies cannot be pinned. APM is the patched build from
 `lkshrk/apm` (branch `lk`: omp target, MCP secrets stay references), pinned by
 version and sha256 in `home/.chezmoiscripts/run_onchange_after_50-apm.sh.tmpl`.
 The `codex` target deploys shared skills into `~/.agents/skills`, which OMP also
