@@ -114,9 +114,11 @@ disappear.
   - edit in place and run `chezmoi re-add` to copy the change back (works for non-template files).
 - `chezmoi status` / `chezmoi diff` show drift in both directions. `chezmoi merge` resolves a file changed on
   both sides.
-- Apps that rewrite their own config (Zed settings, OpenDeck profiles, Omarchy `shell.json`):
-  - `create_` files: chezmoi writes them once and then leaves them to the app; or
-  - normal files that you `re-add` after changing them in the app.
+- Apps that rewrite their own config (Zed settings, OpenDeck profiles, Omarchy `shell.json`) stay fully
+  managed, as with Stow: changes made in the app go back with `dotpush` (`chezmoi re-add`). Exceptions, per
+  file:
+  - `create_` prefix: chezmoi writes the file once if it's missing, then leaves it to the app;
+  - an entry in `home/.chezmoiignore`: chezmoi doesn't touch it at all.
 - New machine: `chezmoi init --apply lkshrk/dotfiles` clones the repo, asks for nothing it can derive, writes
   files and runs the scripts. After a pull: `chezmoi update` (= git pull + apply).
 
@@ -177,7 +179,7 @@ Effects:
   happens only because the work Mac doesn't list `secrets`/`priv`.
 - The work Mac's 30-tool host group becomes `work` plus `jvm`. Its general CLIs (fzf, gum, jd,
   kubeconform, mkcert, …) move into `base`/`dev`/`infra`, where the other hosts get them too.
-- topaz's host-only list folds in: prometheus and rclone → `infra`, duckdb and yt-dlp → `dev`, parsec →
+- topaz's host-only list folds in: promtool and rclone → `infra`, duckdb and yt-dlp → `dev`, parsec →
   `media`, cliclick and duti → `macos`.
 
 ## Groups across the layers
@@ -272,8 +274,8 @@ today's groups.
   `aqua:cloudnative-pg/cloudnative-pg/kubectl-cnpg`, kubeconform, talosctl, sops, opentofu, terraform-ls,
   argo, mc (minio), mkcert, awscli, `github:` flate, `cargo:minijinja-cli` (or brew/AUR), `pypi:flux-local`
 - pin in `~/Dev/h-cloud/mise.toml`: talosctl, kubectl, flux2, helm, cilium-cli, matching the cluster
-- brew + pacman: cloudflared (a service on towerr), prometheus (topaz; promtool alone would be mise
-  `aqua:prometheus/prometheus`)
+- brew + pacman: cloudflared (a service on towerr)
+- mise: promtool (topaz needs only promtool, not the server; registry `promtool` = `aqua:prometheus/prometheus`)
 - brew (work Mac): azure-cli, openshift-cli
 
 ### AI and agents (ai, ai-plugins)
@@ -320,7 +322,7 @@ today's groups.
 ### Host-only extras
 
 - topaz (brew): libiscsi, vips, yt-dlp (or mise `github:yt-dlp/yt-dlp`), cmake, docker-buildx, fswatch,
-  pkgconf, parsec, gradle, rclone, duckdb, prometheus, cliclick, duti
+  pkgconf, parsec, gradle, rclone, duckdb, cliclick, duti
 - work Mac (brew): awscli, azure-cli, fzf, gum, icu4c@76, jd, karakeep, kubeconform, maven, minio-mc,
   mkcert, nss, openjdk@21, openshift-cli, pinentry-mac, sblim-sfcc, tldr, wakeonlan, youtube-dl (replace
   with yt-dlp), alt-tab, betterdisplay, bruno, copilot-cli, dbeaver-community, git-credential-manager,
@@ -405,11 +407,14 @@ Settled in review (2026-11-14):
 - Lua and neovim: **brew/pacman**.
 
 - Grouping: **the 18 role-based groups** above.
+- App-written configs: **fully managed** (re-added with `dotpush`); per-file exceptions through `create_` or
+  `.chezmoiignore` when one is needed.
+- topaz needs only **promtool** (mise), not the Prometheus server.
 
-Still open:
+Done:
 
-- Which app-written configs become `create_` (written once) vs managed and re-added.
-- Whether `prometheus` on topaz is the server or only `promtool`.
+- Dotfiles moved to chezmoi on towerr (2026-11-14). topaz and the work Mac move with
+  `scripts/migrate-to-chezmoi.sh` after pulling.
 
 ## Checked (2026-11-14)
 

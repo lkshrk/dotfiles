@@ -100,7 +100,11 @@ Omarchy update, the `check-dots-links` hook reports managed files that changed;
 ## Dotfiles (chezmoi)
 
 chezmoi copies files from `home/` into `$HOME` (`.chezmoiroot`). No symlinks:
-edits in `$HOME` don't change the repo until you take them back.
+edits in `$HOME` don't change the repo until you take them back (`dotpush`).
+Every tracked file is managed, including configs apps rewrite (Zed, OpenDeck,
+Omarchy `shell.json`). For an exception, rename the source file with a
+`create_` prefix (written once if missing, then left to the app), or list the
+target in `home/.chezmoiignore` (never touched).
 
 ```sh
 chezmoi diff                # what apply would change
