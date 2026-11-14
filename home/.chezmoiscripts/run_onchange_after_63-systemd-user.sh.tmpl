@@ -1,0 +1,10 @@
+{{- $groups := index .hosts .host | default (list) -}}
+{{- if has "omarchy" $groups -}}
+#!/bin/bash
+# units: {{ range list "service" "timer" }}{{ range (glob (joinPath $.chezmoi.sourceDir "dot_config/systemd/user" (printf "*.%s" .))) }}{{ base . }}={{ include . | sha256sum }} {{ end }}{{ end }}
+set -euo pipefail
+# Without a running user manager there is nothing to reload; it reads the units and .wants links when it starts.
+systemctl --user show-environment >/dev/null 2>&1 || { echo "systemd: no user manager; units load at next login" >&2; exit 0; }
+systemctl --user daemon-reload
+systemctl --user start knowledge-sync.timer
+{{- end }}
