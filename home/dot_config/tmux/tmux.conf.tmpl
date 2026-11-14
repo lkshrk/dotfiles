@@ -130,6 +130,9 @@ set -g @resurrect-capture-pane-contents "on"
 set -g @resurrect-processes "nvim man less more tail htop btop"
 set -g @continuum-save-interval "5"
 set -g @continuum-restore "on"
-# continuum hooks status-right, so it loads after the theme sets it.
+# continuum skips its own status-right hook whenever any other tmux process runs; private sockets never autosave.
+set -ag status-right "#{?#{m:*/default,#{socket_path}},#($HOME/.local/share/tmux/plugins/tmux-continuum/scripts/continuum_save.sh),}"
+# The first autosave waits a full interval so it cannot overwrite the snapshot being restored.
+if -F "#{==:#{@continuum-save-last-timestamp},}" "set -gF @continuum-save-last-timestamp '#{start_time}'"
 if-shell "test -f ~/.local/share/tmux/plugins/tmux-resurrect/resurrect.tmux" "run-shell ~/.local/share/tmux/plugins/tmux-resurrect/resurrect.tmux"
 if-shell "test -f ~/.local/share/tmux/plugins/tmux-continuum/continuum.tmux" "run-shell ~/.local/share/tmux/plugins/tmux-continuum/continuum.tmux"
