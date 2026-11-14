@@ -25,11 +25,12 @@ fall_back() {
 }
 
 enabled() {
-  jq -e --arg id "$1" '.plugins[]? | select(.id == $id)' ~/.config/omarchy/shell.json >/dev/null 2>&1
+  jq -e --arg id "$1" '.plugins[]?, .bar.layout[]?[]? | select((if type == "object" then .id else . end) == $id)' \
+    ~/.config/omarchy/shell.json >/dev/null 2>&1
 }
 
 load_failed() {
-  log_of_current_shell | grep -q "service plugin load failed for $1"
+  log_of_current_shell | grep -qF -e "service plugin load failed for $1:" -e "Plugin widget $1 failed:"
 }
 
 for _ in $(seq 1 20); do
@@ -57,4 +58,8 @@ fi
 
 if enabled lkshrk.polkit && load_failed lkshrk.polkit; then
   fall_back lkshrk.polkit omarchy.polkit "Password prompt"
+fi
+
+if enabled lkshrk.tray && load_failed lkshrk.tray; then
+  fall_back lkshrk.tray omarchy.tray "System tray"
 fi
