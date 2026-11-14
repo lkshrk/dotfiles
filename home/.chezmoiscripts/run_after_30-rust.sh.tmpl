@@ -1,7 +1,7 @@
 {{- $groups := index .hosts .host | default (list) -}}
-{{- if has "dev" $groups -}}
+{{- if has "rust" $groups -}}
 #!/bin/bash
-# rustup comes from the OS package lists; give it a default toolchain once.
+# rustup comes from the OS package lists; runs on every apply until it is installed.
 set -euo pipefail
 command -v rustup >/dev/null 2>&1 || exit 0
 rustup default >/dev/null 2>&1 || rustup default stable

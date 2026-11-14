@@ -4,7 +4,6 @@ ninja
 plantuml
 python-protobuf
 rust-analyzer
-rustup
 skopeo
 wimlib
 xorg-server-xvfb

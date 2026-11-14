@@ -4,8 +4,8 @@
 # Installs the pinned patched APM build (lkshrk/apm, branch lk: MCP secrets stay references), then the global agent manifest.
 # inputs: {{ include "dot_apm/apm.yml.tmpl" | sha256sum }} {{ include "../apm/ai-plugins/apm.yml" | sha256sum }}
 set -euo pipefail
-# Tools come from mise; this may run before a shell has put its shims on PATH (first setup).
-export PATH="${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims:$PATH"
+# This may run before a shell has put the mise shims on PATH (first setup); uv installs apm into ~/.local/bin.
+{{ template "tool-path.sh" -}}
 version="0.35.1+lk.1"
 url="https://github.com/lkshrk/apm/releases/download/v0.35.1%2Blk.1/apm_cli-0.35.1%2Blk.1-py3-none-any.whl"
 sha256="c6e39dcb0465fa7363b48af5c164c9f607b70f6e4c1a193070aa2db1e7018e62"

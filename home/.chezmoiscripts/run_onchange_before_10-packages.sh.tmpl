@@ -13,6 +13,12 @@
 set -euo pipefail
 cd {{ .chezmoi.workingTree | quote }}
 {{ if eq .chezmoi.os "darwin" -}}
+if ! command -v brew >/dev/null 2>&1; then
+  for brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    [ ! -x "$brew" ] || { eval "$("$brew" shellenv)"; break; }
+  done
+fi
+command -v brew >/dev/null 2>&1 || { echo "packages: Homebrew is not installed; see https://brew.sh" >&2; exit 1; }
 cat{{ range $lists }} {{ . | quote }}{{ end }} | brew bundle --no-upgrade --file=-
 {{- else if stat "/etc/arch-release" -}}
 mapfile -t pacman_pkgs < <(cat{{ range $lists }} {{ . | quote }}{{ end }} /dev/null | sort -u)
@@ -25,6 +31,7 @@ fi
 mapfile -t aur_pkgs < <(cat{{ range $aur }} {{ . | quote }}{{ end }} | sort -u)
 mapfile -t missing < <(pacman -T "${aur_pkgs[@]}" || true)
 if ((${#missing[@]})); then
+  command -v yay >/dev/null 2>&1 || { echo "packages: yay is needed for the AUR packages ${missing[*]}" >&2; exit 1; }
   echo "packages: installing from the AUR ${missing[*]}"
   yay -S --needed "${missing[@]}"
 fi
