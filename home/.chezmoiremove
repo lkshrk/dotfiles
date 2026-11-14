@@ -1,5 +1,9 @@
 {{- $groups := index .hosts .host | default (list) -}}
 .zprofile
+.config/zsh/25-omp-completions.zsh
+.config/zsh/40-lazy.zsh
+.config/zsh/55-flux-completions.zsh
+.config/zsh/55-kubectl-completions.zsh
 {{- if has "macos" $groups }}
 .profile
 {{- end }}
