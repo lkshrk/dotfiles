@@ -1,0 +1,4 @@
+#!/bin/bash
+# Omarchy's launcher hardcodes ~/Work for sessions started from $HOME; projects live in ~/Dev.
+if [[ $PWD == "$HOME" && -d $HOME/Dev ]]; then cd "$HOME/Dev" || true; fi
+exec /usr/bin/omarchy-agent "$@"
