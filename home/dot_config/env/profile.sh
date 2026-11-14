@@ -14,6 +14,10 @@ fi
 if [ -r "$ENV_DIR/functions/hass" ]; then
   . "$ENV_DIR/functions/hass"
 fi
+# shellcheck source=functions/audio
+if [ -r "$ENV_DIR/functions/audio" ]; then
+  . "$ENV_DIR/functions/audio"
+fi
 
 if [ "${ENV_NEXT_PROFILE_LOADED:-}" = 1 ] && [ "${ENV_NEXT_PROFILE_PATH:-}" = "${PATH:-}" ] && [ "${ENV_NEXT_PROFILE_VERSION:-}" = "$ENV_NEXT_PROFILE_CURRENT_VERSION" ]; then
   unset ENV_NEXT_PROFILE_CURRENT_VERSION

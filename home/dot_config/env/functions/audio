@@ -1,0 +1,7 @@
+audio_restart() { "$HOME/.config/hypr/scripts/audio-restart" "$@"; }
+
+# Hyphenated function names are not POSIX; this file is also sourced by sh.
+if [ -x "$HOME/.config/hypr/scripts/audio-restart" ]; then
+  alias audio-restart=audio_restart
+  alias mic-reset=audio_restart
+fi
