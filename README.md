@@ -68,10 +68,13 @@ Omarchy update, the `check-dots-links` hook reports managed files that changed;
 
 chezmoi copies files from `home/` into `$HOME` (`.chezmoiroot`). No symlinks:
 edits in `$HOME` don't change the repo until you take them back (`dotpush`).
-Every tracked file is managed, including configs apps rewrite (Zed, OpenDeck,
-Omarchy `shell.json`). For an exception, rename the source file with a
-`create_` prefix (written once if missing, then left to the app), or list the
-target in `home/.chezmoiignore` (never touched).
+Every tracked file is managed, including configs apps rewrite (OpenDeck,
+Omarchy `shell.json`). Zed's `settings.json` is a `modify_` template: it keeps
+the live file and replaces only the gateway URLs and model lists from
+`home/.chezmoidata/models.yaml` (comments in the live file are dropped). For
+an exception, rename the source file with a `create_` prefix (written once if
+missing, then left to the app), or list the target in `home/.chezmoiignore`
+(never touched).
 
 ```sh
 chezmoi diff                # what apply would change

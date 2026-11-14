@@ -1,0 +1,26 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- $base := includeTemplate "zed-settings.jsonc" . | fromJsonc -}}
+{{- $s := includeTemplate "zed-settings.jsonc" . | fromJsonc -}}
+{{- if trim .chezmoi.stdin }}{{ $s = fromJsonc .chezmoi.stdin }}{{ end -}}
+{{- $ids := list -}}
+{{- $anthropic := list -}}
+{{- $openai := list -}}
+{{- range .gateway.models -}}
+{{-   $ids = append $ids .id -}}
+{{-   if eq .family "anthropic" -}}
+{{-     $anthropic = append $anthropic (dict "name" .id "display_name" .name "max_tokens" .context "max_output_tokens" .output "mode" (dict "type" "adaptive") "extra_beta_headers" (list) "capabilities" (dict "tools" true "images" .image "prompt_caching" true)) -}}
+{{-   else -}}
+{{-     $openai = append $openai (dict "name" .id "display_name" .name "max_tokens" .context "max_output_tokens" .output "capabilities" (dict "tools" true "images" .image "parallel_tool_calls" true "prompt_cache_key" (eq .family "openai") "chat_completions" true "interleaved_reasoning" false "max_tokens_parameter" false)) -}}
+{{-   end -}}
+{{- end -}}
+{{- $s = setValueAtPath (list "language_models" "anthropic_compatible" "Lite-LLM-Anthropic" "api_url") .gateway.url $s -}}
+{{- $s = setValueAtPath (list "language_models" "anthropic_compatible" "Lite-LLM-Anthropic" "available_models") $anthropic $s -}}
+{{- $s = setValueAtPath (list "language_models" "openai_compatible" "Lite-LLM-OpenAI" "api_url") (printf "%s/v1" .gateway.url) $s -}}
+{{- $s = setValueAtPath (list "language_models" "openai_compatible" "Lite-LLM-OpenAI" "available_models") $openai $s -}}
+{{- /* A model picked in Zed survives unless the gateway no longer serves it. */ -}}
+{{- range list "default_model" "thread_summary_model" "commit_message_model" "inline_assistant_model" -}}
+{{-   if not (has (dig "agent" . "model" "" $s) $ids) -}}
+{{-     $s = setValueAtPath (list "agent" .) (dig "agent" . "" $base) $s -}}
+{{-   end -}}
+{{- end -}}
+{{ toPrettyJson "  " $s }}
