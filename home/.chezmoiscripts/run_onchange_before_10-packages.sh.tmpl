@@ -10,6 +10,7 @@
 #!/bin/bash
 # Installs packages missing from this host's lists; chezmoi reruns it when a list changes.
 # lists: {{ range (concat $lists $aur) }}{{ . }}={{ include (printf "../%s" .) | sha256sum }} {{ end }}
+# repos: {{ range (glob (joinPath .chezmoi.workingTree "packages/arch/repos/*")) }}{{ base . }}={{ include . | sha256sum }} {{ end }}
 set -euo pipefail
 cd {{ .chezmoi.workingTree | quote }}
 {{ if eq .chezmoi.os "darwin" -}}
@@ -27,9 +28,29 @@ if brew trust --help >/dev/null 2>&1; then
 fi
 cat{{ range $lists }} {{ . | quote }}{{ end }} | brew bundle --no-upgrade --file=-
 {{- else if stat "/etc/arch-release" -}}
+# packages/arch/repos/<name>.conf is appended to pacman.conf once, with <name>.asc as its locally signed key.
+new_repos=()
+for conf in packages/arch/repos/*.conf; do
+  [ -e "$conf" ] || continue
+  name=${conf##*/} name=${name%.conf}
+  pacman-conf --repo-list | grep -qx "$name" && continue
+  asc="$PWD/packages/arch/repos/$name.asc"
+  new_repos+=("$PWD/$conf" "$asc" "$(gpg --show-keys --with-colons "$asc" | awk -F: '/^fpr/ {print $10; exit}')")
+done
 mapfile -t pacman_pkgs < <(cat{{ range $lists }} {{ . | quote }}{{ end }} /dev/null | sort -u)
 mapfile -t missing < <(pacman -T "${pacman_pkgs[@]}" || true)
-if ((${#missing[@]})); then
+if ((${#new_repos[@]})); then
+  # A new repo needs -Sy; Omarchy's pacman guard refuses -Syu and leaves upgrades to omarchy update.
+  echo "packages: adding pacman repos and installing ${missing[*]:-nothing new}"
+  pkexec /bin/sh -c 'set -eu
+    while [ "$1" != -- ]; do
+      pacman-key --add "$2" && pacman-key --lsign-key "$3"
+      { echo; cat "$1"; } >>/etc/pacman.conf
+      shift 3
+    done
+    shift
+    pacman -Sy --needed --noconfirm "$@"' sh "${new_repos[@]}" -- "${missing[@]}"
+elif ((${#missing[@]})); then
   echo "packages: installing ${missing[*]}"
   pkexec /usr/bin/pacman -S --needed --noconfirm "${missing[@]}"
 fi
