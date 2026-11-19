@@ -4,7 +4,7 @@
     "layout": {
       "left": [
         {
-          "id": "omarchy.menu"
+          "id": "skal.menu"
         },
         {
           "id": "lkshrk.workspaces"
@@ -217,16 +217,21 @@
     },
     {
       "id": "lkshrk.confirm"
+    },
+    {
+      "id": "skal.menu"
     }
   ],
   "version": 1,
   "disabledPlugins": [
     "omarchy.lock",
-    "omarchy.polkit"
+    "omarchy.polkit",
+    "omarchy.menu"
   ],
   "cloneSourceRestores": [
     "lkshrk.lock",
-    "lkshrk.polkit"
+    "lkshrk.polkit",
+    "skal.menu"
   ],
   "mainScreen": "Odyssey G80SH"
 }
