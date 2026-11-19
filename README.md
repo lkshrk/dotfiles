@@ -66,21 +66,19 @@ Omarchy update, the `check-dots-links` hook reports managed files that changed;
 
 ### Audio
 
-The `audio` group (one block in `home/.chezmoiignore`) holds the USB mic and
-PipeWire setup. The files sit where each program reads them:
+The `audio` group (one block in `home/.chezmoiignore`) holds the PipeWire and
+mixer setup. Mic processing is the omavoice bar plugin (`~/Dev/omavoice`,
+linked into `~/.config/omarchy/plugins`). The files sit where each program
+reads them:
 
 | File | Purpose |
 |---|---|
-| `pipewire/pipewire.conf.d/mic-clock.conf` | Always-present timer that clocks the mic graph, so a USB replug doesn't stall it |
 | `pipewire/pipewire.conf.d/min-quantum.conf` | Graph quantum floor of 512 at 48 kHz (lower makes PipeWeaver xrun) |
-| `pipewire/filter-chain.conf.d/mic-filtered.conf` | "Mic (filtered)": the RODE, or the Razer headset when out of the RODE's range |
-| `wireplumber/wireplumber.conf.d/usb-mic-quantum.conf` | USB mic: fixed quantum, joins the `mic-clock` group |
-| `wireplumber/wireplumber.conf.d/hide-devices.conf` | Hides GPU HDMI audio, the RODE headphone jack and the raw RODE source |
+| `wireplumber/wireplumber.conf.d/hide-devices.conf` | Turns off GPU and iGPU HDMI audio and the unused onboard ALC897; hides the RODE headphone jack |
 | `wireplumber/wireplumber.conf.d/pipeweaver-no-restore.conf` | No mute restore for PipeWeaver nodes (avoids a mute/unmute loop) |
-| `systemd/user/pipewire.service.d/log-xruns.conf` | Logs xruns and ALSA resyncs to the journal |
 | `systemd/user/pipeweaver.service` (+ `graphical-session.target.wants` link) | Pipeweaver mixer daemon |
 | `~/.local/bin/pipeweaver-app`, `pipeweaver.desktop` | Pipeweaver UI launcher |
-| `hypr/scripts/audio-restart` | Restarts the audio stack; `audio-restart` / `mic-reset` (`env/functions/audio`) |
+| `~/.local/bin/mic-swap` | Stream Deck key: switches omavoice between the RODE and the Razer headset mic |
 
 ## Dotfiles (chezmoi)
 

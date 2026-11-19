@@ -69,7 +69,9 @@
           "id": "omarchy.bluetooth"
         },
         {
-          "id": "omarchy.audio"
+          "id": "gigasolo.omavoice",
+          "preset": "podcast",
+          "pinnedSource": "alsa_input.usb-RODE_Microphones_RODE_NT-USB-00.analog-stereo"
         },
         {
           "id": "omarchy.power"

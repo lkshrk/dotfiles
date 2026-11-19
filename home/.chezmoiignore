@@ -13,13 +13,12 @@ Library
 .omp
 {{- end }}
 {{- if not (has "audio" $groups) }}
-.config/env/functions/audio
-.config/hypr/scripts/audio-restart
+.config/omarchy/plugins/gigasolo.omavoice
 .config/pipewire
 .config/systemd/user/graphical-session.target.wants/pipeweaver.service
 .config/systemd/user/pipeweaver.service
-.config/systemd/user/pipewire.service.d
 .config/wireplumber
+.local/bin/mic-swap
 .local/bin/pipeweaver-app
 .local/share/applications/pipeweaver.desktop
 {{- end }}

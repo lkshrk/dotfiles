@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Stream Deck key: switches the mic omavoice processes between the RODE and the Razer headset; prints the one now in use.
+set -euo pipefail
+
+plugin=gigasolo.omavoice
+rode=alsa_input.usb-RODE_Microphones_RODE_NT-USB-00.analog-stereo
+razer=alsa_input.usb-1532_Razer_BlackShark_V2_Pro_2.4_O001000007-00.mono-fallback
+
+current=$(omarchy bar get "$plugin" pinnedSource 2>/dev/null || true)
+if [[ ${1:-} == --status ]]; then
+  next=$current
+elif [[ $current == "$razer" ]]; then
+  next=$rode
+else
+  next=$razer
+fi
+
+[[ $next == "$current" ]] || omarchy bar set "$plugin" pinnedSource "$next" >/dev/null 2>&1
+case $next in
+  "$razer") name=Headset ;;
+  *) name=RODE ;;
+esac
+# The key title is bottom-aligned and trimmed of whitespace; a zero-width space on a second line lifts the name one line.
+printf '%s\n​' "$name"

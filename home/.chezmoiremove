@@ -4,6 +4,13 @@
 .config/zsh/40-lazy.zsh
 .config/zsh/55-flux-completions.zsh
 .config/zsh/55-kubectl-completions.zsh
+.config/env/functions/audio
+.config/hypr/scripts/audio-restart
+.config/pipewire/filter-chain.conf.d
+.config/pipewire/pipewire.conf.d/mic-clock.conf
+.config/systemd/user/pipewire.service.d/log-xruns.conf
+.config/wireplumber/wireplumber.conf.d/onboard-mic-clock.conf
+.config/wireplumber/wireplumber.conf.d/usb-mic-quantum.conf
 {{- if has "macos" $groups }}
 .profile
 .config/yabai/sleep-on-lock.swift

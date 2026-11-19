@@ -66,7 +66,7 @@
     "id": "pulse_input_capture",
     "versioned_id": "pulse_input_capture",
     "settings": {
-      "device_id": "mic_filtered"
+      "device_id": "omavoice"
     },
     "mixers": 3,
     "sync": 0,
