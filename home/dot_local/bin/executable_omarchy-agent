@@ -1,4 +1,49 @@
 #!/bin/bash
 # Omarchy's launcher hardcodes ~/Work for sessions started from $HOME; projects live in ~/Dev.
 if [[ $PWD == "$HOME" && -d $HOME/Dev ]]; then cd "$HOME/Dev" || true; fi
-exec /usr/bin/omarchy-agent "$@"
+
+self=${BASH_SOURCE[0]}
+
+# Back from agent-run with the gateway and secrets set; the variable that pointed agent-run here must not leak into the agent.
+if [[ ${1:-} == --via-agent-run ]]; then
+  unset "$2"
+  shift 2
+  exec /usr/bin/omarchy-agent "$@"
+fi
+
+# Set by omarchy-agent-crash: open the diagnosis as a window in the most recently used tmux client's session.
+if [[ -n ${OMARCHY_AGENT_TMUX:-} ]] &&
+  read -r _ client session < <(tmux list-clients -F '#{client_activity} #{client_pid} #{client_session}' 2>/dev/null | sort -rn) &&
+  [[ -n $client ]] &&
+  tmux new-window -t "$session:" -c "$PWD" -n diagnose -- "$self" --inline "$@"; then
+  windows=$(hyprctl clients -j)
+  pid=$client
+  while ((${pid:-0} > 1)); do
+    address=$(jq -r --argjson pid "$pid" 'first(.[] | select(.pid == $pid) | .address) // empty' <<<"$windows")
+    if [[ -n $address ]]; then
+      hyprctl dispatch "hl.dsp.focus({ window = \"address:$address\" })" >/dev/null
+      break
+    fi
+    pid=$(ps -o ppid= -p "$pid" | tr -d ' ')
+  done
+  exit 0
+fi
+
+agent=$(omarchy-default-agent 2>/dev/null) || agent=
+case $agent in
+  claude | codex | omp | opencode) ;;
+  *) exec /usr/bin/omarchy-agent "$@" ;;
+esac
+
+inline=false
+for arg in "$@"; do
+  [[ $arg == --inline ]] && inline=true
+done
+
+# Terminals launched through uwsm start with a clean environment, so agent-run has to run inside the terminal.
+if ! $inline; then
+  exec omarchy-launch-tui --app-id=org.omarchy.agent "$self" --inline "$@"
+fi
+
+bin_var=${agent^^}_BIN
+exec env "$bin_var=$self" "${ENV_DIR:-$HOME/.config/env}/bin/agent-run" "$agent" --via-agent-run "$bin_var" "$@"

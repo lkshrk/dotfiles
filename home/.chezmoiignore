@@ -52,6 +52,7 @@ Library/LaunchAgents/com.lkshrk.sleep-on-lock.plist
 .local/bin/ha-doorbell
 .local/bin/obs-config
 .local/bin/omarchy-agent
+.local/bin/omarchy-agent-crash
 .local/bin/omarchy-confirm
 .local/bin/slurp
 .local/bin/vram-watch
