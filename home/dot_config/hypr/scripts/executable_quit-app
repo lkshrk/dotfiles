@@ -4,6 +4,8 @@ set -euo pipefail
 
 # Battle.net games share the launcher's class and unit; each game is its own Wine process.
 per_process='^steam_app_battlenet$'
+# These catch SIGTERM and stay in the background when their window closes, but quit on SIGINT.
+sigint_only='^bitwarden$'
 
 clients=$(hyprctl clients -j)
 active=$(hyprctl activewindow -j)
@@ -24,6 +26,13 @@ done < <(jq -r --arg pp "$per_process" ".[] | select(.pid > 0) | \"\(.pid)\t\($a
 
 windows=$(jq -r --arg pp "$per_process" --arg app "$app" \
   ".[] | select(($app_of) == \$app) | \"\(.pid)\t\(.xwayland)\t\(.address)\"" <<<"$clients")
+
+if [[ $app =~ $sigint_only ]]; then
+  while IFS=$'\t' read -r pid _ _; do
+    ((pid > 0)) && kill -INT "$pid" 2>/dev/null
+  done <<<"$windows"
+  exit 0
+fi
 
 wine_prefix() {
   { tr '\0' '\n' <"/proc/$1/environ"; } 2>/dev/null | sed -n 's/^WINEPREFIX=//p'

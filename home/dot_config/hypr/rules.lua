@@ -62,7 +62,9 @@ o.window({ title = ".*is sharing.*" }, { workspace = "special silent" })
 -- A web app's own browser window only exists until webapp-links hands its tab to the default browser.
 o.window("^webapp-.*$", { workspace = "special:webapp-links silent" })
 -- Password managers block screen capture, so they get a tiled workspace to themselves; tag rules apply last, so drop Omarchy's floating-window tag.
-o.window("^(Bitwarden|1[pP]assword|com\\.onepassword\\.OnePassword)$", { tag = "-floating-window", tile = true, workspace = C.homes.Bitwarden })
+o.window("^(1[pP]assword|com\\.onepassword\\.OnePassword)$", { tag = "-floating-window", tile = true, workspace = C.homes["1password"] })
+-- Bitwarden floats pinned instead; Hyper + / brings it to the screen in use and hides it again.
+o.window("^bitwarden$", { float = true, center = true, pin = true })
 -- The Bitwarden extension popout opens where it was triggered; screens/util.lua leaves it alone like a dialog.
 o.window(".*nngceckbapebfimnlniiiahkandclblb.*", { tag = "+bitwarden-popup", workspace = "unset" })
 

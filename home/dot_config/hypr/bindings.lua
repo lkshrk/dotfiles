@@ -113,7 +113,35 @@ app("D", "Equibop (Discord)", "equibop", focus("equibop equibop"))
 app("S", "Signal and Telegram", "signal", focus("'^(signal|org\\.telegram\\.desktop)$' signal-desktop"))
 app("C", "Chatterino", "com.chatterino.chatterino", focus("chatterino chatterino"))
 app("O", "OBS", "com.obsproject.Studio", focus("obsproject obs"))
-app("SLASH", "Bitwarden", "Bitwarden", focus("'^bitwarden$' bitwarden-desktop"))
+-- A pinned window must be unpinned to change workspace, and a hidden one sits on its own special workspace.
+hyper("Apps", "SLASH", "Bitwarden (again to hide)", function()
+  local bw
+  for _, w in ipairs(hl.get_windows()) do
+    if w.mapped and w.class == "bitwarden" then
+      bw = w
+      break
+    end
+  end
+  if not bw then
+    hl.exec_cmd("uwsm-app -- bitwarden")
+    return
+  end
+  local active = hl.get_active_window()
+  if active and active.class == "bitwarden" then
+    if bw.pinned then hl.dispatch(hl.dsp.window.pin({ window = bw })) end
+    hl.dispatch(hl.dsp.window.move({ workspace = "special:bitwarden", window = bw, follow = false }))
+    return
+  end
+  local ws = hl.get_active_workspace()
+  if ws and bw.workspace and bw.workspace.name ~= ws.name then
+    if bw.pinned then hl.dispatch(hl.dsp.window.pin({ window = bw })) end
+    hl.dispatch(hl.dsp.window.move({ workspace = ws.name, window = bw, follow = false }))
+    bw = hl.get_window("address:" .. bw.address) or bw
+  end
+  if not bw.pinned then hl.dispatch(hl.dsp.window.pin({ window = bw })) end
+  hl.dispatch(hl.dsp.focus({ window = bw }))
+  hl.dispatch(hl.dsp.window.alter_zorder({ mode = "top", window = bw }))
+end)
 hyper("Apps", "R", "Files (Nautilus)", focus("'^org\\.gnome\\.Nautilus$' omarchy-launch-nautilus"))
 note("Apps", HYPER .. " + app key, again", "Next window of the same app")
 note("Apps", HYPER .. " + SHIFT + app key", "Send window to that app's workspace")
