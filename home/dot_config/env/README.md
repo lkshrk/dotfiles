@@ -21,8 +21,8 @@ For each launch `agent-run`:
    `https://api.ai.h-cloud.lan`); `claude-sub` clears every gateway variable;
 2. sets `NODE_EXTRA_CA_CERTS` to the LAN CA when one is readable
    (`LAN_CA_PATH` first) and the caller has not set it;
-3. loads the client's envmap through `rbw-env`; a secret rbw cannot provide is
-   skipped, not fatal. Variables already set in the caller win;
+3. loads the client's envmap through `vault-env`; a secret the vault cannot
+   provide is skipped, not fatal. Variables already set in the caller win;
 4. without `LITELLM_API`, falls back to `bin/local-agents-token` (an injected
    `LITELLM_API_KEY`, the private token file, or the vault item), and exports
    the key as both `LITELLM_API` and `LITELLM_API_KEY`;
@@ -148,19 +148,30 @@ such as `executable_agent-run`.
   Branches are kept.
 - `os/<name>.sh`: OS-specific env and PATH facts.
 - `machine/<name>.sh`: machine-specific env and PATH facts.
-- `bin/rbw-env`: shell-neutral secret injection wrapper for agents, zsh
-  wrappers, and one-off commands.
-- `bin/rbw-ssh-pubkeys`: writes fingerprint-named public-key selectors for
-  rbw's native SSH agent to `~/.ssh/rbw`.
-- `secrets/*.envmap`: rbw item to environment variable mappings by consumer.
-  An item written as `<folder>/<name>` is fetched with `rbw get --folder`, for
-  names that exist in more than one folder.
+- `bin/vault-env`: shell-neutral secret injection wrapper for agents, zsh
+  wrappers, and one-off commands. On Linux it reads the vault with `bw` (one
+  `bw list` per run), elsewhere with rbw.
+- `bin/vault-unlock`: one unlock for every caller. On Linux `bw unlock` goes
+  through the Bitwarden desktop app (polkit prompt) and the session key is kept
+  in `$XDG_RUNTIME_DIR/vault/bw-session` (0600); `--check`, `--session`,
+  `--lock`. rbw where `bw` is missing.
+- `bin/vault-get`: prints one item's password, username or notes.
+- `lib/vault.sh`: the `bw` item lookup `vault-env` and `vault-get` share.
+- `bin/vault-ssh-pubkeys`: writes fingerprint-named public-key selectors for
+  the vault's SSH agent to `~/.ssh/vault` (the `IdentityFile`s in `~/.ssh/config`).
+- `lib/ssh-agent-sock.sh`: where the vault's SSH agent listens: the Bitwarden
+  desktop app's `~/.bitwarden-ssh-agent.sock` on Linux, rbw's socket on macOS.
+- `secrets/*.envmap`: vault item to environment variable mappings by consumer.
+  An item written as `<folder>/<name>` only matches in that folder, for names
+  that exist in more than one folder.
 - `tests/env-smoke.sh`: shell-mode checks on macOS (runs `env-linux-smoke.sh`
   on Linux).
 - `tests/env-linux-smoke.sh`: clean Linux env checks with a fake HOME and mise
-  shims, and optional rbw socket coverage.
+  shims, and desktop-app and rbw agent socket coverage.
 - `tests/agent-run-smoke.sh`: every agent client's profile, gateway fallback,
   isolation, CA and binary lookup, with a fake rbw.
+- `tests/vault-unlock.sh`, `tests/vault-env.sh`: both backends with a fake
+  `bw` and rbw.
 - `tests/opencode-config-smoke.sh`: the tracked OpenCode provider/MCP config.
 
 ## Shell layout
@@ -191,11 +202,11 @@ such as `executable_agent-run`.
   export `JAVA_HOME` or prepend Java bins.
 - `KUBECONFIG` is machine-specific, not macOS-specific.
 - `SSH_AUTH_SOCK` preserves existing agents by default. macOS points launchd
-  shells at the rbw socket path; Linux adopts an existing rbw socket when one is
-  present, otherwise points GUI sessions at `$XDG_RUNTIME_DIR/rbw/ssh-agent-socket`
-  when rbw is installed and no agent is set.
+  shells at the rbw socket path; Linux adopts a running vault agent (the
+  Bitwarden desktop app's first, then rbw's), otherwise points sessions without
+  an agent at `~/.bitwarden-ssh-agent.sock` when the desktop app is installed.
 - Maestro is project-local via direnv `.envrc`, not global env.
 - `~/.cargo/bin` is on PATH.
 - `~/.local/bin` wins over package-manager binaries.
 - direnv hooks load in every interactive zsh (`zsh/35-direnv.zsh`), not base env.
-- rbw secret injection is profile-based: `rbw-env <profile> -- <command>`.
+- Vault secret injection is profile-based: `vault-env <profile> -- <command>`.

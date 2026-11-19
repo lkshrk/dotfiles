@@ -1,0 +1,43 @@
+#!/bin/sh
+set -u
+
+ENV_DIR="${ENV_DIR:-$HOME/.config/env}"
+unlock="$ENV_DIR/bin/vault-unlock"
+
+field=password
+if [ "${1:-}" = --field ]; then
+  field=${2:-}
+  shift 2 || true
+fi
+case $field in password | username | notes) ;; *) field= ;; esac
+[ "$#" = 1 ] && [ -n "$1" ] && [ -n "$field" ] || {
+  printf '%s\n' 'usage: vault-get [--field password|username|notes] <item | folder/item>' >&2
+  exit 2
+}
+item=$1
+
+backend=$("$unlock" --backend) || exit 1
+"$unlock" || exit
+
+case $backend in
+  bw)
+    # shellcheck source=../lib/vault.sh
+    . "$ENV_DIR/lib/vault.sh"
+    load() {
+      BW_SESSION=$("$unlock" --session) || return 1
+      export BW_SESSION
+      vault_bw_load "${item##*/}"
+    }
+    load || { "$unlock" --forget && load; } || exit 1
+    "$unlock" --sync-stale
+    vault_bw_value "$items" "$folders" "$field" "$item"
+    ;;
+  *)
+    case $item in
+      */*) set -- --folder "${item%%/*}" "${item#*/}" ;;
+      *) set -- "$item" ;;
+    esac
+    [ "$field" = password ] || set -- --field "$field" "$@"
+    rbw get "$@"
+    ;;
+esac

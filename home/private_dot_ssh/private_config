@@ -2,21 +2,21 @@ Host routi
     HostName 192.168.0.1
     User root
     IdentityAgent SSH_AUTH_SOCK
-    IdentityFile ~/.ssh/rbw/rbw-EVfYNC_veAb_67RBI2e2jQO9AlMezAlbkEFHhIAeD7s.pub
+    IdentityFile ~/.ssh/vault/EVfYNC_veAb_67RBI2e2jQO9AlMezAlbkEFHhIAeD7s.pub
     IdentitiesOnly yes
 
 Host nasi
     HostName 172.22.30.2
     User root
     IdentityAgent SSH_AUTH_SOCK
-    IdentityFile ~/.ssh/rbw/rbw-gCnoW3IOy52ZHAJ8-NxzAOiIO-8VEkkq1Sjw2-sdBDY.pub
+    IdentityFile ~/.ssh/vault/gCnoW3IOy52ZHAJ8-NxzAOiIO-8VEkkq1Sjw2-sdBDY.pub
     IdentitiesOnly yes
 
 Host towerr
     HostName 192.168.176.41
     User lkshrk
     IdentityAgent SSH_AUTH_SOCK
-    IdentityFile ~/.ssh/rbw/rbw-Nat3TfRtVM-dysNPVwhvikfGd7R4TCfMC82TRKMu9hc.pub
+    IdentityFile ~/.ssh/vault/Nat3TfRtVM-dysNPVwhvikfGd7R4TCfMC82TRKMu9hc.pub
     IdentitiesOnly yes
 
 
@@ -24,7 +24,7 @@ Host hetzner
     HostName 91.107.232.241
     User lkshrk
     IdentityAgent SSH_AUTH_SOCK
-    IdentityFile ~/.ssh/rbw/rbw-3o1uFh0xBkmu_XzUWgjQPFGRvxTbskXTQL5BTqYQdLk.pub
+    IdentityFile ~/.ssh/vault/3o1uFh0xBkmu_XzUWgjQPFGRvxTbskXTQL5BTqYQdLk.pub
     IdentitiesOnly yes
 
 Host *

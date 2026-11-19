@@ -7,16 +7,20 @@ if [ -n "${LITELLM_API_KEY:-}" ]; then
   exit 0
 fi
 
+bin=${0%/*}
+ENV_DIR=${ENV_DIR:-$(cd "$bin/.." && pwd)}
+export ENV_DIR
+
 token_file="${XDG_DATA_HOME:-$HOME/.local/share}/local-agents/token"
 if [ -e "$token_file" ]; then
   token=$(cat "$token_file") || exit 1
-elif command -v rbw >/dev/null 2>&1; then
-  "$(dirname "$0")/rbw-unlock-once" && token=$(rbw get --folder ENV local-agents) || {
-    printf '%s\n' 'local agents: unable to read gateway key from rbw' >&2
+elif "$bin/vault-unlock" --backend >/dev/null 2>&1; then
+  token=$("$bin/vault-get" ENV/local-agents) || {
+    printf '%s\n' 'local agents: unable to read gateway key from the vault' >&2
     exit 1
   }
 else
-  printf '%s\n' 'local agents: set LITELLM_API_KEY, provision the private token file, or install rbw' >&2
+  printf '%s\n' 'local agents: set LITELLM_API_KEY, provision the private token file, or install bw' >&2
   exit 1
 fi
 

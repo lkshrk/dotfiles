@@ -16,8 +16,9 @@ git clone https://github.com/lkshrk/dotfiles.git ~/Dev/dotfiles && ~/Dev/dotfile
 2. Runs `chezmoi init --source <repo>` and `chezmoi apply`. Without
    `~/.config/chezmoi/chezmoi.toml` (a first run) it adds `--force`, so the
    repo's configs replace the fresh defaults without asking.
-3. Configures rbw (Bitwarden email and server once, no lock timeout) and
-   unlocks it. On Omarchy it then clones the knowledge vault to `~/knowledge`
+3. Logs the `bw` CLI in to the Bitwarden server once and unlocks the vault
+   through the desktop app (`vault-unlock`); on macOS it configures rbw instead
+   (email and server once, no lock timeout). On Omarchy it then clones the knowledge vault to `~/knowledge`
    and, on a machine without OBS scenes, applies `templates/obs/` with `obs-config`.
 4. Runs `chezmoi apply` again for the steps that waited for the vault (LAN root
    CA, knowledge-sync agent) and, inside Hyprland, checks the config loads.
@@ -28,7 +29,7 @@ rerun by `chezmoi apply` when its inputs change:
 | Script | Hosts | Does |
 |---|---|---|
 | `10-packages`, `20-mise`, `30-rust`, `40-agent-extras`, `50-apm` | per group | packages, mise tools, agents |
-| `55-lan-ca` | personal | LAN root CA from the vault to `~/.local/share/certs/lan-ca.pem` once rbw is unlocked |
+| `55-lan-ca` | personal | LAN root CA from the vault to `~/.local/share/certs/lan-ca.pem` once the vault is unlocked |
 | `60-omarchy-system` | omarchy | `/etc` from `omarchy/` (keyd, fstab mounts, units, cloudflared, irqbalance, ufw, CA trust, keyd/docker groups, zsh login shell) in one pkexec call, only when something differs |
 | `61-omarchy-apps` | omarchy | removes `omarchy/remove.*`, installs `omarchy/webapps`, Helium and File Roller as defaults |
 | `62-omarchy-user` | omarchy | clones the Omarchy shell plugins if missing; Steam Proton prefixes off the NTFS library |
@@ -123,7 +124,7 @@ chezmoi status              # managed files that differ, either direction
 `~/.bashrc` loads Omarchy's bash defaults when they exist, so interactive bash
 behaves like a stock Omarchy shell. The git config's GitHub credential helper
 (every host but the work Mac) finds `gh` on `PATH`; commit signing goes through
-the rbw SSH agent on both personal hosts.
+the vault's SSH agent: the Bitwarden desktop app's on Linux, rbw's on macOS.
 
 ## Packages and tools
 

@@ -4,9 +4,9 @@ After=graphical-session.target
 PartOf=graphical-session.target
 
 [Service]
-# Waits silently for rbw to unlock so rbw-env never has to prompt.
-ExecStartPre=/usr/bin/bash -c 'until rbw unlocked >/dev/null 2>&1; do sleep 30; done'
-ExecStart=%h/.config/env/bin/rbw-env hass-cli -- %h/.local/bin/ha-doorbell
+# Waits silently for the vault to unlock so vault-env never has to prompt.
+ExecStartPre=/usr/bin/bash -c 'until %h/.config/env/bin/vault-unlock --check; do sleep 30; done'
+ExecStart=%h/.config/env/bin/vault-env hass-cli -- %h/.local/bin/ha-doorbell
 TimeoutStartSec=infinity
 Restart=always
 RestartSec=60

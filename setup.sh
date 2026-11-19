@@ -39,7 +39,18 @@ chezmoi init --source "$repo"
 chezmoi apply ${force[@]+"${force[@]}"}
 hash -r
 
-if have rbw; then
+vault_unlock="$HOME/.config/env/bin/vault-unlock"
+# Every bw command but unlock starts the desktop app's proxy and never exits; a missing proxy path avoids it.
+bwq() { BITWARDEN_DESKTOP_PROXY_PATH=/nonexistent/bitwarden-desktop-proxy bw "$@"; }
+if [[ $os == Linux ]] && have bw; then
+  say "bw"
+  if [[ $(bwq status 2>/dev/null | jq -r '.status // empty') == unauthenticated ]]; then
+    read -rp "Bitwarden server URL (empty for bitwarden.com): " base_url
+    [[ -z $base_url ]] || bwq config server "$base_url"
+    bwq login || warn "bw is not logged in; run bw login, then vault-unlock"
+  fi
+  "$vault_unlock" || warn "the vault stays locked; the LAN CA and the knowledge vault clone wait for the next run"
+elif have rbw; then
   say "rbw"
   if [[ -z $(rbw config show 2>/dev/null | jq -r '.email // empty') ]]; then
     default_email=$(awk '{print $1; exit}' "$repo/home/dot_config/git/allowed_signers")
@@ -55,12 +66,12 @@ fi
 
 if [[ $os == Linux ]]; then
   vault="$HOME/knowledge"
-  if [[ ! -d $vault/.git ]] && rbw unlocked >/dev/null 2>&1; then
+  if [[ ! -d $vault/.git ]] && "$vault_unlock" --check; then
     say "knowledge vault"
-    . "$repo/home/dot_config/env/lib/rbw-sock.sh"
-    sock=$(env_rbw_sock_linux) && export SSH_AUTH_SOCK="$sock"
+    . "$repo/home/dot_config/env/lib/ssh-agent-sock.sh"
+    sock=$(env_agent_sock_linux) && export SSH_AUTH_SOCK="$sock"
     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new" git clone git@github.com:lkshrk/knowledge.git "$vault" ||
-      warn "could not clone the knowledge vault; check the rbw SSH agent and rerun"
+      warn "could not clone the knowledge vault; enable the Bitwarden desktop app's SSH agent and rerun"
   fi
   [[ ! -d $vault/.git ]] || (cd "$vault" && lefthook install)
   if have obs && [[ ! -f $HOME/.config/obs-studio/basic/scenes/Untitled.json ]]; then

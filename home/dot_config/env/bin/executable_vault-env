@@ -1,0 +1,159 @@
+#!/bin/sh
+set -u
+
+ENV_DIR="${ENV_DIR:-$HOME/.config/env}"
+VAULT_ENV_STRICT="${VAULT_ENV_STRICT:-1}"
+unlock="$ENV_DIR/bin/vault-unlock"
+
+usage() {
+  printf '%s\n' 'usage: vault-env <profile> -- <command> [args...]' >&2
+  printf '%s\n' '       vault-env --pairs <item> <ENV_VAR> ... -- <command> [args...]' >&2
+}
+
+shift_to_command() {
+  while [ "$#" -gt 0 ] && [ "$1" != "--" ]; do
+    shift
+  done
+  [ "${1:-}" = "--" ] && shift
+  [ "$#" -gt 0 ] || { usage; exit 2; }
+  exec "$@"
+}
+
+validate_var() {
+  case "$1" in
+    ''|[!A-Za-z_]*|*[!A-Za-z0-9_]*)
+      printf 'vault-env: invalid env var name: %s\n' "$1" >&2
+      return 1
+      ;;
+  esac
+}
+
+[ "$#" -gt 0 ] || { usage; exit 2; }
+
+if ! backend=$("$unlock" --backend 2>/dev/null); then
+  if [ "$VAULT_ENV_STRICT" = 1 ]; then
+    printf '%s\n' 'vault-env: no vault client (bw or rbw); refusing to run; set VAULT_ENV_STRICT=0 to allow best-effort launch' >&2
+    exit 1
+  fi
+  printf '%s\n' 'vault-env: no vault client (bw or rbw); running command without injected secrets' >&2
+  shift_to_command "$@"
+fi
+
+# shellcheck source=../lib/vault.sh
+[ "$backend" = bw ] && . "$ENV_DIR/lib/vault.sh"
+
+vault_state=unchecked
+items=
+folders=
+
+bw_load() {
+  BW_SESSION=$("$unlock" --session) || return 1
+  export BW_SESSION
+  vault_bw_load ""
+}
+
+# Unlocks and loads once per run; a session bw rejects is dropped and unlocked again.
+vault_ready() {
+  if [ "$vault_state" = unchecked ]; then
+    vault_state=locked
+    if ! "$unlock" --check; then
+      printf '%s\n' 'vault-env: vault locked; unlocking' >&2
+    fi
+    case $backend in
+      bw)
+        if bw_load || { "$unlock" --forget && bw_load; }; then
+          vault_state=ready
+          "$unlock" --sync-stale
+        fi
+        ;;
+      *) "$unlock" && vault_state=ready ;;
+    esac
+  fi
+  [ "$vault_state" = ready ]
+}
+
+missing_secret=false
+
+inject_secret() {
+  item=$1
+  var=$2
+
+  validate_var "$var" || exit 2
+
+  # POSIX sh has no indirect expansion; validate_var above makes this eval safe.
+  eval "current=\${$var:-}"
+  [ -n "$current" ] && return 0
+
+  if ! vault_ready; then
+    printf 'vault-env: vault is locked; could not retrieve %s for %s\n' "$item" "$var" >&2
+    missing_secret=true
+    return 0
+  fi
+
+  case $backend in
+    bw) value=$(vault_bw_value "$items" "$folders" password "$item") ;;
+    *)
+      case "$item" in
+        */*) value=$(rbw get --folder "${item%%/*}" "${item#*/}" 2>/dev/null) ;;
+        *) value=$(rbw get "$item" 2>/dev/null) ;;
+      esac
+      ;;
+  esac || {
+    printf 'vault-env: could not retrieve %s for %s\n' "$item" "$var" >&2
+    missing_secret=true
+    return 0
+  }
+
+  export "$var=$value"
+}
+
+if [ "$1" = "--pairs" ]; then
+  shift
+  while [ "$#" -gt 0 ] && [ "$1" != "--" ]; do
+    [ "$#" -ge 2 ] || { usage; exit 2; }
+    inject_secret "$1" "$2"
+    shift 2
+  done
+else
+  profile=$1
+  shift
+
+  case "$profile" in
+    ''|.*|*/*|*'..'*)
+      printf 'vault-env: invalid profile name: %s\n' "$profile" >&2
+      exit 2
+      ;;
+  esac
+
+  map_file="$ENV_DIR/secrets/$profile.envmap"
+  [ -r "$map_file" ] || {
+    printf 'vault-env: profile not found: %s\n' "$map_file" >&2
+    exit 2
+  }
+
+  while IFS=' 	' read -r item var extra <&3 || [ -n "${item:-}" ]; do
+    case "${item:-}" in
+      ''|'#'*) continue ;;
+    esac
+    [ -n "${var:-}" ] && [ -z "${extra:-}" ] || {
+      printf 'vault-env: invalid mapping in %s: %s %s %s\n' "$map_file" "${item:-}" "${var:-}" "${extra:-}" >&2
+      exit 2
+    }
+    inject_secret "$item" "$var"
+  done 3< "$map_file"
+fi
+
+[ "${1:-}" = "--" ] || { usage; exit 2; }
+shift
+[ "$#" -gt 0 ] || { usage; exit 2; }
+
+unset BW_SESSION items folders
+if [ "$missing_secret" = true ]; then
+  if [ "$VAULT_ENV_STRICT" = 1 ]; then
+    printf '%s\n' 'vault-env: refusing to run with missing secrets; set VAULT_ENV_STRICT=0 to allow best-effort launch' >&2
+    exit 1
+  fi
+  printf '%s\n' 'vault-env: continuing with one or more missing secrets' >&2
+fi
+
+exec "$@"

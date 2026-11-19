@@ -1,0 +1,60 @@
+#!/bin/sh
+# Writes one public-key file per vault SSH key, named by fingerprint, for IdentityFile selectors in ~/.ssh/config.
+set -eu
+
+ENV_DIR="${ENV_DIR:-$HOME/.config/env}"
+output_dir=${VAULT_SSH_PUBKEY_DIR:-$HOME/.ssh/vault}
+
+# shellcheck source=../lib/ssh-agent-sock.sh
+. "$ENV_DIR/lib/ssh-agent-sock.sh"
+
+for command_name in ssh-add ssh-keygen; do
+  command -v "$command_name" >/dev/null 2>&1 || {
+    printf 'vault-ssh-pubkeys: required command not found: %s\n' "$command_name" >&2
+    exit 1
+  }
+done
+
+case "$(uname -s)" in
+  Darwin)
+    "$ENV_DIR/bin/vault-unlock"
+    sock=$(env_agent_sock_darwin)
+    ;;
+  Linux)
+    sock=$(env_agent_sock_linux) || {
+      printf '%s\n' 'vault-ssh-pubkeys: no SSH agent running; start the Bitwarden desktop app with its SSH agent enabled' >&2
+      exit 1
+    }
+    ;;
+  *)
+    printf '%s\n' 'vault-ssh-pubkeys: unsupported OS' >&2
+    exit 1
+    ;;
+esac
+
+install -d -m 0700 "$output_dir"
+keys_file=$(mktemp "${TMPDIR:-/tmp}/vault-ssh-pubkeys.XXXXXX")
+trap 'rm -f "$keys_file"' EXIT HUP INT TERM
+
+SSH_AUTH_SOCK=$sock ssh-add -L > "$keys_file"
+[ -s "$keys_file" ] || {
+  printf 'vault-ssh-pubkeys: the agent at %s returned no keys\n' "$sock" >&2
+  exit 1
+}
+
+count=0
+while IFS= read -r public_key || [ -n "$public_key" ]; do
+  fingerprint=$(
+    printf '%s\n' "$public_key" \
+      | ssh-keygen -lf - \
+      | awk '{print $2}' \
+      | sed 's/^SHA256://' \
+      | tr '/+' '_-' \
+      | tr -d '='
+  )
+  printf '%s\n' "$public_key" > "$output_dir/$fingerprint.pub"
+  chmod 0644 "$output_dir/$fingerprint.pub"
+  count=$((count + 1))
+done < "$keys_file"
+
+printf 'vault-ssh-pubkeys: wrote %s key(s) to %s\n' "$count" "$output_dir"

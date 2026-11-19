@@ -5,5 +5,5 @@ ConditionPathExists=%h/knowledge/scripts/sync.sh
 [Service]
 Type=oneshot
 SuccessExitStatus=3
-# No tty to unlock from: skip quietly while rbw is locked, but fail when rbw is missing.
-ExecStart=/usr/bin/bash -c '. %h/.config/env/profile.sh; command -v rbw >/dev/null || exit 1; rbw unlocked >/dev/null 2>&1 || exit 0; exec %h/knowledge/scripts/sync.sh --quiet'
+# No tty to unlock from: skip quietly until the vault is unlocked and its SSH agent has keys, but fail without vault-unlock.
+ExecStart=/usr/bin/bash -c '. %h/.config/env/profile.sh; [ -x %h/.config/env/bin/vault-unlock ] || exit 1; %h/.config/env/bin/vault-unlock --check && ssh-add -l >/dev/null 2>&1 || exit 0; exec %h/knowledge/scripts/sync.sh --quiet'

@@ -9,12 +9,13 @@ if [ -z "${NODE_EXTRA_CA_CERTS:-}" ] && [ -r "$HOME/.local/share/certs/lan-ca.pe
   export NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/lan-ca.pem"
 fi
 
-# Adopt an existing rbw socket; otherwise keep SSH_AUTH_SOCK for ordinary ssh-agent setups.
-env_linux_sock="$(env_rbw_sock_linux)" || :
+# Adopt a running vault agent; otherwise keep SSH_AUTH_SOCK for ordinary ssh-agent setups.
+env_linux_sock="$(env_agent_sock_linux)" || :
 if [ -n "$env_linux_sock" ]; then
   export SSH_AUTH_SOCK="$env_linux_sock"
-elif [ -z "${SSH_AUTH_SOCK:-}" ] && [ -n "${XDG_RUNTIME_DIR:-}" ] && command -v rbw >/dev/null 2>&1; then
+elif [ -z "${SSH_AUTH_SOCK:-}" ]; then
   # The desktop session starts before the agent does, and GUI apps never re-read the environment.
-  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/rbw/ssh-agent-socket"
+  env_linux_sock="$(env_agent_sock_linux_planned)" || :
+  [ -z "$env_linux_sock" ] || export SSH_AUTH_SOCK="$env_linux_sock"
 fi
 unset env_linux_sock

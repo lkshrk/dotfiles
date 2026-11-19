@@ -4,7 +4,7 @@ set -eu
 repo=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 
 tmpdir=
-socket_pid=
+socket_pids=
 
 fail() {
   printf 'fail: %s\n' "$1" >&2
@@ -12,7 +12,8 @@ fail() {
 }
 
 cleanup() {
-  [ -z "${socket_pid:-}" ] || kill "$socket_pid" 2>/dev/null || true
+  # shellcheck disable=SC2086
+  [ -z "${socket_pids:-}" ] || kill $socket_pids 2>/dev/null || true
   [ -z "${tmpdir:-}" ] || rm -rf "$tmpdir"
 }
 trap cleanup EXIT HUP INT TERM
@@ -47,7 +48,7 @@ run_profile_probe() {
     TMPDIR="$tmpdir" \
     EXPECTED_SSH_AUTH_SOCK="$expected_sock" \
     SSH_AUTH_SOCK="$home/existing-agent.sock" \
-    RBW_SSH_AUTH_SOCK="$home/missing-rbw-agent.sock" \
+    VAULT_SSH_AUTH_SOCK="$home/missing-vault-agent.sock" \
     PATH=/usr/bin:/bin:/usr/sbin:/sbin \
     /bin/sh -c '
       set -eu
@@ -98,10 +99,10 @@ run_profile_probe() {
     '
 }
 
-run_profile_probe "linux without rbw socket" "$home/existing-agent.sock"
+run_profile_probe "linux without a vault agent" "$home/existing-agent.sock"
 
-socket_path="$runtime/rbw/ssh-agent-socket"
-python3 - "$socket_path" <<'PY' &
+start_socket() {
+python3 - "$1" <<'PY' &
 import os
 import signal
 import socket
@@ -127,16 +128,22 @@ signal.signal(signal.SIGTERM, stop)
 while True:
     time.sleep(1)
 PY
-socket_pid=$!
-
+socket_pids="${socket_pids:-} $!"
 i=0
-while [ "$i" -lt 50 ] && [ ! -S "$socket_path" ]; do
+while [ "$i" -lt 50 ] && [ ! -S "$1" ]; do
   sleep 0.1
   i=$((i + 1))
 done
-[ -S "$socket_path" ] || fail "rbw socket fixture did not start"
+[ -S "$1" ] || fail "socket fixture $1 did not start"
+}
 
-run_profile_probe "linux with existing rbw socket" "$socket_path"
+socket_path="$runtime/rbw/ssh-agent-socket"
+start_socket "$socket_path"
+run_profile_probe "linux with a running rbw agent" "$socket_path"
+
+bw_socket="$home/.bitwarden-ssh-agent.sock"
+start_socket "$bw_socket"
+run_profile_probe "linux with the Bitwarden desktop agent and rbw" "$bw_socket"
 
 
 printf '\n## pre-rename guard\n'

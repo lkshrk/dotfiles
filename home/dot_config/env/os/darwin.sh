@@ -4,7 +4,7 @@ export HOMEBREW_REQUIRE_TAP_TRUST="${HOMEBREW_REQUIRE_TAP_TRUST:-1}"
 export PNPM_HOME="${PNPM_HOME:-$HOME/Library/pnpm}"
 env_path_prepend "$PNPM_HOME/bin"
 
-env_darwin_sock="$(env_rbw_sock_darwin)"
+env_darwin_sock="$(env_agent_sock_darwin)"
 if [ -S "$env_darwin_sock" ]; then
   export SSH_AUTH_SOCK="$env_darwin_sock"
 else

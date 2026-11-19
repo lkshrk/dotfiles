@@ -1,5 +1,5 @@
 #!/bin/sh
-# Launch an AI agent CLI with its rbw secret profile, gateway settings and the optional LAN CA.
+# Launch an AI agent CLI with its vault secret profile, gateway settings and the optional LAN CA.
 set -eu
 
 ENV_DIR="${ENV_DIR:-$HOME/.config/env}"
@@ -58,7 +58,7 @@ case $client in
   *) usage ;;
 esac
 
-# The first pass runs before rbw-env injects the profile; it re-enters with --launch.
+# The first pass runs before vault-env injects the profile; it re-enters with --launch.
 if [ "$launched" = 0 ]; then
   # shellcheck disable=SC2086
   unset $drop
@@ -75,8 +75,9 @@ if [ "$launched" = 0 ]; then
       fi
     done
   fi
-  if command -v rbw >/dev/null 2>&1 && [ -x "$ENV_DIR/bin/rbw-env" ] && [ -r "$ENV_DIR/secrets/$client.envmap" ]; then
-    RBW_ENV_STRICT=0 exec "$ENV_DIR/bin/rbw-env" "$client" -- "$self" --launch "$client" "$@"
+  if [ -x "$ENV_DIR/bin/vault-env" ] && [ -r "$ENV_DIR/secrets/$client.envmap" ] &&
+    "$ENV_DIR/bin/vault-unlock" --backend >/dev/null 2>&1; then
+    VAULT_ENV_STRICT=0 exec "$ENV_DIR/bin/vault-env" "$client" -- "$self" --launch "$client" "$@"
   fi
 fi
 
@@ -97,7 +98,7 @@ fi
 if [ -n "$require" ]; then
   eval "required=\${$require:-}"
   if [ -z "$required" ]; then
-    printf 'agent-run: %s needs %s; unlock rbw or provision the local-agents token\n' "$client" "$require" >&2
+    printf 'agent-run: %s needs %s; unlock the vault or provision the local-agents token\n' "$client" "$require" >&2
     exit 1
   fi
 fi

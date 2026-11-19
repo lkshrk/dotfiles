@@ -9,14 +9,16 @@ tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT HUP INT TERM
 ENV_PACKAGE_DIR="$("$repo/scripts/render-home.sh" towerr "$tmpdir/render")/.config/env"
 mkdir -p "$tmpdir/env/bin" "$tmpdir/bin" "$tmpdir/rbw" "$tmpdir/shim" "$tmpdir/sys"
-# A PATH without the real rbw, so no test can read the vault.
-for tool in sh sed readlink tr cat uname dirname env; do
+# A PATH without a real bw or rbw, so no test can read the vault.
+for tool in sh sed readlink tr cat uname dirname env mkdir id find; do
   ln -s "$(command -v "$tool")" "$tmpdir/sys/$tool"
 done
 env_dir=$tmpdir/env
 
 ln -s "$ENV_PACKAGE_DIR/bin/agent-run" "$env_dir/bin/agent-run"
-ln -s "$ENV_PACKAGE_DIR/bin/rbw-env" "$env_dir/bin/rbw-env"
+ln -s "$ENV_PACKAGE_DIR/bin/vault-env" "$env_dir/bin/vault-env"
+ln -s "$ENV_PACKAGE_DIR/bin/vault-unlock" "$env_dir/bin/vault-unlock"
+ln -s "$ENV_PACKAGE_DIR/lib" "$env_dir/lib"
 ln -s "$ENV_PACKAGE_DIR/secrets" "$env_dir/secrets"
 printf '#!/bin/sh\nprintf "%%s\\n" token-file\n' > "$env_dir/bin/local-agents-token"
 cat > "$tmpdir/rbw/rbw" <<'EOF'

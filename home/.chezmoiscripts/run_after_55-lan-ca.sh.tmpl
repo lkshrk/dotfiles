@@ -1,11 +1,12 @@
 {{- $groups := index .hosts .host | default (list) -}}
 {{- if has "personal" $groups -}}
 #!/bin/bash
-# Writes the vault's LAN root CA once rbw is unlocked; runs on every apply, so it waits for the first unlock.
+# Writes the vault's LAN root CA once the vault is unlocked; runs on every apply, so it waits for the first unlock.
 set -euo pipefail
-command -v rbw >/dev/null 2>&1 && rbw unlocked >/dev/null 2>&1 || exit 0
+vault="$HOME/.config/env/bin"
+[ -x "$vault/vault-unlock" ] && "$vault/vault-unlock" --check || exit 0
 pem="$HOME/.local/share/certs/lan-ca.pem"
-raw=$(rbw get --field username root-CA 2>/dev/null) && [ -n "$raw" ] ||
+raw=$("$vault/vault-get" --field username root-CA 2>/dev/null) && [ -n "$raw" ] ||
   { echo "lan-ca: no root-CA in the vault; LAN hosts (litellm) will fail TLS" >&2; exit 0; }
 body=$(printf '%s\n' "$raw" | sed -e 's/-----BEGIN CERTIFICATE-----//' -e 's/-----END CERTIFICATE-----//' | tr -d '[:space:]')
 mkdir -p "${pem%/*}"

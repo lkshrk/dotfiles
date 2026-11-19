@@ -34,9 +34,9 @@ else
 fi
 
 
-# shellcheck source=lib/rbw-sock.sh
-if [ -r "$ENV_DIR/lib/rbw-sock.sh" ]; then
-  . "$ENV_DIR/lib/rbw-sock.sh"
+# shellcheck source=lib/ssh-agent-sock.sh
+if [ -r "$ENV_DIR/lib/ssh-agent-sock.sh" ]; then
+  . "$ENV_DIR/lib/ssh-agent-sock.sh"
 fi
 
 # shellcheck source=lib/dev-cache.sh
@@ -85,8 +85,8 @@ env_path_prepend "$HOME/.local/bin"
 env_path_prepend "$HOME/.mimocode/bin"
 
 unset env_os env_machine
-unset env_rbw_uid_val env_rbw_tmp env_rbw_sock env_rbw_candidate env_rbw_runtime
-unset -f env_rbw_uid env_rbw_sock_darwin env_rbw_sock_linux 2>/dev/null || true
+unset env_agent_uid_val env_agent_tmp env_agent_sock env_agent_candidate env_agent_runtime
+unset -f env_agent_uid env_agent_sock_darwin env_agent_sock_linux env_agent_sock_linux_planned 2>/dev/null || true
 unset -f env_path_remove env_path_prepend env_path_append 2>/dev/null || true
 
 export ENV_PROFILE_PATH=$PATH

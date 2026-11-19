@@ -43,7 +43,7 @@ else
   rm -f "$dir/.argo.$$"
 fi
 
-# omp prints a script to source, not a #compdef file; the shim skips the ~/.local/bin wrapper and its rbw prompt.
+# omp prints a script to source, not a #compdef file; the shim skips the ~/.local/bin wrapper and its vault prompt.
 omp_bin="${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims/omp"
 if [ -x "$omp_bin" ] && "$omp_bin" completions zsh </dev/null > "$dir/.omp.$$" 2>/dev/null && [ -s "$dir/.omp.$$" ]; then
   mv -f "$dir/.omp.$$" "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/omp-completions.zsh"

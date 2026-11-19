@@ -20,9 +20,9 @@ files=(
 
 usage() { echo "usage: obs-config export|apply" >&2; exit 1; }
 
-# Re-run under rbw-env so the secrets arrive as environment variables.
+# Re-run under vault-env so the secrets arrive as environment variables.
 if [[ -z ${OBS_CONFIG_SECRETS:-} ]]; then
-  exec env OBS_CONFIG_SECRETS=1 "$HOME/.config/env/bin/rbw-env" obs -- "$0" "$@"
+  exec env OBS_CONFIG_SECRETS=1 "$HOME/.config/env/bin/vault-env" obs -- "$0" "$@"
 fi
 for s in "${secrets[@]}"; do
   [[ -n ${!s:-} ]] || { echo "obs-config: $s missing from the vault" >&2; exit 1; }

@@ -4,6 +4,11 @@
 .config/zsh/40-lazy.zsh
 .config/zsh/55-flux-completions.zsh
 .config/zsh/55-kubectl-completions.zsh
+.config/zsh/68-rbw.zsh
+.config/env/bin/rbw-env
+.config/env/bin/rbw-unlock-once
+.config/env/bin/rbw-ssh-pubkeys
+.config/env/lib/rbw-sock.sh
 .config/env/functions/audio
 .config/hypr/scripts/audio-restart
 .config/pipewire/filter-chain.conf.d

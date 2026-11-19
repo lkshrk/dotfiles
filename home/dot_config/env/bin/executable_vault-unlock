@@ -1,0 +1,144 @@
+#!/bin/sh
+# Unlocks the vault once for every caller: bw through the Bitwarden desktop app on Linux, rbw elsewhere.
+set -u
+
+mode=${1:-unlock}
+
+backend=${VAULT_BACKEND:-}
+if [ -z "$backend" ]; then
+  if [ "$(uname -s)" = Linux ] && command -v bw >/dev/null 2>&1; then
+    backend=bw
+  elif command -v rbw >/dev/null 2>&1; then
+    backend=rbw
+  else
+    printf '%s\n' 'vault-unlock: neither bw nor rbw is installed' >&2
+    exit 1
+  fi
+fi
+
+if [ -n "${XDG_RUNTIME_DIR:-}" ] && [ -d "$XDG_RUNTIME_DIR" ]; then
+  dir=$XDG_RUNTIME_DIR/vault
+else
+  dir=${TMPDIR:-/tmp}/vault-$(id -u)
+fi
+umask 077
+mkdir -p "$dir" || exit 1
+session_file=$dir/bw-session
+# Every bw command but unlock starts the desktop app's proxy and then never exits; a missing proxy path avoids it.
+no_proxy=BITWARDEN_DESKTOP_PROXY_PATH=/nonexistent/bitwarden-desktop-proxy
+cancelled=$dir/unlock.cancelled
+
+unlocked() {
+  case $backend in
+    bw) [ -s "$session_file" ] ;;
+    *) rbw unlocked >/dev/null 2>&1 ;;
+  esac
+}
+
+case $mode in
+  --check) unlocked; exit ;;
+  --backend) printf '%s\n' "$backend"; exit 0 ;;
+  --forget) rm -f "$session_file"; exit 0 ;;
+  --sync-stale)
+    [ "$backend" = bw ] && unlocked || exit 0
+    [ -n "$(find "$dir/bw-synced" -mmin -60 2>/dev/null)" ] && exit 0
+    : >"$dir/bw-synced"
+    (BW_SESSION=$(cat "$session_file") env "$no_proxy" bw sync >/dev/null 2>&1) </dev/null >/dev/null 2>&1 &
+    exit 0
+    ;;
+  --lock)
+    rm -f "$session_file"
+    case $backend in
+      bw) env "$no_proxy" bw lock >/dev/null 2>&1 ;;
+      *) rbw lock >/dev/null 2>&1 ;;
+    esac
+    exit 0
+    ;;
+  unlock | --session) ;;
+  *)
+    cat >&2 <<'EOF'
+usage: vault-unlock               unlock if needed (exit 2: no terminal or display to prompt in)
+       vault-unlock --check       exit 0 when unlocked, never prompts
+       vault-unlock --session     print the bw session key, unlocking if needed
+       vault-unlock --backend     print bw or rbw
+       vault-unlock --forget      drop a bw session key bw no longer accepts
+       vault-unlock --sync-stale  bw sync in the background when the last sync is over an hour old
+       vault-unlock --lock        lock the vault
+EOF
+    exit 2
+    ;;
+esac
+
+finish() {
+  [ "$mode" = --session ] && [ "$backend" = bw ] && cat "$session_file"
+  exit 0
+}
+
+unlocked && finish
+
+# Without a terminal only the desktop app or a graphical pinentry can ask.
+if [ -t 0 ]; then
+  tty=true
+else
+  tty=false
+  [ -n "${WAYLAND_DISPLAY:-}${DISPLAY:-}" ] || { [ "$(uname -s)" = Darwin ] && [ -z "${SSH_CONNECTION:-}" ]; } || exit 2
+  exec </dev/null
+fi
+
+say() {
+  [ "$tty" = false ] || printf 'vault: %s\n' "$1" >&2
+}
+
+# bw prints the key and then keeps running while connected to the desktop app, so the key is taken as soon as it appears.
+bw_unlock() {
+  out=$dir/unlock.$$
+  if [ "$tty" = true ]; then
+    bw unlock --raw <&0 >"$out" &
+  else
+    bw unlock --raw <&0 >"$out" 2>/dev/null &
+  fi
+  pid=$!
+  waited=0
+  while kill -0 "$pid" 2>/dev/null && [ ! -s "$out" ] && [ "$waited" -lt 1200 ]; do
+    sleep 0.1
+    waited=$((waited + 1))
+  done
+  sleep 0.2
+  kill "$pid" 2>/dev/null
+  wait "$pid" 2>/dev/null
+  key=$(tr -d '\n' <"$out")
+  rm -f "$out"
+  [ -n "$key" ] || return 1
+  printf '%s' "$key" >"$session_file.$$" && mv "$session_file.$$" "$session_file" || return 1
+  (BW_SESSION=$key env "$no_proxy" bw sync >/dev/null 2>&1 && : >"$dir/bw-synced") </dev/null >/dev/null 2>&1 9>&- &
+  return 0
+}
+
+unlock() {
+  if [ "$tty" = false ] && [ -n "$(find "$cancelled" -mmin -1 2>/dev/null)" ]; then
+    exit 1
+  fi
+  case $backend in
+    bw) bw_unlock ;;
+    *) rbw unlock >/dev/null 2>&1 ;;
+  esac
+  if unlocked; then
+    rm -f "$cancelled"
+    finish
+  fi
+  : >"$cancelled"
+  say 'unlock failed or was cancelled; run vault-unlock to retry'
+  exit 1
+}
+
+if ! command -v flock >/dev/null 2>&1; then
+  unlock
+fi
+
+exec 9>"$dir/unlock.lock"
+if ! flock -n 9; then
+  say 'waiting for another unlock prompt…'
+  flock -w 120 9 || { say 'gave up waiting for another unlock prompt'; exit 1; }
+fi
+unlocked && finish
+unlock

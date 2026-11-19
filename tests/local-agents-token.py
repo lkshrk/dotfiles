@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory() as work:
     env = {"HOME": work, "PATH": f"{bin_dir}:{os.environ['PATH']}",
            "XDG_DATA_HOME": str(home / "data"),
            "XDG_CONFIG_HOME": str(home / "config"),
-           "XDG_RUNTIME_DIR": str(home / "run")}
+           "XDG_RUNTIME_DIR": str(home / "run"), "VAULT_BACKEND": "rbw"}
     (home / "run").mkdir()
     installed = home / "config/env/bin/local-agents-token"
     installed.parent.mkdir(parents=True)
@@ -47,12 +47,13 @@ with tempfile.TemporaryDirectory() as work:
     assert result.returncode != 0 and not result.stdout and "empty" in result.stderr
     rbw.write_text("#!/bin/sh\nexit 1\n")
     result = run(HELPER)
-    assert result.returncode != 0 and not result.stdout and "rbw" in result.stderr
+    assert result.returncode != 0 and not result.stdout and "vault" in result.stderr
     rbw.unlink()
+    del env["VAULT_BACKEND"]
     path = env["PATH"]
     env["PATH"] = str(bin_dir)
     result = run(HELPER)
     env["PATH"] = path
-    assert result.returncode != 0 and not result.stdout and "install rbw" in result.stderr
+    assert result.returncode != 0 and not result.stdout and "install bw" in result.stderr
 
 print("gateway token checks passed")
