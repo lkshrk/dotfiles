@@ -5,4 +5,4 @@ export WINEDLLOVERRIDES="winealsa.drv=d${WINEDLLOVERRIDES:+;$WINEDLLOVERRIDES}"
 export PULSE_LATENCY_MSEC=60
 export DXVK_CONFIG="dxvk.enableNvRawAccessChains=False${DXVK_CONFIG:+;$DXVK_CONFIG}"
 export OBS_VKCAPTURE=1
-exec omarchy-launch-battlenet "$@"
+exec game-run omarchy-launch-battlenet "$@"

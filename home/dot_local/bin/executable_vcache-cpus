@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Prints the CPU list sharing the largest L3 (the V-Cache CCD on a dual-CCD X3D); prints nothing when all L3s match.
+set -euo pipefail
+
+mapfile -t l3 < <(for d in /sys/devices/system/cpu/cpu[0-9]*/cache/index3; do
+  echo "$(<"$d/size") $(<"$d/shared_cpu_list")"
+done | sort -un)
+
+(( ${#l3[@]} > 1 )) && echo "${l3[-1]#* }"
+exit 0

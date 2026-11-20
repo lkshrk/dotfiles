@@ -1,0 +1,7 @@
+[Unit]
+Description=Games started through game-run
+
+[Slice]
+CPUWeight=1000
+# Keeps the game's working set out of zram while builds compete for memory.
+MemoryLow=8G

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Usage: game-run <command> [args...]; runs a game in game.slice on the V-Cache cores.
+set -euo pipefail
+
+cpus=$(vcache-cpus 2>/dev/null || true)
+exec systemd-run --user --scope --quiet --collect --expand-environment=no --slice=game.slice -- ${cpus:+taskset -c "$cpus"} "$@"

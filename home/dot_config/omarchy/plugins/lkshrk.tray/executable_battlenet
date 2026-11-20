@@ -18,7 +18,7 @@ case ${1:-} in
     ;;
   launch)
     # A second client hands --exec to the running one and exits.
-    exec env WINEPREFIX="$PREFIX" PROTONPATH=GE-Proton GAMEID=umu-battlenet PROTON_VERB=run PROTON_USE_XALIA=0 \
+    exec game-run env WINEPREFIX="$PREFIX" PROTONPATH=GE-Proton GAMEID=umu-battlenet PROTON_VERB=run PROTON_USE_XALIA=0 \
       umu-run "$CLIENT" --exec="${2:?exec command required}"
     ;;
   exit)
