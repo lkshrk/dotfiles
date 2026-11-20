@@ -130,6 +130,8 @@ set -g @resurrect-capture-pane-contents "on"
 set -g @resurrect-processes "nvim man less more tail htop btop"
 set -g @continuum-save-interval "5"
 set -g @continuum-restore "on"
+# Resurrect only drops a starting session named 0; plain tmux and Omarchy's launcher leave another one behind.
+set -g @resurrect-hook-post-restore-all "$HOME/.config/tmux/restore-cleanup.sh"
 # continuum skips its own status-right hook whenever any other tmux process runs; private sockets never autosave.
 set -ag status-right "#{?#{m:*/default,#{socket_path}},#($HOME/.local/share/tmux/plugins/tmux-continuum/scripts/continuum_save.sh),}"
 # The first autosave waits a full interval so it cannot overwrite the snapshot being restored.
