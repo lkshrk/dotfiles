@@ -8,26 +8,27 @@ cd "$repo/packages"
 fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 
 groups=$(sed -n 's/^  [^:]*: \[\(.*\)\]$/\1/p' "$repo/home/.chezmoidata/hosts.yaml" | tr ',' '\n' | tr -d ' ' | sort -u)
-for f in arch/* brew/*; do
+# arch/repos/ holds pacman repo configs, not package lists.
+for f in arch/*.pacman arch/*.aur brew/*; do
   g=$(basename "$f"); g=${g%%.*}
   grep -qx "$g" <<<"$groups" || fail "$f: group '$g' is not in hosts.yaml"
 done
 
-for f in arch/*; do
+for f in arch/*.pacman arch/*.aur; do
   sort -uc "$f" 2>/dev/null || fail "$f: not sorted or has duplicates"
   ! grep -qE '[[:space:]]|^$' "$f" || fail "$f: blank lines or spaces"
 done
-dupes=$(cat arch/* | sort | uniq -d)
+dupes=$(cat arch/*.pacman arch/*.aur | sort | uniq -d)
 [ -z "$dupes" ] || fail "in more than one Arch list: $(echo $dupes)"
 for f in installer/*.txt; do
   [ -f "$f" ] || continue
   sort -uc "$f" 2>/dev/null || fail "$f: not sorted or has duplicates"
-  both=$(cat arch/* | sort -u | comm -12 - "$f")
+  both=$(cat arch/*.pacman arch/*.aur | sort -u | comm -12 - "$f")
   [ -z "$both" ] || fail "$f: the installer owns these; keep them out of the role lists: $(echo $both)"
 done
 if ls /usr/share/omarchy/install/*.packages >/dev/null 2>&1; then
   omarchy=$(cat /usr/share/omarchy/install/*.packages | sed 's/#.*//' | tr -s ' \t' '\n' | grep -v '^$' | sort -u)
-  shipped=$(cat arch/* | sort -u | comm -12 - <(printf '%s\n' "$omarchy"))
+  shipped=$(cat arch/*.pacman arch/*.aur | sort -u | comm -12 - <(printf '%s\n' "$omarchy"))
   [ -z "$shipped" ] || fail "Omarchy ships these; keep them out of our lists: $(echo $shipped)"
 fi
 
