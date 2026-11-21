@@ -6,8 +6,11 @@ local S = require("hypr.screens.side")
 
 local W = {}
 
+-- Windows taking another window's frame; the move event arrives after U.state.placing is reset.
+local copying = {}
+
 function W.arrive(w)
-  if U.state.placing or not w or not w.workspace or U.transient(w) then return end
+  if U.state.placing or not w or not w.workspace or U.transient(w) or copying[w.address] then return end
   local workspace = w.workspace.name
   if workspace == C.top_workspace then
     hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))
@@ -44,6 +47,11 @@ U.on_role(function(w, role, promoted)
     W.arrive(hl.get_window("address:" .. w.address) or w)
     return
   end
+  -- A window whose role waited for the settle time skipped its slot at open.
+  if role == "main" then
+    if U.settled(w.address) and w.workspace and C.homes[U.app(w)] == w.workspace.name then W.arrive(w) end
+    return
+  end
   if role ~= "extra" or U.transient(w) or not U.layout_placed(w) then return end
   if (w.fullscreen or 0) ~= 0 or (w.workspace and w.workspace.name == C.gaming_workspace) then return end
   make_extra(w)
@@ -63,8 +71,75 @@ local function place_helium(w)
   if home == C.helium_main_workspace then
     hl.dispatch(hl.dsp.window.float({ action = "disable", window = w }))
   else
-    W.arrive(w)
+    W.arrive(hl.get_window("address:" .. w.address) or w)
   end
+end
+
+local function place_exact(w, x, y, width, height)
+  hl.dispatch(hl.dsp.window.float({ action = "enable", window = w }))
+  hl.dispatch(hl.dsp.window.resize({ x = width, y = height, window = w }))
+  hl.dispatch(hl.dsp.window.move({ x = x, y = y, window = w }))
+end
+
+-- A new Helium window (Ctrl+N) takes the frame of the window it was opened from.
+local function copy_helium(w, source)
+  local x, y = U.xy(source.at)
+  local width, height = U.xy(source.size)
+  local workspace = source.workspace and source.workspace.name
+  local address, from = w.address, source.address
+  copying[address] = true
+  hl.timer(function() copying[address] = nil end, { timeout = 1000, type = "oneshot" })
+  hl.timer(function()
+    local new = hl.get_window("address:" .. address)
+    if not new or not new.mapped then return end
+    if workspace then
+      U.state.placing = true
+      U.move_to(new, workspace)
+      U.state.placing = false
+    end
+    if (new.fullscreen or 0) ~= 0 then
+      hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = new }))
+    end
+    local src = hl.get_window("address:" .. from)
+    -- A workspace holds one fullscreen window, so a maximized source floats at its frame and hands the mode to the new window.
+    if src and src.mapped and (src.fullscreen or 0) ~= 0 and src.workspace and src.workspace.name == workspace then
+      local mode = src.fullscreen
+      local sx, sy = U.xy(src.at)
+      local sw, sh = U.xy(src.size)
+      hl.dispatch(hl.dsp.window.fullscreen_state({ internal = 0, client = 0, window = src }))
+      place_exact(src, sx, sy, sw, sh)
+      hl.dispatch(hl.dsp.window.fullscreen_state({ internal = mode, client = mode, window = new }))
+    else
+      place_exact(new, x, y, width, height)
+    end
+    hl.dispatch(hl.dsp.focus({ window = new }))
+    hl.dispatch(hl.dsp.window.alter_zorder({ mode = "top", window = new }))
+  end, { timeout = 120, type = "oneshot" })
+end
+
+-- When each Helium window last had focus; a new window under the cursor can pull focus elsewhere (a game) before window.open.
+local helium_focus, helium_seq, focused_helium = {}, 0, nil
+hl.on("window.active", function(w)
+  helium_seq = helium_seq + 1
+  if focused_helium then helium_focus[focused_helium] = { seq = helium_seq, t = os.time() } end
+  focused_helium = w and w.address and w.class == "helium" and w.address or nil
+  if focused_helium then helium_focus[focused_helium] = { seq = helium_seq, t = os.time() } end
+end)
+
+-- Session restore opens several windows at once, so only a settled Helium window counts as the source.
+local function helium_source(w)
+  helium_focus[w.address] = nil
+  local best, best_seq = nil, -1
+  for address, seen in pairs(helium_focus) do
+    local fresh = address == focused_helium or os.time() - seen.t <= 2
+    if fresh and seen.seq > best_seq then
+      local candidate = hl.get_window("address:" .. address)
+      if candidate and candidate.mapped and candidate.class == "helium" and U.settled(address) then
+        best, best_seq = candidate, seen.seq
+      end
+    end
+  end
+  return best
 end
 
 -- Popups and prompts always ask on the main screen's current workspace, whichever screen opened them.
@@ -105,13 +180,18 @@ hl.on("window.open", function(w)
     to_main(w)
     return
   end
-  -- Free floating windows keep the frame they were last left at (frames.lua), so they skip slots and the dialog box.
-  if w.floating and not U.layout_placed(w) then return end
   if w.class == "helium" then
-    place_helium(w)
-    focus_soon(w)
+    local source = helium_source(w)
+    if source then
+      copy_helium(w, source)
+    else
+      place_helium(w)
+      focus_soon(w)
+    end
     return
   end
+  -- Free floating windows keep the frame they were last left at (frames.lua), so they skip slots and the dialog box.
+  if w.floating and not U.layout_placed(w) then return end
   -- Only an app that lives on this workspace takes a slot or column; anything else is a popup or gets collected.
   if not w.workspace or C.homes[U.app(w)] ~= w.workspace.name then
     -- The columns layout tiles everything, so Hyprland never floats a popup there on its own.
@@ -124,6 +204,8 @@ hl.on("window.open", function(w)
     end
     return
   end
+  -- A second window of the app may be a settings popup; on_role places it once its role is known.
+  if U.role(w.address) == "pending" then return end
   W.arrive(w)
 end)
 

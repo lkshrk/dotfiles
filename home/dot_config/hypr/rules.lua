@@ -2,11 +2,16 @@ local C = require("hypr.screens.config")
 
 -- One tiled workspace per main app; screens/windows.lua collects tiled apps without a home onto workspace 1.
 for _, app in ipairs(C.apps) do
-  local classes = {}
-  for i, class in ipairs(app) do classes[i] = class:gsub("%.", "\\.") end
-  -- Portrait-screen apps float into their thirds slot (see screens/side.lua).
-  o.window("(?i)^(" .. table.concat(classes, "|") .. ")$", { workspace = app.workspace, float = C.side_workspaces[app.workspace] })
+  -- Helium opens where it was asked for; screens/windows.lua copies the source window or sends it home.
+  if app[1] ~= "helium" then
+    local classes = {}
+    for i, class in ipairs(app) do classes[i] = class:gsub("%.", "\\.") end
+    -- Portrait-screen apps float into their thirds slot (see screens/side.lua).
+    o.window("(?i)^(" .. table.concat(classes, "|") .. ")$", { workspace = app.workspace, float = C.side_workspaces[app.workspace] })
+  end
 end
+-- Helium may open on another screen's workspace; focusing it there would take a fullscreen game's fullscreen (misc.on_focus_under_fullscreen).
+o.window("^helium$", { no_initial_focus = true })
 -- Steam games, and Chatterino's X11 class (U.app maps both to their app).
 o.window("^steam_app_[0-9]+$", { workspace = C.gaming_workspace })
 o.window("^chatterino$", { workspace = "6", float = true })
