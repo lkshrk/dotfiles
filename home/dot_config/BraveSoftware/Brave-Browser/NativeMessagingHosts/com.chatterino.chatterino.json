@@ -1,0 +1,9 @@
+{
+    "allowed_origins": [
+        "chrome-extension://glknmaideaikkmemifbfkhnomoknepka/"
+    ],
+    "description": "Browser interaction with chatterino.",
+    "name": "com.chatterino.chatterino",
+    "path": "/usr/bin/chatterino",
+    "type": "stdio"
+}
