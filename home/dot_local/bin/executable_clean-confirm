@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Usage: clean-confirm dev|ai — shows dev-clean's or ai-clean's dry run, then deletes only after a yes.
+set -euo pipefail
+
+case ${1:-} in
+  dev) clean() { dev-clean "$@"; }; apply=--apply ;;
+  ai) clean() { zsh -c 'source ~/.config/zsh/60-functions.zsh && ai-clean "$@"' ai-clean "$@"; }; apply=--yes ;;
+  *) echo "usage: clean-confirm dev|ai" >&2; exit 2 ;;
+esac
+
+clean
+echo
+if ! gum confirm --default=false "Delete everything listed above?"; then
+  echo "Nothing deleted."
+  exit 0
+fi
+clean "$apply"

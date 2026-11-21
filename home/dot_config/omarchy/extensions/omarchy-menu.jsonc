@@ -11,4 +11,12 @@
 
   // Quotatank is a bar plugin, not an app, so it only appears here through its IPC handler.
   "quota": {"icon":"󰊚","label":"LLM Quota","description":"Quotatank usage and limits","aliases":["quotatank"],"action":"quickshell ipc -p /usr/share/omarchy/shell call janitorhead.quotatank toggle"},
+
+  "utils": {"icon":"󱁤","label":"Utils","after":"apps"},
+  "utils.freeze-report": {"icon":"󰜗","label":"Freeze Report","description":"Freeze snapshot plus nvidia-bug-report, saved under ~/.local/state/freeze-captures","action":"omarchy-launch-floating-terminal-with-presentation freeze-capture --report"},
+  "utils.ai-clean": {"icon":"󰃢","label":"AI Cache Cleanup","description":"Preview, then confirm: Claude, Codex and editor AI caches","action":"omarchy-launch-floating-terminal-with-presentation clean-confirm ai"},
+  "utils.dev-clean": {"icon":"󰗩","label":"Dev Cleanup","description":"Preview, then confirm: tool caches, repo build caches and merged worktrees under ~/Dev; also prunes Docker build cache and unused images","action":"omarchy-launch-floating-terminal-with-presentation clean-confirm dev"},
+  "utils.system-health": {"icon":"󰗶","label":"System Health","description":"Checks keyd, Hyprland config, failed units and the STUFF mount; notifies only when something is wrong","action":"~/.config/omarchy/scripts/check-system-health"},
+  "utils.sync-shell-clones": {"icon":"󰓦","label":"Sync Shell Clones","description":"Re-applies local.patch onto updated upstream plugins; restarts the shell itself when a clone changed, silent when nothing to do","action":"~/.config/omarchy/scripts/sync-shell-clones"},
+  "utils.check-shell-clones": {"icon":"󰕥","label":"Check Shell Clones","description":"If a cloned lock, password-prompt or tray plugin fails to load, switches it back to Omarchy's stock plugin; notifies only on problems","action":"~/.config/omarchy/scripts/check-shell-clones"},
 }
