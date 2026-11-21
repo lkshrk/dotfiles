@@ -58,7 +58,7 @@ for backend in bw rbw; do
 
   reset; mkdir -p "$dir"; : > "$dir/unlock.cancelled"
   out=$("$unlock" </dev/null 2>&1) && fail "$backend: non-terminal caller ignored the cancel hold-off"
-  [ -z "$out" ] || fail "$backend: non-terminal hold-off was not silent: $out"
+  case $out in *'vault: locked; an unlock was cancelled'*) ;; *) fail "$backend: non-terminal hold-off gave no reason: $out" ;; esac
   [ "$(prompts)" = 0 ] || fail "$backend: non-terminal caller prompted during the hold-off"
   in_tty "$unlock" >/dev/null || fail "$backend: terminal caller did not unlock past the cancel marker"
   [ ! -e "$dir/unlock.cancelled" ] || fail "$backend: successful unlock kept the cancel marker"
@@ -69,9 +69,14 @@ for backend in bw rbw; do
   [ -e "$dir/unlock.cancelled" ] || fail "$backend: cancelled unlock left no marker"
 
   reset
+  out=$(FAKE_VAULT_UNLOCK=cancel "$unlock" </dev/null 2>&1) && fail "$backend: cancelled non-terminal unlock succeeded"
+  case $out in *'vault: unlock failed'*) ;; *) fail "$backend: cancelled non-terminal unlock gave no reason: $out" ;; esac
+
+  reset
   rc=0
   out=$(DISPLAY='' WAYLAND_DISPLAY='' "$unlock" </dev/null 2>&1) || rc=$?
   [ "$rc" = 2 ] || fail "$backend: no terminal and no display did not exit 2 (got $rc)"
+  case $out in *'vault: locked, and no terminal or display'*) ;; *) fail "$backend: no terminal and no display gave no reason: $out" ;; esac
 
   if command -v flock >/dev/null 2>&1; then
     reset; mkdir -p "$dir"
