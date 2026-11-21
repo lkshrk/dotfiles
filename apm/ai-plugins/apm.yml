@@ -31,7 +31,7 @@ dependencies:
     targets:
     - claude
   - git: lkshrk/useful-skills
-    ref: 6aeb3bae9195508e918292fc11af60db8ff1b359
+    ref: e716cad3f2dd805dec499a997021accac1cbdb43
   - path: ~/Dev/dotfiles/apm/omp-skills
     targets:
     - codex
