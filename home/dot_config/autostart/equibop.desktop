@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Equibop
+Comment=Equibop autostart script
+Exec=equibop
+StartupNotify=false
+Terminal=false
+Icon=equibop

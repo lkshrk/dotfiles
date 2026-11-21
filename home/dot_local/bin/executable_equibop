@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Encodes screenshares on the AMD iGPU: Chromium has no NVENC path and nvidia-vaapi-driver only decodes.
+# No --render-node-override: it moves rendering to the iGPU too (black window); VA-API skips the NVIDIA node on its own.
+for d in /sys/class/drm/renderD*; do
+  [[ $(basename "$(readlink -f "$d/device/driver")") == amdgpu ]] || continue
+  export LIBVA_DRIVER_NAME=radeonsi
+  set -- --enable-features=AcceleratedVideoEncoder,VaapiVideoEncoder,VaapiIgnoreDriverChecks "$@"
+  break
+done
+exec /usr/bin/equibop "$@"
