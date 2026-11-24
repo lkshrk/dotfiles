@@ -1,0 +1,10 @@
+[Unit]
+Description=Check ~/knowledge for stale page paths every week
+
+[Timer]
+OnCalendar=Mon 10:00
+Persistent=true
+RandomizedDelaySec=30min
+
+[Install]
+WantedBy=timers.target

@@ -6,5 +6,5 @@ set -euo pipefail
 # Without a running user manager there is nothing to reload; it reads the units and .wants links when it starts.
 systemctl --user show-environment >/dev/null 2>&1 || { echo "systemd: no user manager; units load at next login" >&2; exit 0; }
 systemctl --user daemon-reload
-systemctl --user start knowledge-sync.timer tmux-save.timer
+systemctl --user start knowledge-sync.timer tmux-save.timer knowledge-drift.timer
 {{- end }}

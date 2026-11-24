@@ -1,0 +1,7 @@
+[Unit]
+Description=Report ~/knowledge pages whose paths went stale in their repositories
+ConditionPathExists=%h/knowledge/scripts/drift.sh
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash -c '. %h/.config/env/profile.sh; exec %h/knowledge/scripts/drift.sh'
