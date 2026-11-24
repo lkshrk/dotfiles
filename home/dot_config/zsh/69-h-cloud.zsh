@@ -13,7 +13,7 @@ h_cloud_auth() {
     [[ -s $dir/talosconfig && -s $dir/kubeconfig ]] || return 0
     export TALOSCONFIG=$dir/talosconfig KUBECONFIG=$dir/kubeconfig
   else
-    vault_unlock_if_needed || { print -u2 "h-cloud: vault locked"; return 1; }
+    # cluster-auth.sh reaches the vault (via vault-get) only when a cert needs renewing.
     exports=$("$HOME/Dev/h-cloud/scripts/cluster-auth.sh" env) || return 1
     eval "$exports"
     typeset -g _H_CLOUD_AUTH_AT=$EPOCHSECONDS
