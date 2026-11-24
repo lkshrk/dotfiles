@@ -66,6 +66,11 @@ fi
 if have irqbalance; then
   differs "$repo/omarchy/default/irqbalance" /etc/default/irqbalance && todo+=(irqbalance)
 fi
+if pacman -Q equibop-bin >/dev/null 2>&1; then
+  rc=0
+  python3 -I "$repo/omarchy/equibop/preview-video-only.py" check || rc=$?
+  ((rc != 1)) || todo+=(equibop)
+fi
 # ufw owns before.rules, so only this one rule is added rather than shipping the whole file.
 if have ufw && ! grep -qxF -- "$ufw_rule" /etc/ufw/before.rules; then
   if grep -qF -- "$ufw_after" /etc/ufw/before.rules; then
@@ -123,6 +128,9 @@ fi
 if want irqbalance; then
   install -Dm644 "$REPO/omarchy/default/irqbalance" /etc/default/irqbalance
   systemctl try-restart irqbalance
+fi
+if want equibop; then
+  /usr/bin/python3 -I "$REPO/omarchy/equibop/preview-video-only.py" install || echo "system: Equibop thumbnail patch not applied" >&2
 fi
 if want ufw; then
   sed -i "/$UFW_AFTER/a\\
