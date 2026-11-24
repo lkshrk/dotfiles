@@ -46,6 +46,8 @@ pre-push:
       run: bash tests/render-hosts.sh
     repository-git-hooks:
       run: python3 tests/repository-git-hooks.py
+    tmux-autosave:
+      run: bash tests/tmux-autosave.sh
     tmux-omarchy-theme:
       run: bash tests/tmux-omarchy-theme.sh
     vault-env:

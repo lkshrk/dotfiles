@@ -1,0 +1,7 @@
+[Unit]
+Description=Save the tmux server's sessions with tmux-resurrect
+ConditionPathExists=%h/.local/share/tmux/plugins/tmux-resurrect/scripts/save.sh
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/tmux/autosave.sh
