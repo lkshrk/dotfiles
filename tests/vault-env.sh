@@ -43,7 +43,7 @@ EOF
 chmod +x "$tmp/bin/bw"
 export PATH="$tmp/bin:$PATH"
 
-unset LITELLM_API LITELLM_API_KEY GITHUB_TOKEN NOTE A B MISSING DUP BW_SESSION
+unset LITELLM_API LITELLM_API_KEY GITHUB_TOKEN NOTE A B MISSING DUP BW_SESSION VAULT_ENV_STRICT
 fail() { printf 'vault-env: %s\n' "$1" >&2; exit 1; }
 count() { [ -e "$FAKE_VAULT/$1" ] && wc -l < "$FAKE_VAULT/$1" | tr -d ' ' || echo 0; }
 reset() { rm -rf "$XDG_RUNTIME_DIR/vault" "$FAKE_VAULT/prompts" "$FAKE_VAULT/lists" "$FAKE_VAULT/next-key" "$FAKE_VAULT/synced"; }
