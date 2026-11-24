@@ -71,6 +71,13 @@ if pacman -Q equibop-bin >/dev/null 2>&1; then
   python3 -I "$repo/omarchy/equibop/preview-video-only.py" check || rc=$?
   ((rc != 1)) || todo+=(equibop)
 fi
+# A USB device that never answers holds the default 120 s settle, and the LUKS prompt behind it.
+sed 's/^\([[:space:]]*\)udevadm settle$/\1udevadm settle --timeout=10/' /usr/lib/initcpio/hooks/udev >"$work/udev-hook"
+if [ "$(grep -c 'udevadm settle --timeout=10$' "$work/udev-hook")" = 1 ]; then
+  differs "$work/udev-hook" /etc/initcpio/hooks/udev && todo+=(initcpio)
+else
+  echo "system: mkinitcpio's udev hook no longer has one plain 'udevadm settle'; not overriding it" >&2
+fi
 # ufw owns before.rules, so only this one rule is added rather than shipping the whole file.
 if have ufw && ! grep -qxF -- "$ufw_rule" /etc/ufw/before.rules; then
   if grep -qF -- "$ufw_after" /etc/ufw/before.rules; then
@@ -131,6 +138,11 @@ if want irqbalance; then
 fi
 if want equibop; then
   /usr/bin/python3 -I "$REPO/omarchy/equibop/preview-video-only.py" install || echo "system: Equibop thumbnail patch not applied" >&2
+fi
+if want initcpio; then
+  install -Dm644 "$WORK/udev-hook" /etc/initcpio/hooks/udev
+  # Removing the override on failure keeps the next apply retrying the rebuild.
+  limine-mkinitcpio >/dev/null || { rm -f /etc/initcpio/hooks/udev; echo "system: initramfs rebuild failed; udev settle override not applied" >&2; }
 fi
 if want ufw; then
   sed -i "/$UFW_AFTER/a\\
